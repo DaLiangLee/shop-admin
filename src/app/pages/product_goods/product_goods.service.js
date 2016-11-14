@@ -45,13 +45,13 @@
                     {
                         "id": 1,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="member" data-parentid="90000" data-sectionid="90003" member-employee-dialog="edit" title="编辑员工" item="item" employee-item="propsParams.employeeItem(data)" employee-role="propsParams.roleItems">编辑</button>  <button class="btn" cb-access-control="member" data-parentid="90000" data-sectionid="90005" simple-grid-change-status="disable" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">冻结</button> <button class="btn" cb-access-control="member" data-parentid="90000" data-sectionid="90006" simple-grid-change-status="enable" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">恢复</button> <button class="btn btn-danger" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)">删除</button> <button class="btn btn-warning" member-employee-reset="60" item="item" cb-access-control="member" data-parentid="90000" data-sectionid="90004" reset-item="propsParams.resetItem(data)">重置密码</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="member" data-parentid="40000" data-sectionid="40003" ui-sref="product.goods.edit({id: item.id})">编辑商品</button>  <button class="btn" cb-access-control="member" data-parentid="90000" data-sectionid="90005" simple-grid-change-status="disable" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">下架</button> <button class="btn" cb-access-control="member" data-parentid="90000" data-sectionid="90006" simple-grid-change-status="enable" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">恢复</button> <button class="btn btn-danger" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)">删除</button>',
                         "name": '操作',
                         "width": 300
                     }
                 ],
                 "config": {
-                    'settingColumnsSupport': false,   // 设置表格列表项
+                    'settingColumnsSupport': true,   // 设置表格列表项
                     'checkboxSupport': true,  // 是否有复选框
                     'sortSupport': true,
                     'paginationSupport': true,  // 是否有分页

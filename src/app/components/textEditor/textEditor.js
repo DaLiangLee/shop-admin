@@ -44,7 +44,6 @@
       if (setthe.fhtml) {
         s = s.replace(/<\/?[^>]+>/g, '');
         s = s.replace(/\&[a-z]+;/gi, '');
-        s = s.replace(/\s+/g, '\n');
       }
 
       if (setthe.fself && angular.isObject(value)){

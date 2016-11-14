@@ -220,8 +220,6 @@
     var currentParams = $state.params;
     vm.attributeset = [];
     var skuData = [];
-    vm.skuData = [];
-    vm.skuDataLength = 0;
     var removeskuData = [];
     var skuQueue = [];
     vm.isAttributesetLoad = false;
@@ -232,9 +230,10 @@
     if (vm.isChange) {
       //productGoods
     } else {
-      vm.dataBase.status = 0;
-      vm.dataBase.unit = '请先选择商品类目';
-      vm.dataBase.size = [];
+      vm.dataBase.status = 1;
+      vm.dataBase.$unit = '请先选择商品类目';
+      vm.dataBase.$size = [];
+      vm.dataBase.mainphoto = [];
     }
     productGoods.category().then(function (data) {
       console.log(data);
@@ -265,10 +264,11 @@
       select: undefined,
       store: [],
       handler: function (data) {
+        vm.dataBase.brandid = data;
         console.log('brandModel', data);
       }
     };
-    vm.dataBase.size = [];
+    vm.dataBase.$size = [];
     vm.selectModel2 = {
       config: {
         searchPrefer: true,
@@ -278,20 +278,22 @@
           value: "id"
         }
       },
-      select: undefined,
+      catid: undefined,
       store: [],
       handler: function (data) {
         console.log('selectModel', data);
-        vm.dataBase.unit = getData(vm.selectModel2.store, data) && getData(vm.selectModel2.store, data).unit;
+        vm.dataBase.$unit = getData(vm.selectModel2.store, data) && getData(vm.selectModel2.store, data).unit;
         console.log(vm.dataBase.unit);
+        vm.dataBase.cateid = data;
         productGoods.attrsku({id: data}).then(function (data) {
           console.log(data);
           vm.brandModel.store = data.data.data.brand;
           vm.skuData = angular.copy(data.data.data.sku);
-          vm.dataBase.attributeset = data.data.data.attributeset;
+          vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
           skuData = angular.copy(data.data.data.sku);
           vm.skuDataLength = skuData.length - 1;
-          vm.dataBase.size.push(createSkuItem(vm.skuData));
+          vm.dataBase.$size = [];
+          vm.dataBase.$size.push(createSkuItem(vm.skuData));
           vm.isAttributesetLoad = true;
         });
       }
@@ -326,9 +328,11 @@
      * @returns {{sku: {$config: {searchPrefer: boolean, searchParams: string, selectDirective: {name: string, value: string}}, select: undefined, $store: *, $handler: $handler}, skuid: {$config: {searchPrefer: boolean, searchParams: string, selectDirective: {name: string, value: string}}, select: undefined, $store: Array, $handler: $handler}}}
      */
     function createSkuItem(arr, sku, skuid) {
+      var shengxia = arr || [];
       var result = {
         sku: {
           $config: {
+            once: true,
             searchPrefer: true,
             hideSelect: true,
             searchParams: "skuname",
@@ -338,28 +342,37 @@
             }
           },
           select: sku,
-          $store: arr,
+          $store: shengxia,
           $handler: function (data) {
             if (!!getData(arr, data)) {
               result.skuid.$store = getData(arr, data).items;
             } else {
               result.skuid.$store = [];
             }
-            skuQueue.push(data);
-            console.log('skuQueue', skuQueue);
-            console.log('size', vm.dataBase.size);
-            var shengxia = [];
-            angular.forEach(vm.dataBase.size, function (item) {
+            _.remove(vm.skuData, function (item) {
+              return item.id == data;
+            });
+            console.log(this);
+
+            // skuQueue.push(data);
+            // console.log('skuQueue', skuQueue);
+            // console.log('size', vm.dataBase.size);
+            shengxia = [];
+            angular.forEach(vm.dataBase.$size, function (item) {
               angular.forEach(skuData, function (item2) {
-                console.log(item2.id, item.sku.select);
-                if (item.sku.select && item2.id != item.sku.select) {
+                console.log(item2.id, item.sku.select, data);
+                if (!item.sku.select && item2.id != data) {
                   shengxia.push(item2);
                 }
+                if (item.sku.select && item2.id != data) {
+                  shengxia.push(item2);
+                }
+
               });
             });
-            vm.skuData = angular.copy(shengxia);
-            console.log(shengxia);
-            console.log('removeskuData', vm.skuData);
+            // vm.skuData = angular.copy(shengxia);
+            console.log('shengxia', shengxia);
+            // console.log('removeskuData', vm.skuData);
           }
         },
         skuid: {
@@ -374,6 +387,7 @@
           select: skuid,
           $store: [],
           $handler: function (data) {
+            result.skuid.select = data;
             console.log('selectModel', data);
           }
         }
@@ -388,8 +402,25 @@
       createSkuItem(attributeset, 1, 2);
     }
 
-    function getSkuItem() {
-
+    function getSkuItem(data) {
+      if(!angular.isArray(data)){
+        throw Error('需要接收一个array类型数据');
+      }
+      if(!data.length){
+        return [];
+      }
+      var results = [];
+      var temp = angular.copy(skuData);
+      angular.forEach(data, function (item) {
+        var items = _.remove(temp, function(n){
+          return n.id == item.sku.select;
+        })[0];
+        _.remove(items.items, function(n){
+          return n.id != item.skuid.select;
+        });
+        results.push(items);
+      });
+      return results;
     }
 
     /**
@@ -401,25 +432,20 @@
     vm.changeSize = function (index, id, status) {
       if (status) {
         // 添加
-        console.log(index + 1);
-        console.log(vm.skuData);
-        vm.dataBase.size.splice(index + 1, 0, createSkuItem(vm.skuData));
+        vm.dataBase.$size.splice(index + 1, 0, createSkuItem(vm.skuData));
         vm.skuDataLength--;
 
       } else {
         // 删除
         // 至少要保留一项
-        if (vm.dataBase.size.length < 2) {
+        if (vm.dataBase.$size.length < 2) {
           return;
         }
-        vm.dataBase.size.splice(index, 1);
-        console.log('skuData', getData(skuData, id));
+        vm.dataBase.$size.splice(index, 1);
         vm.skuDataLength++;
-        console.log(removeskuData);
 
         if (vm.skuData.length < skuData.length) {
-          angular.isDefined(id) && vm.skuData.push(getData(removeskuData, id));
-          console.log(vm.skuData);
+          angular.isDefined(id) && vm.skuData.push(getData(skuData, id));
         }
       }
     };
@@ -430,7 +456,17 @@
      * @returns {{}}
      */
     function getDataBase(data) {
-      var result = {};
+      var result = angular.extend({
+        skuvalues: getSkuItem(vm.dataBase.$size)
+      }, data);
+      result.productname = encodeURI(result.productname);
+      result.abstracts = encodeURI(result.abstracts);
+      angular.forEach(result.skuvalues, function (item) {
+        item.skuname = encodeURI(item.skuname);
+        item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
+      });
+      result.$unit = undefined;
+      result.$size = undefined;
       return result;
     }
 
@@ -449,16 +485,9 @@
      * 表单提交
      */
     vm.submit = function () {
-      console.log(vm.dataBase);
-      /*if(vm.isChange){
-       productGoods.add(vm.dataBase).then(function () {
-       goto();
-       });
-       }else{
-       productGoods.edit(vm.dataBase).then(function () {
-       goto();
-       });
-       }*/
+      productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
+        console.log('save', data);
+      });
     };
     function goto() {
       preferencenav.removePreference($state.current);

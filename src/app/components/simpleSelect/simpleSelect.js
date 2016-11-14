@@ -33,6 +33,7 @@
   function simpleSelectConfig(){
     return {
       multiple: false,
+      once: false,
       searchPrefer: false,   //是否开启列表搜索
       searchParams: "id",        //绑定的搜索字段
       searchPreHandler: undefined,    //搜索绑定事件供服务端搜索使用
@@ -56,12 +57,12 @@
         selectPreHandler: "&"
       },
       templateUrl: "app/components/simpleSelect/simpleSelect.html",
-      link: function(scope, iElement, iAttrs){
+      link: function(scope, iElement){
         var results = [];
         var select = null;
+        var once = false;
         // config 配置默认参数
         scope.config = angular.extend({}, simpleSelectConfig, scope.config);
-        console.log(scope.store, +new Date());
         var store = scope.$watch('store', function (value) {
           scope.items = value || [];
           angular.element(iElement).find('.text').html("-- 请点击选择 --");
@@ -95,6 +96,9 @@
           }
         };
         iElement.on('click', function (event) {
+          if(once){
+            return ;
+          }
           event.stopPropagation();
           scope.search.params = "";
           $document.find('.k-simple-select .select').hide();
@@ -150,6 +154,11 @@
             scope.selectPreHandler({
               data: value
             });
+            if(scope.config.once){
+              once = true;
+              angular.element(iElement).find('.value').css('background-color', "#ccc");
+              angular.element(iElement).find('.caret').hide();
+            }
             hide();
           }
           scope.$apply();

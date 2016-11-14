@@ -52,9 +52,25 @@
           if(!/^[1-9]+(.)?$/.test(value)){
             if(isNaN(parseFloat(value, 10))){
               value = value.replace(/[^0-9.]/g, "");
+              console.log(value);
             }else{
-              value = parseFloat(value, 10).toFixed(2)
+              if(/^(0|[1-9][0-9]*)(\.[0-9]{1})?$/.test(value)){
+                value = parseFloat(value, 10).toFixed(2);
+                console.log(value);
+              }else{
+                console.log(value);
+                if(/^0$/.test(value)){
+
+                }
+                value = value.substring(0, value.indexOf('.')+3);
+              }
+
             }
+
+          }else{
+            console.log(value);
+
+            value = parseFloat(value, 10).toFixed(2);
           }
           iController.$setViewValue(value);
           iController.$render();

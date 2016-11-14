@@ -32,7 +32,6 @@ router.post('/product/goods/category', function (req, res, next) {
  * 修改店铺信息
  */
 router.post('/product/goods/attrsku', function (req, res, next) {
-  console.log(req.query);
   res.json({
     "data": {
       "sku": GOODS_ATTRSKU.sku,
@@ -43,4 +42,14 @@ router.post('/product/goods/attrsku', function (req, res, next) {
   });
 });
 
+/**
+ * 修改店铺信息
+ */
+router.post('/product/goods/save', function (req, res, next) {
+  console.log(req.query);
+  res.json({
+    "data": "",
+    "status": "0"
+  });
+});
 module.exports = router;

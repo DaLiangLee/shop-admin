@@ -22,6 +22,10 @@
                       "url": "/product/goods/add",
                       "type": "POST"
                     },
+                    "save": {
+                      "url": "/product/goods/save",
+                      "type": "POST"
+                    },
                     "edit": {
                       "url": "/product/goods/edit",
                       "type": "POST"
