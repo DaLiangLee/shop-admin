@@ -1,0 +1,6 @@
+<div>
+  <textarea type="text" class="form-control" rows="5" placeholder="{{options.placeholder}}" cb-placeholder ng-required="!!options.required" ng-disabled="options.disabled" ng-model="options.editor" name="content" required="required"></textarea>
+  <div class="text-right h5">
+    <span>您已经填写<span class="text-danger" ng-bind="options.count"></span>个文字，还可添加<span class="text-danger" ng-bind="options.total - options.count"></span>个</span>
+  </div>
+</div>

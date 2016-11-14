@@ -1,0 +1,50 @@
+<div class="viewFramework-vehicle-selection-dialog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title" ng-bind="title"></h5>
+  </div>
+  <div class="modal-body">
+    <div>
+      <input type="text" name="" id="" ng-model="">
+    </div>
+
+    <div>
+      <div class="all">
+        <h3>全部</h3>
+        <ul>
+          <li><input type="checkbox" name="">全部</li>
+        </ul>
+      </div>
+      <div class="category">
+        <h3>分类</h3>
+        <ul>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+          <li><input type="checkbox" name="">全部</li>
+        </ul>
+      </div>
+      <div class="name">
+        <h3>名称</h3>
+      </div>
+      <div class="brands">
+        <h3>品牌</h3>
+      </div>
+      <div class="models">
+        <h3>车型</h3>
+      </div>
+    </div>
+    <div>
+      <h2>已选择适用车型：</h2>
+      <hr>
+    </div>
+  </div>
+  <div class="modal-footer" ng-if="type == 'review'">
+    <div class="inline-block margin-right">
+      <button class="btn btn-primary" ng-click="close(false)">返回</button>
+    </div>
+  </div>
+</div>

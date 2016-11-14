@@ -1,0 +1,709 @@
+.viewFramework-sidebar {
+  width: 0px;
+  display: none;
+  position: fixed;
+  top: 100px;
+  bottom: 0px;
+  background-color: #1a1a1a;
+  z-index: 102;
+  overflow-x: hidden
+}
+
+.viewFramework-sidebar .sidebar-content {
+  width: 260px;
+  height: 100%;
+  overflow: auto;
+  overflow-x: hidden
+}
+
+.viewFramework-sidebar .sidebar-trans {
+  -o-transition: all 0.12s ease,0.12s ease;
+  -ms-transition: all 0.12s ease,0.12s ease;
+  -moz-transition: all 0.12s ease,0.12s ease;
+  -webkit-transition: all 0.12s ease,0.12s ease
+}
+
+.viewFramework-sidebar .sidebar-fold {
+  position: relative;
+  height: 40px;
+  width: 240px;
+  color: #aeb9c2;
+  text-align: center;
+  font-size: 12px;
+  user-select: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  .icon{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    margin-top: -9px;
+    span {
+      position: absolute;
+    }
+  }
+  &.icon-fold{
+    .icon{
+      .line{
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 18px;
+        background-color: #fff;
+      }
+      .piece{
+        top: 5px;
+        left: 5px;
+        width: 6px;
+        height: 8px;
+        background-color: #fff;
+      }
+      .arrow{
+        top: 0;
+        left: 11px;
+        width:0;
+        height:0;
+        line-height: 0;
+        overflow: hidden;
+        border-width: 9px;
+        border-style: solid;
+        border-color: transparent transparent transparent #fff;
+      }
+    }
+  }
+  &.icon-unfold{
+    .icon {
+      .line {
+        right: 0;
+        top: 0;
+        width: 3px;
+        height: 18px;
+        background-color: #fff;
+      }
+      .piece {
+        top: 5px;
+        left: 7px;
+        width: 6px;
+        height: 8px;
+        background-color: #fff;
+      }
+      .arrow {
+        top: 0;
+        left: -11px;
+        width: 0;
+        height: 0;
+        line-height: 0;
+        overflow: hidden;
+        border-width: 9px;
+        border-style: solid;
+        border-color: transparent #fff transparent transparent;
+      }
+    }
+  }
+}
+
+
+.cb-sidebar-group-tooltip{
+  position: absolute;
+  z-index: 1000;
+  width: 170px;
+  background-color: #333;
+  border-bottom: 8px solid #fe771d;
+  h3{
+    margin: 0;
+    font-size: 18px;
+    line-height: 70px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+  }
+  ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li{
+      a{
+        display: block;
+        padding-left: 30px;
+        z-index: 16;
+        line-height: 72px;
+        color: #9a9a9a;
+        text-decoration: none;
+        &:hover{
+          color: #fe771d;
+          background-color: #000;
+        }
+      }
+    }
+  }
+}
+
+.viewFramework-sidebar .sidebar-fold:hover {
+  background: #000
+}
+
+.viewFramework-sidebar .sidebar-nav {
+  width: 240px;
+  margin-bottom: 1px;
+  .icon-sidebar{
+    display: inline-block;
+    vertical-align: top;
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    background: url("../assets/images/icon-sidebar.png") no-repeat;
+    &.icon-sidebar-store{
+      background-position: 0 -60px;
+    }
+    &.icon-sidebar-product{
+      background-position: 0 -90px;
+    }
+    &.icon-sidebar-trade{
+      background-position: 0 -120px;
+    }
+    &.icon-sidebar-finance{
+      background-position: 0 -180px;
+    }
+    &.icon-sidebar-user{
+      background-position: 0 -210px;
+    }
+    &.icon-sidebar-stocks{
+      background-position: 0 -240px;
+    }
+    &.icon-sidebar-member{
+      background-position: 0 -240px;
+    }
+    &.icon-sidebar-system{
+      background-position: 0 -270px;
+    }
+    &.icon-arrow-down{
+      position: absolute;
+      right: 10px;
+      background-position: 0 -30px;
+    }
+  }
+  &.sidebar-nav-fold{
+    .icon-arrow-down{
+      background-position: 0 0;
+    }
+  }
+}
+
+.viewFramework-sidebar .sidebar-nav ul {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  overflow: hidden
+}
+
+.viewFramework-sidebar .sidebar-nav li a {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  line-height: 70px;
+  color: #fff;
+  overflow: hidden
+}
+
+.viewFramework-sidebar .sidebar-nav li a:hover {
+  background: #feb11d;
+}
+
+.viewFramework-sidebar .sidebar-nav li a:hover .nav-icon,.viewFramework-sidebar .sidebar-nav li a:hover .nav-title {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-item {
+  position: relative
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-comment {
+  background: #2d3945;
+  color: #cccccc;
+  height: 26px;
+  margin-left: 8px;
+  line-height: 26px;
+  padding: 0 7px;
+  vertical-align: middle;
+  position: relative;
+  display: none
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-comment .icon-arrow-left {
+  position: absolute;
+  left: -14px;
+  line-height: 26px;
+  font-size: 24px;
+  color: #2d3945
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-tooltip-comment {
+  color: #ccc
+}
+
+.viewFramework-sidebar .sidebar-nav .sidebar-title {
+  height: 70px;
+  background: #333;
+  color: #fff;
+  font-size: 18px;
+  line-height: 70px;
+  font-weight: bold;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none
+}
+
+
+
+.viewFramework-sidebar .sidebar-manage {
+  vertical-align: middle;
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  right: 0
+}
+
+.viewFramework-sidebar .sidebar-manage a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  color: #a0abb3;
+  text-decoration: none
+}
+
+.viewFramework-sidebar .sidebar-nav-fold ul {
+  height: 0 !important;
+  overflow: hidden
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-item:hover .nav-comment {
+  display: inline-block
+}
+
+.viewFramework-sidebar .entrance-nav .nav-comment {
+  margin-left: 10px
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-icon {
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  float: left;
+}
+
+.viewFramework-sidebar .sidebar-nav .nav-title {
+  float: left;
+  overflow: hidden;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.viewFramework-sidebar .entrance-nav .nav-title {
+  width: auto
+}
+
+.viewFramework-sidebar .sidebar-nav li.consolehome .nav-tooltip {
+  top: 15px;
+  line-height: 40px
+}
+
+.viewFramework-sidebar .sidebar-nav li.consolehome a {
+  height: 70px;
+  line-height: 70px;
+  background: #293038
+}
+
+.viewFramework-sidebar .sidebar-nav li.consolehome a .nav-icon {
+  font-size: 20px
+}
+
+.viewFramework-sidebar .sidebar-nav li.consolehome.active a {
+  background: #293038
+}
+
+.viewFramework-sidebar .sidebar-nav li.active a {
+  background: #fe771d
+}
+
+.viewFramework-sidebar .sidebar-nav li.active a .nav-title {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav li.active a .nav-icon {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav .manage-nav {
+  height: 30px;
+  overflow: hidden
+}
+
+.viewFramework-sidebar .sidebar-nav .manage-nav:hover .nav-icon {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav .manage-nav a {
+  display: block;
+  height: 100%
+}
+
+.viewFramework-sidebar .sidebar-nav .manage-nav .nav-icon {
+  height: 100%;
+  line-height: 30px;
+  font-size: 16px
+}
+
+.viewFramework-sidebar .sidebar-nav .manage-nav .nav-title {
+  margin-top: 14px;
+  background: #293038;
+  height: 1px;
+  width: 120px
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav {
+  display: block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  position: relative
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav.open .more-nav-switch {
+  background: #09c
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav.open .more-nav-switch .nav-icon,.viewFramework-sidebar .sidebar-nav .more-nav.open .more-nav-switch .nav-title {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav.open .more-nav-switch:hover {
+  background: #09c
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav.open .icon-up {
+  display: none
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav.open .icon-down {
+  display: inline-block
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .icon-up {
+  display: inline-block
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .icon-down {
+  display: none
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-switch {
+  display: block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-switch:hover {
+  background: #425160
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-switch:hover .nav-icon,.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-switch:hover .nav-title {
+  color: #fff
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container {
+  background: #425160;
+  position: absolute;
+  bottom: 40px;
+  top: auto;
+  border: none;
+  border-radius: 0 0;
+  box-shadow: none;
+  margin: 0;
+  width: 100%
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container a {
+  color: #fff;
+  text-decoration: none
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item {
+  display: block;
+  height: 40px;
+  line-height: 40px
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item:hover {
+  background: #3a4856
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item:hover .more-nav-item-icon {
+  color: #aeb9c2
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item-icon {
+  width: 50px;
+  display: inline-block;
+  vertical-align: text-top;
+  text-align: center;
+  color: #546478
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item.active {
+  background: #2d3945
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item.active .more-nav-item-icon {
+  color: #0099cc
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-close {
+  height: 20px;
+  background: #09c;
+  text-align: right;
+  line-height: 20px;
+  cursor: pointer
+}
+
+.viewFramework-sidebar .sidebar-nav .more-nav .more-nav-close .icon-down {
+  text-align: left;
+  width: 32px;
+  display: inline-block;
+  color: #80cce6;
+  vertical-align: middle
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar,.viewFramework-sidebar.sidebar-mini {
+  width: 70px;
+  display: block
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-content,.viewFramework-sidebar.sidebar-mini .sidebar-content {
+  width: 90px
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-fold,.viewFramework-sidebar.sidebar-mini .sidebar-fold {
+  width: 70px
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav,.viewFramework-sidebar.sidebar-mini .sidebar-nav {
+  width: 70px
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .nav-item a:hover+.nav-tooltip,.viewFramework-sidebar.sidebar-mini .sidebar-nav .nav-item a:hover+.nav-tooltip {
+  display: block
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .nav-title,.viewFramework-sidebar.sidebar-mini .sidebar-nav .nav-title {
+  display: none
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav .more-nav-switch:hover,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav .more-nav-switch:hover {
+  background: #425160 !important
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav.open .more-nav-switch,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav.open .more-nav-switch {
+  background: #425160 !important
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav .more-nav-container {
+  bottom: 0px;
+  left: 50px;
+  width: 180px
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav .more-nav-container .more-nav-item {
+  display: block;
+  height: 40px;
+  line-height: 40px
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav .more-nav-container .more-nav-item-icon,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav .more-nav-container .more-nav-item-icon {
+  width: 50px;
+  padding-left: 0
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav .more-nav .more-nav-close,.viewFramework-sidebar.sidebar-mini .sidebar-nav .more-nav .more-nav-close {
+  display: none
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-nav li.consolehome a :hover,.viewFramework-sidebar.sidebar-mini .sidebar-nav li.consolehome a :hover {
+  background: #425160
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-title .sidebar-title-text,.viewFramework-sidebar.sidebar-mini .sidebar-title .sidebar-title-text {
+  display: none
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-title-inner:hover+.nav-tooltip,.viewFramework-sidebar.sidebar-mini .sidebar-title-inner:hover+.nav-tooltip {
+  display: block
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .sidebar-manage,.viewFramework-sidebar.sidebar-mini .sidebar-manage {
+  display: none
+}
+
+.viewFramework-sidebar-mini .viewFramework-sidebar .entrance-nav .nav-item:hover .nav-comment,.viewFramework-sidebar.sidebar-mini .entrance-nav .nav-item:hover .nav-comment {
+  display: none
+}
+
+.viewFramework-sidebar-full .viewFramework-sidebar,.viewFramework-sidebar.sidebar-full {
+  width: 240px;
+  display: block
+}
+
+
+
+.viewFramework-sidebar-dialog .modal-dialog {
+  width: 730px
+}
+
+.viewFramework-sidebar-dialog .modal-dialog .modal-title {
+  user-select: none;
+  -webkit-user-select: none
+}
+
+.viewFramework-sidebar-manage .sidebar-item-list {
+  padding: 4px 0 0 0;
+  height: auto
+}
+
+.viewFramework-sidebar-manage .sidebar-item-list-picked .sidebar-item {
+  border: 1px solid #37a9d5
+}
+
+.viewFramework-sidebar-manage .sidebar-item-list-picked .sidebar-item .sidebar-item-opt-icon {
+  display: block
+}
+
+.viewFramework-sidebar-manage .sidebar-item-list-picked .sidebar-item .sidebar-item-icon {
+  color: #516176
+}
+
+.viewFramework-sidebar-manage .sidebar-config-title {
+  padding-left: 6px;
+  user-select: none;
+  -webkit-user-select: none
+}
+
+.viewFramework-sidebar-manage .sidebar-item-wrap {
+  padding: 6px;
+  width: 33.3%;
+  float: left;
+  user-select: none;
+  -webkit-user-select: none
+}
+
+.viewFramework-sidebar-manage .sidebar-item-wrap.on-drag-hover .sidebar-item {
+  border: 1px dashed #ddd
+}
+
+.viewFramework-sidebar-manage .sidebar-item {
+  height: 32px;
+  padding: 4px;
+  line-height: 24px;
+  background: #fff;
+  border: 1px solid #d3dce3;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-transition: all 0.1s, 0.1s;
+  -ms-transition: all 0.1s, 0.1s;
+  -moz-transition: all 0.1s, 0.1s;
+  -webkit-transition: all 0.1s, 0.1s
+}
+
+.viewFramework-sidebar-manage .sidebar-item:hover {
+  border: 1px solid #37a9d5
+}
+
+.viewFramework-sidebar-manage .sidebar-item:hover .sidebar-item-opt-icon {
+  display: block
+}
+
+.viewFramework-sidebar-manage .sidebar-item .sidebar-item-icon {
+  color: #aeb9c2;
+  font-size: 14px;
+  margin: 0 2px;
+  position: relative;
+  top: 1px
+}
+
+.viewFramework-sidebar-manage .sidebar-item .sidebar-item-opt-icon {
+  display: none;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  right: 0;
+  top: 0;
+  line-height: 30px;
+  text-align: center;
+  border-left: 1px solid #37a9d5;
+  color: #37a9d5;
+  font-size: 14px
+}
+
+.viewFramework-sidebar-manage .sidebar-config-gap {
+  border: 1px dashed #e8ecf0;
+  margin: 16px 5px;
+  user-select: none;
+  -webkit-user-select: none
+}
+
+
+
+
+.cb-sidebar-tooltip {
+  position: absolute;
+  z-index: 1030;
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  visibility: visible;
+  .tooltip-inner{
+    max-width: 200px;
+    padding: 12px 8px;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0 0;
+    background-color: #425160;
+  }
+  .tooltip-arrow{
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+  }
+  &.in{
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+  }
+  &.right{
+    padding: 0 5px;
+    margin-left: 3px;
+    .tooltip-arrow{
+      top: 50%;
+      left: 0;
+      margin-top: -5px;
+      border-right-color: #425160;
+      border-width: 5px 5px 5px 0;
+    }
+  }
+}

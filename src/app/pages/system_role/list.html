@@ -1,0 +1,9 @@
+<div class="g-view">
+    <div class="container-fluid">
+        <h3>角色管理</h3>
+        <hr>
+
+        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
+    </div>
+</div>
+<div ng-if="vm.message.loadingState" cb-message-tips config="vm.message.config"></div>

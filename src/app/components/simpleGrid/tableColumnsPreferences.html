@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" data-ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title" ng-bind="title"></h5>
+</div>
+<div class="modal-body clearfix row">
+    <div class="col-sm-12 clearfix" data-spm="95">
+        <div ng-repeat="option in dialogObj" class="pull-left list-user-preferences-uint nowrap" style="display: inline-block;min-width: 138px;padding: 8px 6px;">
+            <label for="{{option.$$hashKey}}" class="inline-block {{option.cssClass}}">
+                <input id="{{option.$$hashKey}}" type="checkbox" class="margin-right-1" ng-disabled="option.canModify" ng-model="option.value"> {{option.name}}</label>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="saveContent()" ng-disabled="selectDisabled">确定</button>
+    <button class="btn btn-default" ng-click="close(false)">取消</button>
+</div>

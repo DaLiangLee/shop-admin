@@ -1,0 +1,55 @@
+<div class="viewFramework-system-role-dialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title" ng-bind="title"></h5>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" name="employee" role="form" novalidate="novalidate">
+          <div class="form-group clearfix">
+              <label for="inputEmail1" class="col-sm-3 control-label"><i class="text-danger">*</i> 员工姓名：</label>
+              <div class="col-sm-8">
+                  <input type="text" autocomplete="off"  name="name" id="inputEmail1" ng-blur="namechange=true" class="form-control" ng-model="item.name" required>
+              </div>
+          </div>
+          <div class="alert alert-danger" ng-if="employee.name.$dirty && employee.name.$error.required && namechange">
+            <p>请填写员工姓名</p>
+          </div>
+          <div class="form-group clearfix">
+            <label for="inputEmail2" class="col-sm-3 control-label"><i class="text-danger">*</i> 账号名称：</label>
+            <div class="col-sm-8">
+              <input type="text" autocomplete="off" name="account" id="inputEmail2" ng-blur="accountchange=true" class="form-control" ng-model="item.account" cb-phone-exist required ng-pattern="/^(13[0-9]{9}|15[012356789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|170[0-9]{8}|177[0-9]{8})$/">
+            </div>
+          </div>
+          <div class="alert alert-danger" ng-if="employee.account.$dirty && employee.account.$error.required && accountchange">
+            <p>请填写账号名称</p>
+          </div>
+          <div class="alert alert-danger" ng-if="employee.account.$dirty && employee.account.$error.pattern && accountchange">
+            <p>手机号码不是11位有效号码</p>
+          </div>
+          <div class="alert alert-danger" ng-if="employee.account.$dirty && employee.account.$error.cbPhoneExist && accountchange">
+            <p>账号已经存在</p>
+          </div>
+          <div class="form-group clearfix">
+              <label for="inputEmail3" class="col-sm-3 control-label"><i class="text-danger">*</i> 角色名称：</label>
+              <div class="col-sm-8">
+                  <select id="inputEmail3" class="form-control" name="rolename" ng-model="item.rolename" ng-options="m.id as m.name for m in roles" required>
+                    <option value="">-- 请选择角色 --</option>
+                  </select>
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="alert alert-danger" ng-if="interceptor">
+            <p>编辑此项后，会影响该账号权限，您确定要编辑吗？</p>
+        </div>
+        <div class="inline-block margin-right" ng-if="interceptor">
+            <button class="btn btn-warning" ng-click="interceptorConfirm()">确定编辑</button>
+            <button class="btn btn-default" ng-click="close(false)">暂不编辑</button>
+        </div>
+        <div class="inline-block margin-right" ng-if="!interceptor">
+            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="employee.$invalid">确定</button>
+            <button class="btn btn-default" ng-click="close(false)">取消</button>
+        </div>
+    </div>
+</div>

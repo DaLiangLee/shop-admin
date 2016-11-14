@@ -1,0 +1,8 @@
+<div class="popover {{placement}} in">
+  <div class="arrow"></div>
+  <div class="popover-inner">
+    <div ng-if="contentHtml =='true'" ng-bind-html="content"></div>
+    <div ng-if="contentHtml =='false'" ng-bind="content"></div>
+    <div class="popover-content"></div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="viewFramework-system-role-dialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title" ng-bind="title"></h5>
+    </div>
+    <div class="modal-body form-horizontal">
+        <div alert type="warning" ng-if="alertWarning">
+            <p ng-bind="alertWarning"></p>
+        </div>
+        <div class="form-group clearfix">
+            <label for="inputEmail3" class="col-sm-3 control-label"><i class="text-danger">*</i> 角色名称：</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" id="inputEmail3" class="form-control" ng-model="item.rolename">
+            </div>
+        </div>
+        <div class="form-group clearfix">
+            <label for="inputEmail3" class="col-sm-3 control-label"><i class="text-danger">*</i> 角色范围：</label>
+            <div class="col-sm-8">
+                <select class="form-control" ng-model="item.datascope">
+                    <option value="">-- 请选择角色范围 --</option>
+                    <option value="0">所有数据</option>
+                    <option value="1">所在店铺及以下数据</option>
+                    <option value="2">仅个人数据</option>
+                </select>
+            </div>
+        </div>
+        <hr>
+        <h5><i class="text-danger">*</i> 设置权限（至少选择一项）</h5>
+        <hr>
+        <div class="" style="height: 200px; overflow-y: auto">
+            <ul>
+                <li bf-template="item.items" ng-repeat="node in $dataSource">
+                    <div>
+                <span ng-if="node.$hasChildren()" ng-click="node.$foldToggle()" style="cursor:pointer;font-size: 20px;">
+                  <span ng-if="!node.$isFolded()">-</span>
+                  <span ng-if="node.$isFolded()">+</span>
+                </span>
+                        <label style="font-size:12px; font-family:Tahoma;cursor: pointer;">
+                            <!-- 在数据变化时，调用服务中的相应函数来更新父节点和子节点状态 -->
+                            <!-- 通过自定义指令bf-check-indeterminate来吧模型更新到界面上 -->
+                            <input type="checkbox" name=""
+                                   bf-check-indeterminate="node.$isIndeterminate()"
+                                   ng-model="node.$checked"
+                                   ng-checked="node.$checked"
+                                   ng-change="node.$setCheckState(node.$checked)" style="vertical-align:middle; margin-top:0;">
+                            {{node.menuname}}
+                        </label>
+                    </div>
+                    <ul ng-if="node.$hasChildren() && !node.$isFolded()">
+                        <li bf-recurse="node.items"></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="alert alert-danger" ng-if="interceptor">
+            <p>编辑此项后，会影响其他账号权限，您确定要编辑吗？</p>
+        </div>
+        <div class="inline-block margin-right" ng-if="interceptor">
+            <button class="btn btn-warning" ng-click="interceptorConfirm()">确定编辑</button>
+            <button class="btn btn-default" ng-click="close(false)">暂不编辑</button>
+        </div>
+        <div class="inline-block margin-right" ng-if="!interceptor">
+            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!item.rolename || !item.datascope">确定</button>
+            <button class="btn btn-default" ng-click="close(false)">取消</button>
+        </div>
+    </div>
+</div>

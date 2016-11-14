@@ -1,0 +1,7 @@
+<div>
+    <ul>
+        <li ng-repeat="item in items" cd-drag item="item" store="items" ui-sref-active="active">
+            <a ui-sref="{{item.name}}"><span ng-bind="item.title" style="width: {{item.width}}px"></span></a>
+            <span class="close" ng-click="removePreference(item, $index)" ng-if="((items.length != 1 || items.length == 1) && item.name != 'desktop.home')  || (items.length != 1 && item.name == 'desktop.home')">&times;</span>
+        </li>
+    </ul>

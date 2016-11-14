@@ -1,0 +1,38 @@
+<div>
+  <ul>
+    <li>
+      <div cb-popover popover-placement="bottom" popover-trigger="click" popover-template-id="{{template}}">111</div>
+    </li>
+  </ul>
+</div>
+<script type="text/ng-template" id="cbVehicleInfoTipsPopoverTemplate1.html">
+  <h3 bindonce>适用车型 <span ng-bind="name">别克</span></h3>
+  <ul>
+    <li bindonce ng-repeat="item in data">
+      <div class="img">
+        <img bo-src-i="{{item.icon}}" alt="">
+      </div>
+      <p class="txt" bo-text="item.text"></p>
+    </li>
+  </ul>
+</script>
+<script type="text/ng-template" id="cbVehicleInfoTipsPopoverTemplate2.html">
+  <h3>适用车型 <span ng-bind="name">别克</span></h3>
+  <ul>
+    <li>
+      车型：<span>2015年款 别克 昂科威  运动款  2.5L</span>
+    </li>
+    <li>
+      当前车况：<span>良好</span>
+    </li>
+    <li>
+      车牌号：<span>鄂A 88888</span>
+    </li>
+    <li>
+      当前里程：<span>12000公里</span>
+    </li>
+    <li>
+      安装硬件：<span>已安装</span>
+    </li>
+  </ul>
+</script>

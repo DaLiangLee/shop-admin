@@ -1,0 +1,15 @@
+<div class="pagination-info" ng-hide="paginationInfo.tipHide">
+    <span>共有{{paginationInfo.total}}条</span>， <span>每页显示：{{paginationInfo.pageSize}}条</span>
+</div>
+<div ng-show="paginationInfo.total" pagination ng-model="paginationInfo.page" boundary-links="true" max-size="maxSize"
+     total-items="paginationInfo.total" page="paginationInfo.page" items-per-page="paginationInfo.pageSize"
+     class="pagination" previous-text="上一页" next-text="下一页" first-text="第一页" last-text="最后一页"
+     previous-title="dfdfdfd"></div>
+<span ng-show="paginationInfo.showPageGoto" class="pagination-goto-page"><input type="text" ng-model="pageGoto"
+                                                                                                  class="form-control"
+                                                                                                  cb-number-range
+                                                                                                  value-min="1"
+                                                                                                  value-max="{{paginationInfo.totalPage}}"> <button
+        class="btn btn-default" ng-disabled="gotoPageBtnDisabled"
+        ng-click="gotoPage()">GO</button></span>
+</div>

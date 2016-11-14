@@ -1,0 +1,9 @@
+<div class="aliyun-console-topbar-search m-topbar-search-warp" ng-class="{'topbar-search-active':isActive}">
+    <div class="aliyun-console-topbar-search-v1_3_21 m-topbar-search" ng-class="{'topbar-search-dropdown-open':dropdownOpen}">
+        <a href="#" class="topbar-btn" ng-click="toggleDropdownStatus($event)"><span class="icon-search"></span><span>{{searchLink.text}}</span></a>
+        <div ng-show="dropdownOpen" class="topbar-search-dropdown">
+            <input class="topbar-search-ask" type="text" name="input" ng-model="model.askInput" autocomplete="off" placeholder="{{searchLink.placeholder}}">
+            <a target="_blank" ng-href="{{searchUrl+model.askInput}}" class="topbar-search-mark icon-enter" ng-click="searchClick($event)"></a>
+        </div>
+    </div>
+</div>

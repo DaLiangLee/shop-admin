@@ -1,0 +1,25 @@
+<div class="k-simple-select">
+  <div class="value">
+    <p class="text">-- 请点击选择 --</p>
+    <span class="caret"></span>
+  </div>
+  <div class="select" ng-if="config.searchPrefer">
+    <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" placeholder="请输入搜索内容" cb-placeholder>
+    <ul class="list-unstyled" ng-if="items.length">
+      <li ng-repeat="item in items" class="{{config.selectDirective.cssProperty}}" ng-class="{'active': setClass(item)}" data-value="{{item[config.selectDirective.value]}}">
+        <img ng-src="{{item[config.selectDirective.images]}}" alt="" ng-if="config.selectDirective.images" class="images">
+        <span ng-bind="item[config.selectDirective.name]"></span>
+      </li>
+    </ul>
+    <div class="none-info" ng-if="!items.length && !search.params">暂无数据</div>
+    <div class="none-info" ng-if="!items.length && search.params">没有搜索到关于的<span ng-bind="search.params"></span>信息</div>
+  </div>
+  <div class="select" ng-if="!config.searchPrefer">
+    <ul class="list-unstyled">
+      <li ng-repeat="item in items track by $index" class="{{config.selectDirective.cssProperty}}" ng-class="{'active': setClass(item)}" data-value="{{item[config.selectDirective.value]}}">
+        <img ng-src="{{item[config.selectDirective.images]}}" alt="" ng-if="config.selectDirective.images" class="images">
+        <span ng-bind="item[config.selectDirective.name]"></span>
+      </li>
+    </ul>
+  </div>
+</div>

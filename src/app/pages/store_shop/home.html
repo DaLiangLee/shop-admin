@@ -1,0 +1,95 @@
+<div class="g-view">
+    <div class="container-fluid">
+        <div class="row">
+            <h2>基本信息</h2>
+            <hr>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">商户名称：</div>
+            <div class="col-md-9"><span ng-bind="vm.dataBase.shopname"></span></div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">商户地址：</div>
+            <div class="col-md-9"><span ng-bind="vm.dataBase.address"></span></div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">营业时间：</div>
+            <div class="col-md-9"><span ng-bind="vm.dataBase.hours.start | date : 'HH:mm'"></span> — <span
+                    ng-bind="vm.dataBase.hours.end | date : 'HH:mm'"></span><button shop-home-settings-hours time="vm.dataBase.hours" setting-item="vm.hoursHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置</button></div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">入驻状态：</div>
+            <div class="col-md-9"><span ng-bind="vm.dataBase.status == 1 ? '正常入驻' : '暂停营业'"></span></div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">经营范围：</div>
+            <div class="col-md-9">
+                <label ng-repeat="item in vm.dataBase.scope"><input type="checkbox" disabled ng-checked="item.status">{{item.name}}</label>
+            </div>
+        </div>
+        <div class="row form-group">
+          <div style="width: 100px;" class="pull-left text-right">法定代表人：</div>
+          <div class="col-md-9"><span ng-bind="vm.dataBase.legaler"></span></div>
+        </div>
+        <div class="row form-group">
+          <div style="width: 100px;" class="pull-left text-right">客服电话：</div>
+          <div class="col-md-9">
+            <div><span ng-bind="vm.dataBase.telephone | numberFormatFilter"></span> <button shop-home-settings-telephone telephone="vm.dataBase.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置</button></div>
+          </div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">店铺二维码：</div>
+            <div class="col-md-9">
+                <img src="{{vm.dataBase.qrcode}}" alt="">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">店招图片：</div>
+            <div class="col-md-9">
+                <div class="col-md-3" ng-repeat="item in vm.dataBase.photos track by $index" ng-if="vm.dataBase.photos.length">
+                  <div>
+                    <img ng-src="{{item}}" alt="">
+                  </div>
+                  <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+                    <a target="_blank" ng-href="{{item}}">下载</a>
+                    <button ng-click="vm.removePhotos($index)">删除</button>
+                    <button cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">重新上传</button>
+                  </div>
+                </div>
+                <div class="col-md-3" ng-if="!vm.dataBase.photos.length">
+                  <div>
+                    您还没有图片
+                  </div>
+                  <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+                    <button cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">上传店招图片</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div style="width: 100px;" class="pull-left text-right">商户介绍：</div>
+            <div class="col-md-9">
+                <p ng-bind="vm.dataBase.description"></p>
+                <button cb-access-control="store" data-parentid="30000" data-sectionid="30004" cb-message-board="editor" content="vm.dataBase.description" data-transmit="{{vm.dataBase.id}}" config="vm.description" title="商户介绍" review-item="vm.reviewHandler(data)">编辑</button>
+            </div>
+        </div>
+      <div style="position: relative;">
+        <div cb-vehicle-info-tips=""></div>
+      </div>
+      <script type="text/ng-template" id="myPopoverTemplate.html">
+        <h3>适用车型 <span ng-bind="name">别克</span></h3>
+        <ul>
+          <li>
+            <img src="" alt="">
+            <span></span>
+          </li>
+        </ul>
+      </script>
+      <form action="" name="a">
+        <input type="text" id="" post-require ng-model="vm.a" name="b">
+        <pre>
+          {{a.b.$error | json}}
+        </pre>
+      </form>
+    </div>
+</div>

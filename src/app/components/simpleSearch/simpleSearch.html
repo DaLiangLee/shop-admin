@@ -1,0 +1,56 @@
+<div>
+    <div class="searchSection">
+        <form class="form-horizontal f-cb" name="search" role="form">
+            <div class="form-group col-sm-4" ng-repeat="item in items">
+                <label for="{{searchID}}-{{item.$$hashKey}}" class="col-sm-3 control-label">{{item.label}}：</label>
+                <div class="col-sm-9">
+
+                    <input type="text" class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-if="item.type === 'text'" ng-model="searchParams[item.searchText]" placeholder="{{item.placeholder}}">
+
+                    <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-if="item.type === 'select'" ng-model="searchParams[item.searchText]" ng-options="m.id as m.name for m in item.list">
+                        <option value="">-- {{item.placeholder ? item.placeholder : '请选择'}} --</option>
+                    </select>
+
+                    <div class="row" ng-if="item.type === 'select2'">
+                        <div class="col-sm-6">
+                            <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-model="searchParams[item.data[0].searchText]" ng-options="m.id as m.name for m in item.data[0].list">
+                                <option value="">-- {{item.data[0].placeholder ? item.data[0].placeholder : '请选择'}} --</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-model="searchParams[item.data[1].searchText]" ng-options="m.id as m.name for m in item.data[1].list">
+                                <option value="">-- {{item.data[1].placeholder ? item.data[1].placeholder : '请选择'}} --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="item.type === 'date'">
+                        <div class="col-sm-6">
+                            <p class="input-group">
+                                <input type="text" id="{{searchID}}-{{item.$$hashKey}}" class="form-control" datepicker-popup="{{item.data[0].format}}" ng-model="searchParams[item.data[0].searchText]" is-open="item.data[0].opened" datepicker-options="dateOptions" close-text="关闭" placeholder="{{item.data[0].placeholder}}" min-date="item.data[0].minDate" max-date="item.data[0].maxDate" datepicker-append-to-body="true" current-text="今天" clear-text="清除" />
+                                <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="item.data[0].opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                            </p>
+                        </div>
+                        <span style="position: absolute; width: 10px; height: 2px; background-color: #7d7d7d; left:50%; margin-left: -5px; top: 15px;"></span>
+                        <div class="col-sm-6">
+                            <p class="input-group">
+                                <input type="text" id="{{searchID}}-{{item.$$hashKey}}" class="form-control" datepicker-popup="{{item.data[1].format}}" ng-model="searchParams[item.data[1].searchText]" is-open="item.data[1].opened" datepicker-options="dateOptions" close-text="关闭" alt-input-formats="altInputFormats" placeholder="{{item.data[1].placeholder}}" min-date="item.data[1].minDate" max-date="item.data[1].maxDate" datepicker-append-to-body="true" current-text="今天" clear-text="清除" />
+                                <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="item.data[1].opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group col-sm-4">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="button" class="btn btn-success" ng-click="setSearch()">搜索</button>
+                    <button type="button" class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

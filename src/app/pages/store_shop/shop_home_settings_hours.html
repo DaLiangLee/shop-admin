@@ -1,0 +1,39 @@
+<div class="viewFramework-shop-home-settings-hours-dialog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title">设置营业时间</h5>
+  </div>
+  <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="pull-right"><div timepicker ng-model="hours.start" id="inputEmail1" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div></div>
+
+        </div>
+        <div class="col-sm-2">-</div>
+        <div class="col-sm-5">
+          <div timepicker ng-model="hours.end" id="inputEmail2" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+        </div>
+      </div>
+    <div class="alert alert-danger" ng-if="hours">
+      <p ng-if="tel.phone.$error.required">歇业时间不能比开业时间小</p>
+      <p ng-if="!tel.phone.$error.required && tel.phone.$error.telephoneAll && tel.phone.$error.telephone400">400电话格式不对</p>
+      <p ng-if="!tel.phone.$error.required && tel.phone.$error.telephoneAll && tel.phone.$error.telephone800">800电话格式不对</p>
+      <p ng-if="!tel.phone.$error.required && tel.phone.$error.telephoneAll && tel.phone.$error.telephonePhone">手机号码格式不对</p>
+      <p ng-if="!tel.phone.$error.required && tel.phone.$error.telephoneAll && tel.phone.$error.telephoneFixed">固定座机电话格式不对</p>
+      <p ng-if="!tel.phone.$error.required && tel.phone.$error.telephoneAll && !tel.phone.$error.telephone400 && !tel.phone.$error.telephone800 && !tel.phone.$error.telephonePhone && !tel.phone.$error.telephoneFixed">输入不是400，800，区号+座机，手机格式号码</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="alert alert-danger" ng-if="interceptor">
+      <p>修改营业时间，会影响用户查看店铺，您确定要修改吗？</p>
+    </div>
+    <div class="inline-block margin-right" ng-if="interceptor">
+      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定设置</button>
+      <button class="btn btn-default" ng-click="close(false)">暂不设置</button>
+    </div>
+    <div class="inline-block margin-right" ng-if="!interceptor">
+      <button class="btn btn-primary" ng-click="confirm()">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
+  </div>
+</div>

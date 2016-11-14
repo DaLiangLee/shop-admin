@@ -1,0 +1,94 @@
+<div class="cb-top-bar g-topbar" role="menubar" bindonce>
+    <div class="topbar-wrap clearfix">
+        <div class="topbar-head pull-left">
+            <a href="/" target="{{navLinks.logo.target || '_blank'}}" class="m-logo topbar-left" title="{{navLinks.logo.title}}"></a>
+            <a ui-sref="desktop.home" cb-access-control="desktop" data-parentid="1" data-sectionid="2"
+               class="topbar-home-link topbar-btn topbar-left"><span
+                    class="ng-binding">商家管理控制台</span></a>
+        </div>
+        <div class="topbar-info pull-right">
+            <!-- 搜索 -->
+            <div cb-shop-topbar-search search-url="{{navLinks.search.href}}" search-link="navLinks.search"
+                 class="topbar-btn topbar-btn-search topbar-left" ng-if="navLinks.search.show"></div>
+            <!-- 手机app -->
+            <div class="topbar-qrcode topbar-left" ng-if="navLinks.qrcode.show">
+                <a class="topbar-btn" role="menuitem" href="{{navLinks.qrcode.href}}" target="_blank"><span ng-if="navLinks.qrcode.icon" class="{{navLinks.qrcode.icon}}"></span>
+                    <span>手机版</span> <span ng-if="navLinks.qrcode.showNew" class="topbar-new-icon icon-new"></span></a>
+                <div class="topbar-qrcode-panel">
+                    <div class="topbar-qrcode-image"><img ng-src="{{navLinks.qrcode.image}}"></div>
+                    <div class="topbar-qrcode-title">扫码下载手机车边生活</div>
+                </div>
+            </div>
+            <!-- 客服电话 -->
+            <div class="topbar-service topbar-left" ng-if="navLinks.service.show">
+                <div class="service topbar-btn">
+                    <span ng-if="navLinks.service.icon" class="{{navLinks.service.icon}}"></span>
+                    <span>客服电话：</span> <span bo-text="navLinks.service.phone"></span>
+                </div>
+            </div>
+            <!-- 站内信  -->
+            <div class="dropdown topbar-notice topbar-btn topbar-left" dropdown
+                 ng-if="messages && messages.total > 0 && navLinks.message.show">
+                <a href="#" role="menuitem" aria-label="message" aria-haspopup="true" aria-label="press enter to expand"
+                   class="dropdown-toggle topbar-btn-notice" dropdown-toggle="dropdown"><span style="display: inline-block;vertical-align: top;color: #fff;font-size: 14px;">留言信息</span>
+                    <span class="topbar-btn-notice-icon fa fa-bell"></span> <span class="topbar-btn-notice-num"
+                                                                                  ng-class="{'topbar-btn-notice-num-zero':messages.total == 0}"
+                                                                                  ng-bind="messages.total"></span></a>
+                <div class="topbar-notice-panel">
+                    <div class="topbar-notice-arrow"></div>
+                    <div class="topbar-notice-head"><span>留言信息</span></div>
+                    <div class="topbar-notice-body">
+                        <ul ng-if="messages && messages.messageList.length >0">
+                            <li ng-repeat="item in messages.messageList"
+                                ng-class="{'topbar-notice-readed':item.readed}">
+                                <a ng-href="{{navLinks.message.messageUrl + item.msgId}}" target="_blank"
+                                   class="clearfix" ng-click="readMessage(item)"><span
+                                        class="inline-block"><span class="topbar-notice-link"
+                                                                   ng-bind="item.title"></span> <span
+                                        class="topbar-notice-time" ng-bind="item.formatCreatedTime"></span></span> <span
+                                        class="inline-block topbar-notice-class" ng-if="item.className"><span
+                                        class="topbar-notice-class-name">{{item.className}}</span></span></a>
+                            </li>
+                        </ul>
+                        <p ng-if="!messages ||  messages.messageList.length == 0" class="topbar-notice-empty">
+                            {{navLinks.message.blankText}}</p>
+                    </div>
+                    <div class="topbar-notice-foot">
+                        <a class="topbar-notice-more" target="_blank" ng-href="{{navLinks.message.href}}"
+                        >{{navLinks.message.text}}</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 帮助 -->
+            <div class="topbar-left topbar-help topbar-info-item" ng-if="navLinks.help.show">
+                <div class="dropdown" dropdown>
+                    <a href="#" role="menuitem" aria-haspopup="true" aria-label="press enter to expand"
+                       class="dropdown-toggle topbar-btn" dropdown-toggle="dropdown">
+                        <span>帮助中心</span><span ng-if="navLinks.help.showNew" class="topbar-new-icon icon-new"></span>
+                        <span class="icon-arrow-down"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="link in navLinks.help.links" class="topbar-info-btn">
+                            <a href="{{link.href}}" target="{{link.target}}"><span>{{link.text}}</span><span
+                                    ng-if="link.showNew" class="topbar-new-icon icon-new"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- user -->
+            <div class="topbar-left topbar-user" ng-if="navLinks.user.show">
+                <div class="dropdown topbar-info-item" dropdown>
+                    <a href="#" role="menuitem" aria-haspopup="true" aria-label="press enter to expand"
+                       class="dropdown-toggle topbar-btn" dropdown-toggle="dropdown"><span><img ng-if="navLinks.user.account.avatar" src="{{navLinks.user.account.avatar}}" alt=""></span> <span
+                            ng-bind="navLinks.user.account.username"></span><span
+                            class="icon-arrow-down"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="topbar-info-btn" ng-repeat="item in navLinks.user.links">
+                            <a class="user-btn-link user-btn-link-signout" href="{{item.href}}"
+                               target="{{item.target || '_self'}}"><span bo-text="item.text"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
