@@ -180,7 +180,7 @@
                 }
             })
             .state('product.goods.edit', {     // 编辑商品
-                url: '/edit/:id',
+                url: '/edit/:skuid',
                 templateUrl: 'app/pages/product_goods/change.html',
                 controller: 'ProductGoodsChangeController',
                 controllerAs: 'vm',

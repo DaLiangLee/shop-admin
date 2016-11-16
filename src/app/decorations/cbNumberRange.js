@@ -47,9 +47,15 @@
 
           var u = true;
           if(filtration !== "-"){
-            filtration = filtration && parseInt(filtration, 10);
             if(rangeEnabled === 'true'){
-              u = filtration !== "" && (filtration < valueMin || filtration > valueMax);
+              if(/^0$/.test(filtration)){
+                u = true;
+              }else if(!/^([1-9]\d{0,16})$/.test(filtration)){
+                u = false;
+              }else if(/^([1-9]\d{0,16})$/.test(filtration)){
+                filtration = filtration !== "" && parseInt(filtration, 10);
+                u = !isNaN(filtration) && (filtration > valueMin && filtration < valueMax);
+              }
             }else{
               if(/^0$/.test(filtration)){
                 u = true;

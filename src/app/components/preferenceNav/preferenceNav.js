@@ -13,8 +13,11 @@
     function preferencenav($rootScope) {
         var preferenceList = [];
         return {
-            setPreferences: function(preferences) {
-                preferenceList.push(preferences);
+            setPreferences: function(toState, toParams) {
+              console.log(toState, toParams);
+                var preference = toState;
+                preference.params = toParams;
+                preferenceList.push(preference);
                 $rootScope.$broadcast('preferencenavsChanged');
             },
             getPreferences: function() {
@@ -37,7 +40,6 @@
             scope: true,
             templateUrl: "app/components/preferenceNav/preferenceNav.html",
             link: function(scope, iElement, iAttrs) {
-              console.log()
                 var maxWidth = 130,minwidth = 40, spanWidth = maxWidth + 30;
                 scope.items = preferencenav.getPreferences();
                 var preferencenavsChanged = $rootScope.$on('preferencenavsChanged', function () {

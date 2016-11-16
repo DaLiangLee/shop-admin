@@ -18,12 +18,14 @@
   /** @ngInject */
   function cbUploadFile($http, $timeout,$log, cbDialog, configuration, webSiteApi, webSiteVerification){
     var API = webSiteApi.WEB_SITE_API['upload'];
-    var URL = 'http://192.168.2.11:9090/shopservice/admin';
-    // var URL = configuration.getAPIConfig();
+
+    //var URL = 'http://192.168.2.11:9090/shopservice/admin';
+    var URL = configuration.getAPIConfig();
+
     var DEFAULT_DATA = {
       uid: 0,
       fileNumLimit: 1,
-      fileSizeLimit: 3 + "mb"
+      fileSizeLimit: 3 + "MB"
     };
     return {
       restrict: "A",
@@ -37,23 +39,24 @@
          * @type {any}
          */
         var config = angular.extend({}, DEFAULT_DATA, scope.config || {});
+        config.fileNumLimit = iAttrs.valueMax * 1 || 1;
         var fileType = webSiteVerification.UPLOAD[iAttrs.cbUploadFile || 'images'];
         var uploadType = iAttrs.uploadType || "";
         var getUploadParam = {};
         var upload;
-
         function handler(childScope) {
           var results = [];
-          var start;
+          var start, add;
           var isClear = true;
           var isError = false;
           childScope.title = iAttrs.title;
           childScope.getUploadParam = getUploadParam;
           childScope.items = [];
-          childScope.postInit = true;
+          childScope.postInit = false;
           $log.debug(upload);
           $timeout(function () {
             start = angular.element('#startUpload');
+            add = angular.element('#addFiles');
             upload = new plupload.Uploader({
               runtimes : 'flash,silverlight,html4',
               browse_button : 'addFiles',
@@ -65,8 +68,8 @@
                 ]
               },
               container: document.getElementById('j-upload-container'),
-              flash_swf_url : '/assets/upload/Moxie.swf',
-              silverlight_xap_url : '/assets/upload/Moxie.xap',
+              flash_swf_url : configuration.getStatic() + '/assets/upload/Moxie.swf',
+              silverlight_xap_url : configuration.getStatic() + '/assets/upload/Moxie.xap',
               url : 'http://oss.aliyuncs.com'
             });
             upload.init();
@@ -78,17 +81,27 @@
                   setUploadParam(up, config.uid++);
                 }
               });
-              childScope.postInit = false;
+              childScope.postInit = true;
+              scope.$apply();
             });
             upload.bind('BeforeUpload', function (up, file) {
               $log.debug('init');
               setUploadParam(up, config.uid++);
             });
             upload.bind('FilesAdded', function (up, files) {
-              /*if(_this.upload.total.queued >= _this.option.fileNumLimit){
-                add.addClass('upload-disabled').prop('disabled', true);
-              }*/
-              start.removeClass('upload-disabled').prop('disabled', false);
+              childScope.danger = "";
+              if(upload.total.queued >= config.fileNumLimit){
+                console.log(config.fileNumLimit, upload.total.queued);
+                var div = add.siblings('div');
+                add.addClass('upload-disabled').prop('disabled', true).css({
+                  'position': 'absolute',
+                  'left': div.css('left'),
+                  'top': div.css('top'),
+                  'z-index': 10
+                });
+
+              }
+              start.removeClass('upload-disabled').prop('disabled', false).click();
               angular.forEach(files, function (file) {
                 childScope.items.push({
                   id: file.id,
@@ -97,6 +110,7 @@
                   size: plupload.formatSize(file.size)
                 });
               });
+              config.uid++;
               scope.$apply();
             });
 
@@ -107,7 +121,7 @@
               scope.$apply();
             });
             upload.bind('FileUploaded', function (up, file, info) {
-              $log.debug('FileUploaded', info.status);
+              $log.debug('FileUploaded', info.status, file);
               if (info.status == 200) {
                 results.push({
                   id: file.id,
@@ -129,7 +143,11 @@
               scope.$apply();
             });
             upload.bind('Error', function (up, err) {
-              $log.debug('Error', err.status);
+              console.log('Error', err);
+              console.log('Error', err.status);
+              if(err.code == -600){
+                childScope.danger = "文件超过"+config.fileSizeLimit+"，请重新选择上传";
+              }
               if(err.status == 403){
                 childScope.danger = "上传过期，请从新选择文件上传";
                 $timeout(function () {
@@ -155,7 +173,7 @@
         function setUploadParam(up, id){
           var new_multipart_params = {
             'uid': id,
-            'key': getUploadParam.dir,
+            'key': getUploadParam.dir + config.uid,
             'expire': getUploadParam.expire,
             'policy': getUploadParam.policy,
             'OSSAccessKeyId': getUploadParam.accessid,

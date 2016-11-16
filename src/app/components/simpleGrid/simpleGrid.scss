@@ -25,3 +25,10 @@
     margin-left: 6px;
   }
 }
+
+.table > tbody > tr > td,.table > tfoot > tr > td{
+  vertical-align: middle;
+}
+.simple-grid-tfoot-batch-warp{
+  padding-top: 20px;
+}

@@ -5,6 +5,7 @@
   'use strict';
   angular
     .module('shopApp')
+
     .directive('simpleGridChangeStatus', simpleGridChangeStatus);
 
 

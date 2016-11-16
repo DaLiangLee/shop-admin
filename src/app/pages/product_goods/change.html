@@ -2,24 +2,29 @@
     <div class="container-fluid">
         <h2>添加编辑商品</h2>
         <hr>
+        <form class="form-horizontal" autocomplete="off" name="goods" role="form" novalidate  ng-if="vm.isLoadData">
         <h3>基本信息</h3>
         <hr>
-        <form class="form-horizontal f-cb" name="goods" role="form" novalidate>
           <div class="form-group" ng-if="vm.isChange">
             <label class="col-sm-2 control-label">商品编码：</label>
             <div class="col-sm-7">
-              <p class="h4" ng-bind="vm.dataBase.id"></p>
+              <p class="h4" ng-bind="vm.dataBase.productid"></p>
             </div>
           </div>
           <div class="form-group">
             <label for="goods_add_name" class="col-sm-2 control-label"><span class="text-danger">*</span> 商品名称：</label>
             <div class="col-sm-7">
-              <input type="text" id="goods_add_name" class="form-control" ng-model="vm.dataBase.productname" placeholder="填写商品名称" cb-placeholder  ng-required="true">
+              <div ng-if="!vm.isChange">
+              <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder  ng-required="true">
+              <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">请输入长度为40以内的商品名称</div>
+              </div>
+              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.productname"></p>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 商品类目：</label>
             <div class="col-sm-7">
+              <div ng-if="!vm.isChange">
               <div class="row">
                 <div class="col-sm-6">
                   <input type="hidden" name="hao" ng-required="true" ng-model="vm.selectModel.select">
@@ -30,18 +35,25 @@
                   <div simple-select config="vm.selectModel2.config" store="vm.selectModel2.store" select="vm.selectModel2.select" select-pre-handler="vm.selectModel2.handler(data)"></div>
                 </div>
               </div>
+              <p class="text-warning" ng-if="!vm.dataBase.cateid">选择商品类目</p>
+              </div>
+              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.productcategory"></p>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 品牌：</label>
             <div class="col-sm-7">
-              <div ng-if="!vm.isAttributesetLoad">
-                <p class="h4">请先选择商品类目</p>
+              <div ng-if="!vm.isChange">
+                <div ng-if="!vm.isAttributesetLoad">
+                  <p class="h4">请先选择商品类目</p>
+                </div>
+                <div ng-if="vm.isAttributesetLoad">
+                  <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.brandid">
+                  <div simple-select config="vm.brandModel.config" store="vm.brandModel.store" select="vm.brandModel.select" select-pre-handler="vm.brandModel.handler(data)"></div>
+                  <p class="text-warning" ng-if="!vm.dataBase.brandid">品牌是必选的</p>
+                </div>
               </div>
-              <div ng-if="vm.isAttributesetLoad">
-                <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.brandid">
-                <div simple-select config="vm.brandModel.config" store="vm.brandModel.store" select="vm.brandModel.select" select-pre-handler="vm.brandModel.handler(data)"></div>
-              </div>
+              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.brandname"></p>
             </div>
           </div>
           <div class="form-group">
@@ -67,32 +79,36 @@
               <div ng-if="!vm.isAttributesetLoad">
                 <p class="h4">请先选择商品类目</p>
               </div>
-              <div class="row form-group" ng-repeat="item in vm.dataBase.$size" id="{{item.$$hashKey}}"  ng-if="vm.isAttributesetLoad">
-                <div class="col-sm-5">
-                  <div simple-select config="item.sku.$config" store="item.sku.$store" select="item.sku.select" select-pre-handler="item.sku.$handler(data)"></div>
-                </div>
-                <div class="col-sm-5">
-                  <input type="hidden" name="{{item.$$hashKey}}" ng-required="true" ng-model="item.skuid.select">
-                  <div simple-select config="item.skuid.$config" store="item.skuid.$store" select="item.skuid.select" select-pre-handler="item.skuid.$handler(data)"></div>
-                </div>
-                <div class="col-sm-2">
-                  <button ng-click="vm.changeSize($index,item.sku.select, true)"  ng-if="vm.skuDataLength">+</button>
+              <div class="row form-group" ng-repeat="item in vm.dataBase.$size" id="{{item.$$hashKey}}" ng-if="vm.isAttributesetLoad">
+                <div class="clearfix">
+                  <div class="col-sm-5">
+                    <div simple-select config="item.sku.$config" store="item.sku.$store" select="item.sku.select" select-pre-handler="item.sku.$handler(data)"></div>
+                  </div>
+                  <div class="col-sm-5">
+                    <div simple-select config="item.skuid.$config" store="item.skuid.$store" select="item.skuid.select" select-pre-handler="item.skuid.$handler(data)"></div>
+                  </div>
+                  <div class="col-sm-2">
+                    <button ng-click="vm.changeSize($index,item.sku.select, true)"  ng-if="vm.skuDataLength">+</button>
 
-                  <button ng-click="vm.changeSize($index,item.sku.select, false)" ng-if="vm.dataBase.$size.length > 1">-</button>
+                    <button ng-click="vm.changeSize($index,item.sku.select, false)" ng-if="vm.dataBase.$size.length > 1">-</button>
+                  </div>
                 </div>
+                <p class="text-warning col-sm-12" ng-if="!item.skuid.select">规格对应属性值一定要选</p>
               </div>
             </div>
           </div>
-          <div class="form-group">
+          <!--<div class="form-group">
             <label class="col-sm-2 control-label">官方指导价（￥）：</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" ng-model="vm.dataBase.officialprice" name="officialprice" placeholder="" cb-money-range  placeholder="填写官方指导价" cb-placeholder>
+              <input type="text" class="form-control" ng-model="vm.dataBase.officialprice" name="officialprice" placeholder="请输入0-9,999,999元的价格，可以保留2位小数到分" cb-placeholder cb-money-range />
+              <div class="alert alert-danger" ng-if="goods.officialprice.$dirty && goods.officialprice.$error.cbMoneyRange">请输入0-9,999,999元的价格，可以保留2位小数到分</div>
             </div>
-          </div>
+          </div>-->
           <div class="form-group">
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 零售价（￥）：</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" ng-model="vm.dataBase.saleprice" name="saleprice" placeholder="填写零售价" cb-money-range cb-placeholder  ng-required="true">
+              <input type="text" class="form-control" ng-model="vm.dataBase.saleprice" name="saleprice" placeholder="请输入0-9,999,999元的价格，可以保留2位小数到分" cb-money-range cb-placeholder  ng-required="true">
+              <div class="alert alert-danger" ng-if="goods.saleprice.$dirty && goods.saleprice.$error.cbMoneyRange">请输入0-9,999,999元的价格，可以保留2位小数到分</div>
             </div>
           </div>
           <div class="form-group">
@@ -104,7 +120,8 @@
           <div class="form-group">
             <label for="" class="col-sm-2 control-label"><span class="text-danger">*</span> 目前库存：</label>
             <div class="col-sm-7">
-              <input type="text" class="form-control" ng-model="vm.dataBase.stock" name="stock" placeholder="" cb-number-range="" range-enabled="false" placeholder="填写目前商品库存" cb-placeholder ng-required="true">
+              <input type="text" class="form-control" ng-model="vm.dataBase.stock" name="stock" cb-number-range="" data-value-min="0" data-value-max="99999999" placeholder="请输入0-99,999,999以内的整数" cb-placeholder ng-required="true">
+              <div class="alert alert-danger" ng-if="goods.stock.$dirty && goods.stock.$error.cbNumberRange">请输入0-99,999,999以内的整数</div>
             </div>
           </div>
           <div class="form-group">
@@ -114,34 +131,34 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">商品图片：</label>
+            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 商品图片：</label>
             <div class="col-sm-7">
               <div class="col-md-3" ng-repeat="item in vm.dataBase.mainphoto track by $index" ng-if="vm.dataBase.mainphoto.length">
-                <div>
-                  <img ng-src="{{item}}" alt="">
+                <div style="width: 300px; height:300px; overflow: hidden">
+                  <img ng-src="{{item}}?x-oss-process=image/resize,w_300" style="vertical-align: middle;" alt="" class="img-thumbnail">
                 </div>
                 <div>
                   <a target="_blank" ng-href="{{item}}">下载</a>
                   <button ng-click="vm.removePhotos($index)">删除</button>
-                  <button cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">重新上传</button>
+                  <button cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase" data-value-max="1" upload-item="vm.uploadHandler(data, $index)">重新上传</button>
                 </div>
               </div>
               <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
                 <div>
-                  您还没有图片
+                  <p class="text-warning">必须要传一张商品图片</p>
                 </div>
                 <div>
-                  <button cb-upload-file="images" title="商品图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">商品图片上传</button>
+                  <button cb-upload-file="images" title="商品图片上传" data-upload-type="storeCase" data-value-max="1" upload-item="vm.uploadHandler(data)">商品图片上传</button>
                 </div>
               </div>
             </div>
           </div>
-        </form>
         <h3>适用车型</h3>
         <hr>
         <button>选择车型</button>
         <div class="text-center">
           <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>
         </div>
+        </form>
     </div>
 </div>

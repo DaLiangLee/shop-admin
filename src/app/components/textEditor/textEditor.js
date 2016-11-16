@@ -66,6 +66,17 @@
           count: getCount(scope.editor),
           placeholder: iAttrs.placeholder
         };
+        scope.$watch('editor', function (value) {
+          if(value){
+            scope.options = {
+              editor: value,
+              total: maxLength,
+              count: getCount(value),
+              placeholder: iAttrs.placeholder
+            };
+          }
+        });
+
         function getCount(value){
           var blank = 0;
           /**

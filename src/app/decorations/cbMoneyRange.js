@@ -66,10 +66,8 @@
               }
 
             }
-
           }else{
             console.log(value);
-
             value = parseFloat(value, 10).toFixed(2);
           }
           iController.$setViewValue(value);

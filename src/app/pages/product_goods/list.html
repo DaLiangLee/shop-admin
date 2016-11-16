@@ -11,3 +11,11 @@
   </div>
 </div>
 <div ng-if="vm.message.loadingState" cb-message-tips config="vm.message.config"></div>
+<script type="text/ng-template" id="cbSkuvaluesTipsPopoverTemplate.html">
+  <h3 class="h3 text-center">商品规格</h3>
+  <ul class="list-unstyled" style="padding: 0;">
+    <li bindonce ng-repeat="item in templateData">
+      <span bo-text="item.skuname"></span>：<span bo-text="item.items[0].skuvalue"></span>
+    </li>
+  </ul>
+</script>

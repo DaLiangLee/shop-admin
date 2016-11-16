@@ -20,7 +20,6 @@
             })
         }
         function init(scope, iElement, type) {
-
             scope.$watch("templateId", function (value) {
 
                 if (value) {

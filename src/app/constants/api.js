@@ -15,8 +15,8 @@
                       "type": "POST"
                     },
                     "list": {
-                      "url": "/product/goods/attrsku",
-                      "type": "POST"
+                      "url": "/product/goods",
+                      "type": "GET"
                     },
                     "add": {
                       "url": "/product/goods/add",

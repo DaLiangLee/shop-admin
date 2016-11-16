@@ -7,9 +7,11 @@
     .module('shopApp')
     .directive('simpleGridRemoveItem', simpleGridRemoveItem);
 
-
   /** @ngInject */
   function simpleGridRemoveItem($log, cbDialog){
+    var REMOVE_MESSAGE = {
+
+    };
     /**
      * 删除逻辑
      *  1，填写删除的对应字段 simpleGridRemoveItem
@@ -26,6 +28,7 @@
      *      删除id添加到transmit当中
      *      剩下的项添加到leftover数组当中
      *  6，通过removeItem返回数据，供控制器后续操作
+     *  7，type 根据这个来获取提示信息
      */
     return {
       restrict: "A",
