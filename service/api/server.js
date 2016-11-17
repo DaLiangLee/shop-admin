@@ -1,5 +1,5 @@
 /**
- * Created by Administrator on 2016/11/11.
+ * Created by Administrator on 2016/11/17.
  */
 const express = require('express');
 const router = express.Router();
@@ -9,39 +9,18 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
-  'productid': '@id',
-  'skuid': '@id',
-  'cateid': '@natural(10, 30)',
-  'brandid': 1,
-  'parentid': 2,
-  'mainphoto|1': [
-    "@image('240x130', '#FF6600', '#FFF', 'png')",
-    "@image('200x100', '#4A7BF7', '#FFF', 'png')",
-    "@image('500x300', '#50B347', '#FFF', 'png')",
-    "@image('300x700', '#4A7BF7', '#FFF', 'png')",
-    "@image('100x200', '#894FC4', '#FFF', 'png')",
-    "@image('1000x800', '#c7254e', '#FFF', 'png')",
-    "@image('1000x300', '#cccccc', '#FFF', 'png')"
-  ],
+  'serverid': '@id',
   'status|0-1': 0,
-  'productname': '@ctitle(10, 40)',
-  'catename': '@ctitle(3, 10)',
-  'cnname': '@ctitle(2, 7)',
+  'servername': '@ctitle(10, 40)',
+  'servertype': '@ctitle(3, 10)',
   'motorbrand': [],
-  'unit|1': [
-    "个", "桶", "毫米", "公斤", "件"
-  ],
-  'officialprice': '@float(0, 99999, 2)',
-  'saleprice': '@float(0, 99999, 2)',
-  'stock': '@float(0, 99999999, 0)',
-  'skuvalues': [{"guid":0,"id":12,"items":[{"guid":0,"id":57,"skuid":12,"skuvalue":"汽机油","sort":1}],"skuname":"机油类别","skutype":"text","sort":0},{"guid":0,"id":13,"items":[{"guid":0,"id":63,"skuid":13,"skuvalue":"半合成机油","sort":2}],"skuname":"机油分类","skutype":"text","sort":0},{"guid":0,"id":14,"items":[{"guid":0,"id":69,"skuid":14,"skuvalue":"5W-30","sort":1}],"skuname":"机油粘度","skutype":"text","sort":0}],
   'abstracts': '@ctitle(1, 30)'
 }, 100);
 
 /**
  * 获取商品管理列表
  */
-router.get('/product/goods', function (req, res, next) {
+router.get('/product/server', function (req, res, next) {
   var data = goods.data.concat([]);
   var page = req.query.page || 1;
   var total = data ? data.length : 0;

@@ -16,7 +16,7 @@
         item: "=",
         itemHandler: "&"
       },
-      link: function(scope, iElement, iAttrs){
+      link: function(scope, iElement){
         function handler(childScope){
           childScope.item = angular.copy(scope.item);
           childScope.interceptor = false;

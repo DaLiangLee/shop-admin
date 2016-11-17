@@ -14,7 +14,6 @@
         var preferenceList = [];
         return {
             setPreferences: function(toState, toParams) {
-              console.log(toState, toParams);
                 var preference = toState;
                 preference.params = toParams;
                 preferenceList.push(preference);

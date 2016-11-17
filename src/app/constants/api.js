@@ -10,10 +10,6 @@
             WEB_SITE_API: {
                 "product": {
                   "goods": {
-                    "get": {
-                      "url": "/product/goods/attrsku",
-                      "type": "POST"
-                    },
                     "list": {
                       "url": "/product/goods",
                       "type": "GET"
@@ -64,6 +60,48 @@
                     },
                     "category": {
                       "url": "/product/goods/category",
+                      "type": "POST"
+                    }
+                  },
+                  "server": {
+                    "list": {
+                      "url": "/product/server",
+                      "type": "GET"
+                    },
+                    "remove": {
+                      "url": "/product/server/remove",
+                      "type": "POST"
+                    },
+                    "putup": {
+                      "url": "/product/server/putup",
+                      "type": "POST"
+                    },
+                    "putdown": {
+                      "url": "/product/server/putdown",
+                      "type": "POST"
+                    },
+                    "edit": {
+                      "url": "/product/server/edit",
+                      "type": "POST"
+                    },
+                    "price": {
+                      "url": "/product/server/price",
+                      "type": "POST"
+                    },
+                    "export": {
+                      "url": "/product/server/export",
+                      "type": "POST"
+                    },
+                    "import": {
+                      "url": "/product/server/import",
+                      "type": "POST"
+                    },
+                    "attrsku": {
+                      "url": "/product/server/attrsku",
+                      "type": "POST"
+                    },
+                    "category": {
+                      "url": "/product/server/category",
                       "type": "POST"
                     }
                   }

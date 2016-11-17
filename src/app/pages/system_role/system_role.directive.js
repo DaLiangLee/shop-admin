@@ -270,11 +270,9 @@
                              * 如果有权限数据 就设置
                              */
                             copyDiff = getEditorData(item.items);
-                            console.log(copyDiff);
 
                             addData();
                             treeService.setCheckState(childScope.item.items, copyDiff, "id");
-                            console.log(childScope.item.items);
 
                         }else{
                             /**

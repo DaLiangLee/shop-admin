@@ -49,7 +49,7 @@
             scope: {},
             link: function(scope, iElement, iAttrs){
                 var length = iAttrs.textLength || cbTruncateTextConfig.textLength;
-                var value = iElement.html();
+                var value = iAttrs.cbTruncateText || iElement.html();
                 var copy = iAttrs.copyText || false;
                 var trigger = iAttrs.trigger || "mouseenter",
                     tooltipPlacement = iAttrs.tooltipPlacement || "top";

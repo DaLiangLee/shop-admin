@@ -41,31 +41,31 @@ html,body,
 }
 
 .viewFramework-body.viewFramework-topbar-hide {
-  top: 0px
+  top: 0;
 }
 
 .viewFramework-body.viewFramework-topbar-hide .viewFramework-sidebar {
-  top: 0px
+  top: 0;
 }
 
 
 .viewFramework-main {
   width: auto;
   position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
+  top: 40px;
+  left: 0;
+  bottom: 0;
+  right: 0;
   overflow: hidden;
   background: #FFF
 }
 .viewFramework-main-body {
   position: absolute;
   width: auto;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   overflow: hidden;
   overflow-y: auto;
   -o-transition: all 0.2s ease;
@@ -75,17 +75,17 @@ html,body,
 }
 
 .viewFramework-sidebar-mini .viewFramework-main {
-  left: 50px
+  left: 50px;
 }
 
 .viewFramework-sidebar-full .viewFramework-main {
-  left: 240px
+  left: 240px;
 }
 
 
 
 .g-view{
-  padding: 80px 40px 40px;
+  padding: 40px;
 }
 
 
@@ -104,7 +104,7 @@ html,body,
 
 @-webkit-keyframes viewFrameworkFadeIn {
   0% {
-    opacity: 0
+    opacity: 0;
   }
 
   100% {
@@ -114,11 +114,11 @@ html,body,
 
 @keyframes viewFrameworkFadeIn {
   0% {
-    opacity: 0
+    opacity: 0;
   }
 
   100% {
-    opacity: 1
+    opacity: 1;
   }
 }
 

@@ -64,7 +64,6 @@
         scope.config = angular.extend({}, simpleSelectConfig, scope.config);
         var value = scope.config.selectDirective.value;
         var name = scope.config.selectDirective.name;
-        var iamge = scope.config.selectDirective.images;
         var store = scope.$watch('store', function (value) {
           scope.items = value || [];
           if(scope.items.length){
