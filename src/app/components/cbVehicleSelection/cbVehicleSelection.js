@@ -38,8 +38,14 @@
        var vehicleBrandsClasses = {};
   }
 
+  /**
+   * data         获取交互数据
+   * config       配置信息
+   * selectItem   返回数据
+   */
+
   /** @ngInject */
-  function cbVehicleSelection() {
+  function cbVehicleSelection(vehicleSelection) {
     return {
       restrict: "A",
       scope: {
@@ -47,8 +53,20 @@
         config: "=",
         selectItem: '&'
       },
-      link: function (scope, iElement, iAttrs, iController) {
+      templateUrl: "app/components/cbVehicleSelection/cbVehicleSelection.html",
+      link: function (scope, iElement, iAttrs) {
+        scope.search = {
+          text: "",
+          handler: function(){
+            if(!this.text){
+              return ;
+            }
+            /*vehicleSelection.query(this.text).then(function () {
 
+            });*/
+            console.log(this);
+          }
+        }
       }
     }
   }

@@ -260,63 +260,6 @@
               showPageGoto: true
             }
           }
-        },
-        DEFAULT_SEARCH: {
-          "config": {
-            "searchID": 'product-goods',
-            "searchDirective": [
-              {
-                'label': "商品编码",
-                'type': 'text',
-                'searchText': "name",
-                'placeholder': '商品编码'
-              },
-              {
-                'label': "商品名称",
-                'type': 'text',
-                'searchText': "account",
-                'placeholder': '商品名称'
-              },
-              {
-                'label': "上架状态",
-                'type': 'select',
-                'searchText': "role",
-                'placeholder': '上架状态',
-                'list': [
-                  {
-                    id: -1,
-                    name: "全部"
-                  },
-                  {
-                    id: 0,
-                    name: "下架"
-                  },
-                  {
-                    id: 1,
-                    name: "上架"
-                  },
-                  {
-                    id: 2,
-                    name: "禁用"
-                  }
-                ]
-              },
-              {
-                'label': "商品类型",
-                'type': 'select2',
-                'searchText': "role",
-                'placeholder': '上架状态',
-                'list': []
-              },
-              {
-                'label': "品牌",
-                'type': 'select',
-                'searchText': "role",
-                'placeholder': '品牌',
-                'list': []
-              }
-            ]
-          }
         }
       }
     }

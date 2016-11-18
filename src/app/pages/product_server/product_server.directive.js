@@ -17,7 +17,6 @@
         itemHandler: "&"
       },
       link: function(scope, iElement, iAttrs){
-        var goodsQueue = [];
         /**
          * 获取可添加的列表项
          * @param data      搜索的结果
@@ -72,7 +71,6 @@
                   vm.gridModel.itemList.push(item);
                 }
               });
-              console.log(vm.gridModel.itemList);
 
               vm.gridModel.paginationinfo = {
                 page: page * 1,
@@ -90,8 +88,46 @@
           childScope.items = angular.copy(scope.item);
           childScope.interceptor = false;
           childScope.items = [];
+          productGoods.category().then(function (data) {
+            console.log(data.data.data);
+            childScope.selectModel.search1.store = data.data.data;
+            childScope.selectModel.search1.select = childScope.selectModel.search1.store[0].id;
+            childScope.selectModel.search2.store = childScope.selectModel.search1.store[0].items;
+            childScope.selectModel.search2.select = childScope.selectModel.search2.store[0].id;
+          });
+          console.log(productServerChangeConfig);
+          /**
+           * 在数组里面根据value参数获取数组中对应的数据
+           * @param arr      数据
+           * @param id       查询id
+           * @param value    比较的字段 默认id
+           */
+          var getData = function (arr, id, value) {
+            value = value || 'id';
+            return _.find(arr, function (item) {
+              return item[value] == id;
+            });
+          };
+          /**
+           * 搜索配置
+           */
+          childScope.selectModel = {
+            search1: {
+              handler: function (data) {
+                console.log(getData(this.store, data));
+                childScope.selectModel.search2.store = getData(this.store, data).items;
 
+              }
+            },
+            search2: {
 
+            },
+            searchText: "",
+            searchHandler: function () {
+              console.log(this.search1.select, this.search2.select, this.searchText);
+
+            }
+          };
 
           /**
            * 表格配置

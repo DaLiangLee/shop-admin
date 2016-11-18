@@ -24,164 +24,167 @@
   'use strict';
   angular
     .module('shopApp')
-    .constant('simpleSelectConfig', simpleSelectConfig())
     .directive('simpleSelect', simpleSelect);
 
   /** @ngInject */
-  function simpleSelectConfig(){
-    return {
-      multiple: false,
-      once: false,
-      searchPrefer: false,   //是否开启列表搜索
-      searchParams: "id",        //绑定的搜索字段
-      searchPreHandler: undefined,    //搜索绑定事件供服务端搜索使用
-      selectDirective: {
-        cssProperty: "",
-        name: "name",
-        value: "id",
-        images: ""
-      }  // 显示信息
-    }
-  }
-
-  /** @ngInject */
-  function simpleSelect($document, $filter, simpleSelectConfig) {
+  function simpleSelect($document, $filter) {
     return {
       restrict: "A",
       scope: {
         store: "=",
-        config: "=",
         select: "=",
-        selectPreHandler: "&"
+        selectHandler: "&",
+        searchHandler: "&"
       },
       templateUrl: "app/components/simpleSelect/simpleSelect.html",
-      link: function(scope, iElement){
-        var results = [];
-        var select = null;
-        var once = false;
-        scope.selectText = "-- 请点击选择 --";
-        // config 配置默认参数
-        scope.config = angular.extend({}, simpleSelectConfig, scope.config);
-        var value = scope.config.selectDirective.value;
-        var name = scope.config.selectDirective.name;
+      link: function(scope, iElement, iAttrs){
+        /**
+         * 设置配置参数
+         * @type config
+         *  multiple: boolean,    是否多选
+         *  once: boolean,        是否只点击一此
+         *  value: string,        指定返回的值的字段
+         *  name: string          指定显示列表的字段
+         *
+         */
+        scope.config = {
+          multiple: angular.isDefined(iAttrs.multiple),
+          once: angular.isDefined(iAttrs.once),
+          value: getOptions()[0],
+          name: getOptions()[1],
+          iamge: getOptions()[2]
+        };
+        /**
+         * 获取字段参数  格式 options="value,name,image"
+         * @returns {*}
+         */
+        function getOptions(){
+          if(!/^[a-z0-9]+\,([a-z0-9]+$)|([a-z0-9]+\,[a-z0-9]+$)/.test(iAttrs.simpleSelect)){
+            return ["id", "name", "image"];
+          }
+          return iAttrs.simpleSelect.split(",");
+        }
+
+        var value = scope.config.value;
+        var name = scope.config.name;
+        var image = scope.config.image;
+        /**
+         * 值相关操作
+         * @type {{once: boolean, image: string, text: string, toggle: toggle}}
+         */
+        scope.choose = {
+          once: false,
+          image: "",
+          text: "-- 请点击选择 --",
+          toggle: function ($event) {
+            $event.stopPropagation();
+            if(this.once){   // 如果是只能点击一次关闭了，就不能再点击了
+              return ;
+            }
+            if(!this.focus){   // 打开下拉选项
+              if(scope.config.multiple){
+                scope.choose.text = "-- 连续点击可以选择多项 --";
+              }
+            }else{    // 关闭下拉选项
+
+            }
+            this.focus = !this.focus;
+          },
+          hide: function () {
+            this.focus = false;
+            scope.search.params = "";
+            if(scope.config.multiple){
+              this.text = "-- 请点击选择 --";
+            }
+          }
+        };
+        /**
+         * 筛选操作
+         * @type {{}}
+         */
+        var search = {};
+        search[name] = undefined;
+        scope.search = {
+          prefer: false,
+          params: undefined,
+          handler: function (data) {
+            search[name] = data || undefined;
+            scope.items = $filter('filter')(scope.store, search);
+            scope.searchHandler({data: data});
+          }
+        };
+        /**
+         * 监听数据变化
+         * @type {(()=>void)|*|(())}
+         */
         var store = scope.$watch('store', function (value) {
           scope.items = value || [];
           if(scope.items.length){
-            scope.selectText = getText(scope.items, scope.select);
+            scope.search.prefer = value.length > 6;
+            if(!scope.select){
+              scope.choose.text = "-- 请点击选择 --";
+            }else{
+              if(scope.config.multiple){
+                scope.choose.text = "-- 请点击选择 --";
+              }else{
+                scope.choose.text = getValue(scope.items, scope.select).text;
+                scope.choose.image = getValue(scope.items, scope.select).image;
+              }
+            }
           }
         });
-        function getText(items, select){
+
+        function getValue(items, select){
           if(!select){
             return "-- 请点击选择 --";
           }
           var item = _.remove(angular.copy(items), function(item){
-            return item[value] == select;
+            return item[scope.config.value] == select;
           });
-          if(item.length == items.length && scope.config.once){
-            bindonce();
-          }
-          return item.length ? item[0][name] : "-- 请点击选择 --";
+          return {
+            text: item.length && item[0][name] ? item[0][name] : "-- 请点击选择 --",
+            image: item.length && item[0][image] ? item[0][image] : ""
+          };
         }
-        scope.select = angular.copy(scope.select);
-        var search = {};
-        search[scope.config.searchParams] = undefined;
-        scope.search = {
-          params: undefined,
-          handler: function (data) {
-            if(angular.isFunction(scope.searchPreHandler)){
-              scope.searchPreHandler({data: data});
-            }else{
-              search[scope.config.searchParams] = data || undefined;
-              scope.items = $filter('filter')(scope.store, search);
-            }
-          }
-        };
-
         scope.setClass = function (item) {
           if(!item){
             return ;
           }
           if(scope.config.multiple){
-            angular.forEach(scope.select, function (n) {
-              n = n*1;
-            });
-            return _.indexOf(scope.select, item[value]) > -1
+            return  _.findIndex(scope.select, function (key) {
+                return key == item[value];
+              }) > -1;
           }else{
             return item[value] == scope.select;
           }
         };
-        iElement.on('click', function (event) {
-          if(once){
-            return ;
-          }
-          event.stopPropagation();
-          scope.search.params = "";
-          $document.find('.k-simple-select .select').hide();
-          $document.find('.k-simple-select').removeClass('focus');
-          select = angular.element(this).find('.select');
-          if (!angular.element(this).data('toggle')){
-            scope.config.multiple && scope.selectText.html("-- 连续点击可以选择多项 --");
-          }
-          angular.element(this).data('toggle', true);
-          select.toggle();
-          angular.element(this).find('.k-simple-select').toggleClass('focus');
-          scope.$apply();
-        });
-
-        $document.on('click', function () {
-          if(select){
-            hide();
-            scope.$apply();
-          }
-        });
-        function hide(){
-          select.hide();
-          $document.find('.k-simple-select').removeClass('focus');
-          scope.config.multiple && scope.selectText.html("-- 请点击选择 --");
-          scope.search.params = "";
-        }
-
-        iElement.on('click', '.select', function (event) {
-          event.stopPropagation();
-        });
-        iElement.on('click', '.select li', function (event) {
-          event.stopPropagation();
-          var _this = angular.element(this);
-          var value = _this.data('value');
-          if(scope.config.multiple){
-            _this.toggleClass('active');
-            if(_.indexOf(results, value) < 0){
-              results.push(angular.element(this).data('value'));
+        scope.options = function ($event, item) {
+          $event.stopPropagation();
+          if(scope.config.multiple){   // 多选
+            var index = _.findIndex(scope.select, function (key) {
+              return key == item[value];
+            });
+            if(index < 0){
+              scope.select.push(item[value]);
             }else{
-              _.remove(results, function(n) {
-                return n == value;
-              });
+              scope.select.splice(index, 1);
             }
-            results.sort();
-            scope.select = results.length ? results : undefined;
-            scope.selectPreHandler({
-              data: results
-            });
-          }else{
-            _this.addClass('active').siblings().removeClass('active');
-            scope.select = value;
-            scope.selectText = _this.text();
-            scope.selectPreHandler({
-              data: value
-            });
-            bindonce();
-            hide();
+          }else{   //单选
+            scope.select = item[value];
+            scope.choose.text = item[name];
+            scope.choose.image = item[image];
+            scope.choose.once = scope.config.once;
+            scope.choose.hide();
           }
-          scope.$apply();
+          scope.selectHandler({
+            data: scope.select
+          });
+        };
+        $document.on('click', function () {
+          scope.$apply(function(){
+            scope.choose.hide();
+          });
         });
-        // 只能选择一次
-        function bindonce(){
-          if(scope.config.once){
-            once = true;
-            angular.element(iElement).find('.value').css('background-color', "#ccc");
-            angular.element(iElement).find('.caret').hide();
-          }
-        }
         /**
          * 销毁操作
          */

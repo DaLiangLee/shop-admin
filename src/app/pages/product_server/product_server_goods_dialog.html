@@ -37,8 +37,21 @@
       <div class="text-right">
         商品总计（￥）：<span class="h4" ng-bind="totalprice | moneyFilter"></span>
       </div>
+      <div class="row">
+        <div class="col-lg-3 col-sm-6">
+          <div simple-select="id,catename" store="selectModel.search1.store" select="selectModel.search1.select" select-handler="selectModel.search1.handler(data)"></div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div simple-select="id,catename" store="selectModel.search2.store" select="selectModel.search2.select"></div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="selectModel.searchText" ng-maxlength="40" placeholder="请输入关键字" cb-placeholder>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <button type="button" class="btn btn-success" ng-click="selectModel.searchHandler()">查找</button>
+        </div>
+      </div>
       <div style="max-height:300px; overflow-y: auto;">
-        <div simple-search config="gridSearch.config" search-pre-handler="gridSearch.handler(data)"></div>
         <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList" pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config" page-changed="gridModel.pageChanged(page)"></div>
       </div>
     </form>

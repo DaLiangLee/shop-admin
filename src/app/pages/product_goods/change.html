@@ -28,11 +28,11 @@
               <div class="row">
                 <div class="col-sm-6">
                   <input type="hidden" name="hao" ng-required="true" ng-model="vm.selectModel.select">
-                  <div simple-select config="vm.selectModel.config" store="vm.selectModel.store" select="vm.selectModel.select" select-pre-handler="vm.selectModel.handler(data)"></div>
+                  <div simple-select="id,catename" store="vm.selectModel.store" select="vm.selectModel.select" select-handler="vm.selectModel.handler(data)"></div>
                 </div>
                 <div class="col-sm-6">
                   <input type="hidden" name="hao2" ng-required="true" ng-model="vm.dataBase.cateid">
-                  <div simple-select config="vm.selectModel2.config" store="vm.selectModel2.store" select="vm.selectModel2.select" select-pre-handler="vm.selectModel2.handler(data)"></div>
+                  <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.selectModel2.select" select-handler="vm.selectModel2.handler(data)"></div>
                 </div>
               </div>
               <p class="text-warning" ng-if="!vm.dataBase.cateid">选择商品类目</p>
@@ -49,7 +49,7 @@
                 </div>
                 <div ng-if="vm.isAttributesetLoad">
                   <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.brandid">
-                  <div simple-select config="vm.brandModel.config" store="vm.brandModel.store" select="vm.brandModel.select" select-pre-handler="vm.brandModel.handler(data)"></div>
+                  <div simple-select="id,cnname" store="vm.brandModel.store" select="vm.dataBase.brandid"></div>
                   <p class="text-warning" ng-if="!vm.dataBase.brandid">品牌是必选的</p>
                 </div>
               </div>
@@ -82,10 +82,10 @@
               <div class="row form-group" ng-repeat="item in vm.dataBase.$size" id="{{item.$$hashKey}}" ng-if="vm.isAttributesetLoad">
                 <div class="clearfix">
                   <div class="col-sm-5">
-                    <div simple-select config="item.sku.$config" store="item.sku.$store" select="item.sku.select" select-pre-handler="item.sku.$handler(data)"></div>
+                    <div simple-select="id,skuname" once store="item.sku.$store" select="item.sku.select" select-handler="item.sku.$handler(data)"></div>
                   </div>
                   <div class="col-sm-5">
-                    <div simple-select config="item.skuid.$config" store="item.skuid.$store" select="item.skuid.select" select-pre-handler="item.skuid.$handler(data)"></div>
+                    <div simple-select="id,skuvalue" store="item.skuid.$store" select="item.skuid.select" select-handler="item.skuid.$handler(data)"></div>
                   </div>
                   <div class="col-sm-2">
                     <button ng-click="vm.changeSize($index,item.sku.select, true)"  ng-if="vm.skuDataLength">+</button>

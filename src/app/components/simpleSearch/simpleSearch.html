@@ -7,20 +7,13 @@
 
                     <input type="text" class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-if="item.type === 'text'" ng-model="searchParams[item.searchText]" placeholder="{{item.placeholder}}">
 
-                    <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-if="item.type === 'select'" ng-model="searchParams[item.searchText]" ng-options="m.id as m.name for m in item.list">
-                        <option value="">-- {{item.placeholder ? item.placeholder : '请选择'}} --</option>
-                    </select>
-
+                    <div  ng-if="item.type === 'select'" simple-select="{{item.value}},{{item.name}}" store="item.list" select="searchParams[item.searchText]"></div>
                     <div class="row" ng-if="item.type === 'select2'">
                         <div class="col-sm-6">
-                            <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-model="searchParams[item.data[0].searchText]" ng-options="m.id as m.name for m in item.data[0].list">
-                                <option value="">-- {{item.data[0].placeholder ? item.data[0].placeholder : '请选择'}} --</option>
-                            </select>
+                            <div simple-select="{{item.data[0].value}},{{item.data[0].name}}" store="item.data[0].list" select="searchParams[item.data[0].searchText]"></div>
                         </div>
                         <div class="col-sm-6">
-                            <select class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-model="searchParams[item.data[1].searchText]" ng-options="m.id as m.name for m in item.data[1].list">
-                                <option value="">-- {{item.data[1].placeholder ? item.data[1].placeholder : '请选择'}} --</option>
-                            </select>
+                          <div simple-select="{{item.data[1].value}},{{item.data[1].name}}" store="item.data[1].list" select="searchParams[item.data[1].searchText]"></div>
                         </div>
                     </div>
                     <div class="row" ng-if="item.type === 'date'">

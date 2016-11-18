@@ -196,7 +196,7 @@
     }
 
     /** @ngInject */
-    function ProductServerChangeController($state, $log, $timeout, productGoods) {
+    function ProductServerChangeController($state, $log, $timeout, productGoods, productServerConfig) {
       var vm = this;
       var currentParams = $state.params;
       vm.attributeset = [];

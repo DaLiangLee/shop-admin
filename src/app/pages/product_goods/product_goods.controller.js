@@ -10,7 +10,7 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($timeout, $state, $log, productGoods, productGoodsConfig, permissions, preferencenav) {
+  function ProductGoodsListController($window, $state, $log, productGoods, productGoodsConfig) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -177,7 +177,7 @@
             /**
              * 这段代码处理skuvalues值的问题，请勿修改 start
              */
-            item.skuvalues = window.eval(item.skuvalues);
+            item.skuvalues = $window.eval(item.skuvalues);
             /**
              * 这段代码处理skuvalues值的问题，请勿修改 end
              */
@@ -200,7 +200,7 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $log, $timeout, productGoods, preferencenav) {
+  function ProductGoodsChangeController($state, $log, $window, productGoods, preferencenav) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -279,15 +279,6 @@
       });
     };
     vm.brandModel = {
-      config: {
-        searchPrefer: true,
-        searchParams: "cnname",
-        selectDirective: {
-          name: "cnname",
-          value: "id",
-          iamges: "logo"
-        }
-      },
       select: undefined,
       store: [],
       handler: function (data) {
@@ -296,14 +287,6 @@
       }
     };
     vm.selectModel2 = {
-      config: {
-        searchPrefer: true,
-        searchParams: "catename",
-        selectDirective: {
-          name: "catename",
-          value: "id"
-        }
-      },
       select: undefined,
       store: [],
       handler: function (data) {
@@ -340,14 +323,6 @@
     }
 
     vm.selectModel = {
-      config: {
-        searchPrefer: true,
-        searchParams: "catename",
-        selectDirective: {
-          name: "catename",
-          value: "id"
-        }
-      },
       select: undefined,
       store: [],
       handler: function (data) {
@@ -378,16 +353,6 @@
     function createSkuItem(arr, sku, skuid) {
       var result = {
         sku: {
-          $config: {
-            once: true,
-            searchPrefer: true,
-            hideSelect: true,
-            searchParams: "skuname",
-            selectDirective: {
-              name: "skuname",
-              value: "id"
-            }
-          },
           select: sku,
           $store: arr || [],
           $handler: function (data) {
@@ -402,14 +367,6 @@
           }
         },
         skuid: {
-          $config: {
-            searchPrefer: true,
-            searchParams: "skuvalue",
-            selectDirective: {
-              name: "skuvalue",
-              value: "id"
-            }
-          },
           select: skuid,
           $store: getSkuidItems(arr, sku),
           $handler: function (data) {

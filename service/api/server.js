@@ -137,3 +137,4 @@ router.post('/product/goods/putdown', function (req, res, next) {
     "status": "0"
   });
 });
+module.exports = router;

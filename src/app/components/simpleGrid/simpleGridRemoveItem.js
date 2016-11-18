@@ -9,9 +9,7 @@
 
   /** @ngInject */
   function simpleGridRemoveItem($log, cbDialog){
-    var REMOVE_MESSAGE = {
-
-    };
+    // REMOVE_MESSAGE
     /**
      * 删除逻辑
      *  1，填写删除的对应字段 simpleGridRemoveItem

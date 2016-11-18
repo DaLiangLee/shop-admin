@@ -1,25 +1,26 @@
-<div class="k-simple-select">
-  <div class="value">
-    <p class="text" ng-bind="selectText"></p>
+<div class="k-simple-select" ng-click="choose.toggle($event)">
+  <!--ng-mouseleave="choose.hide()"-->
+  <div class="value" ng-class="{'disable': choose.once, 'focus': choose.focus}">
+    <p class="text"><img class="img" ng-src="{{choose.image}}" alt="" ng-if="choose.image"><span ng-bind="choose.text"></span></p>
     <span class="caret"></span>
   </div>
-  <div class="select" ng-if="config.searchPrefer">
-    <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" placeholder="请输入搜索内容" cb-placeholder>
-    <ul class="list-unstyled" ng-if="items.length">
-      <li ng-repeat="item in items" class="{{config.selectDirective.cssProperty}}" ng-class="{'active': setClass(item)}" data-value="{{item[config.selectDirective.value]}}">
-        <img ng-src="{{item[config.selectDirective.images]}}" alt="" ng-if="config.selectDirective.images" class="images">
-        <span ng-bind="item[config.selectDirective.name]"></span>
+  <div class="select" ng-if="choose.focus" ng-click="$event.stopPropagation()">
+    <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" ng-if="search.prefer" placeholder="请输入搜索内容" cb-placeholder>
+    <ul class="list-unstyled" ng-if="items.length" dg-click="options($event, item)" selector="li">
+      <li ng-repeat="item in items" ng-class="{'active': setClass(item)}">
+        <img ng-src="{{item[config.images]}}" alt="" ng-if="config.images" class="images">
+        <span ng-bind="item[config.name]"></span>
       </li>
     </ul>
     <div class="none-info" ng-if="!items.length && !search.params">暂无数据</div>
     <div class="none-info" ng-if="!items.length && search.params">没有搜索到关于的<span ng-bind="search.params"></span>信息</div>
   </div>
-  <div class="select" ng-if="!config.searchPrefer">
+  <!--<div class="select" ng-if="!config.searchPrefer">
     <ul class="list-unstyled">
-      <li ng-repeat="item in items track by $index" class="{{config.selectDirective.cssProperty}}" ng-class="{'active': setClass(item)}" data-value="{{item[config.selectDirective.value]}}">
-        <img ng-src="{{item[config.selectDirective.images]}}" alt="" ng-if="config.selectDirective.images" class="images">
-        <span ng-bind="item[config.selectDirective.name]"></span>
+      <li ng-repeat="item in items track by $index" ng-class="{'active': setClass(item)}" ng-click="options(item)">
+        <img ng-src="{{item[config.images]}}" alt="" ng-if="config.images" class="images">
+        <span ng-bind="item[config.name]"></span>
       </li>
     </ul>
-  </div>
+  </div>-->
 </div>
