@@ -9,7 +9,7 @@
         .controller('ProductPackageListController', ProductPackageListController);
 
     /** @ngInject */
-    function ProductPackageListController() {
+    function ProductPackageListController(cbAlert) {
       var vm = this;
       vm.list = [
         {"id":"1","group":"A","name":"AC Schnitzer","logo":"/motor/logo/A_AC-Schnitzer.png"},
@@ -40,9 +40,44 @@
       vm.select1 = "1";
       vm.select2 = ['1'];
       vm.test = function () {
-        console.log(1);
+        cbAlert.alert({
+          'title': '我是标题',
+          'text': '我是说明文字',
+          'type': 'input',
+          'inputPlaceholder': "呵呵",
+          'showCancelButton': true,
+          'showLoaderOnConfirm': true,
+          'allowOutsideClick': true
+        }, function(isConfirm){
+          console.log(isConfirm);
 
+          setTimeout(function(){
+            cbAlert.success('成功', 'success');
+          }, 30000)
+        });
       }
+      vm.test1 = function () {
+        cbAlert.success('成功', 'success');
+      }
+
+      /*cbAlert.alert({
+        'title': '我是标题',
+        'text': '我是说明文字',
+        'type': 'input',
+        'inputPlaceholder': "呵呵",
+        'showCancelButton': false,
+        'delay': 3000
+      }, function(isConfirm){
+
+        if(isConfirm){
+          cbAlert.success('成功', '提交成功');
+        }else{
+          cbAlert.error('失败', '提交失败');
+        }
+      });*/
+/*      setTimeout(function(){
+        cbAlert.close();
+      }, 5000);*/
     }
 
 })();
