@@ -1,4 +1,3 @@
-<script src="../../../../../frontest/src/app/commodity/commodity.controller.js"></script>
 <div class="viewFramework-vehicle-selection">
     <div>
       车款：<input type="text" name="" id="" ng-model="search.text"> <button ng-click="search.handler()">查找</button>
@@ -14,36 +13,57 @@
         <li><input type="checkbox" name="">客车</li>
       </ul>
     </div>
-    <div>
-      <div class="name">
-        <dl>
-          <dt><span>A</span></dt>
-          <dd><label><input type="checkbox" name="">MPV</label> <span ng-click="">展开</span></dd>
-          <dd></dd>
-          <dd></dd>
-          <dd></dd>
-          <dd></dd>
-          <dd></dd>
-        </dl>
+    <div class="clearfix">
+      <div class="list brands">
+        <input type="text" placeholder="搜索首字母" ng-model="searchText" ng-change="firsthandle(searchText)">
+        <div class="items">
+          <dl ng-repeat="(title,items) in brandList">
+            <dt><span ng-bind="title">A</span></dt>
+            <dd ng-repeat="item in items"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.brand"></span></label> <span ng-click="selecthandle(id)" ng-if="!item.checked">展开</span></dd>
+          </dl>
+        </div>
       </div>
-      <div class="brands">
-
+      <div class="list series">
+        <input type="text" placeholder="搜索关键词" ng-model="seriesText">
+        <div class="items">
+          <ul>
+            <li ng-repeat="item in seriesList | filter: {series: seriesText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.series"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="models">
-
+      <div class="list years">
+        <input type="text" placeholder="搜索关键词" ng-model="yearText">
+        <div class="items">
+          <ul>
+            <li ng-repeat="item in yearList | filter: {year: yearText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.year"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="brands">
-
+      <div class="list outputs">
+        <input type="text" placeholder="搜索关键词" ng-model="outputText">
+        <div class="items">
+          <ul>
+            <li ng-repeat="item in outputList | filter: {output: outputText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.output"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="models">
-
+      <div class="list models">
+        <input type="text" placeholder="搜索关键词" ng-model="modelText">
+        <div class="items">
+          <ul>
+            <li ng-repeat="item in modelList | filter: {model: modelText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.model"></span></label></li>
+          </ul>
+        </div>
       </div>
     </div>
     <div>
       <h2>已选择适用车型：</h2>
       <hr>
       <div>
-
+        <div ng-repeat="item in list">
+          <span ng-bind="item.text"></span>
+          <span class="close">&times;</span>
+        </div>
       </div>
     </div>
 </div>

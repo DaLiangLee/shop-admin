@@ -1,0 +1,11 @@
+.viewFramework-vehicle-selection{
+  .list{
+    float: left;
+    width: 20%;
+
+  }
+  .list .items{
+    height: 300px;
+    overflow-y: auto;
+  }
+}

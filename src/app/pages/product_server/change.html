@@ -6,17 +6,17 @@
         <h3>基本信息</h3>
         <hr>
           <div class="form-group" ng-if="vm.isChange">
-            <label class="col-sm-2 control-label">商品编码：</label>
+            <label class="col-sm-2 control-label">项目ID：</label>
             <div class="col-sm-7">
-              <p class="h4" ng-bind="vm.dataBase.productid"></p>
+              <p class="h4" ng-bind="vm.dataBase.serverid"></p>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 项目类型：</label>
             <div class="col-sm-7">
               <div ng-if="!vm.isChange">
-                  <input type="hidden" name="hao" ng-required="true" ng-model="vm.selectModel.select">
-                  <div simple-select config="vm.selectModel.config" store="vm.selectModel.store" select="vm.selectModel.select" select-pre-handler="vm.selectModel.handler(data)"></div>
+                  <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.cateid">
+                  <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.cateid" select-handler="vm.selectModel.handler(data)"></div>
               </div>
               <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.productcategory"></p>
             </div>
@@ -25,13 +25,13 @@
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 项目名称：</label>
             <div class="col-sm-7">
               <div ng-if="!vm.isChange">
-                <div ng-if="!vm.isAttributesetLoad">
+                <div ng-if="!vm.dataBase.cateid">
                   <p class="h4">请先选择项目类型</p>
                 </div>
-                <div ng-if="vm.isAttributesetLoad">
-                  <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.brandid">
-                  <div simple-select config="vm.brandModel.config" store="vm.brandModel.store" select="vm.brandModel.select" select-pre-handler="vm.brandModel.handler(data)"></div>
-                  <p class="text-warning" ng-if="!vm.dataBase.brandid">品牌是必选的</p>
+                <div ng-if="vm.dataBase.cateid">
+                  <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.servercateid">
+                  <div  simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.servercateid" select-handler="vm.selectModel2.handler(data)"></div>
+                  <p class="text-warning" ng-if="!vm.dataBase.servercateid">项目名称是必选的</p>
                 </div>
               </div>
               <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.brandname"></p>
@@ -43,22 +43,7 @@
               <div ng-if="!vm.isAttributesetLoad">
                 <p class="h4">请先选择项目名称</p>
               </div>
-              <div class="row form-group" ng-repeat="item in vm.dataBase.$size" id="{{item.$$hashKey}}" ng-if="vm.isAttributesetLoad">
-                <div class="clearfix">
-                  <div class="col-sm-5">
-                    <div simple-select config="item.sku.$config" store="item.sku.$store" select="item.sku.select" select-pre-handler="item.sku.$handler(data)"></div>
-                  </div>
-                  <div class="col-sm-5">
-                    <div simple-select config="item.skuid.$config" store="item.skuid.$store" select="item.skuid.select" select-pre-handler="item.skuid.$handler(data)"></div>
-                  </div>
-                  <div class="col-sm-2">
-                    <button ng-click="vm.changeSize($index,item.sku.select, true)"  ng-if="vm.skuDataLength">+</button>
-
-                    <button ng-click="vm.changeSize($index,item.sku.select, false)" ng-if="vm.dataBase.$size.length > 1">-</button>
-                  </div>
-                </div>
-                <p class="text-warning col-sm-12" ng-if="!item.skuid.select">规格对应属性值一定要选</p>
-              </div>
+              <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.skuvalues" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
             </div>
           </div>
           <div class="form-group">

@@ -119,6 +119,7 @@
          */
         var store = scope.$watch('store', function (value) {
           scope.items = value || [];
+          scope.choose.once = scope.items.length === 1 && angular.isDefined(iAttrs.once) && scope.select;
           if(scope.items.length){
             scope.search.prefer = value.length > 6;
             if(!scope.select){

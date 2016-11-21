@@ -57,7 +57,7 @@
                 skuid: data.removal[0].skuid
               }
             }
-            productGoods.remove(item).then(function (data) {
+            productServer.remove(item).then(function (data) {
               var message = "";
               if (_.isObject(data.data.data) || _.isEmpty(data.data.data)) {
                 message = "删除成功";
@@ -94,7 +94,7 @@
                 skuid: data.removal[0].skuid
               }
             }
-            productGoods[data.type](item).then(function (data) {
+            productServer[data.type](item).then(function (data) {
               vm.message.loadingState = true;
               var message = "";
               if (_.isEmpty(data.data.data)) {
@@ -173,6 +173,15 @@
             vm.gridModel.itemList = [];
             angular.forEach(data.data.data, function (item) {
               /**
+               * 处理motorbrandids和logos
+               */
+              if(angular.isDefined(item.logos)){
+                item.logos = item.logos.split('#');
+              }
+              if(angular.isDefined(item.motorbrandids)){
+                item.motorbrandids = item.motorbrandids.split('#');
+              }
+              /**
                * 这段代码处理skuvalues值的问题，请勿修改 start
                */
               item.skuvalues = window.eval(item.skuvalues);
@@ -181,6 +190,8 @@
                */
               vm.gridModel.itemList.push(item);
             });
+            console.log(vm.gridModel.itemList);
+
             vm.gridModel.paginationinfo = {
               page: currentParams.page * 1,
               pageSize: 10,
@@ -196,21 +207,21 @@
     }
 
     /** @ngInject */
-    function ProductServerChangeController($state, $log, $timeout, productGoods, productServerConfig) {
+    function ProductServerChangeController($state, $log, $timeout, productServer, productServerConfig, cbAlert) {
       var vm = this;
       var currentParams = $state.params;
       vm.attributeset = [];
-      var skuData = [];
-      var removeskuData = [];
-      var skuQueue = [];
       vm.isLoadData = false;
       vm.isAttributesetLoad = false;
       //  是否是编辑
       vm.isChange = !_.isEmpty(currentParams);
       $log.debug('isChange', vm.isChange);
+      productServer.category().then(function (data) {
+        vm.selectModel.store = data.data.data;
+      });
       vm.dataBase = {};
       if (vm.isChange) {
-        productGoods.edit(currentParams).then(function (data) {
+        productServer.edit(currentParams).then(function (data) {
           var edit = data.data.data;
           //vm.selectModel.select = data.data.data.parentid;
           //vm.dataBase.cateid = data.data.data.cateid;
@@ -228,11 +239,119 @@
       } else {
         vm.isLoadData = true;
         vm.dataBase.status = 1;
-        vm.dataBase.$unit = '请先选择商品类目';
-        vm.dataBase.$size = [];
         vm.dataBase.mainphoto = [];
       }
+      vm.selectModel = {
+        store: [],
+        handler: function (data) {
+          console.log('selectModel', data);
+          setTwoCategorie(data);
+          vm.isAttributesetLoad = false;
+        }
+      };
+      vm.selectModel2 = {
+        store: [],
+        handler: function (data) {
+          console.log('selectModel2', data);
+          console.log(getData(vm.selectModel2.store, data));
+          vm.dataBase.cateid = data;
+          getAttrsku(data);
+        }
+      };
+      vm.sizeModel = {
+        store: [],
+        data: [],
+        every: undefined,
+        handler: function (data) {
+          console.log('sizeModel', data);
+          this.every = data.every;
+          this.data = data.data;
+        }
+      };
+      /**
+       * 在数组里面根据value参数获取数组中对应的数据
+       * @param arr      数据
+       * @param id       查询id
+       * @param value    比较的字段 默认id
+       */
+      var getData = function (arr, id, value) {
+        value = value || 'id';
+        return _.find(arr, function (item) {
+          return item[value] == id;
+        });
+      };
+      function setTwoCategorie(id){
+        if (!!getData(vm.selectModel.store, id)) {
+          vm.selectModel2.store = getData(vm.selectModel.store, id).items;
+        } else {
+          vm.selectModel2.store = [];
+        }
+        console.log(vm.selectModel2.store);
 
+      }
+      function getAttrsku(id, callback){
+        console.log(id);
+
+        productServer.attrsku({id: id}).then(function (data) {
+          vm.sizeModel.store = angular.copy(data.data.data.sku);
+          vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
+          if(!callback){
+            vm.isAttributesetLoad = true;
+          }
+          callback && callback(data.data.data);
+        });
+      }
+
+
+      /**
+       * 格式化 vm.dataBase数据供提交使用
+       * @param data
+       * @returns {{}}
+       */
+      function getDataBase(data) {
+        var result = angular.extend({}, data);
+        result.abstracts = encodeURI(result.abstracts);
+        angular.forEach(result.skuvalues, function (item) {
+          item.skuname = encodeURI(item.skuname);
+          item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
+        });
+        /**
+         * 防止后台数据出bug
+         */
+        result.skuvalues.push({});
+        if(vm.isChange){
+          delete result.parentid;
+          delete result.brandname;
+          delete result.productcategory;
+        }
+        return result;
+      }
+
+      /**
+       * 表单提交
+       */
+      vm.submit = function () {
+        console.log(vm.dataBase);
+
+        if(!vm.sizeModel.data.length){
+          cbAlert.alert('您要至少选择一项规格');
+          return ;
+        }
+        if(!vm.sizeModel.every){
+          cbAlert.alert('规格对应的值没有选择');
+          return ;
+        }
+        // productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
+        //   console.log('save', data);
+        //   if(data.data.status == 0){
+        //     goto();
+        //   }
+        // });
+      };
+      function goto() {
+        preferencenav.removePreference($state.current);
+        $state.go('product.goods.list', {'page': 1});
+      }
       /**
        * 消息提醒
        */

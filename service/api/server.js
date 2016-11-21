@@ -9,11 +9,12 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
-  'serverid': '@id',
+  'guid': '@id',
   'status|0-1': 0,
-  'servername': '@ctitle(10, 40)',
-  'servertype': '@ctitle(3, 10)',
-  'motorbrand': [],
+  'catename': '@ctitle(3, 10)',
+  'servername': '@ctitle(3, 10)',
+  'motorbrandids': '1#2#3#4',
+  'logos': 'http://dummyimage.com/100x100#http://dummyimage.com/100x100#http://dummyimage.com/100x100#http://dummyimage.com/100x100',
   'abstracts': '@ctitle(1, 30)'
 }, 100);
 
@@ -36,7 +37,7 @@ router.get('/product/server', function (req, res, next) {
 /**
  * 获取获取商品类目
  */
-router.post('/product/goods/category', function (req, res, next) {
+router.post('/product/server/category', function (req, res, next) {
   console.log(req.query);
   res.json({
     "data": GOODS_ATTRSKU.category,
@@ -47,7 +48,7 @@ router.post('/product/goods/category', function (req, res, next) {
 /**
  * 获得与商品类目关联的品牌、属性集及其SKU
  */
-router.post('/product/goods/attrsku', function (req, res, next) {
+router.post('/product/server/attrsku', function (req, res, next) {
   res.json({
     "data": {
       "sku": GOODS_ATTRSKU.sku,
@@ -61,7 +62,7 @@ router.post('/product/goods/attrsku', function (req, res, next) {
 /**
  * 保存商品
  */
-router.post('/product/goods/save', function (req, res, next) {
+router.post('/product/server/save', function (req, res, next) {
   console.log(req.query);
   res.json({
     "data": "",

@@ -77,7 +77,7 @@
     /**
      * 初始化
      */
-    AlertDialog.prototype.init = function(options, callback, status){
+    AlertDialog.prototype.init = function(){
       this.isAnimation = supportCss3('animation');
       this.timer = null;
       this.$modal = null;
@@ -328,18 +328,6 @@
       angular.element('body').removeClass('stop-scrolling');
       clearTimeout(this.timer);
     };
-    /**
-     * 启用确认和取消按钮
-     * Enable confirm and cancel buttons
-     */
-    AlertDialog.prototype.enableButtons = function(event) {
-      var modal = this.$modal;
-      var $confirmButton = modal.querySelector('button.confirm');
-      var $cancelButton = modal.querySelector('button.cancel');
-      $confirmButton.disabled = false;
-      $cancelButton.disabled = false;
-    };
-
   /** @ngInject */
   function cbAlert($rootScope){
     return {

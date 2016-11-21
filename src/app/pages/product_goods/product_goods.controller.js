@@ -200,13 +200,10 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $log, $window, productGoods, preferencenav) {
+  function ProductGoodsChangeController($state, $log, $window, productGoods, preferencenav, cbAlert) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
-    var skuData = [];
-    var removeskuData = [];
-    var skuQueue = [];
     vm.isLoadData = false;
     vm.isAttributesetLoad = false;
     //  是否是编辑
@@ -220,14 +217,9 @@
     if (vm.isChange) {
       productGoods.edit(currentParams).then(function (data) {
         var edit = data.data.data;
-        //vm.selectModel.select = data.data.data.parentid;
-        //vm.dataBase.cateid = data.data.data.cateid;
-        //vm.dataBase.brandid = data.data.data.brandid;
         getAttrsku(data.data.data.cateid, function(data){
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
-          console.log(data);
-
           vm.dataBase.brandname = getBrandname(data.brand, edit.brandid);
         });
         vm.isAttributesetLoad = true;
@@ -237,7 +229,7 @@
       vm.isLoadData = true;
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
-      vm.dataBase.$size = [];
+      vm.dataBase.skuvalues = [];
       vm.dataBase.mainphoto = [];
     }
 
@@ -302,21 +294,14 @@
 
     function getAttrsku(id, callback){
       productGoods.attrsku({id: id}).then(function (data) {
-        console.log(data);
         vm.brandModel.store = data.data.data.brand;
         vm.skuData = angular.copy(data.data.data.sku);
+        vm.sizeModel.store = angular.copy(data.data.data.sku);
         vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
-        skuData = angular.copy(data.data.data.sku);
         if(!callback){
-          skuQueue = [];
           vm.dataBase.brandid = undefined;
           vm.brandModel.select = undefined;
-          vm.skuDataLength = skuData.length - 1;
-          vm.dataBase.$size = [];
-          vm.dataBase.$size.push(createSkuItem(vm.skuData));
           vm.isAttributesetLoad = true;
-        }else{
-          vm.skuDataLength = skuData.length;
         }
         callback && callback(data.data.data);
       });
@@ -332,7 +317,16 @@
         console.log(vm.selectModel2.store);
       }
     };
-
+    vm.sizeModel = {
+      store: [],
+      data: [],
+      every: undefined,
+      handler: function (data) {
+        console.log('sizeModel', data);
+        vm.sizeModel.every = data.every;
+        vm.sizeModel.data = data.data;
+      }
+    };
     function setTwoCategorie(id, cateid, unit){
       if (!!getData(vm.selectModel.store, id)) {
         vm.selectModel2.store = getData(vm.selectModel.store, id).items;
@@ -344,122 +338,12 @@
     }
 
     /**
-     * 创建一个sku项目
-     * @param arr    sku数据列表
-     * @param sku    sku属性id
-     * @param skuid  sku值id
-     * @returns {}   一个对象供view使用
-     */
-    function createSkuItem(arr, sku, skuid) {
-      var result = {
-        sku: {
-          select: sku,
-          $store: arr || [],
-          $handler: function (data) {
-            result.skuid.$store = getSkuidItems(arr, data);
-            skuQueue.push({
-              sku: data,
-              skuid: undefined
-            });
-            _.remove(vm.skuData, function (item) {
-              return item.id == data;
-            });
-          }
-        },
-        skuid: {
-          select: skuid,
-          $store: getSkuidItems(arr, sku),
-          $handler: function (data) {
-            result.skuid.select = data;
-            console.log('selectModel', data);
-            _.find(skuQueue, {sku: sku || result.sku.select}).skuid = data;
-          }
-        }
-      };
-      return result;
-    }
-    function getSkuidItems(arr, id){
-      return !!getData(arr, id) ? getData(arr, id).items : [];
-    }
-    /**
-     * 设置sku，编辑时候使用
-     */
-    function setSkuItem(list) {
-      var results = [];
-      angular.forEach(list, function (item) {
-        var sku = _.remove(vm.skuData, {id: item.id});
-        results.push(createSkuItem(sku, item.id, item.items[0].id));
-        skuQueue.push({
-          sku: item.id,
-          skuid: item.items[0].id
-        });
-      });
-      return results;
-    }
-
-    function getSkuItem(data) {
-      if(!angular.isArray(data)){
-        throw Error('需要接收一个array类型数据');
-      }
-      if(!data.length){
-        return [];
-      }
-      var results = [];
-      var temp = angular.copy(skuData);
-      angular.forEach(data, function (item) {
-        if(angular.isDefined(item.sku.select)){
-          var items = _.remove(temp, function(n){
-            return n.id == item.sku.select;
-          })[0];
-          _.remove(items.items, function(n){
-            return n.id != item.skuid.select;
-          });
-          results.push(items);
-        }
-      });
-      return results;
-    }
-
-    /**
-     * 规格添加删除
-     * @param index    当前列表索引
-     * @param id       当前项的sku
-     * @param status   当前是添加还是删除，true是添加，false是删除
-     */
-    vm.changeSize = function (index, id, status) {
-      if (status) {
-        // 添加
-        if(angular.isObject(skuQueue[index]) && angular.isUndefined(skuQueue[index].skuid)){
-          alert('请选择对应的规格值');
-          return ;
-        }
-        vm.dataBase.$size.splice(index + 1, 0, createSkuItem(vm.skuData));
-        vm.skuDataLength--;
-
-      } else {
-        // 删除
-        // 至少要保留一项
-        if (vm.dataBase.$size.length < 2) {
-          return;
-        }
-        vm.dataBase.$size.splice(index, 1);
-        vm.skuDataLength++;
-        _.remove(skuQueue, {sku: id});
-        if (vm.skuData.length < skuData.length) {
-          angular.isDefined(id) && vm.skuData.push(getData(skuData, id));
-        }
-      }
-    };
-
-    /**
      * 格式化 vm.dataBase数据供提交使用
      * @param data
      * @returns {{}}
      */
     function getDataBase(data) {
-      var result = angular.extend({
-        skuvalues: getSkuItem(vm.dataBase.$size)
-      }, data);
+      var result = angular.extend({}, data);
       result.productname = encodeURI(result.productname);
       result.abstracts = encodeURI(result.abstracts);
       angular.forEach(result.skuvalues, function (item) {
@@ -475,7 +359,11 @@
        * 防止后台数据出bug
        */
       result.skuvalues.push({});
-      vm.isChange && delete result.parentid;
+      if(vm.isChange){
+        delete result.parentid;
+        delete result.brandname;
+        delete result.productcategory;
+      }
       delete result.$unit;
       delete result.$size;
       return result;
@@ -489,13 +377,10 @@
     function setDataBase(data) {
       var result = angular.extend({}, data);
       result.mainphoto = [result.mainphoto];
-      result.$size = setSkuItem(window.eval(result.skuvalues));
-      vm.skuDataLength = vm.skuDataLength - result.$size.length;
       result.$unit = result.unit;
       vm.selectModel2.select = result.cateid;
       vm.brandModel.select = result.brandid;
       setTwoCategorie(result.parentid, result.cateid, result.unit);
-      delete result.skuvalues;
       delete result.unit;
       return result;
     }
@@ -518,16 +403,15 @@
     /**
      * 表单提交
      */
-    vm.submit = function (data) {
-      if(!skuQueue.length){
-        alert('您要至少选择一项规格');
+    vm.submit = function () {
+      if(!vm.sizeModel.data.length){
+        cbAlert.alert('您要至少选择一项规格');
         return ;
       }
-      if(!_.every(skuQueue, 'skuid')){
-        alert('规格对应的值没有选择');
+      if(!vm.sizeModel.every){
+        cbAlert.alert('规格对应的值没有选择');
         return ;
       }
-
       productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
         console.log('save', data);
         if(data.data.status == 0){

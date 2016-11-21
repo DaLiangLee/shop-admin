@@ -79,22 +79,7 @@
               <div ng-if="!vm.isAttributesetLoad">
                 <p class="h4">请先选择商品类目</p>
               </div>
-              <div class="row form-group" ng-repeat="item in vm.dataBase.$size" id="{{item.$$hashKey}}" ng-if="vm.isAttributesetLoad">
-                <div class="clearfix">
-                  <div class="col-sm-5">
-                    <div simple-select="id,skuname" once store="item.sku.$store" select="item.sku.select" select-handler="item.sku.$handler(data)"></div>
-                  </div>
-                  <div class="col-sm-5">
-                    <div simple-select="id,skuvalue" store="item.skuid.$store" select="item.skuid.select" select-handler="item.skuid.$handler(data)"></div>
-                  </div>
-                  <div class="col-sm-2">
-                    <button ng-click="vm.changeSize($index,item.sku.select, true)"  ng-if="vm.skuDataLength">+</button>
-
-                    <button ng-click="vm.changeSize($index,item.sku.select, false)" ng-if="vm.dataBase.$size.length > 1">-</button>
-                  </div>
-                </div>
-                <p class="text-warning col-sm-12" ng-if="!item.skuid.select">规格对应属性值一定要选</p>
-              </div>
+              <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.skuvalues" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
             </div>
           </div>
           <!--<div class="form-group">

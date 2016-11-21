@@ -1,0 +1,16 @@
+<div class="row form-group" ng-repeat="item in items">
+  <div class="clearfix">
+    <div class="col-sm-5">
+      <div simple-select="id,skuname" once store="item.sku.$store" select="item.sku.select" select-handler="item.sku.$handler(data)"></div>
+    </div>
+    <div class="col-sm-5">
+      <div simple-select="id,skuvalue" store="item.skuid.$store" select="item.skuid.select" select-handler="item.skuid.$handler(data)"></div>
+    </div>
+    <div class="col-sm-2">
+      <button ng-click="changeSize($index,item.sku.select, true)"  ng-if="skuDataLength">+</button>
+
+      <button ng-click="changeSize($index,item.sku.select, false)" ng-if="items.length > 1">-</button>
+    </div>
+  </div>
+  <p class="text-warning col-sm-12" ng-if="!item.skuid.select">规格对应属性值一定要选</p>
+</div>
