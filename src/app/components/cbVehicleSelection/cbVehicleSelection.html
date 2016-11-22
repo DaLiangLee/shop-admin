@@ -1,8 +1,8 @@
 <div class="viewFramework-vehicle-selection">
-    <div>
+    <!--<div>
       车款：<input type="text" name="" id="" ng-model="search.text"> <button ng-click="search.handler()">查找</button>
-    </div>
-    <div class="category">
+    </div>-->
+    <!--<div class="category">
       <h3>级别通用</h3>
       <ul>
         <li><input type="checkbox" name="">MPV</li>
@@ -12,46 +12,106 @@
         <li><input type="checkbox" name="">皮卡</li>
         <li><input type="checkbox" name="">客车</li>
       </ul>
-    </div>
+    </div>-->
     <div class="clearfix">
       <div class="list brands">
         <input type="text" placeholder="搜索首字母" ng-model="searchText" ng-change="firsthandle(searchText)">
         <div class="items">
-          <dl ng-repeat="(title,items) in brandList">
-            <dt><span ng-bind="title">A</span></dt>
-            <dd ng-repeat="item in items"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.brand"></span></label> <span ng-click="selecthandle(id)" ng-if="!item.checked">展开</span></dd>
-          </dl>
+          <ul>
+            <li ng-repeat="item in brandList" ng-class="{'open': item.open}">
+              <div ng-if="item.group">
+                <span ng-bind="item.group"></span>
+              </div>
+              <div ng-if="!item.group">
+                <input type="checkbox" name=""
+                       bf-check-indeterminate="item.$isIndeterminate()"
+                       ng-model="item.$checked"
+                       ng-checked="item.$checked"
+                       ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
+
+                <span ng-bind="item.brand"></span>
+
+                <span ng-click="selecthandle($index, item, 'series')">{{item.open ? '收起': '展开'}}</span>
+              </div>
+
+
+              </li>
+          </ul>
         </div>
       </div>
-      <div class="list series">
+      <div class="list series" ng-if="seriesList.length">
         <input type="text" placeholder="搜索关键词" ng-model="seriesText">
         <div class="items">
           <ul>
-            <li ng-repeat="item in seriesList | filter: {series: seriesText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.series"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+            <li ng-repeat="item in seriesList | filter: {series: seriesText}">
+              <input type="checkbox" name=""
+                     bf-check-indeterminate="item.$isIndeterminate()"
+                     ng-model="item.$checked"
+                     ng-checked="item.$checked"
+                     ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
+
+              <span ng-bind="item.series"></span>
+
+              <span ng-click="selecthandle($index, item, 'year')">展开</span>
+            </li>
           </ul>
         </div>
       </div>
-      <div class="list years">
+      <div class="list years" ng-if="yearList.length">
         <input type="text" placeholder="搜索关键词" ng-model="yearText">
         <div class="items">
           <ul>
-            <li ng-repeat="item in yearList | filter: {year: yearText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.year"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+            <li ng-repeat="item in yearList | filter: {year: yearText}">
+              <input type="checkbox" name=""
+                     bf-check-indeterminate="item.$isIndeterminate()"
+                     ng-model="item.$checked"
+                     ng-checked="item.$checked"
+                     ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
+
+              <span ng-bind="item.year"></span>
+
+              <span ng-click="selecthandle($index, item, 'output')">展开</span>
           </ul>
         </div>
       </div>
-      <div class="list outputs">
+      <div class="list outputs" ng-if="outputList.length">
         <input type="text" placeholder="搜索关键词" ng-model="outputText">
         <div class="items">
           <ul>
-            <li ng-repeat="item in outputList | filter: {output: outputText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.output"></span></label> <span ng-click="selecthandle(id, pid)" ng-if="!item.checked">展开</span></li>
+            <li ng-repeat="item in outputList | filter: {output: outputText}">
+              <input type="checkbox" name=""
+                 bf-check-indeterminate="item.$isIndeterminate()"
+                 ng-model="item.$checked"
+                 ng-checked="item.$checked"
+                 ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
+
+              <span ng-bind="item.output"></span>
+
+              <span ng-click="selecthandle($index, item, 'model')" ng-if="!item.checked">展开</span></li>
           </ul>
         </div>
       </div>
-      <div class="list models">
+      <div class="list models" ng-if="modelList.length">
         <input type="text" placeholder="搜索关键词" ng-model="modelText">
         <div class="items">
           <ul>
-            <li ng-repeat="item in modelList | filter: {model: modelText}"><label><input type="checkbox" name="" ng-model="item.checked"><span ng-bind="item.model"></span></label></li>
+            <li ng-repeat="item in modelList | filter: {model: modelText}">
+              <input type="checkbox" name=""
+                     bf-check-indeterminate="item.$isIndeterminate()"
+                     ng-model="item.$checked"
+                     ng-checked="item.$checked"
+                     ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
+
+              <span ng-bind="item.model"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="list models" ng-if="modelList.length">
+        <input type="text" placeholder="搜索关键词" ng-model="modelText">
+        <div class="items">
+          <ul>
+            <li ng-repeat="item in modelList | filter: {model: modelText}"><label><input type="checkbox" name="" ng-change="checkedHandle(item)" ng-model="item.checked"><span ng-bind="item.model"></span></label></li>
           </ul>
         </div>
       </div>

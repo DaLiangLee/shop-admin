@@ -224,6 +224,30 @@
                     "field": "_CASE",
                     "version": true
                   }
+                },
+                "vehicle": {
+                  "motor": {
+                    "brand": {
+                      "url": "/motor/brand",
+                      "type": "POST"
+                    },
+                    "series": {
+                      "url": "/motor/series",
+                      "type": "POST"
+                    },
+                    "year": {
+                      "url": "/motor/year",
+                      "type": "POST"
+                    },
+                    "output": {
+                      "url": "/motor/output",
+                      "type": "POST"
+                    },
+                    "model": {
+                      "url": "/motor/model",
+                      "type": "POST"
+                    }
+                  }
                 }
             }
         });

@@ -7,5 +7,9 @@
   .list .items{
     height: 300px;
     overflow-y: auto;
+    .open{
+      background-color: #ccc;
+      color: #fff;
+    }
   }
 }
