@@ -10,7 +10,7 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($window, $state, $log, productGoods, productGoodsConfig) {
+  function ProductGoodsListController($window, $state, $log, $$utils, productGoods, productGoodsConfig) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -178,6 +178,7 @@
              * 这段代码处理skuvalues值的问题，请勿修改 start
              */
             item.skuvalues = $window.eval(item.skuvalues);
+            item.motobrandids = $$utils.getMotorbrandids(item.motobrandids);
             /**
              * 这段代码处理skuvalues值的问题，请勿修改 end
              */
@@ -196,11 +197,10 @@
     }
     getList();
 
-
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $log, $window, productGoods, preferencenav, cbAlert) {
+  function ProductGoodsChangeController($state, $log, $$utils, productGoods, preferencenav, cbAlert) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -221,6 +221,7 @@
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
           vm.dataBase.brandname = getBrandname(data.brand, edit.brandid);
+          vm.dataBase.motobrandids = $$utils.getMotorbrandids(edit.motobrandids)
         });
         vm.isAttributesetLoad = true;
         vm.isLoadData = true;
@@ -356,9 +357,13 @@
        */
       result.officialprice = 0;
       /**
-       * 防止后台数据出bug
+       * 防止后台数据出bug start
        */
+      result.motobrandids.push({});
       result.skuvalues.push({});
+      /**
+       * 防止后台数据出bug end
+       */
       if(vm.isChange){
         delete result.parentid;
         delete result.brandname;

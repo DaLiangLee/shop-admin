@@ -47,7 +47,7 @@
    */
 
   /** @ngInject */
-  function cbVehicleSelection($filter, vehicleSelection, treeService) {
+  function cbVehicleSelection($filter,$timeout, vehicleSelection, treeService) {
     function getGroupList(arr){
       var results = [];
       angular.forEach(arr, function (item) {
@@ -132,6 +132,14 @@
       },
       templateUrl: "app/components/cbVehicleSelection/cbVehicleSelection.html",
       link: function (scope, iElement, iAttrs) {
+        var select = scope.$watch('select', function(value){
+          if(value){
+            //scope.list = getGroupList(value);
+            getSelect(value);
+
+          }
+        });
+
         /**
          * api调用步骤：
          * 1, 获取汽车品牌列表
@@ -153,13 +161,25 @@
          * 2，删除以后可以从新选择
          *
          */
-        console.log(scope);
 
         var list = [];
         vehicleSelection['brand']().then(function(data){
           list = data.data.data;
           scope.brandList = getGroupList(treeService.enhance(data.data.data));
         });
+
+
+        /**
+         * 获取对应的列表，来设置状态
+         * @param item
+         */
+        function getSelect(item){
+          if(!item.length){
+            return [];
+          }
+          //console.log('getSelect', item);
+        };
+
 
         scope.firsthandle = function (search) {
           if (/^[A-Z]{1}$/.test(search)) {
@@ -188,31 +208,10 @@
             scope.modelList = [];
           }
         };
-        var clear = {
-          'brand': function(){
-            scope.seriesList = [];
-            scope.yearList = [];
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'series': function(){
-            scope.yearList = [];
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'year': function(){
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'output': function(){
-            scope.modelList = [];
-          }
-        };
         var motorApi = {
           'series': function(type, item, index){
             vehicleSelection[type]({brandid: item.id}).then(function(data){
               scope.seriesList = getSeries(data.data.data, item);
-              console.log('seriesList', scope.seriesList);
               angular.forEach(scope.brandList, function (key) {
                   if(key.id == item.id){
                     key.items = getSeries(data.data.data, item);
@@ -226,7 +225,6 @@
           'year': function(type, item, index1, index2){
             vehicleSelection[type]({brandid: item.brandid, seriesid: item.id}).then(function(data){
               scope.yearList = getYear(data.data.data, item);
-              console.log('yearList', scope.yearList);
               angular.forEach(scope.brandList, function (key) {
                 if(key.id == item.brandid){
                   angular.forEach(key.items, function (value) {
@@ -238,14 +236,13 @@
                   return false;
                 }
               });
-              console.log(scope.brandList);
+              treeService.enhance(scope.brandList);
               scope.brandList[index1].items[index2].$isChecked() && scope.brandList[index1].items[index2].$setCheckState(true);
             });
           },
           'output': function(type, item, index1, index2, index3){
             return vehicleSelection[type]({brandid: item.brandid, seriesid: item.seriesid, year: item.year}).then(function(data){
               scope.outputList = getOutput(data.data.data, item);
-              console.log('outputList', scope.outputList);
               angular.forEach(scope.brandList, function (key) {
                 if(key.id == item.brandid){
                   angular.forEach(key.items, function (value) {
@@ -269,11 +266,9 @@
           'model': function(type, item, index1, index2, index3, index4){
             return vehicleSelection[type]({brandid: item.brandid, seriesid: item.seriesid, outputid: item.id, year: item.year}).then(function(data){
               scope.modelList = getModel(data.data.data, item);
-              console.log('modelList', scope.modelList);
               angular.forEach(scope.brandList, function (key) {
                 if(key.id == item.brandid){
                   angular.forEach(key.items, function (value) {
-                    console.log('model', value.id , item.seriesid);
                     if(value.id == item.seriesid){
                       angular.forEach(value.items, function (key1) {
                         if(key1.year == item.year){
@@ -330,8 +325,6 @@
             }
           }else if(type === 'output'){
             yearIndex = index;
-
-            console.log('output', scope.brandList[brandIndex].items);
             var tempArray = scope.brandList[brandIndex].items[seriesindex].items;
             var temporary = tempArray[yearIndex].items;
             _.isArray(tempArray) && _.forEach(tempArray, function (key) {
@@ -344,7 +337,11 @@
             }
           }else if(type === 'model'){
             outputIndex = index;
-            var temporary = scope.brandList[brandIndex].items[seriesindex].items[yearIndex].items[outputIndex].items;
+            var tempArray = scope.brandList[brandIndex].items[seriesindex].items[yearIndex].items;
+            var temporary = tempArray[outputIndex].items;
+            _.isArray(tempArray) && _.forEach(tempArray, function (key) {
+              key.$open = false;
+            });
             if(angular.isArray(temporary)){
               scope.modelList = temporary;
             }else{
@@ -358,69 +355,297 @@
          * @type {Array}
          */
         scope.list = [];
-
+        var isChecked = function(item, key, level){
+          return {
+            1: key.brandid == item.brandid,
+            2: key.brandid == item.brandid,
+            3: key.brandid == item.brandid && key.seriesid == item.seriesid,
+            4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
+            5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
+          }[level];
+        };
         function addList(item, checked, level){
-          var isChecked = function(key, level){
-            return {
-              1: key.brandid == item.brandid,
-              2: key.brandid == item.brandid,
-              3: key.brandid == item.brandid && key.seriesid == item.seriesid,
-              4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
-              5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
-            }[level];
-          };
-          var isChecked2 = function(key, level){
-            return {
-              1: key.brandid == item.brandid,
-              2: key.brandid == item.brandid && key.seriesid == item.seriesid,
-              3: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
-              4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid,
-              5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && key.modelid == item.modelid
-            }[level];
-          };
-          var isAdd = function(level){
-            return _.isObject(_.find(scope.list, function (key) {
-              return isChecked2(key, level);
-            }));
-          };
           if(checked){
-            if(isAdd(level)){
-              return ;
-            }
-            if(level === 1){
-              scope.list.push(item);
-            }else{
-              console.log(scope.list, item);
-              if(_.every(item.$parent.items, '$checked', true)){
-                _.remove(scope.list, function(key){
-                  return isChecked(key, level);
-                });
-                scope.list.push(item.$parent);
+            /**
+             * 防止点击也添加当前勾选的
+             */
+            console.log(item, checked, level, isAdd(item, level));
+            if (item.$parent && _.every(item.$parent.items, '$checked')) {
+              _.remove(scope.list, function (key) {
+                return isChecked(item, key, item.level);
+              });
+              if(level > 2){
+                $timeout(function () {
+                  addList(item.$parent, true, level - 1);
+                }, 1);
               }else{
-                scope.list.push(item);
+                scope.list.push(item.$parent);
               }
+            } else {
+              scope.list.push(item);
             }
+            scope.list = _.uniq(scope.list);
           }else{
-            if(level === 1){
-              _.remove(scope.list, function(key){
-                return isChecked(key, level);
-              });
-            }else{
-              _.remove(scope.list, function(key){
-                return isChecked(key, level);
-              });
-              var items = _.filter(item.$parent.items, function(key){
-                return key.$checked;
-              });
-              angular.forEach(items, function (key) {
-                scope.list.push(key);
-              });
-            }
-            console.log(item);
+            /**
+             * 先全部清除
+             */
+            _.remove(scope.list, function(key){
+              return isChecked(item, key, 1);
+            });
+            /**
+             * 显示列表
+             */
+            getRemoveList(item);
           }
         }
+        function getRemoveList(item){
+          var results = [];
+          function setList(item){
+            if(!item.$parent){
+              return ;
+            }
+            var items = _.filter(item.$parent.items, function(key){
+              return key.$checked;
+            });
+            _.forEach(items, function (key) {
+              results.push(key);
+            });
+            setList(item.$parent);
+          }
+          $timeout(function () {
+            var items2 = _.filter(results.reverse(), function(key){
+              return key.$checked;
+            });
+            _.forEach(items2, function (key) {
+              scope.list.push(key);
+            });
+          },1);
+          setList(item);
+        }
+
+
+
         treeService.checkStateChange = function(item, checked){
-          addList(item, checked, item.level);
+          //addList(item, checked, item.level);
+          switch (item.level){
+            case 1:
+              if(checked){
+                if(isAdd(item, item.level)){
+                  return ;
+                }
+                scope.list.push(item);
+              }else{
+                _.remove(scope.list, function(key){
+                  return isChecked(item, key, 1);
+                });
+              }
+              break;
+            case 2:
+              if(checked){
+                if(isAdd(item, item.level)){
+                  return ;
+                }
+                if(_.every(item.$parent.items, '$checked')){
+                  _.remove(scope.list, function(key){
+                    return isChecked(item, key, item.level);
+                  });
+                  scope.list.push(item.$parent);
+                }else{
+                  scope.list.push(item);
+                }
+              }else{
+                _.remove(scope.list, function(key){
+                  return isChecked(item, key, 1);
+                });
+                var items = _.filter(item.$parent.items, function(key){
+                  return key.$checked;
+                });
+                angular.forEach(items, function (key) {
+                  scope.list.push(key);
+                });
+              }
+              break;
+            case 3:
+              if(checked){
+                if(isAdd(item, item.level)){
+                  return ;
+                }
+                if(_.every(item.$parent.items, '$checked')){
+                  _.remove(scope.list, function(key){
+                    return isChecked(item, key, item.level);
+                  });
+                  $timeout(function(){
+                    if(_.every(item.$parent.$parent.items, '$checked')){
+                      _.remove(scope.list, function(key){
+                        return isChecked(item, key, item.level-1);
+                      });
+                      scope.list.push(item.$parent.$parent);
+                    }else{
+                      scope.list.push(item.$parent);
+                    }
+                  },1);
+                }else{
+                  scope.list.push(item);
+                }
+              }else{
+                _.remove(scope.list, function(key){
+                  return isChecked(item, key, 1);
+                });
+                var items = _.filter(item.$parent.items, function(key){
+                  return key.$checked;
+                });
+                $timeout(function(){
+                  var items2 = _.filter(item.$parent.$parent.items, function(key){
+                    return key.$checked;
+                  });
+                  angular.forEach(items2, function (key) {
+                    scope.list.push(key);
+                  });
+                  angular.forEach(items, function (key) {
+                    scope.list.push(key);
+                  });
+                },1);
+              }
+              break;
+            case 4:
+              if(checked){
+                if(isAdd(item, item.level)){
+                  return ;
+                }
+                if(_.every(item.$parent.items, '$checked')){
+                  _.remove(scope.list, function(key){
+                    return isChecked(item, key, item.level);
+                  });
+                  $timeout(function(){
+                    if(_.every(item.$parent.$parent.items, '$checked')){
+                      _.remove(scope.list, function(key){
+                        return isChecked(item, key, item.level-1);
+                      });
+                      $timeout(function(){
+                        if(_.every(item.$parent.$parent.$parent.items, '$checked')){
+                          _.remove(scope.list, function(key){
+                            return isChecked(item, key, item.level-2);
+                          });
+                          scope.list.push(item.$parent.$parent.$parent);
+                        }else{
+                          scope.list.push(item.$parent.$parent);
+                        }
+                      },1);
+                    }else{
+                      scope.list.push(item.$parent);
+                    }
+                  },1);
+                }else{
+                  scope.list.push(item);
+                }
+              }else{
+                _.remove(scope.list, function(key){
+                  return isChecked(item, key, 1);
+                });
+                var items = _.filter(item.$parent.items, function(key){
+                  return key.$checked;
+                });
+                $timeout(function(){
+                  var items2 = _.filter(item.$parent.$parent.items, function(key){
+                    return key.$checked;
+                  });
+                  $timeout(function(){
+                    var items3 = _.filter(item.$parent.$parent.$parent.items, function(key){
+                      return key.$checked;
+                    });
+                    angular.forEach(items3, function (key) {
+                      scope.list.push(key);
+                    });
+                    angular.forEach(items2, function (key) {
+                      scope.list.push(key);
+                    });
+                    angular.forEach(items, function (key) {
+                      scope.list.push(key);
+                    });
+                  },1);
+                },1);
+              }
+              break;
+            case 5:
+              if(checked){
+                if(isAdd(item, item.level)){
+                  return ;
+                }
+                if(_.every(item.$parent.items, '$checked')){
+                  _.remove(scope.list, function(key){
+                    return isChecked(item, key, item.level);
+                  });
+                  $timeout(function(){
+                    if(_.every(item.$parent.$parent.items, '$checked')){
+                      _.remove(scope.list, function(key){
+                        return isChecked(item, key, item.level-1);
+                      });
+                      $timeout(function(){
+                        if(_.every(item.$parent.$parent.$parent.items, '$checked')){
+                          _.remove(scope.list, function(key){
+                            return isChecked(item, key, item.level-2);
+                          });
+                          $timeout(function(){
+                            if(_.every(item.$parent.$parent.$parent.$parent.items, '$checked')){
+                              _.remove(scope.list, function(key){
+                                return isChecked(item, key, item.level-3);
+                              });
+                              scope.list.push(item.$parent.$parent.$parent.$parent);
+                            }else{
+                              scope.list.push(item.$parent.$parent.$parent);
+                            }
+                          },1);
+                        }else{
+                          scope.list.push(item.$parent.$parent);
+                        }
+                      },1);
+                    }else{
+                      scope.list.push(item.$parent);
+                    }
+                  },1);
+                }else{
+                  scope.list.push(item);
+                }
+              }else{
+                _.remove(scope.list, function(key){
+                  return isChecked(item, key, 1);
+                });
+                var items = _.filter(item.$parent.items, function(key){
+                  return key.$checked;
+                });
+                $timeout(function(){
+                  var items2 = _.filter(item.$parent.$parent.items, function(key){
+                    return key.$checked;
+                  });
+                  $timeout(function(){
+                    var items3 = _.filter(item.$parent.$parent.$parent.items, function(key){
+                      return key.$checked;
+                    });
+                    $timeout(function(){
+                      var items4 = _.filter(item.$parent.$parent.$parent.$parent.items, function(key){
+                        return key.$checked;
+                      });
+                      angular.forEach(items4, function (key) {
+                        scope.list.push(key);
+                      });
+                      angular.forEach(items3, function (key) {
+                        scope.list.push(key);
+                      });
+                      angular.forEach(items2, function (key) {
+                        scope.list.push(key);
+                      });
+                      angular.forEach(items, function (key) {
+                        scope.list.push(key);
+                      });
+                    },1);
+                  },1);
+                },1);
+              }
+              break;
+          }
+
+
+
         };
 
         /**
@@ -521,6 +746,7 @@
           _.forEach(items, function (value) {
             results.push({
               "id": value.yearid,
+              "brandid": value.brandid,
               "seriesid": value.seriesid,
               "year": value.year
             });
@@ -546,6 +772,8 @@
           _.forEach(items, function (value) {
             results.push({
               "id": value.outputid,
+              "brandid": value.brandid,
+              "seriesid": value.seriesid,
               "year": value.year,
               "output": encodeURI(value.output)
             });
@@ -604,7 +832,7 @@
         };
         var listScope = scope.$watch('list', function (value) {
           if(value){
-            console.log('list', getResults(value));
+            //console.log('list', getResults(value));
             scope.select = getResults(value);
           }
         }, true);

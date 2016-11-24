@@ -140,8 +140,9 @@
           </div>
         <h3>适用车型</h3>
         <hr>
-        <div>
-          <div cb-vehicle-selection="" select="vm.dataBase."></div>
+          {{vm.dataBase.motobrandids}}
+        <div style="height: 500px; margin-bottom: 20px; overflow-y: auto">
+          <div cb-vehicle-selection="" select="vm.dataBase.motobrandids"></div>
         </div>
         <div class="text-center">
           <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>

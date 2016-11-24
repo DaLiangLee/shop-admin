@@ -10,7 +10,7 @@
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
-    function ProductServerListController($state, $log, productServer, productServerConfig) {
+    function ProductServerListController($state, $log, $$utils, productServer, productServerConfig) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
@@ -180,7 +180,7 @@
               }
               if(angular.isDefined(item.motorbrandids)){
 
-                item.motorbrandids = getMotorbrandids(item.motorbrandids);
+                item.motorbrandids = $$utils.getMotorbrandids(item.motorbrandids);
               }
               /**
                * 这段代码处理skuvalues值的问题，请勿修改 start
@@ -207,6 +207,9 @@
       getList();
     }
     function getMotorbrandids(data){
+      if(data.indexOf('#') == -1){
+        return [];
+      }
       var results = [];
       var list = data.split('#');
       angular.forEach(list, function (item) {

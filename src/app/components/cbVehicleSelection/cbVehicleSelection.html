@@ -17,7 +17,7 @@
       <div class="list brands">
         <input type="text" placeholder="搜索首字母" ng-model="searchText" ng-change="firsthandle(searchText)">
         <div class="items">
-          <ul>
+          <ul class="list-unstyled">
             <li ng-repeat="item in brandList track by $index" ng-class="{'open': item.$open}">
               <div ng-if="item.group">
                 <span ng-bind="item.group"></span>
@@ -42,7 +42,7 @@
       <div class="list series" ng-if="seriesList.length">
         <input type="text" placeholder="搜索关键词" ng-model="seriesText">
         <div class="items">
-          <ul>
+          <ul class="list-unstyled">
             <li ng-repeat="item in seriesList | filter: {series: seriesText}"  ng-class="{'open': item.$open}">
               <input type="checkbox" name=""
                      bf-check-indeterminate="item.$isIndeterminate()"
@@ -60,7 +60,7 @@
       <div class="list years" ng-if="yearList.length">
         <input type="text" placeholder="搜索关键词" ng-model="yearText">
         <div class="items">
-          <ul>
+          <ul class="list-unstyled">
             <li ng-repeat="item in yearList | filter: {year: yearText}"  ng-class="{'open': item.$open}">
               <input type="checkbox" name=""
                      bf-check-indeterminate="item.$isIndeterminate()"
@@ -77,7 +77,7 @@
       <div class="list outputs" ng-if="outputList.length">
         <input type="text" placeholder="搜索关键词" ng-model="outputText">
         <div class="items">
-          <ul>
+          <ul class="list-unstyled">
             <li ng-repeat="item in outputList | filter: {output: outputText}"  ng-class="{'open': item.$open}">
               <input type="checkbox" name=""
                  bf-check-indeterminate="item.$isIndeterminate()"
@@ -87,14 +87,14 @@
 
               <span ng-bind="item.output"></span>
 
-              <span ng-click="selecthandle($index, item, 'model')" ng-if="!item.checked">展开</span></li>
+              <span ng-click="selecthandle($index, item, 'model')">展开</span></li>
           </ul>
         </div>
       </div>
       <div class="list models" ng-if="modelList.length">
         <input type="text" placeholder="搜索关键词" ng-model="modelText">
         <div class="items">
-          <ul>
+          <ul class="list-unstyled">
             <li ng-repeat="item in modelList | filter: {model: modelText}">
               <input type="checkbox" name=""
                      bf-check-indeterminate="item.$isIndeterminate()"

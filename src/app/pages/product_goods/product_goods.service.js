@@ -71,7 +71,7 @@
                       "id": 5,
                       "name": "品牌",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.cnname"></span>'
+                      "fieldDirective": '<div style="width: 200px; overflow-x: auto; white-space: nowrap;"><span ng-repeat="img in item.motobrandids track by $index" data-id="{{item.motobrandids[$index]}}"><img bo-src-i="{{img.brand.logo}}" width="50" /> </span></div>'
                     },
                     {
                       "id": 6,
