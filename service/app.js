@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/10/17.
  */
+'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();

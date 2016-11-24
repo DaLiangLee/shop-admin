@@ -179,7 +179,8 @@
                 item.logos = item.logos.split('#');
               }
               if(angular.isDefined(item.motorbrandids)){
-                item.motorbrandids = item.motorbrandids.split('#');
+
+                item.motorbrandids = getMotorbrandids(item.motorbrandids);
               }
               /**
                * 这段代码处理skuvalues值的问题，请勿修改 start
@@ -205,9 +206,19 @@
       }
       getList();
     }
-
+    function getMotorbrandids(data){
+      var results = [];
+      var list = data.split('#');
+      angular.forEach(list, function (item) {
+        var items = window.eval(item);
+        angular.forEach(items, function (key) {
+          results.push(key);
+        });
+      });
+      return results;
+    }
     /** @ngInject */
-    function ProductServerChangeController($state, $log, $timeout, productServer, productServerConfig, cbAlert) {
+    function ProductServerChangeController($state, $log, $timeout, productServer, productServerChangeConfig,preferencenav, cbAlert) {
       var vm = this;
       var currentParams = $state.params;
       vm.attributeset = [];
@@ -238,7 +249,7 @@
         });
       } else {
         vm.isLoadData = true;
-        vm.dataBase.status = 1;
+        vm.dataBase.serverstatus = 1;
         vm.dataBase.mainphoto = [];
       }
       vm.selectModel = {
@@ -254,7 +265,7 @@
         handler: function (data) {
           console.log('selectModel2', data);
           console.log(getData(vm.selectModel2.store, data));
-          vm.dataBase.cateid = data;
+          //vm.dataBase.cateid = data;
           getAttrsku(data);
         }
       };
@@ -291,7 +302,6 @@
       }
       function getAttrsku(id, callback){
         console.log(id);
-
         productServer.attrsku({id: id}).then(function (data) {
           vm.sizeModel.store = angular.copy(data.data.data.sku);
           vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
@@ -311,14 +321,18 @@
       function getDataBase(data) {
         var result = angular.extend({}, data);
         result.abstracts = encodeURI(result.abstracts);
-        angular.forEach(result.skuvalues, function (item) {
+        angular.forEach(result.sku, function (item) {
           item.skuname = encodeURI(item.skuname);
           item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
         });
         /**
          * 防止后台数据出bug
          */
-        result.skuvalues.push({});
+        result.sku.push({});
+        result.offerprice.push({});
+        /**
+         * 防止后台数据出bug
+         */
         if(vm.isChange){
           delete result.parentid;
           delete result.brandname;
@@ -341,16 +355,21 @@
           cbAlert.alert('规格对应的值没有选择');
           return ;
         }
-        // productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
-        //   console.log('save', data);
-        //   if(data.data.status == 0){
-        //     goto();
-        //   }
-        // });
+        if(!vm.gridModel.itemList.length){
+          cbAlert.alert('您还没有选择报价规格');
+          return ;
+        }
+        vm.dataBase.offerprice = angular.copy(vm.gridModel.itemList);
+        productServer.save(getDataBase(vm.dataBase)).then(function (data) {
+          console.log('save', data);
+          if(data.data.status == 0){
+            goto();
+          }
+        });
       };
       function goto() {
         preferencenav.removePreference($state.current);
-        $state.go('product.goods.list', {'page': 1});
+        $state.go('product.server.list', {'page': 1});
       }
       /**
        * 消息提醒
@@ -363,10 +382,10 @@
        * 表格配置
        */
       vm.gridModel = {
-        columns: angular.copy(productServerConfig.DEFAULT_GRID.columns),
+        columns: angular.copy(productServerChangeConfig.DEFAULT_GRID.columns),
         itemList: [],
-        config: angular.copy(productServerConfig.DEFAULT_GRID.config),
-        loadingState: true,      // 加载数据
+        config: angular.copy(productServerChangeConfig.DEFAULT_GRID.config),
+        loadingState: vm.isChange,      // 加载数据
         pageChanged: function (data) {    // 监听分页
           var page = angular.extend({}, currentParams, {page: data});
           $state.go(currentStateName, page);
@@ -417,6 +436,16 @@
           // }
           //vm.gridModel.itemList = data.list;
 
+        },
+        addItem: function (data) {
+          if (data.status == -1) {
+            vm.message.loadingState = false;
+          } else {
+            console.log(data.data);
+            vm.gridModel.itemList.push(data.data);
+            console.log(vm.gridModel.itemList);
+            vm.gridModel.loadingState = false;
+          }
         },
         statusItem: function (data) {
           $log.debug('statusItem', data);

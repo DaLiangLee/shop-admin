@@ -83,7 +83,7 @@
       this.$modal = null;
       this.option = this._getOptions(this._getDefaults(), arguments);
       this.mount();
-      this._openModal(callback);
+      this._openModal(arguments[1]);
     };
     AlertDialog.prototype.isModal = function(){
       return angular.element('body').find('.k-alert-dialog').length;

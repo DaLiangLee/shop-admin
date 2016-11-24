@@ -5,7 +5,7 @@
  *  which are used in several places to keep good readability
  *  of the tasks
  */
-
+'use strict';
 var gutil = require('gulp-util');
 
 /**

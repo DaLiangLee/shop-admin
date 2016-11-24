@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/11/22.
  */
+'use strict';
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
@@ -75,6 +76,15 @@ router.post('/motor/model', function (req, res, next) {
   var data = _.find(goods.data, {skuid: req.query.skuid});
   res.json({
     "data": [{
+      "brandid": 1,
+      "gearid": 23,
+      "logo": "B_BaoMa.png",
+      "model": "宝马X5 2015款 xDrive35i中国限量版",
+      "outputid": 25,
+      "seriesid": 99,
+      "structid": 2,
+      "year": "2015"
+    },{
       "brandid": 1,
       "gearid": 23,
       "logo": "B_BaoMa.png",

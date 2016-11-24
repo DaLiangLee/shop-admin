@@ -43,7 +43,7 @@
               <div ng-if="!vm.isAttributesetLoad">
                 <p class="h4">请先选择项目名称</p>
               </div>
-              <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.skuvalues" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
+              <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.sku" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
             </div>
           </div>
           <div class="form-group">
@@ -51,13 +51,13 @@
             <div class="col-sm-7">
               <div class="radio-inline">
                 <label>
-                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.status" value="0">
+                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.serverstatus" value="0">
                   暂停服务
                 </label>
               </div>
               <div class="radio-inline">
                 <label>
-                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.status" value="1">
+                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.serverstatus" value="1">
                   正常服务
                 </label>
               </div>
@@ -72,10 +72,18 @@
         <h3>报价规格</h3>
         <hr>
         <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
-        <button product-server-goods-dialog="">选择车型</button>
         <div class="text-center">
           <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>
         </div>
         </form>
     </div>
 </div>
+
+<script type="text/ng-template" id="cbPskuidsTipsPopoverTemplate.html">
+  <h3 class="h3 text-center">商品详情</h3>
+  <ul class="list-unstyled" style="padding: 0;">
+    <li bindonce ng-repeat="item in templateData">
+      <span bo-text="item.productname"></span>：<span bo-text="item.subtotal | moneyFilter"></span>
+    </li>
+  </ul>
+</script>

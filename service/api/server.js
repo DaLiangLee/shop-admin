@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/11/17.
  */
+'use strict';
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
@@ -9,12 +10,11 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
-  'guid': '@id',
+  'serverid': '@id',
   'status|0-1': 0,
   'catename': '@ctitle(3, 10)',
   'servername': '@ctitle(3, 10)',
-  'motorbrandids': '1#2#3#4',
-  'logos': 'http://dummyimage.com/100x100#http://dummyimage.com/100x100#http://dummyimage.com/100x100#http://dummyimage.com/100x100',
+  'motorbrandids': '[{"brand":{"brand":"%E5%AE%9D%E9%A9%AC","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png"}}]#[{"brand":{"brand":"%E4%BF%9D%E6%97%B6%E6%8D%B7","firstletter":"B","id":13,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoShiJie.png"}}]',
   'abstracts': '@ctitle(1, 30)'
 }, 100);
 

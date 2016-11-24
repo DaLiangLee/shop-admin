@@ -1,9 +1,11 @@
 /**
  * Created by Administrator on 2016/10/26.
  */
+'use strict';
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
+
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']

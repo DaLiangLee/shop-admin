@@ -76,6 +76,10 @@
                       "url": "/product/server/putup",
                       "type": "POST"
                     },
+                    "save": {
+                      "url": "/product/server/save",
+                      "type": "POST"
+                    },
                     "putdown": {
                       "url": "/product/server/putdown",
                       "type": "POST"

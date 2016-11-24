@@ -6,14 +6,16 @@
 
   angular
     .module('shopApp')
-    .directive('productServerGoodsDialog', productServerGoodsDialog);
+    .directive('productServerGoodsDialog', productServerGoodsDialog)
+    .directive('productServerQuoteDialog', productServerQuoteDialog);
 
   /** @ngInject */
   function productServerGoodsDialog(cbDialog, productGoods, productServerChangeConfig) {
     return {
       restrict: "A",
       scope: {
-        item: "=",
+        pskuids: "=",
+        productcost: "=",
         itemHandler: "&"
       },
       link: function(scope, iElement, iAttrs){
@@ -217,6 +219,8 @@
            * 拦截确定
            */
           childScope.interceptorConfirm = function () {
+              scope.pskuids = childScope.items;
+              scope.productcost = childScope.totalprice;
             scope.itemHandler({data: {"status":"0", "data": childScope.item}});
             childScope.close();
           };
@@ -236,4 +240,53 @@
     }
   }
 
+  /** @ngInject */
+  function productServerQuoteDialog(cbDialog, productGoods, productServerChangeConfig) {
+    return {
+      restrict: "A",
+      scope: {
+        item: "=",
+        itemHandler: "&"
+      },
+      link: function(scope, iElement, iAttrs){
+
+        function handler(childScope){
+          childScope.items = angular.copy(scope.item);
+          childScope.interceptor = false;
+          childScope.items = {
+            motorbrandids: [],
+            saleprice: "",
+            warranty: 12,
+            productcost: 0,
+            status: 1,
+            pskuids: []
+          };
+          /**
+           * 确定按钮
+           */
+          childScope.confirm = function () {
+            childScope.interceptor = true;
+          };
+          /**
+           * 拦截确定
+           */
+          childScope.interceptorConfirm = function () {
+            scope.itemHandler({data: {"status":"0", "data": childScope.items}});
+            childScope.close();
+          };
+        }
+        /**
+         * 点击按钮
+         */
+        iElement.click(function (t) {
+          scope.itemHandler({data: {"status":"-1", "data":"打开成功"}});
+          t.preventDefault();
+          t.stopPropagation();
+          cbDialog.showDialogByUrl("app/pages/product_server/product_server_quote_dialog.html", handler, {
+            windowClass: "viewFramework-product_server_quote_dialog"
+          });
+        })
+      }
+    }
+  }
 })();

@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/11/2.
  */
+'use strict';
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
