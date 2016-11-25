@@ -48,6 +48,13 @@
 
   /** @ngInject */
   function cbVehicleSelection($filter, $timeout, vehicleSelection, treeService) {
+    function getSeriesTitle(collection, target){
+      var regular = new RegExp('^'+target);
+      return regular.test(collection) ? collection : collection + " " + target;
+    }
+    function getYearTitle(collection, target){
+      return collection.replace(/\s\d{4}$/, "") + " " + target;
+    }
     function getGroupList(arr) {
       var results = [];
       angular.forEach(arr, function (item) {
@@ -63,7 +70,7 @@
       var results = [];
       angular.forEach(arr, function (item) {
         item.logo = data.logo;
-        item.title = data.brand + ' ' + item.series;
+        item.title = getSeriesTitle(item.series, data.brand);
         item.brand = data.brand;
         item.firstletter = data.firstletter;
         item.seriesid = item.id;
@@ -72,11 +79,11 @@
       });
       return results;
     }
-
     function getYear(arr, data) {
       var results = [];
       angular.forEach(arr, function (item) {
-        item.title = data.title + ' ' + item.year;
+        item.logo = data.logo;
+        item.title = getYearTitle(data.title, item.year);
         item.brandid = data.brandid;
         item.brand = data.brand;
         item.firstletter = data.firstletter;
@@ -92,6 +99,7 @@
     function getOutput(arr, data) {
       var results = [];
       angular.forEach(arr, function (item) {
+        item.logo = data.logo;
         item.title = data.title + ' ' + item.output;
         item.brand = data.brand;
         item.firstletter = data.firstletter;
@@ -110,6 +118,7 @@
     function getModel(arr, data) {
       var results = [];
       angular.forEach(arr, function (item) {
+        item.logo = data.logo;
         item.title = item.model;
         item.year = data.year;
         item.brand = data.brand;
@@ -120,7 +129,7 @@
         item.seriesid = data.seriesid;
         item.outputid = data.outputid;
         item.yearid = data.yearid;
-        item.modelid = item.structid;
+        item.modelid = item.id;
         item.level = 5;
         results.push(item);
       });
@@ -136,26 +145,17 @@
       },
       templateUrl: "app/components/cbVehicleSelection/cbVehicleSelection.html",
       link: function (scope, iElement, iAttrs) {
-        /*var select = scope.$watch('select', function(value){
-         if(value){
-         //scope.list = getGroupList(value);
-         getSelect(value);
-
-         }
-         });*/
         scope.list = [];
-        vehicleSelection['brand']().then(function (data) {
-          list = data.data.data;
-          scope.brandList = getGroupList(treeService.enhance(data.data.data));
-          scope.list = getSelect(window.eval(decodeURI('[{"brand":{"brand":"AC%20Schnitzer","firstletter":"A","id":1,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","isChecked":2},"series":[{"id":2,"brandid":1,"series":"AC%20Schnitzer%20X5"},{"id":3,"brandid":1,"series":"AC%20Schnitzer%20X6"}],"year":[{"id":12,"brandid":1,"seriesid":1,"year":"2014"},{"id":13,"brandid":1,"seriesid":1,"year":"2015"},{"id":14,"brandid":1,"seriesid":1,"year":"2016"}],"output":[{"id":111,"brandid":1,"seriesid":1,"year":"2013","output":"2.5T"},{"id":110,"brandid":1,"seriesid":1,"year":"2013","output":"2.0T"}],"model":[{"brandid":1,"gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","model":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E9%99%90%E9%87%8F%E7%89%88","outputid":112,"seriesid":1,"structid":2,"year":"2013"},{"brandid":1,"gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","model":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E8%BF%90%E5%8A%A8%E7%89%88","outputid":112,"seriesid":1,"structid":2,"year":"2013"}]}]')));
-        });
         /**
-         * 结果数组
+         * 缓存数组
          * @type {Array}
          */
         var list = [];
-
-
+        vehicleSelection['brand']().then(function (data) {
+          list = data.data.data;
+          scope.brandList = getGroupList(treeService.enhance(data.data.data));
+          getSelect(window.eval(decodeURI('[{"brand":{"brand":"AC%20Schnitzer","firstletter":"A","id":1,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","title":"AC%20Schnitzer","isChecked":true}},{"brand":{"brand":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6","firstletter":"A","id":"6","logo":"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png","title":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6%20%E8%BD%A6%E7%B3%BB32%20%E6%8E%92%E9%87%8F6320%202013%20%E9%9D%92%E6%98%A5%E7%89%88","isChecked":false},"model":[{"id":6326323,"modelid":6326323,"brandid":"6","gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png","model":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6%20%E8%BD%A6%E7%B3%BB32%20%E6%8E%92%E9%87%8F6320%202013%20%E9%9D%92%E6%98%A5%E7%89%88","title":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6%20%E8%BD%A6%E7%B3%BB32%20%E6%8E%92%E9%87%8F6320%202013%20%E9%9D%92%E6%98%A5%E7%89%88","outputid":6320,"seriesid":"32","structid":2,"year":"2013"}]},{"brand":{"brand":"%E5%AE%9D%E9%A9%AC","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png","title":"%E5%AE%9D%E9%A9%AC","isChecked":true}},{"brand":{"brand":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","firstletter":"B","id":"17","logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA205","isChecked":false},"series":[{"id":"185","seriesid":"185","brandid":"17","brand":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA205","series":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA205","isChecked":true},{"id":"183","seriesid":"183","brandid":"17","brand":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BAT205-D","series":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BAT205-D","isChecked":true},{"id":"180","seriesid":"180","brandid":"17","brand":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BAM20","series":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BAM20","isChecked":true}],"output":[{"id":171780,"brandid":"17","seriesid":"178","outputid":171780,"year":"2013","logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA306%202013%202.0T","output":"2.0T","isChecked":true}],"model":[{"id":17178171783,"modelid":17178171783,"brandid":"17","gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","model":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA%20%E8%BD%A6%E7%B3%BB178%20%E6%8E%92%E9%87%8F171782%202013%20%E8%BF%90%E5%8A%A8%E7%89%88","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA%20%E8%BD%A6%E7%B3%BB178%20%E6%8E%92%E9%87%8F171782%202013%20%E8%BF%90%E5%8A%A8%E7%89%88","outputid":171782,"seriesid":"178","structid":2,"year":"2013"}]}]')));
+        });
         /**
          * 获取对应的列表，来设置状态
          * @param item
@@ -174,7 +174,7 @@
             return items2;
           }
           var items3 = _.find(items2.items, function(key){
-            return key.yearid == item.yearid;
+            return key.year == item.year;
           });
           if(_.isUndefined(items3.items)){
             return items3;
@@ -193,8 +193,9 @@
          * 删除结果数组
          */
         scope.removeHandle = function (item) {
-          console.log(item);
-          getState(item).$setCheckState(false);
+          console.log(item, getState(item));
+         // getState(item)
+          item.$setCheckState(false);
         };
 
 
@@ -220,184 +221,100 @@
          *
          */
 
-
-        var getState2 = function (item) {
-          var items = _.find(scope.brandList, function (key) {
-            return key.brandid == item.brandid;
-          });
-          var items2 = _.find(items.items, function (key) {
-            return key.seriesid == item.seriesid;
-          });
-          return items2;
-        };
-        var getState3 = function (item) {
-          var items = _.find(scope.brandList, function (key) {
-            return key.brandid == item.brandid;
-          });
-
-
-          var items2 = _.find(items.items, function (key) {
-            return key.seriesid == item.seriesid;
-          });
-          console.log('item', items2);
-          var items3 = _.find(items2.items, function (key) {
-            return key.year == item.year;
-          });
-
-          return items3;
-        };
-
         /**
          * 获取对应的列表，来设置状态
          * @param item
          */
-        function getSelect(items) {
-          if (!items.length) {
+        function getSelect(arr) {
+          if(angular.isUndefined(arr)){
+            return [];
+          }
+          if (!arr.length) {
             return [];
           }
           var results = [];
-          _.forEach(items, function (item) {
+          _.forEach(arr, function (item) {
             var key = item.brand;
             key.brandid = key.id;
             key.title = key.brand;
             key.level = 1;
-            if(angular.isUndefined(key.isChecked)){
+            if(key.isChecked){
               getState(key).$setCheckState(true);
               results.push(key);
+            }else{
+              getState(key).$setCheckState(false);
             }
-            //getState(key).$setCheckState(true);
-            console.log(key);
-
             if (angular.isArray(item.series) && item.series.length) {
-              var series = getSeries(item.series, key)[0];
-              _.forEach(getSeries(item.series, key), function (value) {
+              _.forEach(item.series, function (value) {
+                value.level = 2;
                 results.push(value);
               });
             }
             if (angular.isArray(item.year) && item.year.length) {
-              var year = getYear(item.year, series)[0];
-              _.forEach(getYear(item.year, series), function (value) {
+              _.forEach(item.year, function (value) {
+                value.level = 3;
                 results.push(value);
               });
             }
             if (angular.isArray(item.output) && item.output.length) {
-              var output = getOutput(item.output, year)[0];
-              _.forEach(getOutput(item.output, year), function (value) {
+              _.forEach(item.output, function (value) {
+                value.level = 4;
                 results.push(value);
               });
             }
             if (angular.isArray(item.model) && item.model.length) {
-              _.forEach(getModel(item.model, output), function (value) {
+              _.forEach(item.model, function (value) {
+                value.level = 5;
                 results.push(value);
               });
             }
-            /*if (angular.isArray(item.series) && item.series.length) {
-              vehicleSelection['series']({brandid: key.brandid}).then(function (data) {
-                angular.forEach(scope.brandList, function (key2) {
-                  if (key2.id == key.brandid) {
-                    key2.items = getSeries(data.data.data, key);
-                    return false;
-                  }
-                });
-                treeService.enhance(scope.brandList);
-              });
+          });
+          console.log(results);
+          setXauzn(results);
+          return results;
+        }
+        function setXauzn(arr){
+          var json = {};
+          _.forEach(arr, function (item) {
+            if (!json[item.level]) {
+              json[item.level] = [];
             }
-            _.forEach(item.series, function (item2) {
-              item2.seriesid = item2.id;
-              if (angular.isArray(item.year) && item.year.length) {
-                vehicleSelection['year']({brandid: item2.brandid, seriesid: item2.seriesid}).then(function (data) {
-                  angular.forEach(scope.brandList, function (key) {
-                    if (key.id == item.brandid) {
-                      angular.forEach(key.items, function (value) {
-                        if (value.id == item.id) {
-                          value.items = getYear(data.data.data, item);
-                          return false;
-                        }
-                      });
-                      return false;
-                    }
-                  });
-                  treeService.enhance(scope.brandList);
-                });
-                _.forEach(item.year, function (item3) {
-                  if (angular.isArray(item.output) && item.output.length) {
-                    vehicleSelection['output']({
-                      brandid: item3.brandid,
-                      seriesid: item3.seriesid,
-                      year: item3.year
-                    }).then(function (data) {
-                      angular.forEach(scope.brandList, function (key) {
-                        if (key.id == item.brandid) {
-                          angular.forEach(key.items, function (value) {
-                            if (value.id == item.seriesid) {
-                              angular.forEach(value.items, function (key1) {
-                                if (key1.year == item.year) {
-                                  key1.items = getOutput(data.data.data, item);
-                                  return false;
-                                }
-                              });
-                              return false;
-                            }
-                          });
-                          return false;
-                        }
-                      });
-                      treeService.enhance(scope.brandList);
-                    });
-                    _.forEach(item.output, function (item4) {
-                      vehicleSelection['model']({
-                        brandid: item4.brandid,
-                        seriesid: item4.seriesid,
-                        outputid: item4.id,
-                        year: item4.year
-                      }).then(function (data) {
-                        angular.forEach(scope.brandList, function (key) {
-                          if (key.id == item.brandid) {
-                            angular.forEach(key.items, function (value) {
-                              if (value.id == item.seriesid) {
-                                angular.forEach(value.items, function (key1) {
-                                  if (key1.year == item.year) {
-                                    angular.forEach(key1.items, function (key2) {
-                                      if (key2.id == item.id) {
-                                        key2.items = getModel(data.data.data, item);
-                                        return false;
-                                      }
-                                    });
-                                    return false;
-                                  }
-                                });
-                                return false;
-                              }
-                            });
-                            return false;
-                          }
-                        });
-                        treeService.enhance(scope.brandList);
-                      });
-                    });
-                  }
-                });
-              }
-            });
-            /!*if (angular.isArray(item.series) && item.series.length) {
-              vehicleSelection['series']({brandid: key.brandid}).then(function (data) {
-                angular.forEach(scope.brandList, function (key2) {
-                  if (key2.id == key.brandid) {
-                    key2.items = getSeries(data.data.data, key);
-                    return false;
-                  }
-                });
-                treeService.enhance(scope.brandList);
-              });
-              _.forEach(item.series, function (item2) {
-                item2.seriesid = item2.id;
-                if (angular.isArray(item.year) && item.year.length) {
-                  vehicleSelection['year']({brandid: item2.brandid, seriesid: item2.seriesid}).then(function (data) {
+            json[item.level].push(item);
+          });
+          console.log(json);
+          _.forEach(json, function (item, key) {
+            switch (key){
+              case '2':
+                _.forEach(_.uniq(item, 'brandid'), function (value) {
+                  vehicleSelection['series']({brandid: value.brandid}).then(function (data) {
                     angular.forEach(scope.brandList, function (key) {
-                      if (key.id == item.brandid) {
+                      if (key.id == value.brandid) {
+                        key.items = getSeries(data.data.data, value);
+                        return false;
+                      }
+                    });
+                    treeService.enhance(scope.brandList);
+                    var currentArray = _.filter(item, function (n) {
+                      return n.brandid == value.brandid;
+                    });
+                    _.forEach(currentArray, function (value2) {
+                      if(value2.isChecked){
+                        getState(value2).$setCheckState(true);
+                      }
+                    });
+                  });
+                });
+                break;
+              case '3':
+                console.log(3);
+
+                _.forEach(_.uniq(item, 'seriesid'), function (value1) {
+                  vehicleSelection['year']({brandid: value1.brandid, seriesid: value1.seriesid}).then(function (data) {
+                    angular.forEach(scope.brandList, function (key) {
+                      if (key.id == value1.brandid) {
                         angular.forEach(key.items, function (value) {
-                          if (value.id == item.id) {
-                            value.items = getYear(data.data.data, item);
+                          if (value.id == value1.seriesid) {
+                            value.items = getYear(data.data.data, value1);
                             return false;
                           }
                         });
@@ -405,21 +322,71 @@
                       }
                     });
                     treeService.enhance(scope.brandList);
+                    var currentArray = _.filter(item, function (n) {
+                      return n.seriesid == value1.seriesid;
+                    });
+                    _.forEach(currentArray, function (value2) {
+                      if(value2.isChecked){
+                        getState(value2).$setCheckState(true);
+                      }
+                    });
                   });
-                  _.forEach(item.year, function (item3) {
-                    if (angular.isArray(item.output) && item.output.length) {
-                      vehicleSelection['output']({
-                        brandid: item3.brandid,
-                        seriesid: item3.seriesid,
-                        year: item3.year
-                      }).then(function (data) {
-                        angular.forEach(scope.brandList, function (key) {
-                          if (key.id == item.brandid) {
-                            angular.forEach(key.items, function (value) {
-                              if (value.id == item.seriesid) {
-                                angular.forEach(value.items, function (key1) {
-                                  if (key1.year == item.year) {
-                                    key1.items = getOutput(data.data.data, item);
+                });
+                break;
+              case '4':
+                console.log(4);
+                _.forEach(_.uniq(item, 'year'), function (value1) {
+                  vehicleSelection['output']({
+                    brandid: value1.brandid,
+                    seriesid: value1.seriesid,
+                    year: value1.year
+                  }).then(function (data) {
+                    angular.forEach(scope.brandList, function (key) {
+                      if (key.id == value1.brandid) {
+                        angular.forEach(key.items, function (value) {
+                          if (value.id == value1.seriesid) {
+                            angular.forEach(value.items, function (key1) {
+                              if (key1.year == value1.year) {
+                                key1.items = getOutput(data.data.data, value1);
+                                return false;
+                              }
+                            });
+                            return false;
+                          }
+                        });
+                        return false;
+                      }
+                    });
+                    treeService.enhance(scope.brandList);
+                    var currentArray = _.filter(item, function (n) {
+                      return n.year == value1.year;
+                    });
+                    _.forEach(currentArray, function (value2) {
+                      if(value2.isChecked){
+                        getState(value2).$setCheckState(true);
+                      }
+                    });
+                  });
+                });
+                break;
+              case '5':
+                console.log(5);
+                _.forEach(_.uniq(item, 'outputid'), function (value1) {
+                  vehicleSelection['model']({
+                    brandid: value1.brandid,
+                    seriesid: value1.seriesid,
+                    outputid: value1.outputid,
+                    year: value1.year
+                  }).then(function (data) {
+                    angular.forEach(scope.brandList, function (key) {
+                      if (key.id == value1.brandid) {
+                        angular.forEach(key.items, function (value) {
+                          if (value.id == value1.seriesid) {
+                            angular.forEach(value.items, function (key1) {
+                              if (key1.year == value1.year) {
+                                angular.forEach(key1.items, function (key2) {
+                                  if (key2.id == value1.outputid) {
+                                    key2.items = getModel(data.data.data, value1);
                                     return false;
                                   }
                                 });
@@ -429,50 +396,24 @@
                             return false;
                           }
                         });
-                        treeService.enhance(scope.brandList);
-                      });
-                      _.forEach(item.output, function (item4) {
-                        vehicleSelection['model']({
-                          brandid: item4.brandid,
-                          seriesid: item4.seriesid,
-                          outputid: item4.id,
-                          year: item4.year
-                        }).then(function (data) {
-                          angular.forEach(scope.brandList, function (key) {
-                            if (key.id == item.brandid) {
-                              angular.forEach(key.items, function (value) {
-                                if (value.id == item.seriesid) {
-                                  angular.forEach(value.items, function (key1) {
-                                    if (key1.year == item.year) {
-                                      angular.forEach(key1.items, function (key2) {
-                                        if (key2.id == item.id) {
-                                          key2.items = getModel(data.data.data, item);
-                                          return false;
-                                        }
-                                      });
-                                      return false;
-                                    }
-                                  });
-                                  return false;
-                                }
-                              });
-                              return false;
-                            }
-                          });
-                          treeService.enhance(scope.brandList);
-                        });
-                      });
-                    }
+                        return false;
+                      }
+                    });
+                    treeService.enhance(scope.brandList);
+                    var currentArray = _.filter(item, function (n) {
+                      return n.outputid == value1.outputid;
+                    });
+                    console.log(item);
+
+                    _.forEach(currentArray, function (value2) {
+                        getState(value2).$setCheckState(true);
+                    });
                   });
-                }
-              });
-            }*!/*/
+                });
+                break;
+            }
           });
-          console.log(results);
-
-          return results;
         }
-
 
         scope.firsthandle = function (search) {
           if (/^[A-Z]{1}$/.test(search)) {
@@ -653,7 +594,7 @@
           item.$open = !item.$open;
         };
 
-        var isChecked = function (item, key, level) {
+        var isAddChecked = function (item, key, level) {
           return {
             1: key.brandid == item.brandid,
             2: key.brandid == item.brandid,
@@ -662,7 +603,15 @@
             5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
           }[level];
         };
-
+        var isRemoveChecked = function (item, key, level) {
+          return {
+            "1": key.brandid == item.brandid,
+            "2": key.brandid == item.brandid && key.seriesid == item.seriesid,
+            "3": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
+            "4": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid,
+            "5": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && key.modelid == item.modelid
+          }[level];
+        };
         function addList(item, checked, level) {
           if (checked) {
             /**
@@ -670,7 +619,7 @@
              */
             if (item.$parent && _.every(item.$parent.items, '$checked')) {
               _.remove(scope.list, function (key) {
-                return isChecked(item, key, item.level);
+                return isAddChecked(item, key, item.level);
               });
               if (level > 2) {
                 $timeout(function () {
@@ -688,40 +637,9 @@
              * 先全部清除
              */
             _.remove(scope.list, function (key) {
-              return isChecked(item, key, 1);
+              return isRemoveChecked(item, key, level);
             });
-            /**
-             * 显示列表
-             */
-            getRemoveList(item);
           }
-        }
-
-        function getRemoveList(item) {
-          var results = [];
-
-          function setList(item) {
-            if (!item.$parent) {
-              return;
-            }
-            var items = _.filter(item.$parent.items, function (key) {
-              return key.$checked;
-            });
-            _.forEach(items, function (key) {
-              results.push(key);
-            });
-            setList(item.$parent);
-          }
-
-          $timeout(function () {
-            var items2 = _.filter(results.reverse(), function (key) {
-              return key.$checked;
-            });
-            _.forEach(items2, function (key) {
-              scope.list.push(key);
-            });
-          }, 1);
-          setList(item);
         }
 
         treeService.checkStateChange = function (item, checked) {
@@ -740,7 +658,8 @@
               "firstletter": item[0].firstletter,
               "id": item[0].brandid,
               "logo": item[0].logo,
-              "isChecked": item[0].brandid && item[0].seriesid
+              "title": encodeURI(item[0].title),
+              "isChecked": angular.isUndefined(item[0].seriesid)
             }
           }
         }
@@ -763,8 +682,13 @@
           _.forEach(items, function (value) {
             results.push({
               "id": value.seriesid,
+              "seriesid": value.seriesid,
               "brandid": value.brandid,
-              "series": encodeURI(value.series)
+              "brand": encodeURI(value.brand),
+              "logo": value.logo,
+              "title": encodeURI(value.title),
+              "series": encodeURI(value.series),
+              "isChecked": angular.isUndefined(value.year)
             });
           });
           return results;
@@ -790,7 +714,11 @@
               "id": value.yearid,
               "brandid": value.brandid,
               "seriesid": value.seriesid,
-              "year": value.year
+              "series": encodeURI(value.series),
+              "year": value.year,
+              "logo": value.logo,
+              "title": encodeURI(value.title),
+              "isChecked": angular.isUndefined(value.outputid)
             });
           });
           return results;
@@ -806,7 +734,7 @@
           }
           var results = [];
           var items = _.filter(item, function (key) {
-            return key.brandid && key.seriesid && key.year && key.outputid && !key.model;
+            return key.brandid && key.seriesid && key.year && key.outputid && !key.modelid;
           });
           if (!items.length) {
             return;
@@ -816,8 +744,12 @@
               "id": value.outputid,
               "brandid": value.brandid,
               "seriesid": value.seriesid,
+              "outputid": value.outputid,
               "year": value.year,
-              "output": encodeURI(value.output)
+              "logo": value.logo,
+              "title": encodeURI(value.title),
+              "output": encodeURI(value.output),
+              "isChecked": angular.isUndefined(value.modelid)
             });
           });
           return results;
@@ -840,10 +772,13 @@
           }
           _.forEach(items, function (value) {
             results.push({
+              "id": value.modelid,
+              "modelid": value.modelid,
               "brandid": value.brandid,
               "gearid": value.gearid,
               "logo": value.logo,
               "model": encodeURI(value.model),
+              "title": encodeURI(value.title),
               "outputid": value.outputid,
               "seriesid": value.seriesid,
               "structid": value.structid,
@@ -877,6 +812,8 @@
           if (value) {
             //console.log('list', getResults(value));
             scope.select = getResults(value);
+            console.log('cbVehicleSelection', getResults(value));
+
           }
         }, true);
         /*scope.$destroy(function(){

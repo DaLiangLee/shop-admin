@@ -10,7 +10,10 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
+  "abstracts": '@ctitle(1, 30)',
+  "attrvalues": "1",
   'productid': '@id',
+  "guid": '@id',
   'skuid': '@id',
   'cateid': '@natural(10, 30)',
   'brandid': 1,
@@ -28,16 +31,39 @@ var goods = generateJSON({
   'productname': '@ctitle(10, 40)',
   'catename': '@ctitle(3, 10)',
   'cnname': '@ctitle(2, 7)',
-  'motobrandids': '[{"brand":{"brand":"AC%20Schnitzer","firstletter":"A","id":1,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png"},"series":[{"id":101,"brandid":1,"series":"%E5%AE%9D%E9%A9%AC5%E7%B3%BB"},{"id":99,"brandid":1,"series":"%E5%AE%9D%E9%A9%AC2%E7%B3%BB%E6%97%85%E8%A1%8C%E8%BD%A6"},{"id":99,"brandid":1,"series":"%E5%AE%9D%E9%A9%AC2%E7%B3%BB%E6%97%85%E8%A1%8C%E8%BD%A6"},{"id":99,"brandid":1,"series":"%E5%AE%9D%E9%A9%AC2%E7%B3%BB%E6%97%85%E8%A1%8C%E8%BD%A6"},{"id":99,"brandid":1,"series":"%E5%AE%9D%E9%A9%AC2%E7%B3%BB%E6%97%85%E8%A1%8C%E8%BD%A6"}],"year":[{"id":288,"brandid":1,"seriesid":99,"year":"2014"},{"id":290,"brandid":1,"seriesid":99,"year":"2013"},{"id":289,"brandid":1,"seriesid":99,"year":"2016"},{"id":287,"brandid":1,"seriesid":99,"year":"2015"}],"output":[{"id":25,"brandid":1,"seriesid":99,"year":"2015","output":"2.0T"}],"model":[{"brandid":1,"gearid":23,"logo":"B_BaoMa.png","model":"%E5%AE%9D%E9%A9%ACX5%202015%E6%AC%BE%20xDrive35i%E4%B8%AD%E5%9B%BD%E9%99%90%E9%87%8F%E7%89%88","outputid":25,"seriesid":99,"structid":2,"year":"2015"}]}]#[{"brand":{"brand":"%E9%98%BF%E5%B0%94%E6%B3%95%E7%BD%97%E5%AF%86%E6%AC%A7","firstletter":"A","id":4,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AErFaLuoMiOu.png"}}]#[{"brand":{"brand":"%E9%98%BF%E6%96%AF%E9%A1%BF%C2%B7%E9%A9%AC%E4%B8%81","firstletter":"A","id":5,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_ASiDunMaDing.png"}}]#[{"brand":{"brand":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6","firstletter":"A","id":6,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png"}}]#[{"brand":{"brand":"%E5%A5%A5%E8%BF%AA","firstletter":"A","id":7,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AoDi.png"}},{"brand":{"brand":"%E5%B7%B4%E5%8D%9A%E6%96%AF","firstletter":"B","id":8,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaBoSi.png"}}]#[{"brand":{"brand":"%E5%AE%9D%E9%AA%8F","firstletter":"B","id":9,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoJun.png"}}]#[{"brand":{"brand":"%E5%AE%9D%E9%A9%AC","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png"}}]#[{"brand":{"brand":"AC%20Schnitzer","firstletter":"A","id":99,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png"},"series":[{"id":100,"brandid":99,"series":"%E5%AE%9D%E9%A9%AC3%E7%B3%BB"}]}]',
+  'motobrandids': '[{"brand":{"brand":"AC%20Schnitzer","firstletter":"A","id":1,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","title":"AC%20Schnitzer%20X5","isChecked":false},"series":[{"id":2,"seriesid":2,"brandid":1,"brand":"AC%20Schnitzer","logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","title":"AC%20Schnitzer%20X5","series":"AC%20Schnitzer%20X5","isChecked":true},{"id":3,"seriesid":3,"brandid":1,"brand":"AC%20Schnitzer","logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","title":"AC%20Schnitzer%20X6","series":"AC%20Schnitzer%20X6","isChecked":true}],"year":[{"id":12,"brandid":1,"seriesid":1,"series":"AC%20Schnitzer%207%E7%B3%BB","year":"2014","title":"AC%20Schnitzer%207%E7%B3%BB%202014","isChecked":true},{"id":13,"brandid":1,"seriesid":1,"series":"AC%20Schnitzer%207%E7%B3%BB","year":"2015","title":"AC%20Schnitzer%207%E7%B3%BB%202015","isChecked":true},{"id":14,"brandid":1,"seriesid":1,"series":"AC%20Schnitzer%207%E7%B3%BB","year":"2016","title":"AC%20Schnitzer%207%E7%B3%BB%202016","isChecked":true}],"output":[{"id":110,"brandid":1,"seriesid":1,"outputid":110,"year":"2013","title":"AC%20Schnitzer%207%E7%B3%BB%202013%202.0T","output":"2.0T","isChecked":true},{"id":111,"brandid":1,"seriesid":1,"outputid":111,"year":"2013","title":"AC%20Schnitzer%207%E7%B3%BB%202013%202.5T","output":"2.5T","isChecked":true}],"model":[{"id":11114,"modelid":11114,"brandid":1,"gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","model":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E9%99%90%E9%87%8F%E7%89%88","title":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E9%99%90%E9%87%8F%E7%89%88","outputid":112,"seriesid":1,"structid":2,"year":"2013"},{"id":11115,"modelid":11115,"brandid":1,"gearid":23,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png","model":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E9%9D%92%E6%98%A5%E7%89%88","title":"AC%20Schnitzer%20%E8%BD%A6%E7%B3%BB1%20%E6%8E%92%E9%87%8F112%202013%20%E9%9D%92%E6%98%A5%E7%89%88","outputid":112,"seriesid":1,"structid":2,"year":"2013"}]},{"brand":{"brand":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6","firstletter":"A","id":6,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png","title":"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6","isChecked":true}},{"brand":{"brand":"%E5%B7%B4%E5%8D%9A%E6%96%AF","firstletter":"B","id":8,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaBoSi.png","title":"%E5%B7%B4%E5%8D%9A%E6%96%AF","isChecked":true}},{"brand":{"brand":"%E4%BF%9D%E6%97%B6%E6%8D%B7","firstletter":"B","id":13,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoShiJie.png","title":"%E4%BF%9D%E6%97%B6%E6%8D%B7","isChecked":true}},{"brand":{"brand":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","firstletter":"B","id":17,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png","title":"%E5%8C%97%E6%B1%BD%E5%A8%81%E6%97%BA","isChecked":true}}]',
   'unit|1': [
     "个", "桶", "毫米", "公斤", "件"
   ],
-  'officialprice': '@float(0, 99999, 2)',
-  'saleprice': '@float(0, 99999, 2)',
-  'stock': '@float(0, 99999999, 0)',
-  'skuvalues': [{"guid":0,"id":12,"items":[{"guid":0,"id":57,"skuid":12,"skuvalue":"汽机油","sort":1}],"skuname":"机油类别","skutype":"text","sort":0},{"guid":0,"id":13,"items":[{"guid":0,"id":63,"skuid":13,"skuvalue":"半合成机油","sort":2}],"skuname":"机油分类","skutype":"text","sort":0},{"guid":0,"id":14,"items":[{"guid":0,"id":69,"skuid":14,"skuvalue":"5W-30","sort":1}],"skuname":"机油粘度","skutype":"text","sort":0}],
-  'abstracts': '@ctitle(1, 30)'
+  'officialprice': '@float(0, 9999, 2)',
+  'saleprice': '@float(0, 9999, 2)',
+  'stock': '@float(0, 999, 0)',
+  'skuvalues': '[{"guid":0,"id":12,"items":[{"guid":0,"id":57,"skuid":12,"skuvalue":"汽机油","sort":1}],"skuname":"机油类别","skutype":"text","sort":0},{"guid":0,"id":13,"items":[{"guid":0,"id":63,"skuid":13,"skuvalue":"半合成机油","sort":2}],"skuname":"机油分类","skutype":"text","sort":0},{"guid":0,"id":14,"items":[{"guid":0,"id":69,"skuid":14,"skuvalue":"5W-30","sort":1}],"skuname":"机油粘度","skutype":"text","sort":0}]',
+  "transid": 1,
+  "transname": "中通快递",
+  "updatetime": '@date("yyyy-MM-dd HH:mm:ss")',
+  "audit": "0",
+  "benefitprice": 0,
+  "costprice": 0,
+  "createtime": '@date("yyyy-MM-dd HH:mm:ss")',
+  "emsfee": 0,
+  "expressfee": 0,
+  "groupprice": 0,
+  "integral": 0,
+  "mailfee": 0,
+  "parentcatename": "机油",
+  "recommend": "0",
+  "skusalenum": 0,
+  "specialprice": 0,
+  "storeid": 1,
+  "tradeprice": 0
 }, 100);
+
+
+
+
+
+
 
 /**
  * 获取商品管理列表

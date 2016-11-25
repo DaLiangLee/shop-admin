@@ -10,13 +10,30 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
+  "audit": "0",
+  "cateid": 2,
+  "guid": '@id',
   'serverid': '@id',
+  "servercateid": 14,
   'status|0-1': 0,
+  "recommend": "0",
+  "storeid": 1,
   'catename': '@ctitle(3, 10)',
   'servername': '@ctitle(3, 10)',
   'motorbrandids': '[{"brand":{"brand":"%E5%AE%9D%E9%A9%AC","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png"}}]#[{"brand":{"brand":"%E4%BF%9D%E6%97%B6%E6%8D%B7","firstletter":"B","id":13,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoShiJie.png"}}]',
   'abstracts': '@ctitle(1, 30)'
 }, 100);
+
+
+{
+
+
+
+
+
+
+}
+
 
 /**
  * 获取商品管理列表

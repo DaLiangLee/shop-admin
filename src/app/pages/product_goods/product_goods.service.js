@@ -71,7 +71,7 @@
                       "id": 5,
                       "name": "品牌",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<div style="width: 200px; overflow-x: auto; white-space: nowrap;"><span ng-repeat="img in item.motobrandids track by $index" data-id="{{item.motobrandids[$index]}}"><img bo-src-i="{{img.brand.logo}}" width="50" /> </span></div>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.cnname"></span>'
                     },
                     {
                       "id": 6,
@@ -83,7 +83,7 @@
                       "id": 7,
                       "name": "适用品牌",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.motorbrand"></span>'
+                      "fieldDirective": '<div style="width: 200px; overflow-x: auto; white-space: nowrap;"><span ng-repeat="img in item.motobrandids track by $index" data-id="{{item.motobrandids[$index]}}"><img bo-src-i="{{img.brand.logo}}" width="50" /> </span></div>'
                     },
                     {
                       "id": 8,
@@ -118,7 +118,7 @@
                     {
                         "id": 1,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.goods.edit({skuid: item.skuid})">编辑</button>  <button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40006" adjust-prices-dialog="" item="item" item-handler="propsParams.pricesItem(data)">调价</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">上架</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">下架</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.goods.edit({pskuid: item.pskuid})">编辑</button>  <button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40006" adjust-prices-dialog="" item="item" item-handler="propsParams.pricesItem(data)">调价</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">上架</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">下架</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
                         "name": '操作',
                         "width": 300
                     }

@@ -56,7 +56,7 @@
           if(data.removal.length == 1){
             item = {
               productid: data.removal[0].productid,
-              skuid: data.removal[0].skuid
+              pskuid: data.removal[0].pskuid
             }
           }
           productGoods.remove(item).then(function (data) {
@@ -93,7 +93,7 @@
           var item = null;
           if(data.removal.length == 1){
             item = {
-              skuid: data.removal[0].skuid
+              pskuid: data.removal[0].pskuid
             }
           }
           productGoods[data.type](item).then(function (data) {
@@ -122,7 +122,7 @@
           vm.message.loadingState = false;
         } else {
           var prices = {
-            skuid: data.data.skuid,
+            pskuid: data.data.skuid,
             saleprice: data.data.saleprice
           };
           productGoods.price(prices).then(function (data) {
@@ -200,7 +200,7 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $log, $$utils, productGoods, preferencenav, cbAlert) {
+  function ProductGoodsChangeController($state, $window, $log, $$utils, productGoods, preferencenav, cbAlert) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -221,7 +221,8 @@
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
           vm.dataBase.brandname = getBrandname(data.brand, edit.brandid);
-          vm.dataBase.motobrandids = $$utils.getMotorbrandids(edit.motobrandids)
+          vm.dataBase.motobrandids = edit.motobrandids;
+          vm.dataBase.skuvalues = $window.eval(edit.skuvalues);
         });
         vm.isAttributesetLoad = true;
         vm.isLoadData = true;

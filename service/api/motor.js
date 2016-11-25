@@ -23,14 +23,21 @@ const brand = [
 /**
  * 获取车辆品牌列表
  */
+/*router.post('/motor/brand', function (req, res, next) {
+  res.json({
+    "status":0,
+    "data": brand
+  });
+});*/
+
+
 router.post('/motor/brand', function (req, res, next) {
+
   res.json({
     "status":0,
     "data": brand
   });
 });
-
-
 const series = {
   '1': [
     {"id": 1, "brandid": 1, "series": "AC Schnitzer 7系"},
@@ -272,6 +279,7 @@ router.post('/motor/series', function (req, res, next) {
   });
 });
 
+
 /**
  * 获取年份列表
  */
@@ -319,6 +327,7 @@ router.post('/motor/model', function (req, res, next) {
   res.json({
     "data": [
       {
+      "id": (req.query.brandid+req.query.seriesid+req.query.outputid)*1+1,
       "brandid": req.query.brandid*1,
       "gearid": 23,
       "logo": model.logo,
@@ -329,6 +338,7 @@ router.post('/motor/model', function (req, res, next) {
       "year": req.query.year
       },
       {
+        "id": (req.query.brandid+req.query.seriesid+req.query.outputid)*1+2,
         "brandid": req.query.brandid*1,
         "gearid": 23,
         "logo": model.logo,
@@ -339,6 +349,7 @@ router.post('/motor/model', function (req, res, next) {
         "year": req.query.year
       },
       {
+        "id": (req.query.brandid+req.query.seriesid+req.query.outputid)*1+3,
         "brandid": req.query.brandid*1,
         "gearid": 23,
         "logo": model.logo,

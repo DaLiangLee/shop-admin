@@ -164,7 +164,7 @@
         /**
          * 鼠标移入
          */
-        iElement.on('mouseenter', _.debounce(moveIn, 300));
+        //iElement.on('mouseenter', _.debounce(moveIn, 300));
         /*$document.on('mousemove', function (event) {
 
           console.log(event.target);
@@ -173,11 +173,11 @@
         /**
          * 鼠标移出
          */
-        iElement.on('mouseleave', function () {
-          console.log('mouseleave');
+        //iElement.on('mouseleave', function () {
+          //console.log('mouseleave');
 
-          hide();
-        });
+          //hide();
+        //});
         /**
          * 销毁操作
          */

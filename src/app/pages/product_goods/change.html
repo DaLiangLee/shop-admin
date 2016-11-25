@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="" class="col-sm-2 control-label"><span class="text-danger">*</span> 目前库存：</label>
+            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 目前库存：</label>
             <div class="col-sm-7">
               <input type="text" class="form-control" ng-model="vm.dataBase.stock" name="stock" cb-number-range="" data-value-min="0" data-value-max="99999999" placeholder="请输入0-99,999,999以内的整数" cb-placeholder ng-required="true">
               <div class="alert alert-danger" ng-if="goods.stock.$dirty && goods.stock.$error.cbNumberRange">请输入0-99,999,999以内的整数</div>
@@ -140,7 +140,6 @@
           </div>
         <h3>适用车型</h3>
         <hr>
-          {{vm.dataBase.motobrandids}}
         <div style="height: 500px; margin-bottom: 20px; overflow-y: auto">
           <div cb-vehicle-selection="" select="vm.dataBase.motobrandids"></div>
         </div>
