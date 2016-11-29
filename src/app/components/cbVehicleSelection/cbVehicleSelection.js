@@ -12,32 +12,6 @@
   /** @ngInject */
   function vehicleSelection(requestService) {
     return requestService.request('vehicle', 'motor');
-    /**
-     * 通过本地存储来保存文件
-     * sessionStorage   在关闭页面后即被清空
-     * localStorage     一直保存
-     * 设置数据    setItem(key,value)
-     * 全部数据    valueOf()
-     * 获取数据    getItem(key)
-     * 删除数据    removeItem(key)
-     * 清空数据    clear()
-     * 存储熟练    length
-     * 事件监听    storage[ie有兼容性问题]
-     */
-    /**
-     * 汽车名字
-     * @type {{}}
-     */
-    var vehicleNames = {};
-    /**
-     * 汽车品牌
-     * @type {{}}
-     */
-    var vehicleBrands = {};
-    /**
-     * 汽车品牌分类
-     */
-    var vehicleBrandsClasses = {};
   }
 
   /**
@@ -52,96 +26,112 @@
       var regular = new RegExp('^'+target);
       return regular.test(collection) ? collection : collection + " " + target;
     }
-    function getYearTitle(collection, target){
-      return collection && collection.replace(/\s\d{4}$/, "") + " " + target;
-    }
-    function getGroupList(arr) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        item.title = item.title ? item.title : item.brand;
-        item.brandid = item.id;
-        item.level = 1;
-        results.push(item);
-      });
-      return results;
-    }
+    /**
+     * 设置格式化数据，供页面好操作
+     * @param level
+     * @param data
+     * @param item
+     */
+    var setFormatData = function(level, data, item){
+      console.log('setFormatData', level, data, item);
 
-    function getSeries(arr, data) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        item.logo = data.logo;
-        item.title = item.title ? item.title : getSeriesTitle(item.series, data.brand);
-        item.brand = data.brand;
-        item.firstletter = data.firstletter;
-        item.seriesid = item.id;
-        item.level = 2;
-        results.push(item);
+      _.forEach(data, function(value){
+        value.level = level;
+        if(!value.title && value.level == 1){
+          value.title = value.brand;
+        }else if(!value.title && value.level == 2){
+          value.title = getSeriesTitle(value.series, item.brand);
+        }else if(!value.title && value.level == 3){
+          value.title = item.title +" "+ value.year;
+        }else if(!value.title && value.level == 4){
+          value.title = item.title +" "+ value.output;
+        }else if(!value.title && value.level == 5){
+          value.title = value.model;
+        }
+        if(angular.isUndefined(value.logo)){
+          value.logo = item.logo;
+        }
+        if(angular.isUndefined(value.firstletter)){
+          value.firstletter = item.firstletter;
+        }
+        if(angular.isUndefined(value.brand)){
+          value.brand = item.brand;
+        }
+        if(angular.isUndefined(value.brandid) && value.level == 1){
+          value.brandid = value.id;
+        }else{
+          value.brandid = item.brandid;
+        }
+        if(angular.isUndefined(value.seriesid) && value.level > 1){
+          if(item && item.seriesid){
+            value.seriesid = item.seriesid
+          }else{
+            value.seriesid = value.id;
+          }
+        }
+        if(angular.isUndefined(value.series) && value.level > 1){
+          value.series = item.series;
+        }
+        if(angular.isUndefined(value.yearid) && value.level > 2){
+          if(item && item.yearid){
+            value.yearid = item.yearid
+          }else{
+            value.yearid = value.id;
+          }
+        }
+        if(angular.isUndefined(value.year) && value.level > 2){
+          value.year = item.year;
+        }
+        if(angular.isUndefined(value.outputid) && value.level > 3){
+          if(item && item.outputid){
+            value.outputid = item.outputid
+          }else{
+            value.outputid = value.id;
+          }
+          if(angular.isUndefined(value.output)){
+            value.output = item.output;
+          }
+        }
       });
-      return results;
-    }
-    function getYear(arr, data) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        item.logo = data.logo;
-        item.title = item.title ? item.title : getYearTitle(data.title, item.year);
-        item.brandid = data.brandid;
-        item.brand = data.brand;
-        item.firstletter = data.firstletter;
-        item.series = data.series;
-        item.seriesid = data.seriesid;
-        item.yearid = item.id;
-        item.level = 3;
-        results.push(item);
-      });
-      return results;
-    }
+      return data;
+    };
 
-    function getOutput(arr, data) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        item.logo = data.logo;
-        item.title = item.title ? item.title : data.title + ' ' + item.output;
-        item.brand = data.brand;
-        item.firstletter = data.firstletter;
-        item.series = data.series;
-        item.year = data.year;
-        item.yearid = data.yearid;
-        item.brandid = data.brandid;
-        item.seriesid = data.seriesid;
-        item.outputid = item.id;
-        item.level = 4;
-        results.push(item);
-      });
-      return results;
-    }
+    /**
+     * 根据等级来定义删除项
+     * @param item     当前项
+     * @param key      列表当前项
+     * @param level    当前等级
+     */
+    var isRemoveChecked = function(item, key, level){
+      return {
+        "1": key.brandid == item.brandid && angular.isUndefined(key.seriesid),
+        "2": key.brandid == item.brandid && key.seriesid == item.seriesid && angular.isUndefined(key.year),
+        "3": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && angular.isUndefined(key.outputid),
+        "4": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && angular.isUndefined(key.modelid),
+        "5": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && key.modelid == item.modelid
+      }[level];
+    };
 
-    function getModel(arr, data) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        item.logo = data.logo;
-        item.title = item.model;
-        item.year = data.year;
-        item.brand = data.brand;
-        item.firstletter = data.firstletter;
-        item.series = data.series;
-        item.brandid = data.brandid;
-        item.output = data.output;
-        item.seriesid = data.seriesid;
-        item.outputid = data.outputid;
-        item.yearid = data.yearid;
-        item.modelid = item.modelid;
-        item.level = 5;
-        results.push(item);
-      });
-      return results;
-    }
-
-
+    /**
+     * 是否可以添加
+     * @param item
+     * @param key
+     * @param level
+     * @returns {*}
+     */
+    var isAddChecked = function (item, key, level) {
+      return {
+        1: key.brandid == item.brandid,
+        2: key.brandid == item.brandid,
+        3: key.brandid == item.brandid && key.seriesid == item.seriesid,
+        4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
+        5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
+      }[level];
+    };
     return {
       restrict: "A",
       scope: {
-        select: "=",
-        selectItem: '&'
+        select: "="
       },
       templateUrl: "app/components/cbVehicleSelection/cbVehicleSelection.html",
       link: function (scope, iElement, iAttrs) {
@@ -150,11 +140,15 @@
          * @type {Array}
          */
         var list = [];
+
+        /**
+         * 获取车辆品牌列表
+         */
         vehicleSelection['brand']().then(function (data) {
           list = data.data.data;
-          scope.brandList = getGroupList(treeService.enhance(data.data.data));
-          if(!angular.isUndefined(scope.select)){
-            scope.list = [];
+          scope.brandList = setFormatData(1, treeService.enhance(data.data.data));
+          scope.list = [];
+          if (!angular.isUndefined(scope.select)) {
             getSelect($window.eval(decodeURI(scope.select)));
           }
         });
@@ -191,47 +185,13 @@
             return key.modelid == item.modelid;
           });
         };
-        /**
-         * 删除结果数组
-         */
-        scope.removeHandle = function (item) {
-          //console.log(item, getState(item));
-         // getState(item)
-          item.$setCheckState(false);
-        };
-
-
-        /**
-         * api调用步骤：
-         * 1, 获取汽车品牌列表
-         * 2，根据汽车品牌id获取车系列表
-         * 3，根据车系id获取年份列表
-         * 4，根据汽车品牌id、车系id和年份获取排量列表
-         * 5，根据汽车品牌id、车系id、排量id和年份获取型号列表
-         *
-         * 操作思路：
-         * 1，当前项勾选，其下的所有子项全部勾选，提交api为当前项id
-         * 2，当前列表全选，父项勾选选中。
-         * 3，当前列表选中项大于1， 父项半选中状态。
-         * 4，切换父项，子项所有的状态保留
-         * 5，将当前选中的项显示结果列表，
-         *
-         * 结果列表显示逻辑：
-         * 1，显示所有项
-         * 3，只显示到当前项
-         * 2，删除以后可以从新选择
-         *
-         */
 
         /**
          * 获取对应的列表，来设置状态
          * @param item
          */
         function getSelect(arr) {
-          if(angular.isUndefined(arr)){
-            return [];
-          }
-          if (!arr.length) {
+          if(angular.isUndefined(arr) || !arr.length){
             return [];
           }
           var results = [];
@@ -271,604 +231,162 @@
               });
             }
           });
-          console.log(results);
-          setXauzn(results);
+          getSubKeysData(results);
           return results;
         }
-        function setXauzn(arr){
-          var json = {};
-          _.forEach(arr, function (item) {
-            if (!json[item.level]) {
-              json[item.level] = [];
+        function getSubKeysData(data){
+          var result = {};
+          _.forEach(data, function (item) {
+            if (!result[item.level]) {
+              result[item.level] = [];
             }
-            json[item.level].push(item);
+            result[item.level].push(item);
           });
-          console.log(json);
-          _.forEach(json, function (item, key) {
-            switch (key){
-              case '2':
-                _.forEach(_.uniq(item, 'brandid'), function (value) {
-                  vehicleSelection['series']({brandid: value.brandid}).then(function (data) {
-                    angular.forEach(scope.brandList, function (key) {
-                      if (key.id == value.brandid) {
-                        key.items = getSeries(data.data.data, value);
-                        return false;
-                      }
-                    });
-                    treeService.enhance(scope.brandList);
-                    var currentArray = _.filter(item, function (n) {
-                      return n.brandid == value.brandid;
-                    });
-                    _.forEach(currentArray, function (value2) {
-                      if(value2.isChecked){
-                        getState(value2).$setCheckState(true);
-                      }
-                    });
-                  });
-                });
-                break;
-              case '3':
-                _.forEach(_.uniq(item, 'seriesid'), function (value1) {
-                  vehicleSelection['year']({brandid: value1.brandid, seriesid: value1.seriesid}).then(function (data) {
-                    angular.forEach(scope.brandList, function (key) {
-                      if (key.id == value1.brandid) {
-                        angular.forEach(key.items, function (value) {
-                          if (value.id == value1.seriesid) {
-                            value.items = getYear(data.data.data, value1);
-                            return false;
-                          }
-                        });
-                        return false;
-                      }
-                    });
-                    treeService.enhance(scope.brandList);
-                    var currentArray = _.filter(item, function (n) {
-                      return n.seriesid == value1.seriesid;
-                    });
-                    _.forEach(currentArray, function (value2) {
-                      if(value2.isChecked){
-                        getState(value2).$setCheckState(true);
-                      }
-                    });
-                  });
-                });
-                break;
-              case '4':
-                _.forEach(_.uniq(item, 'year'), function (value1) {
-                  vehicleSelection['output']({
-                    brandid: value1.brandid,
-                    seriesid: value1.seriesid,
-                    year: value1.year
-                  }).then(function (data) {
-                    angular.forEach(scope.brandList, function (key) {
-                      if (key.id == value1.brandid) {
-                        angular.forEach(key.items, function (value) {
-                          if (value.id == value1.seriesid) {
-                            angular.forEach(value.items, function (key1) {
-                              if (key1.year == value1.year) {
-                                key1.items = getOutput(data.data.data, value1);
-                                return false;
-                              }
-                            });
-                            return false;
-                          }
-                        });
-                        return false;
-                      }
-                    });
-                    treeService.enhance(scope.brandList);
-                    var currentArray = _.filter(item, function (n) {
-                      return n.year == value1.year;
-                    });
-                    _.forEach(currentArray, function (value2) {
-                      if(value2.isChecked){
-                        getState(value2).$setCheckState(true);
-                      }
-                    });
-                  });
-                });
-                break;
-              case '5':
-                _.forEach(_.uniq(item, 'outputid'), function (value1) {
-                  vehicleSelection['model']({
-                    brandid: value1.brandid,
-                    seriesid: value1.seriesid,
-                    outputid: value1.outputid,
-                    year: value1.year
-                  }).then(function (data) {
-                    angular.forEach(scope.brandList, function (key) {
-                      if (key.id == value1.brandid) {
-                        angular.forEach(key.items, function (value) {
-                          if (value.id == value1.seriesid) {
-                            angular.forEach(value.items, function (key1) {
-                              if (key1.year == value1.year) {
-                                angular.forEach(key1.items, function (key2) {
-                                  if (key2.id == value1.outputid) {
-                                    key2.items = getModel(data.data.data, value1);
-                                    return false;
-                                  }
-                                });
-                                return false;
-                              }
-                            });
-                            return false;
-                          }
-                        });
-                        return false;
-                      }
-                    });
-                    treeService.enhance(scope.brandList);
-                    var currentArray = _.filter(item, function (n) {
-                      return n.outputid == value1.outputid;
-                    });
-                    _.forEach(currentArray, function (value2) {
-                        getState(value2).$setCheckState(true);
-                    });
-                  });
-                });
-                break;
-            }
+          result[2] && _.forEach(_.uniq(result[2], 'brandid'), function (value) {
+            var items = _.filter(result[2], function(n){
+              return n.brandid == value.brandid && !n.isChecked;
+            });
+            var parent = getState(value);
+            loadingSubData(2, parent, 'series', 'seriesList', function () {
+              var currentArray = _.filter(result[2], function (n) {
+                return n.brandid == value.brandid;
+              });
+              _.forEach(currentArray, function (value2) {
+                if(value2.isChecked){
+                  getState(value2).$setCheckState(true);
+                }
+              });
+              result[3] && setYear(items);
+            });
+
           });
+          function setYear(list){
+            _.forEach(list, function (value) {
+              var items = _.filter(result[3], function(n){
+                return n.brandid == value.brandid && n.seriesid == value.seriesid && !n.isChecked;
+              });
+              var parent = getState(value);
+              loadingSubData(3, parent, 'year', 'yearList', function () {
+                var currentArray = _.filter(result[3], function (n) {
+                  return n.seriesid == value.seriesid;
+                });
+                _.forEach(currentArray, function (value2) {
+                  if(value2.isChecked){
+                    getState(value2).$setCheckState(true);
+                  }
+                });
+                result[4] && setOutput(items);
+              });
+            });
+          }
+          function setOutput(list){
+            _.forEach(list, function (value) {
+              var items = _.filter(result[4], function(n){
+                return n.brandid == value.brandid && n.seriesid == value.seriesid && n.year == value.year && !n.isChecked;
+              });
+              var parent = getState(value);
+              loadingSubData(4, parent, 'output', 'outputList', function () {
+                var currentArray = _.filter(result[4], function (n) {
+                  return n.year == value.year;
+                });
+                _.forEach(currentArray, function (value2) {
+                  if(value2.isChecked){
+                    getState(value2).$setCheckState(true);
+                  }
+                });
+                result[5] && setModel(items);
+              });
+            });
+          }
+          function setModel(list){
+            _.forEach(list, function (value) {
+              var parent = getState(value);
+              loadingSubData(5, parent, 'model', 'modelList', function () {
+                var currentArray = _.filter(result[5], function (n) {
+                  return n.outputid == value.outputid;
+                });
+                _.forEach(currentArray, function (value2) {
+                    getState(value2).$setCheckState(true);
+                });
+              });
+            });
+          }
         }
 
-        scope.firsthandle = function (search) {
-          if (/^[A-Z]{1}$/.test(search)) {
-            scope.brandList = getGroupList($filter('filter')(list, {firstletter: search}))
-          } else {
-            scope.brandList = getGroupList($filter('filter')(list, {brand: search}))
-          }
-        };
-        var motor = {
-          'series': function () {
-            scope.seriesList = [];
-            scope.yearList = [];
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'year': function () {
-            scope.yearList = [];
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'output': function () {
-            scope.outputList = [];
-            scope.modelList = [];
-          },
-          'model': function () {
-            scope.modelList = [];
-          }
-        };
-        var motorApi = {
-          'series': function (type, item, index) {
-            vehicleSelection[type]({brandid: item.id}).then(function (data) {
-              scope.seriesList = getSeries(data.data.data, item);
-              angular.forEach(scope.brandList, function (key) {
-                if (key.id == item.id) {
-                  key.items = getSeries(data.data.data, item);
-                  return false;
-                }
-              });
-              treeService.enhance(scope.brandList);
-              scope.brandList[index].$isChecked() && scope.brandList[index].$setCheckState(true);
-            });
-          },
-          'year': function (type, item, index1, index2) {
-            vehicleSelection[type]({brandid: item.brandid, seriesid: item.id}).then(function (data) {
-              scope.yearList = getYear(data.data.data, item);
-              angular.forEach(scope.brandList, function (key) {
-                if (key.id == item.brandid) {
-                  angular.forEach(key.items, function (value) {
-                    if (value.id == item.id) {
-                      value.items = getYear(data.data.data, item);
-                      return false;
-                    }
-                  });
-                  return false;
-                }
-              });
-              treeService.enhance(scope.brandList);
-              scope.brandList[index1].items[index2].$isChecked() && scope.brandList[index1].items[index2].$setCheckState(true);
-            });
-          },
-          'output': function (type, item, index1, index2, index3) {
-            return vehicleSelection[type]({
-              brandid: item.brandid,
-              seriesid: item.seriesid,
-              year: item.year
-            }).then(function (data) {
-              scope.outputList = getOutput(data.data.data, item);
-              angular.forEach(scope.brandList, function (key) {
-                if (key.id == item.brandid) {
-                  angular.forEach(key.items, function (value) {
-                    if (value.id == item.seriesid) {
-                      angular.forEach(value.items, function (key1) {
-                        if (key1.year == item.year) {
-                          key1.items = getOutput(data.data.data, item);
-                          return false;
-                        }
-                      });
-                      return false;
-                    }
-                  });
-                  return false;
-                }
-              });
-              treeService.enhance(scope.brandList);
-              scope.brandList[index1].items[index2].items[index3].$isChecked() && scope.brandList[index1].items[index2].items[index3].$setCheckState(true);
-            });
-          },
-          'model': function (type, item, index1, index2, index3, index4) {
-            return vehicleSelection[type]({
-              brandid: item.brandid,
-              seriesid: item.seriesid,
-              outputid: item.id,
-              year: item.year
-            }).then(function (data) {
-              scope.modelList = getModel(data.data.data, item);
-              angular.forEach(scope.brandList, function (key) {
-                if (key.id == item.brandid) {
-                  angular.forEach(key.items, function (value) {
-                    if (value.id == item.seriesid) {
-                      angular.forEach(value.items, function (key1) {
-                        if (key1.year == item.year) {
-                          angular.forEach(key1.items, function (key2) {
-                            if (key2.id == item.id) {
-                              key2.items = getModel(data.data.data, item);
-                              return false;
-                            }
-                          });
-                          return false;
-                        }
-                      });
-                      return false;
-                    }
-                  });
-                  return false;
-                }
-              });
-              treeService.enhance(scope.brandList);
-              scope.brandList[index1].items[index2].items[index3].items[index4].$isChecked() && scope.brandList[index1].items[index2].items[index3].items[index4].$setCheckState(true);
-            });
-          }
-        };
         /**
-         * 选择子项
-         * @param item
+         * 在列表删除当前项
+         * 只需要给当前项设置取消选中状态即可
          */
-        var brandIndex = 0, seriesindex = 0, yearIndex = 0, outputIndex = 0;
-        scope.selecthandle = function (index, item, type) {
-          motor[type]();
-          if (type === 'series') {
-            brandIndex = index;
-            var tempArray = scope.brandList;
-            var temporary = tempArray[brandIndex].items;
-            _.isArray(tempArray) && _.forEach(tempArray, function (key) {
-              key.$open = false;
-            });
-            if (angular.isArray(temporary)) {
-              scope.seriesList = temporary;
-            } else {
-              motorApi[type](type, item, brandIndex);
-            }
-          } else if (type === 'year') {
-            seriesindex = index;
-            var tempArray = scope.brandList[brandIndex].items;
-            var temporary = tempArray[seriesindex].items;
-            _.isArray(tempArray) && _.forEach(tempArray, function (key) {
-              key.$open = false;
-            });
-            if (angular.isArray(temporary)) {
-              scope.yearList = temporary;
-            } else {
-              motorApi[type](type, item, brandIndex, seriesindex);
-            }
-          } else if (type === 'output') {
-            yearIndex = index;
-            var tempArray = scope.brandList[brandIndex].items[seriesindex].items;
-            var temporary = tempArray[yearIndex].items;
-            _.isArray(tempArray) && _.forEach(tempArray, function (key) {
-              key.$open = false;
-            });
-            if (angular.isArray(temporary)) {
-              scope.outputList = temporary;
-            } else {
-              motorApi[type](type, item, brandIndex, seriesindex, yearIndex);
-            }
-          } else if (type === 'model') {
-            outputIndex = index;
-            var tempArray = scope.brandList[brandIndex].items[seriesindex].items[yearIndex].items;
-            var temporary = tempArray[outputIndex].items;
-            _.isArray(tempArray) && _.forEach(tempArray, function (key) {
-              key.$open = false;
-            });
-            if (angular.isArray(temporary)) {
-              scope.modelList = temporary;
-            } else {
-              motorApi[type](type, item, brandIndex, seriesindex, yearIndex, outputIndex);
-            }
-          }
-          item.$open = !item.$open;
+        scope.removeHandle = function (item) {
+          item.$setCheckState(false);
         };
-        var isAddChecked = function (item, key, level) {
-          return {
-            1: key.brandid == item.brandid,
-            2: key.brandid == item.brandid,
-            3: key.brandid == item.brandid && key.seriesid == item.seriesid,
-            4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
-            5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
-          }[level];
-        };
-        var isRemoveChecked = function (item, key, level) {
-          return {
-            "1": key.brandid == item.brandid,
-            "2": key.brandid == item.brandid && key.seriesid == item.seriesid,
-            "3": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
-            "4": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid,
-            "5": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && key.modelid == item.modelid
-          }[level];
-        };
-        function addList(item, checked, level) {
-          if (checked) {
-            /**
-             *  1, 如果当前的$parent为undefined 一定是第一项
-             *  2, 当前等级为一级 level = 1
-             *  如果以上条件都满足，就把所有子级全部在list删除
-             *  添加当前的项
-             */
-            if(angular.isUndefined(item.$parent) && item.level === 1){ // 第一级
-              _.remove(scope.list, function (key) {
-                return isRemoveChecked(item, key, level);
-              });
-              scope.list.push(item);
-            }
-            /**
-             *  1, 当前选中，
-             *  2, 不能是最后一级 level = 5
-             *  3，当前的兄弟都没有选中
-             *  如果以上条件都满足，就把所有子级全部在list删除
-             *  添加当前的项
-             */
-            if(item.$checked && item.level !== 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))){
-              _.remove(scope.list, function (key) {
-                return isRemoveChecked(item, key, level);
-              });
-              scope.list.push(item);
-            }
-            /**
-             *  1, 当前选中，
-             *  2, 查询$parent 通过父$parent查找当前兄弟是否都选中状态
-             *  3，根据条件2来判断，如果2位true, 先删除不匹配的项
-             *  4，然后通过当前项的等级来判断，是否递归操作,否则就添加父级
-             *  5，根据条件2来判断，如果2位false就直接添加当前项
-             *  如果以上条件都满足，就把所有子级全部在list删除
-             *  添加当前的项
-             */
-            if (item.$parent && _.every(item.$parent.items, '$checked')) {
-              _.remove(scope.list, function (key) {
-                return isAddChecked(item, key, item.level);
-              });
-              if (level > 2) {
-                $timeout(function () {
-                  addList(item.$parent, true, level - 1);
-                }, 1);
-              } else {
-                scope.list.push(item.$parent);
-              }
-            } else {
-              scope.list.push(item);
-            }
-            scope.list = _.sortBy(_.uniq(scope.list), 'brandid');
-          } else {
-            /**
-             * 先全部清除
-             */
-            removeList(item, level);
-          }
-        }
 
+        /**
+         * tree每次操作复选框都是调用的事件
+         * @param item        当前项
+         * @param checked     选中状态
+         */
         treeService.checkStateChange = function (item, checked) {
-          addList(item, checked, item.level);
+          console.log('checkStateChange', item);
+          toggle(item, checked);
         };
 
         /**
-         * 删除列表
-         * @param item
-         * @param level
+         * 根据当前项状态切换
+         * @param item      当前项
+         * @param checked   选中状态
          */
-        function removeList(item, level){
-            switch (level){
-              case 1:
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item, key, level);
-                });
-                break;
-              case 2:
-                console.log(2);
-                var items = _.filter(item.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent, key, item.$parent.level);
-                });
-                var isItems = _.filter(item.$parent.items, function(key){
-                  return !key.$checked && !isRemoveChecked(item, key, level);
-                });
-                _.forEach(isItems, function(key){
-                  _.forEach(key.items, function(key2){
-                    console.log(key2);
-                    if(key2.$checked){
-                      scope.list.push(key2);
-                    }
-                  });
-                });
-                _.forEach(items, function(key){
-                  scope.list.push(key);
-                });
-                break;
-              case 3:
-                console.log(3);
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent, key, item.$parent.$parent.level);
-                });
-                var items1 = _.filter(item.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items1, function(key){
-                  scope.list.push(key);
-                });
-                var items = _.filter(item.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent, key, item.$parent.level);
-                });
-                var isItems = _.filter(item.$parent.items, function(key){
-                  return !key.$checked && !isRemoveChecked(item, key, level);
-                });
-                _.forEach(isItems, function(key){
-                  _.forEach(key.items, function(key2){
-                    console.log(key2);
-                    if(key2.$checked){
-                      scope.list.push(key2);
-                    }
-                  });
-                });
-                _.forEach(items, function(key){
-                  scope.list.push(key);
-                });
-                break;
-              case 4:
-                console.log(4);
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent.$parent, key, item.$parent.$parent.$parent.level);
-                });
-                var items2 = _.filter(item.$parent.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items2, function(key){
-                  scope.list.push(key);
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent, key, item.$parent.$parent.level);
-                });
-                var items1 = _.filter(item.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items1, function(key){
-                  scope.list.push(key);
-                });
-                var items = _.filter(item.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent, key, item.$parent.level);
-                });
-                var isItems = _.filter(item.$parent.items, function(key){
-                  return !key.$checked && !isRemoveChecked(item, key, level);
-                });
-                _.forEach(isItems, function(key){
-                  _.forEach(key.items, function(key2){
-                    console.log(key2);
-                    if(key2.$checked){
-                      scope.list.push(key2);
-                    }
-                  });
-                });
-                _.forEach(items, function(key){
-                  scope.list.push(key);
-                });
-                break;
-              case 5:
-                console.log(5);
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent.$parent.$parent, key, item.$parent.$parent.$parent.$parent.level);
-                });
-                var items3 = _.filter(item.$parent.$parent.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items3, function(key){
-                  scope.list.push(key);
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent.$parent, key, item.$parent.$parent.$parent.level);
-                });
-                var items2 = _.filter(item.$parent.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items2, function(key){
-                  scope.list.push(key);
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent.$parent, key, item.$parent.$parent.level);
-                });
-                var items1 = _.filter(item.$parent.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.forEach(items1, function(key){
-                  scope.list.push(key);
-                });
-                var items = _.filter(item.$parent.items, function(key){
-                  return key.$checked;
-                });
-                _.remove(scope.list, function (key) {
-                  return isRemoveChecked(item.$parent, key, item.$parent.level);
-                });
-                var isItems = _.filter(item.$parent.items, function(key){
-                  return !key.$checked && !isRemoveChecked(item, key, level);
-                });
-                _.forEach(isItems, function(key){
-                  _.forEach(key.items, function(key2){
-                    console.log(key2);
-                    if(key2.$checked){
-                      scope.list.push(key2);
-                    }
-                  });
-                });
-                _.forEach(items, function(key){
-                  scope.list.push(key);
-                });
-                break;
-            }
+        function toggle(item, checked) {
+          if (checked) {
+            addList(item);
+          } else {
+            removeList(item);
+          }
+        }
 
+        /**
+         * 设置列表
+         * 自动去重排序返回一个新列表
+         * @param list
+         */
+        function setList(list) {
+          scope.list.push(list);
+          scope.list = _.sortBy(_.uniq(scope.list), 'brandid');
+        }
 
-
-
-
-
-
-
-          /*/!**
+        /**
+         * 当前项添加到列表
+         * @param item     当前项
+         */
+        function addList(item) {
+          /**
            *  1, 如果当前的$parent为undefined 一定是第一项
            *  2, 当前等级为一级 level = 1
            *  如果以上条件都满足，就把所有子级全部在list删除
            *  添加当前的项
-           *!/
-          if(angular.isUndefined(item.$parent) && level === 1){ // 第一级
+           */
+          if(angular.isUndefined(item.$parent)){ // 第一级
             _.remove(scope.list, function (key) {
-              return isRemoveChecked(item, key, level);
+              return isRemoveChecked(item, key, item.level);
             });
+            setList(item);
             return ;
           }
-
-          /!**
+          /**
            *  1, 当前选中，
            *  2, 不能是最后一级 level = 5
            *  3，当前的兄弟都没有选中
            *  如果以上条件都满足，就把所有子级全部在list删除
            *  添加当前的项
-           *!/
-          if(item.$checked && item.level !== 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))){
+           */
+          if(item.$checked && item.level != 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))){
             _.remove(scope.list, function (key) {
-              return isRemoveChecked(item, key, level);
+              return isRemoveChecked(item, key, item.level);
             });
-            console.log(item, true, level);
-
-
+            setList(item);
             return ;
           }
-
-
-          /!**
+          /**
            *  1, 当前选中，
            *  2, 查询$parent 通过父$parent查找当前兄弟是否都选中状态
            *  3，根据条件2来判断，如果2位true, 先删除不匹配的项
@@ -876,221 +394,319 @@
            *  5，根据条件2来判断，如果2位false就直接添加当前项
            *  如果以上条件都满足，就把所有子级全部在list删除
            *  添加当前的项
-           *!/
-          if (item.$parent && !_.every(item.$parent.items, '$checked')) {
-            console.log(item.$parent.$isIndeterminate());
-            var items = _.filter(item.$parent.items, function(key){
-              return key.$checked;
-            });
-            _.remove(scope.list, function (key) {
-              return isRemoveChecked(item.$parent, key, item.$parent.level);
-            });
-            _.forEach(items, function(key){
-              scope.list.push(key);
-            });
-          }
-          console.log(3333);*/
-
-        }
-
-
-        /**
-         * 获取车系列表
-         * @param item
-         */
-        function getSeriesResults(item) {
-          if (!item.length) {
-            return ;
-          }
-          var results = [];
-          var items = _.filter(item, function (key) {
-            return key.brandid && key.seriesid;
-          });
-          if (!items.length) {
-            return;
-          }
-          _.forEach(items, function (value) {
-            results.push({
-              "id": value.seriesid,
-              "seriesid": value.seriesid,
-              "brandid": value.brandid,
-              "brand": encodeURI(value.brand),
-              "firstletter": items.firstletter,
-              "logo": value.logo,
-              "title": encodeURI(getSeriesTitle(value.series, value.brand)),
-              "series": encodeURI(value.series),
-              "isChecked": angular.isUndefined(value.year)
-            });
-          });
-          return _.uniq(results, 'id');
-        }
-
-        /**
-         * 获取年份列表
-         * @param item
-         */
-        function getYearResults(item) {
-          if (!item.length) {
-            return;
-          }
-          var results = [];
-          var items = _.filter(item, function (key) {
-            return key.brandid && key.seriesid && key.year;
-          });
-          if (!items.length) {
-            return;
-          }
-          _.forEach(items, function (value) {
-            results.push({
-              "id": value.yearid,
-              "brandid": value.brandid,
-              "brand": encodeURI(value.brand),
-              "firstletter": value.firstletter,
-              "seriesid": value.seriesid,
-              "series": encodeURI(value.series),
-              "year": value.year,
-              "logo": value.logo,
-              "title": encodeURI(getYearTitle(getSeriesTitle(value.series, value.brand), value.year)),
-              "isChecked": angular.isUndefined(value.outputid)
-            });
-          });
-          return _.uniq(results, 'id');
-        }
-
-        /**
-         * 获取排量列表
-         * @param item
-         */
-        function getOutputResults(item) {
-          if (!item.length) {
-            return;
-          }
-          var results = [];
-          var items = _.filter(item, function (key) {
-            return key.brandid && key.seriesid && key.year && key.outputid;
-          });
-          if (!items.length) {
-            return;
-          }
-          _.forEach(items, function (value) {
-            results.push({
-              "id": value.outputid,
-              "brandid": value.brandid,
-              "seriesid": value.seriesid,
-              "outputid": value.outputid,
-              "brand": encodeURI(value.brand),
-              "firstletter": value.firstletter,
-              "year": value.year,
-              "logo": value.logo,
-              "title": encodeURI(getYearTitle(getSeriesTitle(value.series, value.brand), value.year) + " " + value.output),
-              "output": encodeURI(value.output),
-              "isChecked": angular.isUndefined(value.modelid)
-            });
-          });
-          return _.uniq(results, 'id');
-        }
-
-        /**
-         * 获取车型列表
-         * @param item
-         */
-        function getModelResults(item) {
-          if (!item.length) {
-            return;
-          }
-          var results = [];
-          var items = _.filter(item, function (key) {
-            return key.brandid && key.seriesid && key.year && key.outputid && key.model;
-          });
-          if (!items.length) {
-            return;
-          }
-          _.forEach(items, function (value) {
-            results.push({
-              "id": value.modelid,
-              "modelid": value.modelid,
-              "brandid": value.brandid,
-              "brand": encodeURI(value.brand),
-              "firstletter": value.firstletter,
-              "gearid": value.gearid,
-              "logo": value.logo,
-              "model": encodeURI(value.model),
-              "title": encodeURI(value.model),
-              "outputid": value.outputid,
-              "seriesid": value.seriesid,
-              "structid": value.structid,
-              "year": value.year
-            });
-          });
-          return results;
-        }
-
-        /**
-         * 获取格式化数据对象
-         * @param item
-         * @returns {{}}
-         */
-        var getBrandResults = function(item){
-          /**
-           * 如果长度为0，直接返回{}
            */
-          if(!item.length){
-            return {};
+          if (item.$parent && _.every(item.$parent.items, '$checked')) {
+            _.remove(scope.list, function (key) {
+              return isAddChecked(item, key, item.level);
+            });
+            if (item.level > 2) {
+              $timeout(function () {
+                addList(item.$parent);
+              }, 1);
+            } else {
+              setList(item.$parent);
+            }
+          } else {
+            setList(item);
           }
-          var items = _.find(item, function(key){
-            return key.level == 1;
+        }
+
+        /**
+         * 删除列表指定项
+         * @param item     当前项
+         */
+        function removeList(item) {
+          _.remove(scope.list, function (key) {
+            return isRemoveChecked(item, key, item.level);
           });
-          if(item.length === 1 && items && items.$checked){
-            return {
-              brand: {
-                "brand": encodeURI(items.brand),
-                "firstletter": items.firstletter,
-                "id": items.brandid,
-                "logo": items.logo,
-                "title": encodeURI(items.title),
-                "isChecked": true
+          /**
+           *  1, 当前取消，
+           *  2, 查询$parent 通过父$parent查找当前兄弟是否都选中状态
+           *  3，根据条件2来判断，如果2位true, 先删除不匹配的项
+           *  4，然后通过当前项的等级来判断，是否递归操作,否则就添加父级
+           *  5，根据条件2来判断，如果2位false就直接添加当前项
+           *  如果以上条件都满足，就把所有子级全部在list删除
+           *  添加当前的项
+           */
+          if(item.$parent){
+            _.remove(scope.list, function (key) {
+              return isRemoveChecked(item.$parent, key, item.level);
+            });
+            _.forEach(item.$siblings(), function (key) {
+              if(angular.isUndefined(key.$isIndeterminate()) && key.$checked){
+                key.$setCheckState(true);
               }
+            });
+            if(item.level > 2){
+              $timeout(function () {
+                removeList(item.$parent);
+              }, 100);
             }
           }
-          return {
-            brand: {
-              "brand": encodeURI(item[0].brand),
-              "firstletter": item[0].firstletter,
-              "id": item[0].brandid,
-              "logo": item[0].logo,
-              "title": encodeURI(item[0].brand),
-              "isChecked": false
-            },
-            series: getSeriesResults(item),
-            year: getYearResults(item),
-            output: getOutputResults(item),
-            model: getModelResults(item)
+        }
+
+        var clearSubkeys = {
+          'series': function () {
+            scope.seriesList = [];
+            scope.yearList = [];
+            scope.outputList = [];
+            scope.modelList = [];
+            return scope.brandList;
+          },
+          'year': function () {
+            scope.yearList = [];
+            scope.outputList = [];
+            scope.modelList = [];
+            return scope.seriesList;
+          },
+          'output': function () {
+            scope.outputList = [];
+            scope.modelList = [];
+            return scope.yearList;
+          },
+          'model': function () {
+            scope.modelList = [];
+            return scope.outputList;
           }
         };
-        var getResults = function (arr) {
+        var getSubmitData = {
+          'series': function (item) {
+            return {
+              brandid: item.brandid
+            };
+          },
+          'year': function (item) {
+            return {
+              brandid: item.brandid,
+              seriesid: item.seriesid
+            };
+          },
+          'output': function (item) {
+            return {
+              brandid: item.brandid,
+              seriesid: item.seriesid,
+              year: item.year
+            };
+          },
+          'model': function (item) {
+            return {
+              brandid: item.brandid,
+              seriesid: item.seriesid,
+              year: item.year,
+              outputid: item.outputid
+            };
+          }
+        };
+        /**
+         * 加载子数据
+         * @param level    当前等级
+         * @param item     当前项
+         * @param type     当前类型
+         * @param listType 当前列表类型
+         * @param callback 回调函数
+         * @constructor
+         */
+        function loadingSubData(level, item, type,listType, callback){
+          vehicleSelection[type](getSubmitData[type](item)).then(function (data) {
+            item.items = setFormatData(level, data.data.data, item);
+            scope[listType] = setFormatData(level, data.data.data, item);
+            treeService.enhance(scope.brandList);
+            callback && callback();
+          });
+        }
+        scope.selecthandle = function (level, item, type, listType) {
+          _.forEach(clearSubkeys[type](), function (key) {
+            key.$open = false;
+          });
+          if (angular.isArray(item.items)) {
+            scope[listType] = item.items;
+          } else {
+            loadingSubData(level, item, type, listType, function(){
+              item.$isChecked() && item.$setCheckState(true);
+            });
+          }
+          item.$open = !item.$open;
+        };
+
+        /**
+         * 获取结果数据
+         * @param data
+         */
+        function getResults(data){
           var brand = {};
           var results = [];
-          _.forEach(arr, function (item) {
+          _.forEach(data, function (item) {
             if (!brand[item.brandid]) {
               brand[item.brandid] = [];
             }
             brand[item.brandid].push(item);
           });
-          _.forEach(brand, function (item) {
-            results.push(getBrandResults(item));
-          });
+          /**
+           * brand 格式化
+           *  {
+                "brand": "AC Schnitzer",
+                "firstletter": "A",
+                "id": 1,
+                "logo": "A_AC-Schnitzer.png"
+              }
+           * series 格式化
+           *  {
+           *    brandid:1,
+                id:1,
+                series:"AC Schnitzer 7系"
+           *  }
+           * year   格式化
+           *  {
+           *    brandid:1,
+                id:1,
+                seriesid:2,
+                year:"2015"
+           *  }
+           * output 格式化
+           *  {
+           *    id:45,
+                output:"3.0T",
+                year:"2015"
+           *  }
+           * model  格式化
+           *  {
+                "modelid": 1,
+                "firstletter": "A",
+                "brandid": 1,
+                "seriesid": 2,
+                "year": "2015",
+                "outputid": 45,
+                "structid": 2,
+                "gearid": 23,
+                "model": "AC Schnitzer X5 2015款 ACS35 35i"
+              }
+           */
+            function getBrand(item){
+                return {
+                  "brand": encodeURI(item[0].brand),
+                  "firstletter": item[0].firstletter,
+                  "id": item[0].brandid,
+                  "brandid": item[0].brandid,
+                  "logo": item[0].logo,
+                  "isChecked": item.length === 1 && item[0].$checked
+                }
+            }
+            function getSeries(item){
+              if (!item.length) {
+                return ;
+              }
+              var results = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                results.push({
+                  "id": value.seriesid,
+                  "brandid": value.brandid,
+                  "series": encodeURI(value.series),
+                  "seriesid": value.seriesid,
+                  "isChecked": angular.isUndefined(value.year)
+                });
+              });
+              return _.uniq(results, 'id');
+            }
+            function getYear(item){
+              if (!item.length) {
+                return;
+              }
+              var results = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                results.push({
+                  "id": value.yearid,
+                  "brandid": value.brandid,
+                  "seriesid": value.seriesid,
+                  "year": value.year,
+                  "isChecked": angular.isUndefined(value.outputid)
+                });
+              });
+              return _.uniq(results, 'id');
+            }
+            function getOutput(item){
+              if (!item.length) {
+                return;
+              }
+              var results = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year && key.outputid;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                results.push({
+                  "id": value.outputid,
+                  "brandid": value.brandid,
+                  "seriesid": value.seriesid,
+                  "year": value.year,
+                  "output": encodeURI(value.output),
+                  "outputid": value.outputid,
+                  "isChecked": angular.isUndefined(value.modelid)
+                });
+              });
+              return _.uniq(results, 'id');
+            }
+            function getModel(item){
+              if (!item.length) {
+                return;
+              }
+              var results = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year && key.outputid && key.model;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                results.push({
+                  "id": value.modelid,
+                  "modelid": value.modelid,
+                  "brandid": value.brandid,
+                  "firstletter": value.firstletter,
+                  "gearid": value.gearid,
+                  "logo": value.logo,
+                  "model": encodeURI(value.model),
+                  "outputid": value.outputid,
+                  "seriesid": value.seriesid,
+                  "structid": value.structid,
+                  "year": value.year
+                });
+              });
+              return results;
+            }
+            _.forEach(brand, function(item){
+              results.push({
+                brand: getBrand(item),
+                series: getSeries(item),
+                year: getYear(item),
+                output: getOutput(item),
+                model: getModel(item)
+              });
+            });
           return results;
-        };
+        }
+
         var listScope = scope.$watch('list', function (value) {
           if (value) {
-            console.log('list', getResults(value));
+            //console.log('list', getResults(value));
+            console.log(value);
             scope.select = getResults(value);
-            //console.log('cbVehicleSelection', getResults(value));
+            console.log('cbVehicleSelection', getResults(value));
           }
         }, true);
-        /*scope.$destroy(function(){
-         listScope();
-         });*/
       }
     }
   }

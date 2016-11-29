@@ -23,11 +23,20 @@
         var enhanceItem = function (item, childrenName, parent) {
             if (parent) {
                 item.$parent = parent;
+                item.$siblings = function () {
+                  if(!angular.isArray(item.$parent.items)){
+                    return [];
+                  }
+                  return _.filter(item.$parent.items, function (key) {
+                    return key.$$hashKey != item.$$hashKey;
+                  });
+                };
             }
             item.$hasChildren = function () {
                 var subItems = this.$children();
                 return angular.isArray(subItems) && subItems.length;
             };
+
             item.$children = function () {
                 return this[childrenName] || [];
             };

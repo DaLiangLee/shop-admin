@@ -10,6 +10,8 @@
     <button>测试</button>
   </div>-->
   <!--{{vm.list}}-->
-  {{vm.list}}
-  <div cb-vehicle-selection="" select="vm.list"></div>
+  <pre>
+    {{vm.list | json}}
+  </pre>
+  <div cb-vehicle-selection select="vm.list"></div>
 </div>
