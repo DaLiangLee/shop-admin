@@ -64,7 +64,7 @@
                     {
                         "id": 7,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.server.edit({id: item.serverid})">编辑</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.server.edit({serverid: item.serverid})">编辑</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putupserver" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdownserver" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
                         "name": '操作',
                         "width": 300
                     }
@@ -195,7 +195,7 @@
             {
               "id": 7,
               "cssProperty": "state-column",
-              "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.server.edit({id: item.serverid})">编辑</button>  <button class="btn btn-primary" product-server-goods-dialog="" pskuids="item.pskuids" productcost="item.productcost">管理商品</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
+              "fieldDirective": '<button class="btn btn-primary" product-server-quote-dialog="edit" item="item" item-handler="propsParams.addItem(data)">编辑</button>  <button class="btn btn-primary" product-server-goods-dialog="" pskuids="item.pskuids" productcost="item.productcost">管理商品</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putupofferprice" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdownofferprice" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
               "name": '操作',
               "width": 300
             }
@@ -213,7 +213,7 @@
               showPageGoto: true
             },
             'addColumnsBarDirective': [
-              '<button class="btn btn-primary" product-server-quote-dialog="" item="propsParams.offerprices" item-handler="propsParams.addItem(data)">+新增报价</button> '
+              '<button class="btn btn-primary" product-server-quote-dialog="add" item="propsParams.offerprices" item-handler="propsParams.addItem(data)">+新增报价</button> '
             ]
           }
         },

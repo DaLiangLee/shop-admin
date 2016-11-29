@@ -64,48 +64,90 @@
                     }
                   },
                   "server": {
-                    "list": {
+                    "list": {   // 服务列表
                       "url": "/product/server",
                       "type": "GET"
                     },
-                    "remove": {
+                    "remove": {   //删除服务
                       "url": "/product/server/remove",
                       "type": "POST"
                     },
-                    "putup": {
-                      "url": "/product/server/putup",
+                    "putdownserver": {   // 暂停服务
+                      "url": "/product/server/putdownserver",
                       "type": "POST"
                     },
-                    "save": {
+                    "save": {   // 保存服务
                       "url": "/product/server/save",
                       "type": "POST"
                     },
-                    "putdown": {
-                      "url": "/product/server/putdown",
+                    "putupserver": {   //恢复服务
+                      "url": "/product/server/putupserver",
                       "type": "POST"
                     },
-                    "edit": {
+                    "edit": {   // 编辑服务
                       "url": "/product/server/edit",
                       "type": "POST"
                     },
-                    "price": {
-                      "url": "/product/server/price",
+                    "offerprice": {   // 编辑报价
+                      "url": "/product/server/offerprice",
                       "type": "POST"
                     },
-                    "export": {
+                    "putupofferprice": {   // 恢复服务报价
+                      "url": "/product/server/putupofferprice",
+                      "type": "POST"
+                    },
+                    "putdownofferprice": {   // 暂停服务报价
+                      "url": "/product/server/putdownofferprice",
+                      "type": "POST"
+                    },
+                    "removeprice": {   // 删除报价
+                      "url": "/product/server/removeprice",
+                      "type": "POST"
+                    },
+                    "allpskulist": {   // 管理商品（获得全部的商品SKU列表）
+                      "url": "/product/server/allpskulist",
+                      "type": "POST"
+                    },
+                    "pskulist": {   // 管理商品（依据服务报价获得商品SKU列表）编辑时候使用
+                      "url": "/product/server/pskulist",
+                      "type": "POST"
+                    },
+                    "export": {  // 导出
                       "url": "/product/server/export",
                       "type": "POST"
                     },
-                    "import": {
+                    "import": {   // 导入
                       "url": "/product/server/import",
                       "type": "POST"
                     },
-                    "attrsku": {
+                    "attrsku": {  // 获得与服务类目关联的品牌、属性集及其SKU
                       "url": "/product/server/attrsku",
                       "type": "POST"
                     },
-                    "category": {
+                    "category": {   // 获取服务类目
                       "url": "/product/server/category",
+                      "type": "POST"
+                    },
+                    "search": {   //搜索服务
+                      "url": "/product/server/search",
+                      "type": "POST"
+                    }
+                  }
+                },
+                "trade": {
+                  "porder": {
+                    "list": {
+                      "url": "/trade/porder",
+                      "type": "GET"
+                    }
+                  },
+                  "sorder": {
+                    "list": {
+                      "url": "/trade/sorder",
+                      "type": "GET"
+                    },
+                    "detail": {
+                      "url": "/trade/detail",
                       "type": "POST"
                     }
                   }

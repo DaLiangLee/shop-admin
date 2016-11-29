@@ -241,7 +241,7 @@
   }
 
   /** @ngInject */
-  function productServerQuoteDialog(cbDialog, productGoods, productServerChangeConfig) {
+  function productServerQuoteDialog(cbDialog) {
     return {
       restrict: "A",
       scope: {
@@ -249,18 +249,22 @@
         itemHandler: "&"
       },
       link: function(scope, iElement, iAttrs){
-
+        var type = iAttrs.productServerQuoteDialog;
         function handler(childScope){
-          childScope.items = angular.copy(scope.item);
+          if(angular.isUndefined(scope.item)){
+            childScope.items = {
+              motorbrandids: [],
+              saleprice: "",
+              warranty: 12,
+              productcost: 0,
+              status: 1,
+              pskuids: []
+            };
+          }else{
+            childScope.items = angular.copy(scope.item);
+          }
           childScope.interceptor = false;
-          childScope.items = {
-            motorbrandids: [],
-            saleprice: "",
-            warranty: 12,
-            productcost: 0,
-            status: 1,
-            pskuids: []
-          };
+
           /**
            * 确定按钮
            */
@@ -271,7 +275,7 @@
            * 拦截确定
            */
           childScope.interceptorConfirm = function () {
-            scope.itemHandler({data: {"status":"0", "data": childScope.items}});
+            scope.itemHandler({data: {"status":"0", "type": type, "data": childScope.items}});
             childScope.close();
           };
         }

@@ -39,6 +39,12 @@ app.use('/shopservice/admin', require('./api/goods'));
   //服务管理
 app.use('/shopservice/admin', require('./api/server'));
 
+// 订单管理
+  //商品订单
+app.use('/shopservice/admin', require('./api/porder'));
+  //服务订单
+app.use('/shopservice/admin', require('./api/sorder'));
+
 // 店员管理
 app.use('/shopservice/admin', require('./api/member'));
 

@@ -217,6 +217,8 @@
     if (vm.isChange) {
       productGoods.edit(currentParams).then(function (data) {
         var edit = data.data.data;
+        console.log(edit);
+        
         getAttrsku(data.data.data.cateid, function(data){
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
@@ -232,6 +234,7 @@
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
       vm.dataBase.skuvalues = [];
+      vm.dataBase.motobrandids = [];
       vm.dataBase.mainphoto = [];
     }
 
@@ -416,6 +419,10 @@
       }
       if(!vm.sizeModel.every){
         cbAlert.alert('规格对应的值没有选择');
+        return ;
+      }
+      if(!vm.dataBase.motobrandids.length){
+        cbAlert.alert('您还没有选择适用车型');
         return ;
       }
       productGoods.save(getDataBase(vm.dataBase)).then(function (data) {

@@ -18,7 +18,7 @@
                   <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.cateid">
                   <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.cateid" select-handler="vm.selectModel.handler(data)"></div>
               </div>
-              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.productcategory"></p>
+              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.catename"></p>
             </div>
           </div>
           <div class="form-group">
@@ -34,7 +34,7 @@
                   <p class="text-warning" ng-if="!vm.dataBase.servercateid">项目名称是必选的</p>
                 </div>
               </div>
-              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.brandname"></p>
+              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.servername"></p>
             </div>
           </div>
           <div class="form-group">
@@ -78,7 +78,7 @@
         </form>
     </div>
 </div>
-
+<!--
 <script type="text/ng-template" id="cbPskuidsTipsPopoverTemplate.html">
   <h3 class="h3 text-center">商品详情</h3>
   <ul class="list-unstyled" style="padding: 0;">
@@ -86,4 +86,4 @@
       <span bo-text="item.productname"></span>：<span bo-text="item.subtotal | moneyFilter"></span>
     </li>
   </ul>
-</script>
+</script>-->

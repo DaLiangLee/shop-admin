@@ -1,5 +1,30 @@
 <div class="g-view">
-    <div class="container-fluid">
-        <h1>服务订单管理</h1>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">服务订单管理</div>
+      <div class="panel-body">
+        <div simple-search config="vm.gridSearch.config" search-pre-handler="vm.gridSearch.handler(data)"></div>
+      </div>
     </div>
+
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+  </div>
 </div>
+<script type="text/ng-template" id="cbSkuvaluesTipsPopoverTemplate.html">
+  <h3 class="h3 text-center">商品规格</h3>
+  <ul class="list-unstyled" style="padding: 0;">
+    <li bindonce ng-repeat="item in templateData">
+      <span bo-text="item.skuname"></span>：<span bo-text="item.items[0].skuvalue"></span>
+    </li>
+  </ul>
+</script>
+<script type="text/ng-template" id="cbTradePorderStatusTipsPopoverTemplate.html">
+  <p bindonce>
+    订单完成时间：<span bo-bind="templateData | date : 'yyyy-MM-dd'"></span>
+  </p>
+</script>
+<script type="text/ng-template" id="cbTradePorderPaystatusTipsPopoverTemplate.html">
+  <p bindonce>
+    付款时间：<span bo-bind="templateData | date : 'yyyy-MM-dd'"></span>
+  </p>
+</script>

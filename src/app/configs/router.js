@@ -30,7 +30,15 @@
             .when('/product/goods/', '/product/goods/list/')
             .when('/product/goods/list', '/product/goods/list/1')
             .when('/product/goods/list/', '/product/goods/list/1')
-            .when('/member', '/member/employee/list/')                  // 员工管理
+            .when('/product/server', '/product/server/list/')     // 产品管理
+            .when('/product/server/', '/product/server/list/')
+            .when('/product/server/list', '/product/server/list/1')
+            .when('/product/server/list/', '/product/server/list/1')
+            .when('/trade/porder', '/trade/porder/list/')              // 商品订单管理
+            .when('/trade/porder/', '/trade/porder/list/')
+            .when('/trade/porder/list', '/trade/porder/list/1')
+            .when('/trade/porder/list/', '/trade/porder/list/1')
+            .when('/member', '/member/employee/list/')                  // 服务管理
             .when('/member/', '/member/employee/list/')
             .when('/member/employee', '/member/employee/list/')
             .when('/member/employee/', '/member/employee/list/')
@@ -226,7 +234,7 @@
                 }
             })
             .state('product.server.edit', {     // 编辑项目
-                url: '/edit/:id',
+                url: '/edit/:serverid',
                 templateUrl: 'app/pages/product_server/change.html',
                 controller: 'ProductServerChangeController',
                 controllerAs: 'vm',
@@ -298,13 +306,13 @@
                 template: '<div ui-view></div>',
                 title: '商品订单管理',
                 permission: {
-                    parentid: 1,
+                    parentid: 5,
                     category: "trade",
-                    sectionid: 5
+                    sectionid: 50000
                 }
             })
             .state('trade.porder.list', {      // 商品订单管理
-                url: '/porder',
+                url: '/list/:page',
                 templateUrl: 'app/pages/trade_porder/list.html',
                 controller: 'TradePorderListController',
                 controllerAs: 'vm',
@@ -312,19 +320,7 @@
                 permission: {
                     parentid: 50000,
                     category: "trade",
-                    sectionid: 50001
-                }
-            })
-            .state('trade.porder.detail', {     // 商品订单详情
-                url: '/detail/:id',
-                templateUrl: 'app/pages/trade_porder/detail.html',
-                controller: 'TradePorderDetailController',
-                controllerAs: 'vm',
-                title: '商品订单详情',
-                permission: {
-                    parentid: 50000,
-                    category: "trade",
-                    sectionid: 50003
+                    sectionid: 50000
                 }
             })
             .state('trade.sorder', {      // 服务订单管理
@@ -332,21 +328,21 @@
                 template: '<div ui-view></div>',
                 title: '服务订单管理',
                 permission: {
-                    parentid: 50000,
+                    parentid: 5,
                     category: "trade",
                     sectionid: 50100
                 }
             })
             .state('trade.sorder.list', {      // 服务订单管理
-                url: '/porder',
+                url: '/list/:page',
                 templateUrl: 'app/pages/trade_sorder/list.html',
                 controller: 'TradeSorderListController',
                 controllerAs: 'vm',
                 title: '服务订单管理',
                 permission: {
-                    parentid: 50000,
+                    parentid: 50100,
                     category: "trade",
-                    sectionid: 50101
+                    sectionid: 50100
                 }
             })
             .state('trade.sorder.add', {     // 新增服务订单
@@ -356,9 +352,9 @@
                 controllerAs: 'vm',
                 title: '新增服务订单',
                 permission: {
-                    parentid: 50000,
+                    parentid: 50100,
                     category: "trade",
-                    sectionid: 50102
+                    sectionid: 50101
                 }
             })
             .state('trade.sorder.edit', {     // 编辑服务订单
@@ -368,21 +364,21 @@
                 controllerAs: 'vm',
                 title: '编辑服务订单',
                 permission: {
-                    parentid: 50000,
+                    parentid: 50100,
                     category: "trade",
-                    sectionid: 50003
+                    sectionid: 50101
                 }
             })
             .state('trade.sorder.detail', {     // 服务订单详情
-                url: '/detail/:id',
-                templateUrl: 'app/pages/trade_porder/detail.html',
+                url: '/detail/:detailid',
+                templateUrl: 'app/pages/trade_sorder/detail.html',
                 controller: 'TradePorderDetailController',
                 controllerAs: 'vm',
                 title: '服务订单详情',
                 permission: {
-                    parentid: 50000,
+                    parentid: 50100,
                     category: "trade",
-                    sectionid: 50003
+                    sectionid: 50103
                 }
             })
             .state('finance', {      // 财务管理

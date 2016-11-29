@@ -14,12 +14,11 @@
       if(!name){
         return name;
       }
-      console.log(arguments);
       var num = name * 100;
       for (var i=1, len= arguments.length; i < len; i++){
         num += arguments[i]*100;
       }
-      return parseInt(num, 10)/100;
+      return (parseInt(num, 10)/100).toFixed(2);
     }
   }
 

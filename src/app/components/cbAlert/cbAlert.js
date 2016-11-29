@@ -110,9 +110,6 @@
         if (!userParams[0].title) {
           throw new Error('options 没有写‘title’');
         }
-        if (!userParams[0].text) {
-          throw new Error('options 没有写‘text’');
-        }
         if (!userParams[0].type) {
           throw new Error('options 没有写‘type’');
         }
@@ -162,6 +159,12 @@
         var dialog = "";
         var icon = "",inputBox = "";
         switch (_this.option.type){
+          case 'none':
+            /**
+             * 错误
+             */
+            icon = '';
+            break;
           case 'error':
             /**
              * 错误
@@ -260,11 +263,15 @@
             if(_.trim($input.val())){
               _this.option.showLoaderOnConfirm && setLoader();
               callback($input.val());
+              _this.close();
             }
             $input.siblings('.error-container').toggleClass('show', !_.trim($input.val()));
           }else{
-            _this.option.showLoaderOnConfirm && setLoader();
-            callback(true);
+            if(_this.option.showLoaderOnConfirm){
+              setLoader();
+            }else{
+              callback(true);
+            }
           }
         }else{
           _this.close();
@@ -288,7 +295,7 @@
        */
       $cancel.on('click', function () {
         if(_this.option.doneFunctionExists){
-          callback(false);
+          callback(false, _this);
         }else{
           _this.close();
         }
@@ -330,11 +337,12 @@
     };
   /** @ngInject */
   function cbAlert($rootScope){
+    var temporary = null;
     return {
-      alert: function( arg1, arg2, arg3 ) {
+      dialog: function( arg1, arg2, arg3 ) {
         $rootScope.$evalAsync(function(){
           if( angular.isFunction(arg2) ) {
-            new AlertDialog( arg1, function(isConfirm){
+            temporary = new AlertDialog( arg1, function(isConfirm){
               $rootScope.$evalAsync( function(){
                 arg2(isConfirm);
               });
@@ -344,9 +352,65 @@
           }
         });
       },
+      alert: function( arg1, arg2, arg3 ) {
+        $rootScope.$evalAsync(function(){
+          new AlertDialog( arg1, arg2, arg3 );
+        });
+      },
+      confirm: function (title, callback, message, type) {
+        $rootScope.$evalAsync(function(){
+          if(!angular.isFunction(callback)){
+            throw Error('callback is not a function');
+          }
+          temporary = new AlertDialog({
+            title: title,       //标题
+            text: message ||　"",        //提示文字
+            type: type || 'none',
+            showConfirmButton: true,    //显示确认按钮
+            showCancelButton: true    //显示取消按钮
+          }, function(isConfirm){
+            $rootScope.$evalAsync( function(){
+              callback(isConfirm);
+              temporary.close();
+            });
+          });
+        });
+      },
+      prompt: function (title, callback) {
+        $rootScope.$evalAsync(function(){
+          if(!angular.isFunction(callback)){
+            throw Error('callback is not a function');
+          }
+          $rootScope.$evalAsync(function(){
+            temporary = new AlertDialog({
+              title: title,       //标题
+              text: '',        //提示文字
+              showConfirmButton: true,    //显示确认按钮
+              showCancelButton: true    //显示取消按钮
+            }, function(isConfirm, obj){
+              console.log(isConfirm, obj);
+
+              $rootScope.$evalAsync( function(){
+                callback(isConfirm, obj);
+              });
+            });
+          });
+        });
+      },
       success: function(title, message) {
         $rootScope.$evalAsync(function(){
           new AlertDialog( title, message, 'success' );
+        });
+      },
+      tips: function(title, delay) {
+        $rootScope.$evalAsync(function(){
+          temporary = new AlertDialog({
+            title: title,       //标题
+            text: '',        //提示文字
+            type: 'success',      //类型
+            showConfirmButton: false,    //显示确认按钮
+            delay: delay || 3000     //延迟时间
+          });
         });
       },
       error: function(title, message) {
@@ -366,7 +430,8 @@
       },
       close: function() {
         $rootScope.$evalAsync(function(){
-          AlertDialog.close();
+          temporary.close();
+          temporary = null;
         });
       }
     }

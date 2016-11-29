@@ -5,20 +5,17 @@
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
+const brand = require('./../data/cb_motor_brand.json').RECORDS;
+/*
+const motor = require('./../data/cb_motor_all.json').RECORDS;
+const motor = require('./../data/cb_motor_all.json').RECORDS;
+const motor = require('./../data/cb_motor_all.json').RECORDS;
+*/
+//const motor = require('./../data/cb_motor_all.json').RECORDS;
 
-const brand = [
-  {"brand":"AC Schnitzer","firstletter":"A","id":1,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AC-Schnitzer.png"},
-  {"brand":"阿尔法罗密欧","firstletter":"A","id":4,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AErFaLuoMiOu.png"},
-  {"brand":"阿斯顿·马丁","firstletter":"A","id":5,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_ASiDunMaDing.png"},
-  {"brand":"安凯客车","firstletter":"A","id":6,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png"},
-  {"brand":"奥迪","firstletter":"A","id":7,"logo":"http://localhost:9090/shopservice/public/logo/motor/A_AoDi.png"},
-  {"brand":"巴博斯","firstletter":"B","id":8,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaBoSi.png"},
-  {"brand":"宝马","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png"},
-  {"brand":"保时捷","firstletter":"B","id":13,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoShiJie.png"},
-  {"brand":"北京汽车","firstletter":"B","id":14,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiJingQiChe.png"},
-  {"brand":"北汽威旺","firstletter":"B","id":17,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BeiQiWeiWang.png"},
-  {"brand":"奔驰","firstletter":"B","id":20,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BenChi.png"}
-];
+
+console.log(brand.length);
+
 
 /**
  * 获取车辆品牌列表
