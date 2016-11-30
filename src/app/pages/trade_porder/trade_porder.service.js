@@ -100,13 +100,13 @@
                       "id": 13,
                       "name": "订单状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | tradeStatusFilter"></span><span bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'server_order_status\'"></span><span bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
                     },
                     {
                       "id": 14,
                       "name": "付款状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | tradePaystatusFilter"></span><span bo-if="item.paystatus == 0" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span><span bo-if="item.paystatus == 0" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</span>'
                     },
                     {
                         "id": 15,

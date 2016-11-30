@@ -1,0 +1,99 @@
+<div class="g-view">
+  <div class="container-fluid">
+    <h2>新建服务订单</h2>
+    <hr>
+    <form class="form-horizontal" autocomplete="off" name="sorder" role="form" novalidate>
+      <h3>服务订单</h3>
+      <hr>
+      <button select-user-dialog="" item-handler="vm.selectUserHandler(data)">选择用户</button>
+
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label class="col-sm-2 control-label">子订单数量：</label>
+          <div class="col-sm-7">
+            <p class="h4" ng-bind="vm.dataBase.productid"></p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="col-sm-2 control-label">订单金额：</label>
+          <div class="col-sm-7">
+            <p class="h4" ng-bind="vm.dataBase.productid"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label class="col-sm-2 control-label">工时总计：</label>
+          <div class="col-sm-7">
+            <p class="h4" ng-bind="vm.dataBase.productid"></p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="col-sm-2 control-label">商品总计：</label>
+          <div class="col-sm-7">
+            <p class="h4" ng-bind="vm.dataBase.productid"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_realname" class="col-sm-2 control-label"><span class="text-danger">*</span> 客户姓名：</label>
+          <div class="col-sm-7">
+            <input type="text" id="trade_sorder_add_realname" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入姓名" cb-placeholder  ng-required="true">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_username" class="col-sm-2 control-label"><span class="text-danger">*</span> 手机号码：</label>
+          <div class="col-sm-7">
+            <input type="text" id="trade_sorder_add_username" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入11位手机号码" cb-placeholder  ng-required="true">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <label class="col-sm-1 control-label">工时总计：</label>
+          <div class="col-sm-11">
+            <p class="h4" ng-bind="vm.dataBase.productid"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_realname" class="col-sm-2 control-label"><span class="text-danger">*</span> 车牌号：</label>
+          <div class="col-sm-7">
+            <input type="type" ng-model="vm.che" ng-pattern="/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/" name="che" style="display: none">
+            <div cb-select-license select="vm.che"></div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_username" class="col-sm-2 control-label"><span class="text-danger">*</span> VIN码：</label>
+          <div class="col-sm-7">
+            <input type="text" id="trade_sorder_add_username" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入11位手机号码" cb-placeholder  ng-required="true">
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_realname" class="col-sm-2 control-label"><span class="text-danger">*</span> 发动机号：</label>
+          <div class="col-sm-7">
+            <input type="text" id="trade_sorder_add_realname" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入姓名" cb-placeholder  ng-required="true">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label for="trade_sorder_add_username" class="col-sm-2 control-label"><span class="text-danger">*</span> 总里程数：</label>
+          <div class="col-sm-7">
+            <input type="text" id="trade_sorder_add_username" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入11位手机号码" cb-placeholder  ng-required="true">
+          </div>
+        </div>
+      </div>
+
+
+      <h3>适用车型</h3>
+      <hr>
+      <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>
+      </div>
+    </form>
+  </div>
+</div>

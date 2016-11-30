@@ -149,6 +149,10 @@
                     "detail": {
                       "url": "/trade/detail",
                       "type": "POST"
+                    },
+                    "user": {
+                      "url": "/trade/sorder/user",
+                      "type": "POST"
                     }
                   }
                 },

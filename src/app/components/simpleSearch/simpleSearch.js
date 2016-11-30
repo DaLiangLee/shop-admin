@@ -38,8 +38,7 @@
          * @type {{searchParams: string, searchPrefer: boolean, searchDirective: Array}}
          */
         var DEFAULT_CONFIG = {
-            searchID: "",       //表单id
-            searchParams: "searchItems",
+            searchID: "",               //表单id
             searchPrefer: false,       //过滤形式（客户端false还是服务端true）   如果数据少可以选择本地过滤。后期扩展使用暂不适用
             searchDirective: []        //自定义列表项配置    必填项
         };
@@ -47,7 +46,8 @@
             restrict: "A",
             scope: {
                 config: "=",
-                searchPreHandler: "&"
+                searchPreHandler: "&",
+                searchHandler: "&"
             },
             templateUrl: "app/components/simpleSearch/simpleSearch.html",
             controller: ["$scope", function($scope) {
@@ -55,7 +55,6 @@
                 $scope.config = angular.extend({}, DEFAULT_CONFIG, $scope.config);
                 $scope.searchID = $scope.config.searchID;
                 $scope.items = $scope.config.searchDirective;
-
                 // 给date设置默认配置
                 angular.forEach($scope.items, function (value1) {
                     if(value1.type === 'date'){
@@ -75,12 +74,11 @@
                         });
                     }
                 });
-
                 $scope.dateOptions = {
                     formatYear: 'yy',
                     startingDay: 1
                 };
-                $scope.searchParams = angular.copy($scope.config.searchParams);
+                $scope.searchParams = {};
                 $scope.setSearch = function () {
                     var searchParams = {};
                     angular.forEach($scope.searchParams, function (key, value) {
@@ -91,16 +89,18 @@
                         }
                     });
                     $scope.searchPreHandler({data: searchParams});
+                    $scope.searchHandler({data: searchParams});
                 };
                 $scope.cancel = function () {
-                    var page = angular.copy($scope.config.searchParams);
+                    var page = angular.copy($scope.searchParams);
                     angular.forEach(page, function (value, key) {
                         if(key !== 'page'){
-                            page[key] = undefined;
+                            delete page[key];
                         }
                     });
                     $scope.searchParams = page;
                     $scope.searchPreHandler({data: $scope.searchParams});
+                    $scope.searchHandler({data: $scope.searchParams});
                 };
             }]
         }

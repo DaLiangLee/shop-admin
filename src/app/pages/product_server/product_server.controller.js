@@ -322,7 +322,7 @@
         productServer.edit(currentParams).then(function (data) {
           var edit = data.data.data;
           console.log(edit);
-          getAttrsku(data.data.data.cateid, function(data){
+          getAttrsku(edit.server.cateid, function(data){
             vm.dataBase = setDataBase(edit);
             vm.isAttributesetLoad = true;
             vm.isLoadData = true;

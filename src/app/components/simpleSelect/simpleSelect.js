@@ -48,6 +48,7 @@
          *
          */
         scope.config = {
+          search: angular.isDefined(iAttrs.search),
           multiple: angular.isDefined(iAttrs.multiple),
           once: angular.isDefined(iAttrs.once),
           value: getOptions()[0],
@@ -105,7 +106,7 @@
         var search = {};
         search[name] = undefined;
         scope.search = {
-          prefer: false,
+          prefer: scope.config.search,
           params: undefined,
           handler: function (data) {
             search[name] = data || undefined;
@@ -121,7 +122,9 @@
           scope.items = value || [];
           scope.choose.once = scope.items.length === 1 && angular.isDefined(iAttrs.once) && scope.select;
           if(scope.items.length){
-            scope.search.prefer = value.length > 6;
+            if(scope.config.search){
+              scope.search.prefer = value.length > 6;
+            }
             if(!scope.select){
               scope.choose.text = "-- 请点击选择 --";
             }else{

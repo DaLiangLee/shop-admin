@@ -267,10 +267,9 @@
             }
             $input.siblings('.error-container').toggleClass('show', !_.trim($input.val()));
           }else{
+            callback(true);
             if(_this.option.showLoaderOnConfirm){
               setLoader();
-            }else{
-              callback(true);
             }
           }
         }else{
@@ -336,7 +335,7 @@
       clearTimeout(this.timer);
     };
   /** @ngInject */
-  function cbAlert($rootScope){
+  function cbAlert($rootScope, $timeout){
     var temporary = null;
     return {
       dialog: function( arg1, arg2, arg3 ) {
@@ -357,6 +356,25 @@
           new AlertDialog( arg1, arg2, arg3 );
         });
       },
+      ajax: function(title, callback, message, type){
+        $rootScope.$evalAsync(function(){
+          if(!angular.isFunction(callback)){
+            throw Error('callback is not a function');
+          }
+          temporary = new AlertDialog({
+            title: title,       //标题
+            text: message ||　"",        //提示文字
+            type: type || 'none',
+            showConfirmButton: true,    //显示确认按钮
+            showCancelButton: true,    //显示取消按钮
+            showLoaderOnConfirm: true
+          }, function(isConfirm){
+            $rootScope.$evalAsync( function(){
+              callback(isConfirm);
+            });
+          });
+        });
+      },
       confirm: function (title, callback, message, type) {
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
@@ -371,7 +389,6 @@
           }, function(isConfirm){
             $rootScope.$evalAsync( function(){
               callback(isConfirm);
-              temporary.close();
             });
           });
         });
@@ -387,11 +404,9 @@
               text: '',        //提示文字
               showConfirmButton: true,    //显示确认按钮
               showCancelButton: true    //显示取消按钮
-            }, function(isConfirm, obj){
-              console.log(isConfirm, obj);
-
+            }, function(isConfirm){
               $rootScope.$evalAsync( function(){
-                callback(isConfirm, obj);
+                callback(isConfirm);
               });
             });
           });
@@ -402,12 +417,12 @@
           new AlertDialog( title, message, 'success' );
         });
       },
-      tips: function(title, delay) {
+      tips: function(title, delay, type) {
         $rootScope.$evalAsync(function(){
-          temporary = new AlertDialog({
+          new AlertDialog({
             title: title,       //标题
             text: '',        //提示文字
-            type: 'success',      //类型
+            type: type || 'success',      //类型
             showConfirmButton: false,    //显示确认按钮
             delay: delay || 3000     //延迟时间
           });

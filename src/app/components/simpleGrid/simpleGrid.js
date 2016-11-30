@@ -177,7 +177,11 @@
             if(config.paginationSupport && !scope.showNoneDataInfoTip){    //添加分页
                 page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="'+config.paginationInfo.showPageGoto+'"></div></div>';
             }
-            node += '<td colspan="'+ (scope.columns.length-1) +'">'+ btn + page +'</td>';
+            if(config.checkboxSupport){
+              node += '<td colspan="'+ (scope.columns.length-1) +'">'+ btn + page +'</td>';
+            }else{
+              node += '<td colspan="'+ scope.columns.length +'">'+ btn + page +'</td>';
+            }
             return '<tFoot ng-if="!showNoneDataInfoTip && !loadingState"><tr>' + node + '</tr></tFoot>';
         }
 

@@ -1,0 +1,11 @@
+.trade_sorder_select_user_dialog{
+  .modal-dialog{
+    width: 1000px;
+    .searchSection .control-label{
+      white-space: nowrap;
+    }
+    .simple-grid-none-data{
+      height: 300px;
+    }
+  }
+}
