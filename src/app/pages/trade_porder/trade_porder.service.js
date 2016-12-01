@@ -82,7 +82,7 @@
                       "id": 10,
                       "name": "客户信息",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.realname + item.username"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.realname + item.mobile"></span>'
                     },
                     {
                       "id": 11,
@@ -100,7 +100,7 @@
                       "id": 13,
                       "name": "订单状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'server_order_status\'"></span><span bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'porder_order_status\'"></span><span bo-if="item.status == 2" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
                     },
                     {
                       "id": 14,

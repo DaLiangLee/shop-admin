@@ -89,6 +89,13 @@ body.stop-scrolling{
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-align: center;
     border-radius: 5px;
+    .show-loader-text{
+      text-align: center;
+      line-height: 30px;
+      font-size: 14px;
+      color: #ff9900;
+      display: none;
+    }
     .icon{
       $red:     #F27474;
       $orange:  #F8BB86;

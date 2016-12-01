@@ -15,12 +15,4 @@
     <div class="none-info" ng-if="!items.length && !search.params">暂无数据</div>
     <div class="none-info" ng-if="!items.length && search.params">没有搜索到关于的<span ng-bind="search.params"></span>信息</div>
   </div>
-  <!--<div class="select" ng-if="!config.searchPrefer">
-    <ul class="list-unstyled">
-      <li ng-repeat="item in items track by $index" ng-class="{'active': setClass(item)}" ng-click="options(item)">
-        <img ng-src="{{item[config.images]}}" alt="" ng-if="config.images" class="images">
-        <span ng-bind="item[config.name]"></span>
-      </li>
-    </ul>
-  </div>-->
 </div>

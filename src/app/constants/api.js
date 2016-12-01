@@ -153,6 +153,38 @@
                     "user": {
                       "url": "/trade/sorder/user",
                       "type": "POST"
+                    },
+                    "offerprice": {
+                      "url": "/trade/sorder/offerprice",
+                      "type": "POST"
+                    },
+                    "motor": {
+                      "url": "/trade/sorder/motor",
+                      "type": "POST"
+                    },
+                    "remind": {
+                      "url": "/trade/sorder/remind",
+                      "type": "POST"
+                    },
+                    "confirmMotor": {
+                      "url": "/trade/sorder/confirmMotor",
+                      "type": "POST"
+                    },
+                    "cancel": {
+                      "url": "/trade/sorder/cancel",
+                      "type": "POST"
+                    },
+                    "finish": {
+                      "url": "/trade/sorder/finish",
+                      "type": "POST"
+                    },
+                    "pickupMotor": {
+                      "url": "/trade/sorder/pickupMotor",
+                      "type": "POST"
+                    },
+                    "refund": {
+                      "url": "/trade/sorder/refund",
+                      "type": "POST"
                     }
                   }
                 },

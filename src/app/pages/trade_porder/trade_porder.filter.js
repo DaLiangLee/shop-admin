@@ -18,15 +18,21 @@
         '7': '已退款'
       },
       'server_order_paystatus': {
-        '0': '已付款',
-        '1': '未付款',
+        '0': '未付款',
+        '1': '已付款',
         '2': '待退款',
         '3': '已退款'
       },
       'server_order_child': {
         '0': '待服务',
         '1': '服务中',
-        '2': '服务完成'
+        '2': '服务完成',
+        "3": "已关闭"
+      },
+      'porder_order_status': {
+        '0': '已下单',
+        '1': '已使用',
+        '2': '已完成'
       }
     })
     .filter('formatStatusFilter', formatStatusFilter)

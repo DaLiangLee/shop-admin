@@ -37,37 +37,104 @@
        */
       vm.gridModel.config.propsParams = {
         complete: function (data) {   // 服务完成
-          cbAlert.alert('服务完成', '等待API实现');
-          //console.log('服务完成', data);
-/*          cbAlert.ajax('heh', function(isConfirm){
-            console.log(isConfirm);
+          cbAlert.ajax('您是否确认服务完成？', function(isConfirm){
             if(isConfirm){
-              setTimeout(function(){
-                cbAlert.tips('hhe', 'hahhaahshs ');
-              }, 3000);
+              console.log('您是否确认客户提车？', data);
+              tradeSorder.finish({
+                orderid: data.orderid
+              }).then(function(results){
+                if(results.data.status == '0'){
+                  cbAlert.tips('确认服务完成成功');
+                  getList();
+                }
+              });
             }else{
               cbAlert.close();
             }
-          });*/
+          }, "如果确认服务完成该订单已完成",'warning');
         },
         confirmTakecar: function(data){ // 确认接车
-          cbAlert.alert('确认接车', '等待API实现');
+          if(data.status == "0"){
+            tradeSorder.confirmMotor({
+              orderid: data.data.orderid,
+              motorid: data.data.motorid,
+              totalmile: data.data.totalmile
+            }).then(function(results){
+              if(results.data.status == '0'){
+                cbAlert.tips('确认接车成功', 2000);
+                getList();
+              }
+            });
+          }
         },
         takecar: function(data){   // 客户提车
-          //console.log('客户提车', data);
-          cbAlert.alert('客户提车', '等待API实现');
+          cbAlert.ajax('您是否确认客户提车？', function(isConfirm){
+            if(isConfirm){
+              console.log('您是否确认客户提车？', data);
+              tradeSorder.pickupMotor({
+                orderid: data.orderid
+              }).then(function(results){
+                if(results.data.status == '0'){
+                  cbAlert.tips('确认客户提车成功');
+                  getList();
+                }
+              });
+            }else{
+              cbAlert.close();
+            }
+          }, "如果确认客户提车该订单已完成",'warning');
         },
         refund: function(data){   // 订单退款
-          //console.log('订单退款', data);
-          cbAlert.alert('订单退款', '等待API实现');
+          cbAlert.ajax('您是否确认订单退款？', function(isConfirm){
+            if(isConfirm){
+              console.log('您是否确认订单退款？', data);
+              tradeSorder.refund({
+                orderid: data.orderid
+              }).then(function(results){
+                if(results.data.status == '0'){
+                  cbAlert.tips('订单退款成功');
+                  getList();
+                }
+              });
+            }else{
+              cbAlert.close();
+            }
+          }, "如果确认订单退款，钱将打给用户",'warning');
         },
-        reminder: function(data){   // 提醒客户
-          //console.log('提醒客户', data);
-          cbAlert.alert('提醒客户', '等待API实现');
+        reminder: function(item){   // 提醒客户
+          console.log('提醒客户', item);
+          item.disabled = true;
+          tradeSorder.remind({
+            storeid: item.storeid,
+            orderid: item.orderid,
+            realname: item.realname,
+            mobile: item.mobile
+          }).then(function(data){
+            var results = data.data;
+            if(results.status == '0'){
+              cbAlert.tips('提醒客户成功', 2000);
+            }else{
+              cbAlert.tips(results.rtnInfo, 3000, 'error');
+            }
+            item.disabled = false;
+          });
         },
         cancelorder: function(data){   // 取消订单
-          //console.log('提醒客户', data);
-          cbAlert.alert('取消订单', '等待API实现');
+          cbAlert.ajax('您是否确认取消订单？', function(isConfirm){
+            if(isConfirm){
+              console.log('取消订单？', data);
+              tradeSorder.cancel({
+                orderid: data.orderid
+              }).then(function(results){
+                if(results.data.status == '0'){
+                  cbAlert.tips('确认取消订单成功');
+                  getList();
+                }
+              });
+            }else{
+              cbAlert.close();
+            }
+          }, "如果确认取消订单该订单将终止",'warning');
         }
       };
 
@@ -126,10 +193,15 @@
     }
 
     /** @ngInject */
-    function TradeSorderChangeController(tradeSorder, tradeSorderChangeConfig) {
+    function TradeSorderChangeController(tradeSorder, tradeSorderChangeConfig, cbAlert) {
       var vm = this;
       vm.dataBase = {
-
+        storeid: "1",
+        totalcost: 0,
+        totalsale: 0,
+        motormodel: "请先选择车辆",
+        realname: "请先选择客户",
+        mobile: "请先选择客户"
       };
       /*vm.dataBase = {
         userid: "",  // 用户id
@@ -144,13 +216,38 @@
         details: []
       }*/
 
+      /**
+       * 选择用户
+       * @param data
+       */
       vm.selectUserHandler = function (data) {
         if(data.status == '0'){
           vm.dataBase.userid = data.data.userid;
           vm.dataBase.realname = data.data.realname;
-          vm.dataBase.username = data.data.username;
+          vm.dataBase.mobile = data.data.username;
+          vm.$$userclass = data.data.userclass;
         }
-      }
+      };
+
+      /**
+       * 选择车辆信息
+       * @param data
+       */
+      vm.selectMotorHandler = function (data) {
+        console.log('selectMotorHandler', data);
+        if(data.status == '1'){
+          cbAlert.alert(data.data);
+        }
+        if(data.status == '0'){
+          vm.dataBase.enginenumber = data.data.enginenumber;
+          vm.dataBase.motorid = data.data.motorid;
+          vm.dataBase.motormodel = data.data.model;
+          vm.dataBase.licence = data.data.licence;
+          vm.dataBase.vin = data.data.vin;
+          vm.dataBase.totalmile = data.data.totalmile;
+          vm.isMotormodel = true;
+        }
+      };
 
       /**
        * 表格配置
@@ -170,21 +267,41 @@
        *
        */
       vm.gridModel.config.propsParams = {
-        complete: function (data) {   // 服务完成
-          cbAlert.alert('服务完成', '等待API实现');
-          //console.log('服务完成', data);
-          /*          cbAlert.ajax('heh', function(isConfirm){
-           console.log(isConfirm);
-           if(isConfirm){
-           setTimeout(function(){
-           cbAlert.tips('hhe', 'hahhaahshs ');
-           }, 3000);
-           }else{
-           cbAlert.close();
-           }
-           });*/
+        addItems: function (data) {   // 新增项目
+          console.log('addItems', data);
+          if(data.status == "0"){
+            vm.gridModel.itemList.push(data.data);
+            vm.gridModel.loadingState = false;
+            computSealeCost();
+          }
+        },
+        removeItem: function(data){  // 删除项目
+          console.log('removeItem', data);
+          if(data.status == "0") {
+            _.remove(vm.gridModel.itemList, {"offerid": data.transmit});
+            computSealeCost();
+          }
         }
       };
+
+      function computSealeCost(){   // 计算工时费和商品费用
+        var sale = 0,cost = 0;
+        angular.forEach(vm.gridModel.itemList, function (item) {
+          sale += item.saleprice * 100;
+          cost += item.productcost * 100;
+        });
+        vm.dataBase.totalcost = cost/100;
+        vm.dataBase.totalsale = sale/100;
+        vm.dataBase.childs = vm.gridModel.itemList;
+      }
+
+      /**
+       * 提交数据
+       */
+      vm.submit = function () {
+        console.log(vm.dataBase);
+
+      }
 
 
 

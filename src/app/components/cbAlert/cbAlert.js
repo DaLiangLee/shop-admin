@@ -14,7 +14,6 @@
   angular
     .module('shopApp')
     .factory('cbAlert', cbAlert);
-
     function supportCss3(style) {
       var prefix = ['webkit', 'Moz', 'ms', 'o'],
         i,
@@ -26,13 +25,17 @@
           });
         };
 
-      for (i in prefix)
+      for (i in prefix){
         humpString.push(_toHumb(prefix[i] + '-' + style));
+      }
 
       humpString.push(_toHumb(style));
 
-      for (i in humpString)
-        if (humpString[i] in htmlStyle) return true;
+      for (i in humpString){
+        if (humpString[i] in htmlStyle) {
+          return true;
+        }
+      }
 
       return false;
     }
@@ -231,6 +234,9 @@
         icon && (dialog += icon);
         dialog += title;
         dialog += text;
+        if(_this.option.showLoaderOnConfirm){
+          dialog += '<p class="show-loader-text">正在提交中。。。</p>';
+        }
         inputBox && (dialog += inputBox);
         buttonBox && (dialog += buttonBox);
         return dialog;
@@ -285,6 +291,7 @@
           left: $confirm.position().left +5,
           top: $confirm.position().top +26
         }).show();
+        _this.$modal.find('.show-loader-text').show();
       }
       $input.on('input', function () {
         $input.siblings('.error-container').toggleClass('show', !_.trim($input.val()));
