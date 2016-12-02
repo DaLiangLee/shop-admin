@@ -10,18 +10,18 @@ const GOODS_ATTRSKU = require('./../data/goods_attrsku');
 const generateJSON = require('./../generate');
 
 var goods = generateJSON({
+  "abstracts": "asdasd爱的十大阿萨德",
   "audit": "0",
   "cateid": 2,
   "guid": '@id',
-  'serverid': '@id',
-  "servercateid": 14,
-  'status|0-1': 0,
+  "motorbrandids": "[{\"brand\":{\"brand\":\"%E5%AE%9D%E9%AA%8F\",\"firstletter\":\"B\",\"id\":9,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoJun.png\"}},{\"brand\":{\"brand\":\"%E5%AE%9D%E9%A9%AC\",\"firstletter\":\"B\",\"id\":11,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png\"}}]#[{\"brand\":{\"brand\":\"%E5%A5%A5%E8%BF%AA\",\"firstletter\":\"A\",\"id\":7,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/A_AoDi.png\"},\"series\":[{\"id\":38,\"brandid\":7,\"series\":\"%E5%A5%A5%E8%BF%AAA4\"}]},{\"brand\":{\"brand\":\"%E5%A5%94%E9%A9%B0\",\"firstletter\":\"B\",\"id\":20,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BenChi.png\"},\"series\":[{\"id\":214,\"brandid\":20,\"series\":\"%E5%A5%94%E9%A9%B0E%E7%BA%A7(%E8%BF%9B%E5%8F%A3)\"}]}]#[{\"brand\":{\"brand\":\"%E9%98%BF%E6%96%AF%E9%A1%BF%C2%B7%E9%A9%AC%E4%B8%81\",\"firstletter\":\"A\",\"id\":5,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/A_ASiDunMaDing.png\"}},{\"brand\":{\"brand\":\"%E5%AE%89%E5%87%AF%E5%AE%A2%E8%BD%A6\",\"firstletter\":\"A\",\"id\":6,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/A_AnKaiKeChe.png\"}}]#[{\"brand\":{\"brand\":\"%E5%A5%A5%E8%BF%AA\",\"firstletter\":\"A\",\"id\":7,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/A_AoDi.png\"}},{\"brand\":{\"brand\":\"%E5%B7%B4%E5%8D%9A%E6%96%AF\",\"firstletter\":\"B\",\"id\":8,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaBoSi.png\"}}]",
   "recommend": "0",
-  "storeid": 1,
-  'catename': '@ctitle(3, 10)',
-  'servername': '@ctitle(3, 10)',
-  'motorbrandids': '[{"brand":{"brand":"%E5%AE%9D%E9%A9%AC","firstletter":"B","id":11,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png"}}]#[{"brand":{"brand":"%E4%BF%9D%E6%97%B6%E6%8D%B7","firstletter":"B","id":13,"logo":"http://localhost:9090/shopservice/public/logo/motor/B_BaoShiJie.png"}}]',
-  'abstracts': '@ctitle(1, 30)'
+  "scatename1": '@ctitle(3, 10)',   // 所有页面的服务大类名
+  "scatename2": '@ctitle(3, 10)',   // 所有页面的服务子类名
+  "servercateid": 14,
+  "serverid": '@id',
+  'status|0-1': 0,
+  "storeid": '@id'
 }, 100);
 
 
@@ -67,16 +67,37 @@ router.post('/product/server/attrsku', function (req, res, next) {
 });
 
 /**
- * 保存商品
+ * 保存服务基本信息
  */
-router.post('/product/server/save', function (req, res, next) {
+router.post('/product/server/saveServer', function (req, res, next) {
   console.log(req.query);
   res.json({
-    "data": "",
+    "data": generateJSON({
+      "serverid": '@id'
+    }, 1).data[0].serverid,
     "status": "0"
   });
 });
-module.exports = router;
+/**
+ * 保存服务报价
+ */
+router.post('/product/server/saveOfferprice', function (req, res, next) {
+  console.log(req.query);
+  res.json({
+    "data": generateJSON({
+      "serverid": req.query.serverid,
+      "motorbrandids": req.query.motorbrandids,
+      "productcost": req.query.productcost,
+      "psku": "[]",
+      "saleprice": req.query.saleprice,
+      "status": req.query.status,
+      "warranty": req.query.warranty,
+      "guid": '@id'
+    }, 1).data[0],
+    "status": "0"
+  });
+});
+
 
 /**
  * 编辑商品

@@ -76,8 +76,24 @@
                       "url": "/product/server/putdownserver",
                       "type": "POST"
                     },
-                    "save": {   // 保存服务
-                      "url": "/product/server/save",
+                    "saveServer": {   // 保存服务
+                      "url": "/product/server/saveServer",
+                      "type": "POST"
+                    },
+                    "saveOfferprice": {   // 保存服务
+                      "url": "/product/server/saveOfferprice",
+                      "type": "POST"
+                    },
+                    "removeOfferprice": {   // 删除服务报价
+                      "url": "/product/server/removeOfferprice",
+                      "type": "POST"
+                    },
+                    "putupofferprice": {   // 恢复服务报价
+                      "url": "/product/server/putupofferprice",
+                      "type": "POST"
+                    },
+                    "putdownofferprice": {   // 暂停服务报价
+                      "url": "/product/server/removeOfferprice",
                       "type": "POST"
                     },
                     "putupserver": {   //恢复服务
@@ -90,14 +106,6 @@
                     },
                     "offerprice": {   // 编辑报价
                       "url": "/product/server/offerprice",
-                      "type": "POST"
-                    },
-                    "putupofferprice": {   // 恢复服务报价
-                      "url": "/product/server/putupofferprice",
-                      "type": "POST"
-                    },
-                    "putdownofferprice": {   // 暂停服务报价
-                      "url": "/product/server/putdownofferprice",
                       "type": "POST"
                     },
                     "removeprice": {   // 删除报价

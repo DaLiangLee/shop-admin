@@ -229,6 +229,9 @@
          * 点击按钮
          */
         iElement.click(function (t) {
+          if(angular.isUndefined(iAttrs.server)){
+
+          }
           scope.itemHandler({data: {"status":"-1", "data":"打开成功"}});
           t.preventDefault();
           t.stopPropagation();
@@ -253,28 +256,31 @@
         function handler(childScope){
           if(angular.isUndefined(scope.item)){
             childScope.items = {
+              serverid: iAttrs.server,
               motorbrandids: [],
               saleprice: "",
               warranty: 12,
               productcost: 0,
               status: 1,
-              pskuids: []
+              psku: [{}]
             };
           }else{
             childScope.items = angular.copy(scope.item);
           }
-          childScope.interceptor = false;
-
           /**
-           * 确定按钮
+           * 确定
            */
           childScope.confirm = function () {
-            childScope.interceptor = true;
-          };
-          /**
-           * 拦截确定
-           */
-          childScope.interceptorConfirm = function () {
+            if(!childScope.items.motorbrandids.length){
+              childScope.alertWarning = "至少需要选一辆车";
+              return ;
+            }
+            /**
+             * 解决后台bug
+             */
+            if(angular.isUndefined(scope.item) && childScope.items.motorbrandids.length == 1){
+              childScope.items.motorbrandids.push({});
+            }
             scope.itemHandler({data: {"status":"0", "type": type, "data": childScope.items}});
             childScope.close();
           };
@@ -283,6 +289,11 @@
          * 点击按钮
          */
         iElement.click(function (t) {
+          console.log(iAttrs.server);
+          if(iAttrs.productServerQuoteDialog === "add" && !iAttrs.server){
+            scope.itemHandler({data: {"status":"1", "data":"请先填写基本信息并保存"}});
+            return ;
+          }
           scope.itemHandler({data: {"status":"-1", "data":"打开成功"}});
           t.preventDefault();
           t.stopPropagation();

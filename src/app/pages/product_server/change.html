@@ -69,11 +69,18 @@
               <div text-editor="" editor="vm.dataBase.abstracts" data-max-length="30" data-filter=""></div>
             </div>
           </div>
+          <div ng-if="vm.isAddData">
+          <div class="text-center">
+            <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="goods.$invalid">保存</button>
+          </div>
+          </div>
+        <div ng-if="!vm.isAddData">
         <h3>报价规格</h3>
         <hr>
-        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
-        <div class="text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>
+          <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary">{{vm.isChange ? "修改" : "完成"}}</button>
+          </div>
         </div>
         </form>
     </div>

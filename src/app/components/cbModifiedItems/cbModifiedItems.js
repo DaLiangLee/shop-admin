@@ -14,19 +14,7 @@
     .directive('cbModifiedItems', cbModifiedItems);
 
   /** @ngInject */
-  function cbModifiedItems(cbAlert){
-    /**
-     * 在数组里面根据value参数获取数组中对应的数据
-     * @param arr      数据
-     * @param id       查询id
-     * @param value    比较的字段 默认id
-     */
-    var getData = function (arr, id, value) {
-      value = value || 'id';
-      return _.find(arr, function (item) {
-        return item[value] == id;
-      });
-    };
+  function cbModifiedItems(cbAlert, utils){
     /**
      * 根据scope.skuQueue 获取返回结果的值
      * @param arr      skuQueue
@@ -83,13 +71,15 @@
          */
         var store = scope.$watch('store', function (value) {
           console.log(value);
-          scope.skuQueue = getSkuQueue(scope.select);
-          scope.size = angular.copy(value);
-          dataLists = angular.copy(value);
-          scope.items = setItems(scope.skuQueue, scope.size);
-          scope.skuDataLength = value.length - scope.skuQueue.length;
-          console.log(value , scope.skuQueue);
-          scope.selectHandler({data: {data: scope.select || [], every: _.every(scope.skuQueue, 'skuid')}});
+          if(value){
+            scope.skuQueue = getSkuQueue(scope.select);
+            scope.size = angular.copy(value);
+            dataLists = angular.copy(value);
+            scope.items = setItems(scope.skuQueue, scope.size);
+            scope.skuDataLength = value.length - scope.skuQueue.length;
+            console.log(value , scope.skuQueue);
+            scope.selectHandler({data: {data: scope.select || [], every: _.every(scope.skuQueue, 'skuid')}});
+          }
         });
         /**
          * 创建一个sku项目
@@ -129,7 +119,10 @@
           return result;
         }
         function getSkuidItems(arr, id){
-          return !!getData(arr, id) ? getData(arr, id).items : [];
+          if(angular.isUndefined(id)){
+            return [];
+          }
+          return angular.isUndefined(utils.getData(arr, id)) ? [] : utils.getData(arr, id).items;
         }
         /**
          * 设置sku，编辑时候使用
@@ -178,7 +171,7 @@
             scope.skuDataLength++;
             _.remove(scope.skuQueue, {sku: id});
             if (scope.size.length < dataLists.length) {
-              angular.isDefined(id) && scope.size.push(getData(dataLists, id));
+              angular.isDefined(id) && scope.size.push(utils.getData(dataLists, id));
             }
           }
         };

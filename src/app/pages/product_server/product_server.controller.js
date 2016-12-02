@@ -176,16 +176,36 @@
       productServer.category().then(function (data) {
         vm.selectModel.store = data.data.data;
       });
-      vm.dataBase = {};
       /**
-       * 消息提醒
+       * 基本信息数据
+       * @type {{}}
+       * 保存数据有规格， 服务状态，商品简介
        */
-      vm.message = {
-        loadingState: false
-      };
+      var diffData = null;
 
       /**
-       * 表格配置
+       * 验证基本信息是否修改
+       * 1，如果修改 需要提交数据给后台
+       * 2，如果没有修改，什么都不需要做
+       * @param newData
+       * @param oldData
+       */
+      function compareDiff(newData, oldData){
+        if(oldData.sku.length != newData.sku.length || oldData.serverstatus != newData.serverstatus || oldData.abstracts != newData.abstracts){
+          productServer().then(function(results){
+
+          });
+        }
+      }
+
+      /**
+       * 基本信息数据
+       * @type {{}}
+       */
+      vm.dataBase = {};
+
+      /**
+       * 报价表格配置
        */
       vm.gridModel = {
         columns: angular.copy(productServerChangeConfig.DEFAULT_GRID.columns),
@@ -203,10 +223,9 @@
        *
        */
       vm.gridModel.config.propsParams = {
+        serverid: "",
         removeItem: function (data) {
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
+          if (data.status == '0') {
             /**
              * 删除单页
              */
@@ -217,46 +236,33 @@
                 skuid: data.removal[0].skuid
               }
             }
-            productGoods.remove(item).then(function (data) {
-              var message = "";
-              if (_.isObject(data.data.data) || _.isEmpty(data.data.data)) {
-                message = "删除成功";
-              } else {
-                message = data.data.data;
-              }
-              vm.message.loadingState = true;
-              vm.message.config = {
-                type: data.data.status,
-                message: message
-              };
-              getList();
-            }, function (data) {
-              $log.debug('removeItemError', data);
-            });
           }
-          // if(data.list.length <= 5 && total > 10){
-          //     vm.gridModel.loadingState = true;
-          //     $timeout(function (){
-          //         getList();
-          //     }, 3000);
-          // }
-          //vm.gridModel.itemList = data.list;
-
         },
         addItem: function (data) {
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
+          if(data.status == '1'){
+            cbAlert.alert(data.data);
+          }
+          if (data.status == '0') {
             console.log(data.data);
-            if(data.type === 'add'){
-              vm.gridModel.itemList.push(data.data);
-              vm.gridModel.loadingState = false;
-            }else if(data.type === 'edit'){
-              productServer.offerprice({offerpriceid: data.data })
-            }
-
-            console.log(vm.gridModel.itemList);
-
+            productServer.saveOfferprice(data.data).then(function (results) {
+              console.log('saveOfferprice', results);
+              if(results.data.status == 0) {
+                if(data.type === 'add'){
+                  /**
+                   * 返回新增服务数据添加到
+                   */
+                  vm.gridModel.itemList.unshift(results.data.data);
+                }else if(data.type === 'edit'){
+                  /**
+                   * 修改某一项
+                   */
+                  _.remove(vm.gridModel.itemList, function(key){
+                    return key.guid == results.data.data.guid;
+                  });
+                  vm.gridModel.itemList.unshift(results.data.data);
+                }
+              }
+            });
           }
         },
         statusItem: function (data) {
@@ -318,6 +324,12 @@
           }
         }
       };
+      /**
+       * 是否是添加服务
+       * 来分步保存数据
+       * @type {boolean}
+       */
+      vm.isAddData = !vm.isChange;
       if (vm.isChange) {
         productServer.edit(currentParams).then(function (data) {
           var edit = data.data.data;
@@ -334,6 +346,59 @@
         vm.dataBase.serverstatus = 1;
         vm.dataBase.mainphoto = [];
       }
+      /**
+       * 保存基本信息到服务器
+       */
+      vm.save = function(){
+        if(!vm.sizeModel.data.length){
+          cbAlert.alert('您要至少选择一项规格');
+          return ;
+        }
+        if(!vm.sizeModel.every){
+          cbAlert.alert('规格对应的值没有选择');
+          return ;
+        }
+        productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
+          console.log('saveServer', data);
+          if(data.data.status == 0) {
+            /**
+             * 返回新增服务id，供添加报价使用
+             */
+            vm.gridModel.config.propsParams.serverid = data.data.data;
+            vm.isAddData = false;
+          }
+        });
+      };
+
+
+
+      /**
+       * 格式化 vm.dataBase数据供提交使用
+       * @param data
+       * @returns {{}}
+       */
+      function getDataBase(data) {
+        var result = angular.extend({}, data);
+        result.abstracts = encodeURI(result.abstracts);
+        angular.forEach(result.sku, function (item) {
+          item.skuname = encodeURI(item.skuname);
+          item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
+        });
+        /**
+         * 防止后台数据出bug
+         */
+        result.sku.push({});
+        /**
+         * 防止后台数据出bug
+         */
+        if(vm.isChange){
+          delete result.parentid;
+          delete result.brandname;
+          delete result.productcategory;
+        }
+        return result;
+      }
+
       vm.selectModel = {
         store: [],
         handler: function (data) {
@@ -412,51 +477,12 @@
       }
 
       /**
-       * 格式化 vm.dataBase数据供提交使用
-       * @param data
-       * @returns {{}}
-       */
-      function getDataBase(data) {
-        var result = angular.extend({}, data);
-        result.abstracts = encodeURI(result.abstracts);
-        angular.forEach(result.sku, function (item) {
-          item.skuname = encodeURI(item.skuname);
-          item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
-        });
-        /**
-         * 防止后台数据出bug
-         */
-        result.sku.push({});
-        result.offerprice.push({});
-        /**
-         * 防止后台数据出bug
-         */
-        if(vm.isChange){
-          delete result.parentid;
-          delete result.brandname;
-          delete result.productcategory;
-        }
-        return result;
-      }
-
-      /**
        * 表单提交
        */
       vm.submit = function () {
         console.log(vm.dataBase);
 
-        if(!vm.sizeModel.data.length){
-          cbAlert.alert('您要至少选择一项规格');
-          return ;
-        }
-        if(!vm.sizeModel.every){
-          cbAlert.alert('规格对应的值没有选择');
-          return ;
-        }
-        if(!vm.gridModel.itemList.length){
-          cbAlert.alert('您还没有选择报价规格');
-          return ;
-        }
+
         vm.dataBase.offerprice = angular.copy(vm.gridModel.itemList);
         productServer.save(getDataBase(vm.dataBase)).then(function (data) {
           console.log('save', data);

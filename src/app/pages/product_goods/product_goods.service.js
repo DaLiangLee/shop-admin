@@ -65,7 +65,7 @@
                       "id": 4,
                       "name": "商品类型",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.catename"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.pcatename1 +\' - \'+ item.pcatename2"></span>'
                     },
                     {
                       "id": 5,

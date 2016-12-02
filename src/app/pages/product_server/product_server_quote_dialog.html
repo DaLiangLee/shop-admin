@@ -4,19 +4,13 @@
     <h5 class="modal-title">报价信息</h5>
   </div>
   <div class="modal-body">
-      <div alert type="warning" ng-if="alertWarning">
-        <p ng-bind="alertWarning"></p>
-      </div>
-      <div class="list" style="height:500px; overflow-y: auto;">
-        <div cb-vehicle-selection="" select="items.motorbrandids"></div>
-      </div>
     <form class="form-horizontal" autocomplete="off" name="price" role="form" novalidate>
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group clearfix">
             <label for="inputEmail1" class="col-sm-3 control-label"><i class="text-danger">*</i> 工时费（￥）：</label>
             <div class="col-sm-8">
-              <input type="text" id="inputEmail1" class="form-control" ng-model="items.saleprice">
+              <input type="text" id="inputEmail1" class="form-control" name="saleprice" ng-model="items.saleprice" placeholder="请输入0-9,999,999元的价格，可以保留2位小数到分" cb-money-range cb-placeholder  ng-required="true">
             </div>
           </div>
         </div>
@@ -24,23 +18,22 @@
           <div class="form-group clearfix">
             <label for="inputEmail2" class="col-sm-3 control-label"><i class="text-danger">*</i> 保修期（月）：</label>
             <div class="col-sm-8">
-              <input type="text" id="inputEmail2" class="form-control" ng-model="items.warranty">
+              <input type="text" id="inputEmail2" class="form-control" name="warranty" ng-model="items.warranty" cb-number-range="" data-value-min="0" data-value-max="999" placeholder="请输入0-999以内的整数" cb-placeholder ng-required="true">
             </div>
           </div>
         </div>
       </div>
     </form>
+    <div class="list" style="height:500px; overflow-y: auto;">
+      <div cb-vehicle-selection="" select="items.motorbrandids"></div>
+    </div>
+    <div alert type="warning" ng-if="alertWarning && items.motorbrandids.length == 0">
+      <p ng-bind="alertWarning"></p>
+    </div>
   </div>
   <div class="modal-footer">
-    <!--<div class="alert alert-danger" ng-if="interceptor">
-      <p>您确定选择吗？</p>
-    </div>
-    <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定选择</button>
-      <button class="btn btn-default" ng-click="close(false)">暂不选择</button>
-    </div>-->
     <div class="inline-block margin-right">
-      <button class="btn btn-primary" ng-click="interceptorConfirm()" ng-disabled="price.$invalid">确定</button>
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="price.$invalid">确定</button>
       <button class="btn btn-default" ng-click="close(false)">取消</button>
     </div>
   </div>

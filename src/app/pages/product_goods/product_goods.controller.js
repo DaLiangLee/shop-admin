@@ -218,7 +218,6 @@
       productGoods.edit(currentParams).then(function (data) {
         var edit = data.data.data;
         console.log(edit);
-        
         getAttrsku(data.data.data.cateid, function(data){
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);

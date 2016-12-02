@@ -35,13 +35,13 @@
                       "id": 2,
                       "name": "项目名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename2"></span>'
                     },
                     {
                       "id": 3,
                       "name": "项目类型",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.catename"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>'
                     },
                     {
                       "id": 4,
@@ -213,7 +213,7 @@
               showPageGoto: true
             },
             'addColumnsBarDirective': [
-              '<button class="btn btn-primary" product-server-quote-dialog="add" item="propsParams.offerprices" item-handler="propsParams.addItem(data)">+新增报价</button> '
+              '<button class="btn btn-primary" product-server-quote-dialog="add" data-server="{{propsParams.serverid}}"  item="propsParams.offerprices" item-handler="propsParams.addItem(data)">+新增报价</button> '
             ]
           }
         },
