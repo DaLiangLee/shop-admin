@@ -9,13 +9,13 @@
         <div class="col-sm-6">
           <label class="col-sm-2 control-label">子订单数量：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.gridModel.itemList.length"></p>
+            <p class="text-border" ng-bind="vm.gridModel.itemList.length"></p>
           </div>
         </div>
         <div class="col-sm-6">
           <label class="col-sm-2 control-label">订单金额：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.dataBase.totalcost | moneypushFilter : vm.dataBase.totalsale"></p>
+            <p class="text-border" ng-bind="vm.dataBase.totalcost | moneypushFilter : vm.dataBase.totalsale"></p>
           </div>
         </div>
       </div>
@@ -23,13 +23,13 @@
         <div class="col-sm-6">
           <label class="col-sm-2 control-label">工时总计：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.dataBase.totalsale | moneyFilter"></p>
+            <p class="text-border" ng-bind="vm.dataBase.totalsale | moneyFilter"></p>
           </div>
         </div>
         <div class="col-sm-6">
           <label class="col-sm-2 control-label">商品总计：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.dataBase.totalcost | moneyFilter"></p>
+            <p class="text-border" ng-bind="vm.dataBase.totalcost | moneyFilter"></p>
           </div>
         </div>
       </div>
@@ -37,24 +37,24 @@
         <div class="col-sm-6">
           <label class="col-sm-2 control-label"><span class="text-danger">*</span> 客户姓名：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.dataBase.realname"></p>
+            <p class="text-border" ng-bind="vm.dataBase.realname"></p>
           </div>
-          <span select-user-dialog="" item-handler="vm.selectUserHandler(data)">选择客户</span>
+          <button class="btn btn-success" select-user-dialog="" item-handler="vm.selectUserHandler(data)">选择客户</button>
         </div>
         <div class="col-sm-6">
           <label class="col-sm-2 control-label"><span class="text-danger">*</span> 手机号码：</label>
           <div class="col-sm-7">
-            <p class="h4" ng-bind="vm.dataBase.mobile"></p>
+            <p class="text-border" ng-bind="vm.dataBase.mobile"></p>
           </div>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="form-group row">s
         <div class="col-sm-12">
           <label class="col-sm-1 control-label"><span class="text-danger">*</span> 车辆信息：</label>
           <div class="col-sm-9">
-            <p class="h4" ng-bind="vm.dataBase.motormodel"></p>
+            <p class="text-border" ng-bind="vm.dataBase.motormodel"></p>
           </div>
-          <span trade-sorder-add-motors="{{vm.dataBase.userid}}" item-handler="vm.selectMotorHandler(data)">选择车辆</span>
+          <button class="btn btn-success" trade-sorder-add-motors="{{vm.dataBase.userid}}" item-handler="vm.selectMotorHandler(data)">选择车辆</button>
         </div>
       </div>
       <div class="form-group row" ng-if="vm.isMotormodel">

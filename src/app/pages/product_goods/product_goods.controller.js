@@ -200,7 +200,7 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $window, $log, $$utils, productGoods, preferencenav, cbAlert) {
+  function ProductGoodsChangeController($state, $window, $log, categoryGoods, productGoods, preferencenav, cbAlert) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -211,14 +211,14 @@
     $log.debug('isChange', vm.isChange);
     vm.dataBase = {};
     console.log(vm.isChange);
-    productGoods.category().then(function (data) {
+    categoryGoods.goods().then(function (data) {
       vm.selectModel.store = data.data.data;
     });
     if (vm.isChange) {
       productGoods.edit(currentParams).then(function (data) {
         var edit = data.data.data;
         console.log(edit);
-        getAttrsku(data.data.data.cateid, function(data){
+        getAttrsku(data.data.data.pcateid2, function(data){
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
           vm.dataBase.brandname = getBrandname(data.brand, edit.brandid);
@@ -418,6 +418,10 @@
       }
       if(!vm.sizeModel.every){
         cbAlert.alert('规格对应的值没有选择');
+        return ;
+      }
+      if(!vm.dataBase.mainphoto.length){
+        cbAlert.alert('您需要上传一张商品图片');
         return ;
       }
       if(!vm.dataBase.motobrandids.length){

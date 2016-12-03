@@ -79,6 +79,7 @@
           text: "-- 请点击选择 --",
           toggle: function ($event) {
             $event.stopPropagation();
+            $document.find('.k-simple-select .select').hide();
             if(this.once){   // 如果是只能点击一次关闭了，就不能再点击了
               return ;
             }
@@ -137,7 +138,15 @@
             }
           }
         });
-
+        /**
+         * 监听数据变化
+         * @type {(()=>void)|*|(())}
+         */
+        var select = scope.$watch('select', function (value) {
+          if(angular.isUndefined(value)){
+            scope.choose.text = "-- 请点击选择 --";
+          }
+        });
         function getValue(items, select){
           if(!select){
             return "-- 请点击选择 --";
@@ -194,6 +203,7 @@
          */
         scope.$on('$destroy', function() {
           store();
+          select();
         });
       }
     }

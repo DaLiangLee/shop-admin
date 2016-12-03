@@ -4,57 +4,7 @@
     <h5 class="modal-title">商品管理</h5>
   </div>
   <div class="modal-body">
-    <form class="form-horizontal" autocomplete="off" name="price" role="form" novalidate>
-      <div alert type="warning" ng-if="alertWarning">
-        <p ng-bind="alertWarning"></p>
-      </div>
-      <div class="list" style="max-height:300px; overflow-y: auto;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>商品名称</th>
-              <th>商品类目</th>
-              <th>商品单价（￥）</th>
-              <th>商品数量（最大999）</th>
-              <th>商品小计（￥）</th>
-              <th>上架状态</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="item in items track by $index">
-              <td><span class="state-unread" ng-bind="item.productname"></span></td>
-              <td><span class="state-unread" ng-bind="item.catename"></span></td>
-              <td><span class="state-unread" ng-bind="item.saleprice | moneyFilter"></span></td>
-              <td><input type="text" class="form-control" ng-model="item.count" cb-number-range="" data-value-min="0" data-value-max="999" placeholder="请输入1-999以内的整数" cb-placeholder ng-blur="compute($index, item)"></td>
-              <td><span class="state-unread" ng-bind="item.subtotal | moneyFilter"></span></td>
-              <td><span class="state-unread" ng-bind="item.status == 0 ? '下架' : '上架'"></span></td>
-              <td><button class="btn btn-danger" ng-click="remove($index, item)">删除</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="text-right">
-        商品总计（￥）：<span class="h4" ng-bind="totalprice | moneyFilter"></span>
-      </div>
-      <div class="row">
-        <div class="col-lg-3 col-sm-6">
-          <div simple-select="id,catename" store="selectModel.search1.store" select="selectModel.search1.select" select-handler="selectModel.search1.handler(data)"></div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <div simple-select="id,catename" store="selectModel.search2.store" select="selectModel.search2.select"></div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="selectModel.searchText" ng-maxlength="40" placeholder="请输入关键字" cb-placeholder>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <button type="button" class="btn btn-success" ng-click="selectModel.searchHandler()">查找</button>
-        </div>
-      </div>
-      <div style="max-height:300px; overflow-y: auto;">
-        <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList" pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config" page-changed="gridModel.pageChanged(page)"></div>
-      </div>
-    </form>
+
   </div>
   <div class="modal-footer">
     <!--<div class="alert alert-danger" ng-if="interceptor">

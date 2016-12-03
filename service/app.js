@@ -28,8 +28,13 @@ app.all('*',function (req, res, next) {
     }
 });
 
+
 // 车辆选择通用api
 app.use('/shopservice/admin', require('./api/motor'));
+// 通用api
+app.use('/shopservice/admin', require('./api/category'));
+
+
 // 店铺管理
 app.use('/shopservice/admin', require('./api/store'));
 

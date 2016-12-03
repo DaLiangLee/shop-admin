@@ -226,19 +226,31 @@
                 templateUrl: 'app/pages/product_server/change.html',
                 controller: 'ProductServerChangeController',
                 controllerAs: 'vm',
-                title: '新增项目',
+                title: '新增服务',
                 permission: {
                     parentid: 40100,
                     category: "product",
                     sectionid: 40101
                 }
             })
+            .state('product.server.addGoods', {     // 新增服务报价商品添加
+              url: '/addGoods?serverid&offerid&edit',
+              templateUrl: 'app/pages/product_server/add_goods.html',
+              controller: 'ProductServerAddGoodsController',
+              controllerAs: 'vm',
+              title: '管理商品',
+              permission: {
+                parentid: 40100,
+                category: "product",
+                sectionid: 40101
+              }
+            })
             .state('product.server.edit', {     // 编辑项目
                 url: '/edit/:serverid',
                 templateUrl: 'app/pages/product_server/change.html',
                 controller: 'ProductServerChangeController',
                 controllerAs: 'vm',
-                title: '编辑项目',
+                title: '编辑服务',
                 permission: {
                     parentid: 40100,
                     category: "product",

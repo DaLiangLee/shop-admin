@@ -149,7 +149,11 @@
           scope.brandList = setFormatData(1, treeService.enhance(data.data.data));
           scope.list = [];
           if (!angular.isUndefined(scope.select)) {
-            getSelect($window.eval(decodeURI(scope.select)));
+            if(angular.isArray(scope.select)){
+              getSelect(scope.select);
+            }else{
+              getSelect($window.eval(decodeURI(scope.select)));
+            }
           }
         });
         /**
@@ -195,9 +199,9 @@
             return [];
           }
           var results = [];
+          console.log(arr);
           _.forEach(arr, function (item) {
             var key = item.brand;
-            key.brandid = key.id;
             key.title = key.brand;
             key.level = 1;
             if(key.isChecked){

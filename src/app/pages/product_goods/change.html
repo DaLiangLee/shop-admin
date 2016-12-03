@@ -8,7 +8,7 @@
           <div class="form-group" ng-if="vm.isChange">
             <label class="col-sm-2 control-label">商品编码：</label>
             <div class="col-sm-7">
-              <p class="h4" ng-bind="vm.dataBase.productid"></p>
+              <p class="text-border" ng-bind="vm.dataBase.productid"></p>
             </div>
           </div>
           <div class="form-group">
@@ -18,7 +18,7 @@
               <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder  ng-required="true">
               <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">请输入长度为40以内的商品名称</div>
               </div>
-              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.productname"></p>
+              <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.productname"></p>
             </div>
           </div>
           <div class="form-group">
@@ -27,17 +27,17 @@
               <div ng-if="!vm.isChange">
               <div class="row">
                 <div class="col-sm-6">
-                  <input type="hidden" name="hao" ng-required="true" ng-model="vm.selectModel.select">
-                  <div simple-select="id,catename" store="vm.selectModel.store" select="vm.selectModel.select" select-handler="vm.selectModel.handler(data)"></div>
+                  <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.pcateid1">
+                  <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.pcateid1" select-handler="vm.selectModel.handler(data)"></div>
                 </div>
                 <div class="col-sm-6">
-                  <input type="hidden" name="hao2" ng-required="true" ng-model="vm.dataBase.cateid">
-                  <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.selectModel2.select" select-handler="vm.selectModel2.handler(data)"></div>
+                  <input type="hidden" name="hao2" ng-required="true" ng-model="vm.dataBase.pcateid2">
+                  <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.pcateid2" select-handler="vm.selectModel2.handler(data)"></div>
                 </div>
               </div>
               <p class="text-warning" ng-if="!vm.dataBase.cateid">选择商品类目</p>
               </div>
-              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.parentcatename + vm.dataBase.catename"></p>
+              <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.pcatename1 +' - '+ vm.dataBase.pcatename2"></p>
             </div>
           </div>
           <div class="form-group">
@@ -45,7 +45,7 @@
             <div class="col-sm-7">
               <div ng-if="!vm.isChange">
                 <div ng-if="!vm.isAttributesetLoad">
-                  <p class="h4">请先选择商品类目</p>
+                  <p class="text-border text-border-warning">请先选择商品类目</p>
                 </div>
                 <div ng-if="vm.isAttributesetLoad">
                   <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.brandid">
@@ -53,7 +53,7 @@
                   <p class="text-warning" ng-if="!vm.dataBase.brandid">品牌是必选的</p>
                 </div>
               </div>
-              <p ng-if="vm.isChange" class="h4" ng-bind="vm.dataBase.cnname"></p>
+              <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.cnname"></p>
             </div>
           </div>
           <div class="form-group">
@@ -77,7 +77,7 @@
             <label class="col-sm-2 control-label"><span class="text-danger">*</span> 规格：</label>
             <div class="col-sm-7">
               <div ng-if="!vm.isAttributesetLoad">
-                <p class="h4">请先选择商品类目</p>
+                <p class="text-border text-border-warning">请先选择商品类目</p>
               </div>
               <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.skuvalues" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
             </div>
@@ -99,7 +99,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">零售单位：</label>
             <div class="col-sm-7">
-              <p class="h4" ng-bind="vm.dataBase.$unit"></p>
+              <p class="text-border" ng-bind="vm.dataBase.$unit"></p>
             </div>
           </div>
           <div class="form-group">

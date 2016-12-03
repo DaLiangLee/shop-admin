@@ -7,6 +7,7 @@
     angular
         .module('shopApp')
         .controller('ProductServerListController', ProductServerListController)
+        .controller('ProductServerAddGoodsController', ProductServerAddGoodsController)
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
@@ -163,17 +164,22 @@
       }
       getList();
     }
+
     /** @ngInject */
-    function ProductServerChangeController($state, $log, $timeout, productServer, productServerChangeConfig,preferencenav, cbAlert) {
+    function ProductServerChangeController($state, $log, $window, categoryServer, productServer, productServerAddGoods, productServerChangeConfig,preferencenav, cbAlert) {
       var vm = this;
       var currentParams = $state.params;
       vm.attributeset = [];
       vm.isLoadData = false;
       vm.isAttributesetLoad = false;
+      /**
+       * 清除报价添加
+       */
+      productServerAddGoods.remove();
       //  是否是编辑
       vm.isChange = !_.isEmpty(currentParams);
       $log.debug('isChange', vm.isChange);
-      productServer.category().then(function (data) {
+      categoryServer.server().then(function (data) {
         vm.selectModel.store = data.data.data;
       });
       /**
@@ -213,8 +219,8 @@
         config: angular.copy(productServerChangeConfig.DEFAULT_GRID.config),
         loadingState: vm.isChange,      // 加载数据
         pageChanged: function (data) {    // 监听分页
-          var page = angular.extend({}, currentParams, {page: data});
-          $state.go(currentStateName, page);
+          //var page = angular.extend({}, currentParams, {page: data});
+          //$state.go(currentStateName, page);
         }
       };
 
@@ -232,10 +238,19 @@
             var item = null;
             if(data.removal.length == 1){
               item = {
-                productid: data.removal[0].productid,
-                skuid: data.removal[0].skuid
+                offerid: data.removal[0].offerid
               }
             }
+            productServer.removeOfferprice(item).then(function (results) {
+              console.log('saveOfferprice', results);
+              if(results.data.status == 0) {
+                cbAlert.tips('删除成功');
+                /**
+                 * 修改某一项
+                 */
+                getOfferpriceList();
+              }
+            });
           }
         },
         addItem: function (data) {
@@ -247,81 +262,37 @@
             productServer.saveOfferprice(data.data).then(function (results) {
               console.log('saveOfferprice', results);
               if(results.data.status == 0) {
-                if(data.type === 'add'){
-                  /**
-                   * 返回新增服务数据添加到
-                   */
-                  vm.gridModel.itemList.unshift(results.data.data);
-                }else if(data.type === 'edit'){
-                  /**
-                   * 修改某一项
-                   */
-                  _.remove(vm.gridModel.itemList, function(key){
-                    return key.guid == results.data.data.guid;
-                  });
-                  vm.gridModel.itemList.unshift(results.data.data);
-                }
+                //getOfferpriceList();
+                vm.gridModel.itemList.push(getOfferprice(results.data.data));
               }
             });
           }
         },
         statusItem: function (data) {
           $log.debug('statusItem', data);
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
+          if (data.status == '0') {
             var item = null;
             if(data.removal.length == 1){
               item = {
-                offerpriceid: data.removal[0].offerpriceid
+                offerid: data.removal[0].offerid
               }
             }
             productServer[data.type](item).then(function (data) {
-              vm.message.loadingState = true;
-              var message = "";
-              if (_.isEmpty(data.data.data)) {
-                message = "修改成功";
-              } else {
-                message = data.data.data;
-              }
-              vm.message.config = {
-                type: data.data.status,
-                message: message
-              };
-              getList();
+              getOfferpriceList();
             }, function (data) {
-              $log.debug('removeItemError', data);
+              $log.debug('statusItem', data);
             });
 
           }
         },
-        pricesItem: function (data) {
-          console.log(data.data);
-
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
-            var prices = {
-              skuid: data.data.skuid,
-              saleprice: data.data.saleprice
-            };
-            productGoods.price(prices).then(function (data) {
-              var message = "";
-              if (_.isObject(data.data.data) || _.isEmpty(data.data.data)) {
-                message = "调价成功";
-              } else {
-                message = data.data.data;
-              }
-              vm.message.loadingState = true;
-              vm.message.config = {
-                type: data.data.status,
-                message: message
-              };
-              getList();
-            }, function (data) {
-              $log.debug('pricesItemError', data);
-            });
-          }
+        goAddGoods: function (item) {
+          var data = {
+            'serverid': item.serverid,
+            'offerid': item.offerid,
+            'edit': angular.isUndefined(item.pskuids) ? "0" : "1"
+          };
+          productServerAddGoods.set(data);
+          $state.go('product.server.addGoods' ,data);
         }
       };
       /**
@@ -334,7 +305,7 @@
         productServer.edit(currentParams).then(function (data) {
           var edit = data.data.data;
           console.log(edit);
-          getAttrsku(edit.server.cateid, function(data){
+          getAttrsku(edit.server.scateid2, function(data){
             vm.dataBase = setDataBase(edit);
             vm.isAttributesetLoad = true;
             vm.isLoadData = true;
@@ -346,18 +317,49 @@
         vm.dataBase.serverstatus = 1;
         vm.dataBase.mainphoto = [];
       }
+
+
+      function getOfferpriceList(){
+        productServer.edit(currentParams).then(function (results) {
+          var data = [];
+          angular.forEach(results.data.data, function (item) {
+            data.push(getOfferprice(item));
+          });
+          vm.gridModel.itemList = data;
+        });
+      }
+
+      /**
+       * 格式化报价数据，
+       * 因为撤了品牌是一个字符串数组，需要先解码在转换成数组
+       * @param data
+       * @returns {{}}
+       */
+      function getOfferprice(data){
+        var result = {};
+        angular.forEach(data, function (item, key) {
+          if(key === 'motorbrandids'){
+            result[key] = $window.eval(decodeURI(item));
+          }else{
+            result[key] = item;
+          }
+        });
+        return result;
+      }
+
+
       /**
        * 保存基本信息到服务器
        */
       vm.save = function(){
-        if(!vm.sizeModel.data.length){
+        /*if(!vm.sizeModel.data.length){
           cbAlert.alert('您要至少选择一项规格');
           return ;
         }
         if(!vm.sizeModel.every){
           cbAlert.alert('规格对应的值没有选择');
           return ;
-        }
+        }*/
         productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
           console.log('saveServer', data);
           if(data.data.status == 0) {
@@ -380,14 +382,14 @@
       function getDataBase(data) {
         var result = angular.extend({}, data);
         result.abstracts = encodeURI(result.abstracts);
-        angular.forEach(result.sku, function (item) {
+       /* angular.forEach(result.sku, function (item) {
           item.skuname = encodeURI(item.skuname);
           item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
-        });
+        });*/
         /**
          * 防止后台数据出bug
          */
-        result.sku.push({});
+        /*result.sku.push({});*/
         /**
          * 防止后台数据出bug
          */
@@ -465,8 +467,7 @@
        * @returns {{}}
        */
       function setDataBase(data) {
-        var result = angular.extend({}, data);
-        var results = {};
+        var result = angular.extend({}, data), results = {};
         results = result.server;
         results.serverstatus = result.server.status;
         results.sku = result.skuList;
@@ -491,6 +492,246 @@
           }
         });
       };
+      function goto() {
+        preferencenav.removePreference($state.current);
+        $state.go('product.server.list', {'page': 1});
+      }
+
+    }
+
+    /** @ngInject */
+    function ProductServerAddGoodsController($state, $filter, $log, utils, productServer, categoryGoods, productServerAddGoods, productServerChangeConfig,preferencenav, cbAlert) {
+      var vm = this;
+      var currentParams = $state.params;
+      verificationURL();
+      vm.attributeset = [];
+      vm.isLoadData = false;
+      vm.isAttributesetLoad = false;
+      vm.items = [];
+      //  是否是编辑
+      vm.isChange = !_.isEmpty(currentParams);
+      $log.debug('isChange', vm.isChange);
+      console.log('productServerAddGoods', productServerAddGoods.get());
+      var dataLists = [];
+      var searchData = undefined;
+      var currentPage = 1;
+      /**
+       * 效验URL是不是对的，
+       * 如果是错的，就直接返回到列表
+       */
+      function verificationURL(){
+        var regular = /^\d{18}$/;
+        /**
+         * 如果刷新页面，只能靠当前url来检查了，
+         */
+        if(_.isEmpty(productServerAddGoods.get())){
+          if(!(currentParams.serverid && regular.test(currentParams.serverid))){
+            goto();
+          }
+          if(!(currentParams.offerid && regular.test(currentParams.offerid))){
+            goto();
+          }
+          if(!(currentParams.edit && (currentParams.edit == 0 || currentParams.edit == 1))){
+            goto();
+          }
+        }else{
+          if(!angular.equals(currentParams, productServerAddGoods.get())){
+            goto();
+          }
+        }
+      }
+
+      categoryGoods.goods().then(function (data) {
+        vm.selectModel.search1.store = data.data.data;
+      });
+
+      /**
+      * 搜索配置
+      */
+      vm.selectModel = {
+        search1: {
+          handler: function (data) {
+            if(angular.isObject(utils.getData(this.store, data))){
+              vm.selectModel.search2.store = utils.getData(this.store, data).items;
+            }else{
+              vm.selectModel.search2.store = [];
+            }
+          }
+        },
+        search2: {},
+        searchText: "",
+        searchHandler: function () {
+          searchData = {
+            "pcatename1": this.search1.select,
+            "pcatename2": this.search2.select,
+            "cnname": this.searchText,
+            "productname": this.searchText
+          };
+          getList(currentPage, searchData);
+        },
+        resetHandler: function(){
+          searchData = undefined;
+          this.search1.select = undefined;
+          this.search2.select = undefined;
+          this.searchText = undefined;
+          this.search2.store = [];
+          getList(currentPage, searchData);
+        }
+      };
+
+      /**
+      * 表格配置
+      */
+      vm.gridModel = {
+        columns: angular.copy(productServerChangeConfig.DEFAULT_GRID_GOODS.columns),
+        itemList: [],
+        config: angular.copy(productServerChangeConfig.DEFAULT_GRID_GOODS.config),
+        loadingState: true,      // 加载数据
+        pageChanged: function (page) {    // 监听分页
+          currentPage = page;
+          getList(currentPage, searchData);
+        }
+      };
+
+      /**
+      * 组件数据交互
+      */
+      vm.gridModel.config.propsParams = {
+        addItem: function (data) {
+          if(!data){
+            return ;
+          }
+          if(!!_.find(vm.items, {pskuid: data.pskuid})){
+            return ;
+          }
+          var item = _.remove(dataLists, {pskuid: data.pskuid});
+          if(item.length){
+            item[0].numbers = 1;
+            item[0].subtotal = item[0].saleprice;
+            console.log(item);
+            vm.items.push(item[0]);
+            getTotalprice();
+            getList(currentPage, searchData);
+          }
+        }
+      };
+
+      /**
+       * 第一次添加
+       */
+      if(currentParams.edit === "0"){
+        console.log(1);
+        productServer.allpskulist().then(function(data){
+          dataLists = data.data.data;
+          getList(1);
+          vm.gridModel.loadingState = false;
+        });
+      }
+      /**
+       * 编辑效果
+       */
+      if(currentParams.edit === "1"){
+        productServer.allpskulist().then(function(data){
+          dataLists = data.data.data;
+          getList(1);
+          vm.gridModel.loadingState = false;
+        });
+        /*productServer.pskulist().then(function(){
+
+        });*/
+      }
+
+      /**
+       * 获取所有列表，本地分页，和过滤
+       */
+      function getList(page, search){
+        if(angular.isUndefined(search)){
+          vm.gridModel.itemList = _.chunk(dataLists, 10)[page - 1] || [];
+          vm.gridModel.paginationinfo = {
+            page: page,
+            pageSize: 10,
+            total: dataLists.length
+          };
+        }else{
+          var results = $filter('filter')(dataLists, search);
+          vm.gridModel.itemList = _.chunk(results, 10)[page - 1] || [];
+          vm.gridModel.paginationinfo = {
+            page: page,
+            pageSize: 10,
+            total: results.length
+          };
+        }
+      }
+
+
+      vm.remove = function (data) {
+        dataLists.push(_.remove(vm.items, {pskuid: data.pskuid})[0]);
+        getList(currentPage, searchData);
+        getTotalprice();
+      };
+      /**
+      * 失去焦点，计算小计
+      * @param index
+      * @param item
+      */
+      vm.compute = function (item) {
+        item.subtotal = item.saleprice * 100 * item.numbers / 100;
+        getTotalprice();
+      };
+
+      /**
+      * 计算商品总计
+      */
+      function getTotalprice(){
+        var price = 0;
+        angular.forEach(vm.items, function (item) {
+          price += item.subtotal;
+        });
+        vm.totalprice = price;
+      }
+      /**
+      * 初始化获取商品总计
+      */
+      getTotalprice();
+
+      /**
+       * 格式化数据
+       */
+      function getDataBase(){
+        var result = {
+          serverid: currentParams.serverid,
+          offerid: currentParams.offerid,
+          productcost: vm.totalprice,
+          psku: []
+        };
+        angular.forEach(vm.items, function(item){
+          result.psku.push({
+            pskuid: item.pskuid,
+            numbers: item.numbers
+          });
+        });
+        result.psku.push({});
+        return result;
+      }
+      /**
+       * 表单提交
+       */
+      vm.goBack = function (save) {
+        if(save){
+          console.log(vm.dataBase);
+          productServer.saveProduct(getDataBase()).then(function (data) {
+            console.log('save', data);
+            if(data.data.status == 0){
+              preferencenav.removePreference($state.current);
+              $state.go('product.server.edit', {'serverid': currentParams.serverid});
+            }
+          });
+        }else{
+          preferencenav.removePreference($state.current);
+          $state.go('product.server.edit', {'serverid': currentParams.serverid});
+        }
+      };
+
       function goto() {
         preferencenav.removePreference($state.current);
         $state.go('product.server.list', {'page': 1});

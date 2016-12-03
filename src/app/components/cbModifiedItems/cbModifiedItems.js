@@ -70,13 +70,16 @@
          * @type {(()=>void)|*|(())}
          */
         var store = scope.$watch('store', function (value) {
-          console.log(value);
           if(value){
             scope.skuQueue = getSkuQueue(scope.select);
             scope.size = angular.copy(value);
             dataLists = angular.copy(value);
             scope.items = setItems(scope.skuQueue, scope.size);
-            scope.skuDataLength = value.length - scope.skuQueue.length;
+            if(scope.skuQueue.length === 0){
+              scope.skuDataLength = value.length - 1;
+            }else{
+              scope.skuDataLength = value.length - scope.skuQueue.length;
+            }
             console.log(value , scope.skuQueue);
             scope.selectHandler({data: {data: scope.select || [], every: _.every(scope.skuQueue, 'skuid')}});
           }

@@ -80,6 +80,10 @@
                       "url": "/product/server/saveServer",
                       "type": "POST"
                     },
+                    "saveProduct": {    // 添加服务报价中的商品
+                      "url": "/product/server/saveProduct",
+                      "type": "POST"
+                    },
                     "saveOfferprice": {   // 保存服务
                       "url": "/product/server/saveOfferprice",
                       "type": "POST"
@@ -93,7 +97,7 @@
                       "type": "POST"
                     },
                     "putdownofferprice": {   // 暂停服务报价
-                      "url": "/product/server/removeOfferprice",
+                      "url": "/product/server/putdownofferprice",
                       "type": "POST"
                     },
                     "putupserver": {   //恢复服务
@@ -335,6 +339,24 @@
                     },
                     "model": {
                       "url": "/motor/model",
+                      "type": "POST"
+                    },
+                    "prefix": {
+                      "url": "/motor/prefix",
+                      "type": "POST"
+                    }
+                  }
+                },
+                "category": {
+                  "goods": {
+                    "goods": {
+                      "url": "/category/goods",
+                      "type": "POST"
+                    }
+                  },
+                  "server": {
+                    "server": {
+                      "url": "/category/server",
                       "type": "POST"
                     }
                   }

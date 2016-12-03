@@ -7,12 +7,29 @@
     angular
         .module('shopApp')
         .factory('productServer', productServer)
+        .factory('productServerAddGoods', productServerAddGoods)
         .factory('productServerConfig', productServerConfig)
         .factory('productServerChangeConfig', productServerChangeConfig);
 
     /** @ngInject */
     function productServer(requestService) {
         return requestService.request('product', 'server');
+    }
+
+    /** @ngInject */
+    function productServerAddGoods() {
+      var result = {};
+      return {
+        get: function(){
+          return result;
+        },
+        set: function (data) {
+          result = data;
+        },
+        remove: function () {
+          result = {};
+        }
+      }
     }
 
     /** @ngInject */
@@ -172,7 +189,7 @@
               "id": 3,
               "name": "商品费用（￥）",
               "cssProperty": "state-column",
-              "fieldDirective": '<span class="state-unread" ng-bind="item.productcost | moneyFilter"></span><span cb-popover="" popover-placement="bottom" popover-template-id="cbPskuidsTipsPopoverTemplate.html" popover-template-data="item.pskuids">详情</span>'
+              "fieldDirective": '<span class="state-unread" ng-bind="item.productcost | moneyFilter"></span>'
             },
             {
               "id": 4,
@@ -190,12 +207,12 @@
               "id": 6,
               "name": "报价状态",
               "cssProperty": "state-column",
-              "fieldDirective": '<span class="state-unread" bo-bind="item.status == 0 ? \'暂停报价\' : \'正常报价\'"></span>'
+              "fieldDirective": '<span class="state-unread" ng-bind="item.status == 0 ? \'暂停报价\' : \'正常报价\'"></span>'
             },
             {
               "id": 7,
               "cssProperty": "state-column",
-              "fieldDirective": '<button class="btn btn-primary" product-server-quote-dialog="edit" item="item" item-handler="propsParams.addItem(data)">编辑</button>  <button class="btn btn-primary" product-server-goods-dialog="" pskuids="item.pskuids" productcost="item.productcost">管理商品</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putupofferprice" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdownofferprice" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
+              "fieldDirective": '<button class="btn btn-primary" product-server-quote-dialog="edit" item="item" item-handler="propsParams.addItem(data)">编辑</button>  <button class="btn btn-primary" ng-click="propsParams.goAddGoods(item)">管理商品</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putupofferprice" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">恢复</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdownofferprice" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
               "name": '操作',
               "width": 300
             }
