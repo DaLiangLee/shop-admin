@@ -52,7 +52,6 @@
          * 点击按钮
          */
         iElement.click(function (t) {
-          console.log(iAttrs.server);
           if(iAttrs.productServerQuoteDialog === "add" && !iAttrs.server){
             scope.itemHandler({data: {"status":"1", "data":"请先填写基本信息并保存"}});
             return ;

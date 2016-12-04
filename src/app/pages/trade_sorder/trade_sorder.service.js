@@ -247,7 +247,7 @@
               showPageGoto: true
             },
             'addColumnsBarDirective': [
-              '<button class="btn btn-primary" trade-sorder-add-items item-handler="propsParams.addItems(data)">+新增项目</button> '
+              '<button class="btn btn-primary" trade-sorder-add-items="{{propsParams.userid}}" item-handler="propsParams.addItems(data)">+新增项目</button> '
             ]
           }
         }

@@ -329,7 +329,7 @@
         });
         this.$modal.find('.alert-dialog').removeClass('showAlertDialog').addClass('hideAlertDialog');
       }else{
-        this.$modal.fadeOut().remove();
+        this.$modal.fadeOut(250).remove();
       }
       return true;
     };
@@ -421,7 +421,7 @@
       },
       success: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message, 'success' );
+          new AlertDialog( title, message || "", 'success' );
         });
       },
       tips: function(title, delay, type) {
@@ -431,23 +431,23 @@
             text: '',        //提示文字
             type: type || 'success',      //类型
             showConfirmButton: false,    //显示确认按钮
-            delay: delay || 3000     //延迟时间
+            delay: delay || 2000     //延迟时间
           });
         });
       },
       error: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message, 'error' );
+          new AlertDialog( title, message || "", 'error' );
         });
       },
       warning: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message, 'warning' );
+          new AlertDialog( title, message || "", 'warning' );
         });
       },
       info: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message, 'info' );
+          new AlertDialog( title, message || "", 'info' );
         });
       },
       close: function() {

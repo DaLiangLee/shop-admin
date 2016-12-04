@@ -1,0 +1,64 @@
+.k-carbrand{
+  position: relative;
+  width: 180px;
+  padding: 0 20px;
+  height: 50px;
+  box-sizing: content-box;
+  .boxs{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .lists{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 200px;
+  }
+  li{
+    float: left;
+    padding: 0 5px;
+    line-height: 50px;
+    img{
+      vertical-align: middle;
+      width: 50px;
+      height: 35px;
+    }
+  }
+  &.move .toggle{
+    display: block;
+  }
+  .toggle{
+    display: none;
+  }
+  .toggle span{
+    position: absolute;
+    top: 0;
+    width: 20px;
+    text-align: center;
+    line-height: 50px;
+    height: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "宋体";
+    cursor: pointer;
+    color: #e8cd2d;
+    &.prev{
+      left: 0;
+    }
+    &.next{
+      right: 0;
+    }
+    &.disabled,&.disabled:hover{
+      cursor: default;
+      color: #ccc;
+    }
+    &:hover{
+      color: #e8a700;
+    }
+  }
+}

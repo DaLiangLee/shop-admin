@@ -244,7 +244,7 @@
       scope: {
         itemHandler: "&"
       },
-      link: function(scope, iElement){
+      link: function(scope, iElement, iAttrs){
         function handler(childScope){
           var search = {
             page: 1,
@@ -350,6 +350,10 @@
          * 点击按钮
          */
         iElement.click(function (t) {
+          if(!iAttrs.tradeSorderAddItems){
+            scope.itemHandler({data: {"status":"1", "data":"请先选择用户"}});
+            return ;
+          }
           scope.itemHandler({data: {"status":"-1", "data":"打开成功"}});
           t.preventDefault();
           t.stopPropagation();

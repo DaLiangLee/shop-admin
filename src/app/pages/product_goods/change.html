@@ -145,6 +145,7 @@
         </div>
         <div class="text-center">
           <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange ? "修改" : "添加"}}</button>
+          <button type="button" class="btn btn-default" cb-back-button="{'name':'product.goods.list','params':{'page': 1}}" data-router="product.goods.edit" ng-if="vm.isChange">返回</button>
         </div>
         </form>
     </div>

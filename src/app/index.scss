@@ -50,6 +50,15 @@ $icon-font-path: "../../bootstrap-sass/assets/fonts/bootstrap/";
   }
 }
 
+.table-hover {
+  > tbody > tr.downline {
+    background-color: #eaeaea;
+    &:hover{
+      background-color: #eaeaea;
+    }
+  }
+}
+
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

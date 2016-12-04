@@ -10,19 +10,12 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($window, $state, $log, $$utils, productGoods, productGoodsConfig) {
+  function ProductGoodsListController($window, $state, $log, utils, productGoods, productGoodsConfig, cbAlert) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = $state.params;
     var total = 0;
-
-    /**
-     * 消息提醒
-     */
-    vm.message = {
-      loadingState: false
-    };
 
     /**
      * 表格配置
@@ -38,42 +31,34 @@
       }
     };
     /*productGoods.category().then(function (data) {
-      console.log(data.data.data);
-    });*/
+     console.log(data.data.data);
+     });*/
     /**
      * 组件数据交互
      *
      */
     vm.gridModel.config.propsParams = {
       removeItem: function (data) {
-        if (data.status == -1) {
-          vm.message.loadingState = false;
-        } else {
+        if (data.status == 0) {
           /**
            * 删除单页
            */
           var item = null;
-          if(data.removal.length == 1){
+          if (data.removal.length == 1) {
             item = {
               productid: data.removal[0].productid,
               pskuid: data.removal[0].pskuid
             }
           }
-          productGoods.remove(item).then(function (data) {
-            var message = "";
-            if (_.isObject(data.data.data) || _.isEmpty(data.data.data)) {
-              message = "删除成功";
+          productGoods.remove(item).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips("删除成功");
             } else {
-              message = data.data.data;
+              cbAlert.error("错误提示", results.data.rtnInfo);
             }
-            vm.message.loadingState = true;
-            vm.message.config = {
-              type: data.data.status,
-              message: message
-            };
             getList();
-          }, function (data) {
-            $log.debug('removeItemError', data);
+          }, function (results) {
+            $log.debug('removeItemError', results);
           });
         }
         // if(data.list.length <= 5 && total > 10){
@@ -86,60 +71,40 @@
 
       },
       statusItem: function (data) {
-        $log.debug('statusItem', data);
-        if (data.status == -1) {
-          vm.message.loadingState = false;
-        } else {
+        if (data.status == 0) {
           var item = null;
-          if(data.removal.length == 1){
+          if (data.removal.length == 1) {
             item = {
               pskuid: data.removal[0].pskuid
             }
           }
-          productGoods[data.type](item).then(function (data) {
-            vm.message.loadingState = true;
-            var message = "";
-            if (_.isEmpty(data.data.data)) {
-              message = "修改成功";
+          productGoods[data.type](item).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips("商品状态修改成功");
             } else {
-              message = data.data.data;
+              cbAlert.error("错误提示", results.data.rtnInfo);
             }
-            vm.message.config = {
-              type: data.data.status,
-              message: message
-            };
             getList();
-          }, function (data) {
-            $log.debug('removeItemError', data);
+          }, function (results) {
+            $log.debug('statusItemError', results);
           });
 
         }
       },
       pricesItem: function (data) {
-        console.log(data.data);
-
-        if (data.status == -1) {
-          vm.message.loadingState = false;
-        } else {
-          var prices = {
-            pskuid: data.data.skuid,
+        if (data.status == 0) {
+          productGoods.price({
+            pskuid: data.data.pskuid,
             saleprice: data.data.saleprice
-          };
-          productGoods.price(prices).then(function (data) {
-            var message = "";
-            if (_.isObject(data.data.data) || _.isEmpty(data.data.data)) {
-              message = "调价成功";
+          }).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips("调价成功");
             } else {
-              message = data.data.data;
+              cbAlert.error("错误提示", results.data.rtnInfo);
             }
-            vm.message.loadingState = true;
-            vm.message.config = {
-              type: data.data.status,
-              message: message
-            };
             getList();
-          }, function (data) {
-            $log.debug('pricesItemError', data);
+          }, function (results) {
+            $log.debug('pricesItemError', results);
           });
         }
       }
@@ -178,7 +143,7 @@
              * 这段代码处理skuvalues值的问题，请勿修改 start
              */
             item.skuvalues = $window.eval(item.skuvalues);
-            item.motobrandids = $$utils.getMotorbrandids(item.motobrandids);
+            item.motobrandids = utils.getMotorbrandids(item.motobrandids);
             /**
              * 这段代码处理skuvalues值的问题，请勿修改 end
              */
@@ -195,6 +160,7 @@
         $log.debug('getListError', data);
       });
     }
+
     getList();
 
   }
@@ -218,7 +184,7 @@
       productGoods.edit(currentParams).then(function (data) {
         var edit = data.data.data;
         console.log(edit);
-        getAttrsku(data.data.data.pcateid2, function(data){
+        getAttrsku(data.data.data.pcateid2, function (data) {
           vm.dataBase = setDataBase(edit);
           vm.dataBase.productcategory = getCate(edit.parentid, edit.cateid);
           vm.dataBase.brandname = getBrandname(data.brand, edit.brandid);
@@ -237,31 +203,33 @@
       vm.dataBase.mainphoto = [];
     }
 
-    function getCate(parentid, cateid){
-      var str = "",item2;
-      var item1 = _.remove(vm.selectModel.store, function(item){
+    function getCate(parentid, cateid) {
+      var str = "", item2;
+      var item1 = _.remove(vm.selectModel.store, function (item) {
         return item.id == parentid;
       });
-      if(item1.length){
+      if (item1.length) {
         str = item1[0].catename;
-        if(item1[0].items.length){
-          item2 = _.remove(item1[0].items, function(item){
+        if (item1[0].items.length) {
+          item2 = _.remove(item1[0].items, function (item) {
             return item.id == cateid;
           });
-          if(item2.length){
-            str += " "+item2[0].catename;
+          if (item2.length) {
+            str += " " + item2[0].catename;
           }
         }
 
       }
       return str;
     }
-    function getBrandname(data, id){
-      var item = _.remove(data, function(item){
+
+    function getBrandname(data, id) {
+      var item = _.remove(data, function (item) {
         return item.id == id;
       });
       return item.length ? item[0].shortname : "";
     }
+
     /**
      * 在数组里面根据value参数获取数组中对应的数据
      * @param arr      数据
@@ -287,7 +255,7 @@
       store: [],
       handler: function (data) {
         console.log('selectModel', data);
-        if(!!getData(vm.selectModel2.store, data)){
+        if (!!getData(vm.selectModel2.store, data)) {
           vm.dataBase.$unit = getData(vm.selectModel2.store, data).unit;
         }
         console.log(getData(vm.selectModel2.store, data));
@@ -296,13 +264,13 @@
       }
     };
 
-    function getAttrsku(id, callback){
+    function getAttrsku(id, callback) {
       productGoods.attrsku({id: id}).then(function (data) {
         vm.brandModel.store = data.data.data.brand;
         vm.skuData = angular.copy(data.data.data.sku);
         vm.sizeModel.store = angular.copy(data.data.data.sku);
         vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
-        if(!callback){
+        if (!callback) {
           vm.dataBase.brandid = undefined;
           vm.brandModel.select = undefined;
           vm.isAttributesetLoad = true;
@@ -331,7 +299,7 @@
         vm.sizeModel.data = data.data;
       }
     };
-    function setTwoCategorie(id, cateid, unit){
+    function setTwoCategorie(id, cateid, unit) {
       if (!!getData(vm.selectModel.store, id)) {
         vm.selectModel2.store = getData(vm.selectModel.store, id).items;
       } else {
@@ -367,7 +335,7 @@
       /**
        * 防止后台数据出bug end
        */
-      if(vm.isChange){
+      if (vm.isChange) {
         delete result.parentid;
         delete result.brandname;
         delete result.productcategory;
@@ -392,11 +360,12 @@
       delete result.unit;
       return result;
     }
+
     vm.uploadHandler = function (data, index) {
-      if(data.status == 0){
-        if(angular.isDefined(index)){
+      if (data.status == 0) {
+        if (angular.isDefined(index)) {
           vm.dataBase.mainphoto[index] = data.data[0].url;
-        }else{
+        } else {
           angular.forEach(data.data, function (item) {
             vm.dataBase.mainphoto.push(item.url);
           });
@@ -412,25 +381,25 @@
      * 表单提交
      */
     vm.submit = function () {
-      if(!vm.sizeModel.data.length){
+      if (!vm.sizeModel.data.length) {
         cbAlert.alert('您要至少选择一项规格');
-        return ;
+        return;
       }
-      if(!vm.sizeModel.every){
+      if (!vm.sizeModel.every) {
         cbAlert.alert('规格对应的值没有选择');
-        return ;
+        return;
       }
-      if(!vm.dataBase.mainphoto.length){
+      if (!vm.dataBase.mainphoto.length) {
         cbAlert.alert('您需要上传一张商品图片');
-        return ;
+        return;
       }
-      if(!vm.dataBase.motobrandids.length){
+      if (!vm.dataBase.motobrandids.length) {
         cbAlert.alert('您还没有选择适用车型');
-        return ;
+        return;
       }
       productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
         console.log('save', data);
-        if(data.data.status == 0){
+        if (data.data.status == 0) {
           goto();
         }
       });

@@ -70,18 +70,22 @@
     }
 
     /** @ngInject */
-    function cbBackButton($rootScope){
+    function cbBackButton($rootScope, preferencenav){
         return {
             restrict: 'A',
             scope: {},
             link: function(scope, iElement, iAttrs){
                 // 获取返回上一页路由信息
                 var router = scope.$eval(iAttrs.cbBackButton);
+                var current = iAttrs.router;
                 iElement.on('click',function(){
-                    if(angular.isUndefined(router)){
+                    if(angular.isUndefined(router) && angular.isUndefined(current)){
                         throw new Error("没有填写返回上一页路由信息");
                     }
                     $rootScope.back(router);
+                    preferencenav.removePreference({
+                      name: current
+                    });
                 });
             }
         };

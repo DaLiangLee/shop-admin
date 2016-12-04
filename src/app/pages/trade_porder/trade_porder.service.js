@@ -40,13 +40,13 @@
                       "id": 3,
                       "name": "商品名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.productname"></span>'
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="10"></span>'
                     },
                     {
                       "id": 4,
                       "name": "商品规格",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread">有<i bo-text="item.skuvalues.length"></i>个规格<span cb-popover="" popover-placement="bottom" popover-template-id="cbSkuvaluesTipsPopoverTemplate.html" popover-template-data="item.skuvalues">详情</span></span>'
+                      "fieldDirective": '<span class="state-unread">有<i bo-text="item.skuvalues.length"></i>个规格<span cb-popover="" popover-placement="right" popover-template-id="cbSkuvaluesTipsPopoverTemplate.html" popover-template-data="item.skuvalues">详情</span></span>'
                     },
                     {
                       "id": 5,
@@ -94,7 +94,7 @@
                       "id": 12,
                       "name": "订单备注",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.remark"></span>'
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.remark}}" text-length="10"></span>'
                     },
                     {
                       "id": 13,

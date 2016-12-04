@@ -158,8 +158,15 @@
                     node += '<td '+(item.width ? 'width="'+item.width+'"' : "")+'>' + item.fieldDirective + '</td>';
                 }
             });
-            var columnsClass = scope.config.columnsClass ? ' ng-class="' + scope.config.columnsClass + '" ' : "";
-            return '<tbody ng-if="!loadingState"><tr '+bindonce+' '+ columnsClass +' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
+
+            var statusShow = "{";
+            angular.forEach(scope.config.statusShow, function(value){
+              statusShow += value.sClass +": "+ rowItemName+"."+value.key+"=="+ value.value +",";
+            });
+            statusShow = statusShow.substring(0, statusShow.length - 1) +　"}";
+            var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";
+            var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
+            return '<tbody ng-if="!loadingState"><tr '+statusShowClass+' '+bindonce+' '+ columnsClass +' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
         }
         function tFootConfig(scope){
             var node = "",btn = "",page = "",config = scope.config;

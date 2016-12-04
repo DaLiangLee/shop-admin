@@ -68,8 +68,8 @@
                       "url": "/product/server",
                       "type": "GET"
                     },
-                    "remove": {   //删除服务
-                      "url": "/product/server/remove",
+                    "removeServer": {   //删除服务
+                      "url": "/product/server/removeServer",
                       "type": "POST"
                     },
                     "putdownserver": {   // 暂停服务

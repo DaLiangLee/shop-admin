@@ -79,18 +79,10 @@
         <hr>
           <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
           <div class="text-center">
-            <button type="button" class="btn btn-primary">{{vm.isChange ? "修改" : "完成"}}</button>
+            <button type="button" class="btn btn-primary" ng-click="vm.submit()">{{vm.isChange ? "修改" : "完成"}}</button>
+            <button type="button" class="btn btn-default" cb-back-button="{'name':'product.server.list','params':{'page': 1}}" data-router="product.server.edit" ng-if="vm.isChange">返回</button>
           </div>
         </div>
         </form>
     </div>
 </div>
-<!--
-<script type="text/ng-template" id="cbPskuidsTipsPopoverTemplate.html">
-  <h3 class="h3 text-center">商品详情</h3>
-  <ul class="list-unstyled" style="padding: 0;">
-    <li bindonce ng-repeat="item in templateData">
-      <span bo-text="item.productname"></span>：<span bo-text="item.subtotal | moneyFilter"></span>
-    </li>
-  </ul>
-</script>-->

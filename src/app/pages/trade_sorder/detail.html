@@ -1,1 +1,161 @@
-服务订单详情
+<div class="g-view">
+  <div class="container-fluid">
+    <h2>服务订单详情</h2>
+    <hr>
+    <form class="form-horizontal" autocomplete="off" name="sorder" role="form" novalidate>
+      <h3>服务订单</h3>
+      <hr>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label class="col-md-2 control-label">订单编号：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.gridModel.itemList.length"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="col-md-2 control-label">订单金额：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.totalcost | moneypushFilter : vm.dataBase.totalsale"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label class="col-md-2 control-label">工时总计：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.totalsale | moneyFilter"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="col-md-2 control-label">商品总计：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.totalcost | moneyFilter"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span> 客户姓名：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.realname"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="col-md-2 control-label"><span class="text-danger">*</span> 手机号码：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.mobile"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-12">
+          <label class="col-md-1 control-label"><span class="text-danger">*</span> 车辆信息：</label>
+          <div class="col-md-11">
+            <p class="text-border" ng-bind="vm.dataBase.motormodel"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label class="col-md-2 control-label">车牌号：</label>
+          <div class="col-md-10">
+              <p class="text-border" ng-bind="vm.dataBase.licence"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="trade_sorder_add_vin" class="col-md-2 control-label">VIN码：</label>
+          <div class="col-md-10">
+              <p class="text-border" ng-bind="vm.dataBase.vin"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label for="trade_sorder_add_enginenumber" class="col-md-2 control-label">发动机号：</label>
+          <div class="col-md-10">
+              <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="trade_sorder_add_totalmile" class="col-md-2 control-label">总里程数：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label for="trade_sorder_add_enginenumber" class="col-md-2 control-label">订单状态：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="trade_sorder_add_totalmile" class="col-md-2 control-label">预约到店时间：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-6">
+          <label for="trade_sorder_add_enginenumber" class="col-md-2 control-label">付款状态：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="trade_sorder_add_totalmile" class="col-md-2 control-label">付款时间：</label>
+          <div class="col-md-10">
+            <p class="text-border" ng-bind="vm.dataBase.enginenumber"></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-12">
+          <label class="col-md-1 control-label"><span class="text-danger">*</span> 订单进度：</label>
+          <div class="col-md-11">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" style="width: 20%">
+                <span class="sr-only">35% Complete (success)</span>
+              </div>
+              <div class="progress-bar progress-bar-info" style="width: 20%">
+                <span class="sr-only">20% Complete (warning)</span>
+              </div>
+              <div class="progress-bar progress-bar-warning" style="width: 20%">
+                <span class="sr-only">10% Complete (danger)</span>
+              </div>
+              <div class="progress-bar progress-bar-danger" style="width: 20%">
+                <span class="sr-only">10% Complete (danger)</span>
+              </div>
+              <div class="progress-bar progress-bar-success" style="width: 20%">
+                <span class="sr-only">10% Complete (danger)</span>
+              </div>
+            </div>
+            <div class="pull-left" style="width: 20%">
+              新建订单(线上)
+            </div>
+            <div class="pull-left"  style="width: 20%">
+              到店接车
+            </div>
+            <div  class="pull-left" style="width: 20%">
+              服务完成
+            </div>
+            <div  class="pull-left" style="width: 20%">
+              支付完成（线上）
+            </div>
+            <div  class="pull-left" style="width: 20%">
+              订单完成
+            </div>
+          </div>
+        </div>
+      </div>
+      <h3>子订单详情</h3>
+      <hr>
+      <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+      <div class="text-center">
+        <button type="button" class="btn btn-default" cb-back-button="{'name':'trade.sorder.list','params':{'page': 1}}" data-router="trade.sorder.detail">返回</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -50,44 +50,39 @@
                       "width": 120
                     },
                     {
-                      "id": 3,
-                      "name": "商品编码",
-                      "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.productid"></span>'
-                    },
-                    {
-                      "id": 3,
+                      "id": 2,
                       "name": "商品名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.productname"></span>'
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="10"></span>',
+                      "width": 170
                     },
                     {
-                      "id": 4,
+                      "id": 3,
                       "name": "商品类型",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.pcatename1 +\' - \'+ item.pcatename2"></span>'
                     },
                     {
-                      "id": 5,
+                      "id": 4,
                       "name": "品牌",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.cnname"></span>'
                     },
                     {
-                      "id": 6,
+                      "id": 5,
                       "name": "规格",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread">有<i bo-text="item.skuvalues.length"></i>个规格<span cb-popover="" popup-delay="0" popover-placement="right" popover-template-id="cbSkuvaluesTipsPopoverTemplate.html" popover-template-data="item.skuvalues">详情</span></span>'
+                      "fieldDirective": '<span class="state-unread text-primary" style="cursor: pointer;" cb-popover="" popup-delay="0" popover-placement="right" popover-template-id="cbSkuvaluesTipsPopoverTemplate.html" popover-template-data="item.skuvalues"><u>共有<i bo-text="item.skuvalues.length"></i>个规格</u></span>'
                     },
                     {
-                      "id": 7,
+                      "id": 6,
                       "name": "适用品牌",
                       "cssProperty": "state-column",
                       "fieldDirective": '<div style="width: 200px; overflow-x: auto; white-space: nowrap;"><span ng-repeat="img in item.motobrandids track by $index" data-id="{{item.motobrandids[$index]}}"><img bo-src-i="{{img.brand.logo}}" width="50" /> </span></div>'
                     },
                     {
-                      "id": 8,
-                      "name": "零售单位",
+                      "id": 7,
+                      "name": "单位",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.unit"></span>'
                     },
@@ -98,29 +93,23 @@
                       "fieldDirective": '<span class="state-unread" bo-bind="item.officialprice | moneyFilter"></span>'
                     },*/
                     {
-                      "id": 10,
-                      "name": "零售价（￥）",
+                      "id": 8,
+                      "name": "零售价（元）",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.saleprice | moneyFilter"></span>'
                     },
                     {
-                      "id": 11,
-                      "name": "目前库存",
+                      "id": 9,
+                      "name": "库存",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.stock"></span>'
                     },
                     {
-                      "id": 12,
-                      "name": "上架状态",
-                      "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status == 0 ? \'下架\' : \'上架\'"></span>'
-                    },
-                    {
-                        "id": 1,
+                        "id": 10,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.goods.edit({pskuid: item.pskuid})">编辑</button>  <button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40006" adjust-prices-dialog="" item="item" item-handler="propsParams.pricesItem(data)">调价</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">上架</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">下架</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.goods.edit({pskuid: item.pskuid})">编辑</button>  <button class="btn btn-info" cb-access-control="product" data-parentid="40000" data-sectionid="40006" adjust-prices-dialog="" item="item" item-handler="propsParams.pricesItem(data)">调价</button>  <button class="btn btn-default" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putup" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">上架</button> <button class="btn btn-warning" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdown" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">下架</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
                         "name": '操作',
-                        "width": 300
+                        "width": 250
                     }
                 ],
                 "config": {
@@ -131,6 +120,18 @@
                     'selectedProperty': "selected",  // 数据列表项复选框
                     'selectedScopeProperty': "selectedItems",
                     'useBindOnce': true,  // 是否单向绑定
+                    'statusShow': [
+                      {
+                        sClass: 'downline',
+                        key: 'status',
+                        value: '0'
+                      },
+                      {
+                        sClass: 'online',
+                        key: 'status',
+                        value: '1'
+                      }
+                    ],
                     "paginationInfo": {   // 分页配置信息
                         maxSize: 5,
                         showPageGoto: true

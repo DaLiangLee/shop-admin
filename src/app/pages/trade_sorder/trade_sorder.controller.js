@@ -267,7 +267,11 @@
        *
        */
       vm.gridModel.config.propsParams = {
+        userid: vm.dataBase.userid,
         addItems: function (data) {   // 新增项目
+          if(data.status == '1'){
+            cbAlert.alert(data.data);
+          }
           console.log('addItems', data);
           if(data.status == "0"){
             vm.gridModel.itemList.push(data.data);

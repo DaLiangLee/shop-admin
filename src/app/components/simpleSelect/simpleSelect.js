@@ -55,6 +55,7 @@
           name: getOptions()[1],
           iamge: getOptions()[2]
         };
+        var placeholder = angular.isDefined(iAttrs.placeholder) ? iAttrs.placeholder : "请点击选择";
         /**
          * 获取字段参数  格式 options="value,name,image"
          * @returns {*}
@@ -76,7 +77,7 @@
         scope.choose = {
           once: false,
           image: "",
-          text: "-- 请点击选择 --",
+          text: "-- "+placeholder+" --",
           toggle: function ($event) {
             $event.stopPropagation();
             $document.find('.k-simple-select .select').hide();
@@ -96,7 +97,7 @@
             this.focus = false;
             scope.search.params = "";
             if(scope.config.multiple){
-              this.text = "-- 请点击选择 --";
+              this.text = "-- "+placeholder+" --";
             }
           }
         };
@@ -127,10 +128,10 @@
               scope.search.prefer = value.length > 6;
             }
             if(!scope.select){
-              scope.choose.text = "-- 请点击选择 --";
+              scope.choose.text = "-- "+placeholder+" --";
             }else{
               if(scope.config.multiple){
-                scope.choose.text = "-- 请点击选择 --";
+                scope.choose.text = "-- "+placeholder+" --";
               }else{
                 scope.choose.text = getValue(scope.items, scope.select).text;
                 scope.choose.image = getValue(scope.items, scope.select).image;
@@ -144,18 +145,18 @@
          */
         var select = scope.$watch('select', function (value) {
           if(angular.isUndefined(value)){
-            scope.choose.text = "-- 请点击选择 --";
+            scope.choose.text = "-- "+placeholder+" --";
           }
         });
         function getValue(items, select){
           if(!select){
-            return "-- 请点击选择 --";
+            return "-- "+placeholder+" --";
           }
           var item = _.remove(angular.copy(items), function(item){
             return item[scope.config.value] == select;
           });
           return {
-            text: item.length && item[0][name] ? item[0][name] : "-- 请点击选择 --",
+            text: item.length && item[0][name] ? item[0][name] : "-- "+placeholder+" --",
             image: item.length && item[0][image] ? item[0][image] : ""
           };
         }

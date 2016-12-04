@@ -11,19 +11,12 @@
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
-    function ProductServerListController($state, $log, $$utils, productServer, productServerConfig, cbAlert) {
+    function ProductServerListController($state, $log, utils, productServer, productServerConfig, cbAlert) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
       var currentParams = $state.params;
       var total = 0;
-
-      /**
-       * 消息提醒
-       */
-      vm.message = {
-        loadingState: false
-      };
 
       /**
        * 表格配置
@@ -45,9 +38,7 @@
        */
       vm.gridModel.config.propsParams = {
         removeItem: function (data) {
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
+          if (data.status == 0) {
             /**
              * 删除单页
              */
@@ -57,7 +48,7 @@
                 serverid: data.removal[0].serverid
               }
             }
-            productServer.remove(item).then(function (data) {
+            productServer.removeServer(item).then(function (data) {
               if(data.data.status === '0'){
                 cbAlert.tips("删除成功");
               }else{
@@ -77,10 +68,7 @@
           //vm.gridModel.itemList = data.list;
         },
         statusItem: function (data) {
-          $log.debug('statusItem', data);
-          if (data.status == -1) {
-            vm.message.loadingState = false;
-          } else {
+          if (data.status == 0) {
             var item = null;
             if(data.removal.length == 1){
               item = {
@@ -138,7 +126,7 @@
               }
               if(angular.isDefined(item.motorbrandids)){
 
-                item.motorbrandids = $$utils.getMotorbrandids(item.motorbrandids);
+                item.motorbrandids = utils.getMotorbrandids(item.motorbrandids);
               }
               /**
                * 这段代码处理skuvalues值的问题，请勿修改 start
@@ -197,13 +185,10 @@
        * @param oldData
        */
       function compareDiff(newData, oldData){
-        if(oldData.sku.length != newData.sku.length || oldData.serverstatus != newData.serverstatus || oldData.abstracts != newData.abstracts){
-          productServer().then(function(results){
-
-          });
+        if(oldData.serverstatus != newData.serverstatus || oldData.abstracts != newData.abstracts){
+          productServer.saveServer(getDataBase(newData)).then(function(results){});
         }
       }
-
       /**
        * 基本信息数据
        * @type {{}}
@@ -241,6 +226,10 @@
                 offerid: data.removal[0].offerid
               }
             }
+            if(vm.gridModel.itemList.length === 1){
+              cbAlert.tips('至少要有一条报价规格');
+              return ;
+            }
             productServer.removeOfferprice(item).then(function (results) {
               console.log('saveOfferprice', results);
               if(results.data.status == 0) {
@@ -262,8 +251,8 @@
             productServer.saveOfferprice(data.data).then(function (results) {
               console.log('saveOfferprice', results);
               if(results.data.status == 0) {
-                //getOfferpriceList();
-                vm.gridModel.itemList.push(getOfferprice(results.data.data));
+                getOfferpriceList();
+                //vm.gridModel.itemList.push(getOfferprice(results.data.data));
               }
             });
           }
@@ -291,6 +280,7 @@
             'offerid': item.offerid,
             'edit': angular.isUndefined(item.pskuids) ? "0" : "1"
           };
+          compareDiff(vm.dataBase, diffData);
           productServerAddGoods.set(data);
           $state.go('product.server.addGoods' ,data);
         }
@@ -302,15 +292,19 @@
        */
       vm.isAddData = !vm.isChange;
       if (vm.isChange) {
-        productServer.edit(currentParams).then(function (data) {
-          var edit = data.data.data;
-          console.log(edit);
-          getAttrsku(edit.server.scateid2, function(data){
-            vm.dataBase = setDataBase(edit);
-            vm.isAttributesetLoad = true;
-            vm.isLoadData = true;
-            console.log(data);
-          });
+        productServer.edit(currentParams).then(function (results) {
+          var edit = results.data.data;
+          diffData = angular.extend({}, edit.server);
+          vm.dataBase = setDataBase(edit);
+          vm.isLoadData = true;
+          vm.gridModel.config.propsParams.serverid = edit.server.serverid;
+          /*getAttrsku(edit.server.scateid2, function(data){
+
+           console.log(diffData , vm.dataBase);
+           vm.isAttributesetLoad = true;
+
+           console.log(data);
+           });*/
         });
       } else {
         vm.isLoadData = true;
@@ -320,12 +314,13 @@
 
 
       function getOfferpriceList(){
-        productServer.edit(currentParams).then(function (results) {
+        productServer.edit({serverid: vm.gridModel.config.propsParams.serverid}).then(function (results) {
           var data = [];
-          angular.forEach(results.data.data, function (item) {
+          angular.forEach(results.data.data.offerList, function (item) {
             data.push(getOfferprice(item));
           });
           vm.gridModel.itemList = data;
+          diffData = angular.extend({}, results.data.data.server);
         });
       }
 
@@ -338,7 +333,7 @@
       function getOfferprice(data){
         var result = {};
         angular.forEach(data, function (item, key) {
-          if(key === 'motorbrandids'){
+          if(key === 'motorbrandids' && angular.isString(item)){
             result[key] = $window.eval(decodeURI(item));
           }else{
             result[key] = item;
@@ -368,6 +363,8 @@
              */
             vm.gridModel.config.propsParams.serverid = data.data.data;
             vm.isAddData = false;
+          }else{
+            cbAlert.error(data.data.rtnInfo);
           }
         });
       };
@@ -415,7 +412,7 @@
           console.log('selectModel2', data);
           console.log(getData(vm.selectModel2.store, data));
           //vm.dataBase.cateid = data;
-          getAttrsku(data);
+          //getAttrsku(data);
         }
       };
       vm.sizeModel = {
@@ -447,7 +444,6 @@
           vm.selectModel2.store = [];
         }
         console.log(vm.selectModel2.store);
-
       }
       function getAttrsku(id, callback){
         console.log(id);
@@ -471,7 +467,9 @@
         results = result.server;
         results.serverstatus = result.server.status;
         results.sku = result.skuList;
-        vm.gridModel.itemList = result.offerList;
+        angular.forEach(result.offerList, function (item) {
+          vm.gridModel.itemList.push(getOfferprice(item));
+        });
         vm.gridModel.loadingState = false;
         //setTwoCategorie(result.parentid, result.cateid, result.unit);
         return results;
@@ -481,16 +479,12 @@
        * 表单提交
        */
       vm.submit = function () {
-        console.log(vm.dataBase);
-
-
-        vm.dataBase.offerprice = angular.copy(vm.gridModel.itemList);
-        productServer.save(getDataBase(vm.dataBase)).then(function (data) {
-          console.log('save', data);
-          if(data.data.status == 0){
-            goto();
-          }
-        });
+        if(!vm.gridModel.itemList.length){
+          cbAlert.tips('至少要有一条报价规格');
+          return ;
+        }
+        compareDiff(vm.dataBase, diffData);
+        goto();
       };
       function goto() {
         preferencenav.removePreference($state.current);
@@ -503,7 +497,7 @@
     function ProductServerAddGoodsController($state, $filter, $log, utils, productServer, categoryGoods, productServerAddGoods, productServerChangeConfig,preferencenav, cbAlert) {
       var vm = this;
       var currentParams = $state.params;
-      verificationURL();
+      //verificationURL();
       vm.attributeset = [];
       vm.isLoadData = false;
       vm.isAttributesetLoad = false;
@@ -562,9 +556,8 @@
         searchText: "",
         searchHandler: function () {
           searchData = {
-            "pcatename1": this.search1.select,
-            "pcatename2": this.search2.select,
-            "cnname": this.searchText,
+            "pcateid1": this.search1.select,
+            "pcateid2": this.search2.select,
             "productname": this.searchText
           };
           getList(currentPage, searchData);
@@ -619,26 +612,21 @@
       /**
        * 第一次添加
        */
-      if(currentParams.edit === "0"){
-        console.log(1);
-        productServer.allpskulist().then(function(data){
-          dataLists = data.data.data;
-          getList(1);
-          vm.gridModel.loadingState = false;
-        });
-      }
+      productServer.allpskulist().then(function(data){
+        dataLists = data.data.data;
+        getList(1);
+        vm.gridModel.loadingState = false;
+      });
       /**
        * 编辑效果
        */
       if(currentParams.edit === "1"){
-        productServer.allpskulist().then(function(data){
-          dataLists = data.data.data;
-          getList(1);
-          vm.gridModel.loadingState = false;
-        });
-        /*productServer.pskulist().then(function(){
-
-        });*/
+        productServer.pskulist({offerid: currentParams.offerid}).then(function(data){
+          vm.items = angular.copy(data.data.data);
+          angular.forEach(vm.items, function (item) {
+            vm.compute(item);
+          })
+        })
       }
 
       /**
@@ -653,6 +641,7 @@
             total: dataLists.length
           };
         }else{
+          //console.log(search, $filter('filter')(dataLists, search), dataLists);
           var results = $filter('filter')(dataLists, search);
           vm.gridModel.itemList = _.chunk(results, 10)[page - 1] || [];
           vm.gridModel.paginationinfo = {
@@ -702,7 +691,8 @@
           serverid: currentParams.serverid,
           offerid: currentParams.offerid,
           productcost: vm.totalprice,
-          psku: []
+          psku: [],
+          clear: 0
         };
         angular.forEach(vm.items, function(item){
           result.psku.push({
@@ -710,6 +700,7 @@
             numbers: item.numbers
           });
         });
+        result.clear = vm.items.length === 0 ? 1 : 0;
         result.psku.push({});
         return result;
       }
@@ -718,7 +709,6 @@
        */
       vm.goBack = function (save) {
         if(save){
-          console.log(vm.dataBase);
           productServer.saveProduct(getDataBase()).then(function (data) {
             console.log('save', data);
             if(data.data.status == 0){
