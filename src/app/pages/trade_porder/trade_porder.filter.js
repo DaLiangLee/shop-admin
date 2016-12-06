@@ -6,47 +6,7 @@
 
   angular
     .module('shopApp')
-    .constant('STATUS_COLLECTION', {
-      "server_order_status": {
-        '0': '已预约',
-        '1': '已下单',
-        '2': '服务中',
-        '3': '待提车',
-        '4': '已完成',
-        '5': '已取消',
-        '6': '退款中',
-        '7': '已退款'
-      },
-      'server_order_paystatus': {
-        '0': '未付款',
-        '1': '已付款',
-        '2': '待退款',
-        '3': '已退款'
-      },
-      'server_order_child': {
-        '0': '待服务',
-        '1': '服务中',
-        '2': '服务完成',
-        "3": "已关闭"
-      },
-      'porder_order_status': {
-        '0': '已下单',
-        '1': '已使用',
-        '2': '已完成'
-      }
-    })
-    .filter('formatStatusFilter', formatStatusFilter)
     .filter('computeTotalPriceFilter', computeTotalPriceFilter);
-
-  /** @ngInject */
-  function formatStatusFilter(STATUS_COLLECTION) {
-    return function(name, type) {
-      if(angular.isUndefined(name) || angular.isUndefined(type)){
-        return name;
-      }
-      return STATUS_COLLECTION[type][name];
-    }
-  }
 
   /** @ngInject */
   function computeTotalPriceFilter() {

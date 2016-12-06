@@ -21,15 +21,17 @@
     return {
       restrict: "A",
       scope: {
-        time: "=",
+        startTime: "=",
+        endTime: "=",
         settingItem: '&'
       },
       link: function(scope, iElement){
         function handler(childScope) {
           childScope.hours = {
-            start: timeChange(angular.copy(scope.time).start),
-            end : timeChange(angular.copy(scope.time).end)
+            start: timeChange(scope.startTime, 0),
+            end : timeChange(scope.endTime, 1)
           };
+          console.log(childScope.hours);
           childScope.hstep = 1;
           childScope.mstep = 5;
           childScope.ismeridian = false;
@@ -38,17 +40,52 @@
             childScope.interceptor = true;
            };
            childScope.interceptorConfirm = function () {
-             scope.settingItem({data: {"status":"0", "data":{
-               start: $filter('date')(childScope.hours.start, 'HH:mm'),
-               end: $filter('date')(childScope.hours.end, 'HH:mm')
-             }}});
+             var opentime = $filter('date')(childScope.hours.start, 'HH:mm'),
+                 closetime = $filter('date')(childScope.hours.end, 'HH:mm');
+             if(scope.startTime == opentime && closetime == scope.endTime){
+               scope.settingItem({data: {"status":"1", "data":""}});
+             }else{
+               scope.settingItem({data: {"status":"0", "data":{
+                 opentime: opentime,
+                 closetime: closetime
+               }}});
+             }
              childScope.close();
            }
         }
-        function timeChange(time) {
+        function format(time, num){
+          if(time%num < num){
+            time = time - time%num + num;
+          }
+          if(time < 10){
+            time = "0"+time;
+          }else{
+            time = ""+time;
+          }
+          return time;
+        }
+        function timeChange(time, num) {
           var DATE = new Date();
-          var date = DATE.getFullYear() + DATE.getMonth() + DATE.getDay() +" "+ time + ":00";
-          return (new Date(date));
+          if(time == '0'){
+            time = DATE.getHours()+":"+DATE.getMinutes();
+          }
+          if(time.indexOf(":") > -1){
+            if(time.split(":")[0]*1+num > 23){
+              time = "00:"+time.split(":")[1];
+              console.log('if1',time);
+            }else{
+              time = time.split(":")[0]*1+num +":"+ format(time.split(":")[1]*1, 5);
+              console.log('if2',time);
+            }
+          }else{
+            if(time+num > 23){
+              time = "00:00"
+            }else{
+              time = (time+num)+":00";
+            }
+          }
+          var date = DATE.getFullYear()+ "-" + DATE.getMonth() + "-" + DATE.getDay() +" "+ time + ":00:00";
+          return (new Date(date)).getTime();
         }
         /**
          * 点击按钮
@@ -81,7 +118,11 @@
             childScope.interceptor = true;
           };
           childScope.interceptorConfirm = function () {
-            scope.settingItem({data: {"status":"0", "data": childScope.telephone}});
+            if(scope.telephone == childScope.telephone){
+              scope.settingItem({data: {"status":"1", "data": ""}});
+            }else{
+              scope.settingItem({data: {"status":"0", "data": childScope.telephone}});
+            }
             childScope.close();
           }
         }

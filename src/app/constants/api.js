@@ -8,6 +8,30 @@
         .module('shopApp')
         .constant('webSiteApi', {
             WEB_SITE_API: {
+                "store": {
+                  "shop": {
+                    "manager": {
+                      "url": "/store/shop/manager",
+                      "type": "POST"
+                    },
+                    "saveTime": {
+                      "url": "/store/shop/saveTime",
+                      "type": "POST"
+                    },
+                    "savePhotos": {
+                      "url": "/store/shop/savePhotos",
+                      "type": "POST"
+                    },
+                    "saveTelephone": {
+                      "url": "/store/shop/saveTelephone",
+                      "type": "POST"
+                    },
+                    "saveDescription": {
+                      "url": "/store/shop/saveDescription",
+                      "type": "POST"
+                    }
+                  }
+                },
                 "product": {
                   "goods": {
                     "list": {
@@ -158,8 +182,16 @@
                       "url": "/trade/sorder",
                       "type": "GET"
                     },
+                    "save": {
+                      "url": "/trade/sorder/save",
+                      "type": "POST"
+                    },
                     "detail": {
-                      "url": "/trade/detail",
+                      "url": "/trade/sorder/detail",
+                      "type": "POST"
+                    },
+                    "childFinish": {
+                      "url": "/trade/sorder/childFinish",
                       "type": "POST"
                     },
                     "user": {
@@ -322,27 +354,27 @@
                 "vehicle": {
                   "motor": {
                     "brand": {
-                      "url": "/motor/brand",
+                      "url": "/public/motor/brand",
                       "type": "POST"
                     },
                     "series": {
-                      "url": "/motor/series",
+                      "url": "/public/motor/series",
                       "type": "POST"
                     },
                     "year": {
-                      "url": "/motor/year",
+                      "url": "/public/motor/year",
                       "type": "POST"
                     },
                     "output": {
-                      "url": "/motor/output",
+                      "url": "/public/motor/output",
                       "type": "POST"
                     },
                     "model": {
-                      "url": "/motor/model",
+                      "url": "/public/motor/model",
                       "type": "POST"
                     },
                     "prefix": {
-                      "url": "/motor/prefix",
+                      "url": "/public/motor/prefix",
                       "type": "POST"
                     }
                   }
@@ -350,13 +382,19 @@
                 "category": {
                   "goods": {
                     "goods": {
-                      "url": "/category/goods",
+                      "url": "/public/category/goods",
                       "type": "POST"
                     }
                   },
                   "server": {
-                    "server": {
-                      "url": "/category/server",
+                    "storeserver": {
+                      "url": "/public/category/server",
+                      "type": "POST"
+                    }
+                  },
+                  "download": {
+                    "download": {
+                      "url": "/public/download",
                       "type": "POST"
                     }
                   }

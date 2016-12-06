@@ -33,13 +33,13 @@
                     },
                     {
                       "id": 2,
-                      "name": "订单创建时间",
+                      "name": "创建时间",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.createtime | date : \'yyyy-MM-dd HH:mm:ss\'"></span>'
                     },
                     {
                       "id": 3,
-                      "name": "预约到店时间",
+                      "name": "预约到店",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.meettime | date : \'yyyy-MM-dd HH:mm:ss\'"></span>'
                     },
@@ -53,23 +53,23 @@
                       "id": 5,
                       "name": "订单内容",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.content"></span>'
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.content}}" text-length="10"></span>'
                     },
                     {
                       "id": 6,
-                      "name": "工时总计（￥）",
+                      "name": "工时总计(元)",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.totalsale | moneyFilter"></span>'
                     },
                     {
                       "id": 7,
-                      "name": "商品总计（￥）",
+                      "name": "商品总计(元)",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.totalcost | moneyFilter"></span>'
                     },
                     {
                       "id": 8,
-                      "name": "总价格（￥）",
+                      "name": "总价格(元)",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-bind="item.totalcost | moneypushFilter : item.totalsale"></span>'
                     },
@@ -89,7 +89,7 @@
                       "id": 11,
                       "name": "订单状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'server_order_status\'"></span><span bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'server_order_status\'"></span><br  /><u class="text-primary" style="cursor: pointer;" bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</u>'
                     },
                     {
                       "id": 12,
@@ -101,12 +101,12 @@
                       "id": 14,
                       "name": "付款状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span><span bo-if="item.paystatus == 0" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span><br /><u class="text-primary" style="cursor: pointer;" bo-if="item.paystatus == 1" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</u>'
                     },
                     {
                         "id": 15,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50103" ui-sref="trade.sorder.detail({detailid: item.detailid})">订单详情</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 0" ng-click="propsParams.reminder(item)" ng-disabled="item.disabled">提醒客户</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 2" ng-click="propsParams.complete(item)"  ng-disabled="item.disabled">服务完成</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 3" ng-click="propsParams.takecar(item)" ng-disabled="item.disabled">客户提车</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50104" bo-if="item.status == 0 || item.status == 1" trade-sorder-confirm-takecar-dialog item="item" item-handler="propsParams.confirmTakecar(data)" >确认接车</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 4" ng-click="propsParams.refund(item)"  ng-disabled="item.disabled">订单退款</button>  <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50105" bo-if="item.status == 0 || item.status == 1 || item.status == 2 || item.status == 3" ng-click="propsParams.cancelorder(item)" ng-disabled="item.disabled">取消订单</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50103" ui-sref="trade.sorder.detail({orderid: item.orderid})">订单详情</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 0" ng-click="propsParams.reminder(item)" ng-disabled="item.disabled">提醒客户</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 2" ng-click="propsParams.complete(item)"  ng-disabled="item.disabled">服务完成</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 3" ng-click="propsParams.takecar(item)" ng-disabled="item.disabled">客户提车</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50104" bo-if="item.status == 0 || item.status == 1" trade-sorder-confirm-takecar-dialog item="item" item-handler="propsParams.confirmTakecar(data)" >确认接车</button> <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50102" bo-if="item.status == 4" ng-click="propsParams.refund(item)"  ng-disabled="item.disabled">订单退款</button>  <button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50105" bo-if="item.status == 0 || item.status == 1 || item.status == 2 || item.status == 3" ng-click="propsParams.cancelorder(item)" ng-disabled="item.disabled">取消订单</button>',
                         "name": '操作',
                         "width": 50
                     }
@@ -206,19 +206,19 @@
               "id": 3,
               "name": "工时费（￥）",
               "cssProperty": "state-column",
-              "fieldDirective": '<span class="state-unread" bo-bind="item.saleprice | moneyFilter"></span>'
+              "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | moneyFilter"></span>'
             },
             {
               "id": 4,
               "name": "商品费用（￥）",
               "cssProperty": "state-column",
-              "fieldDirective": '<span class="state-unread" bo-bind="item.productcost | moneyFilter"></span>'
+              "fieldDirective": '<span class="state-unread" bo-bind="item.psaleprice | moneyFilter"></span>'
             },
             {
               "id": 5,
               "name": "单项小计（￥）",
               "cssProperty": "state-column",
-              "fieldDirective": '<span class="state-unread" bo-bind="item.saleprice | moneypushFilter : item.productcost"></span>'
+              "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | moneypushFilter : item.psaleprice"></span>'
             },
             {
               "id": 6,

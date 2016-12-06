@@ -93,10 +93,11 @@
                 }
               ]
             },
+            tips: true,
             handler: function(data){
               console.log((_.isEmpty(data.realname) && _.isEmpty(data.username)));
               if(_.isEmpty(data) || (_.isEmpty(data.realname) && _.isEmpty(data.username))){
-                childScope.gridModel.loadingState = false;
+                childScope.gridSearch.tips = true;
                 childScope.gridModel.itemList = [];
                 search.page = 1;
                 return ;
@@ -107,7 +108,7 @@
               if(angular.isDefined(data.realname)){
                 search.username = data.username;
               }
-              childScope.gridModel.loadingState = true;
+              childScope.gridSearch.tips = false;
               searchList(search);
             }
           };
@@ -133,13 +134,13 @@
                 "id": 2,
                 "name": "会员来源",
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.source"></span>'
+                "fieldDirective": '<span class="state-unread" bo-bind="item.source | formatStatusFilter : \'user_source\'"></span>'
               },
               {
                 "id": 3,
                 "name": "会员类型",
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.usertype"></span>'
+                "fieldDirective": '<span class="state-unread" bo-bind="item.usertype | formatStatusFilter : \'user_type\'"></span>'
               },
               {
                 "id": 4,
@@ -150,7 +151,6 @@
               }
             ],
             "config": {
-              'noneDataInfoMessage': "请先输入用户姓名或者联系方式再点击搜索",
               'paginationSupport': true,  // 是否有分页
               'useBindOnce': true,  // 是否单向绑定
               "paginationInfo": {   // 分页配置信息
@@ -406,9 +406,6 @@
                 key.active = false;
               });
               item.active = true;
-              childScope.ordertype = item.ordertype;
-              childScope.gridModel.columns = columns[item.ordertype];
-              this.type = item.type;
               searchList(type, search);
               this.loading = true;
             }

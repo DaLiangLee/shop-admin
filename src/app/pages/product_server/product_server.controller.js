@@ -167,8 +167,10 @@
       //  是否是编辑
       vm.isChange = !_.isEmpty(currentParams);
       $log.debug('isChange', vm.isChange);
-      categoryServer.server().then(function (data) {
-        vm.selectModel.store = data.data.data;
+      categoryServer.storeserver().then(function (data) {
+        angular.forEach(data.data.data, function(item){
+          vm.selectModel.store.push(item);
+        });
       });
       /**
        * 基本信息数据
@@ -271,7 +273,6 @@
             }, function (data) {
               $log.debug('statusItem', data);
             });
-
           }
         },
         goAddGoods: function (item) {
@@ -612,21 +613,66 @@
       /**
        * 第一次添加
        */
-      productServer.allpskulist().then(function(data){
-        dataLists = data.data.data;
-        getList(1);
-        vm.gridModel.loadingState = false;
-      });
+      if(currentParams.edit === "0") {
+        productServer.allpskulist().then(function (data) {
+          dataLists = data.data.data;
+          getList(1);
+          vm.gridModel.loadingState = false;
+        });
+      }
       /**
        * 编辑效果
        */
       if(currentParams.edit === "1"){
         productServer.pskulist({offerid: currentParams.offerid}).then(function(data){
-          vm.items = angular.copy(data.data.data);
+          vm.items = angular.copy(data.data.data.pskulist);
           angular.forEach(vm.items, function (item) {
             vm.compute(item);
-          })
+          });
+          dataLists = filterData(data.data.data.allpskulist, data.data.data.pskulist, "pskuid");
+          getList(1);
+          vm.gridModel.loadingState = false;
         })
+      }
+
+      /**
+       * 格式化显示数据
+       * 依赖_.remove方法
+       * @param all     全部数据
+       * @param list    已经选中的数据
+       * @return {[]}   返回数组 格式化数据
+       */
+      function filterData(all, list, id){
+        /**
+         * 强制让all和list变成数组形式，如果不是数组直接返回空数组
+         */
+        if(!angular.isArray(all) || !angular.isArray(list)){
+          return [];
+        }
+        /**
+         * 如果all和list长度一样，表示list已经把all全部选择，返回空数组
+         */
+        if(all.length === list.length){
+          return [];
+        }
+        /**
+         * 如果没有填id，就动态赋值一个id
+         * @type {*}
+         */
+        id = id || "id";
+        /**
+         * 拷贝数组，防止对原数组进行操作
+         */
+        all = all.concat([]);
+        /**
+         * 循环list，用list的item去删除all里面对应的item
+         */
+        angular.forEach(list, function (key) {
+          _.remove(all, function(value){
+            return value[id] === key[id];
+          });
+        });
+        return all;
       }
 
       /**
@@ -635,6 +681,7 @@
       function getList(page, search){
         if(angular.isUndefined(search)){
           vm.gridModel.itemList = _.chunk(dataLists, 10)[page - 1] || [];
+          console.log(vm.gridModel.itemList);
           vm.gridModel.paginationinfo = {
             page: page,
             pageSize: 10,
@@ -651,7 +698,6 @@
           };
         }
       }
-
 
       vm.remove = function (data) {
         dataLists.push(_.remove(vm.items, {pskuid: data.pskuid})[0]);

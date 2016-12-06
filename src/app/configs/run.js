@@ -18,6 +18,7 @@
         /** @ngInject */
         function configurationRun(configuration) {
           configuration.setConfig({
+            storeid: userPermissionList.storeid,
             api: userPermissionList.api,
             avatar: userPermissionList.avatar,
             message: userPermissionList.message,

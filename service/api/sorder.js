@@ -100,8 +100,37 @@ router.post('/trade/sorder/cancel', function (req, res, next) {
   });
 });
 
+// 获得服务报价列表
+var data = generateJSON({
+  "guid": "@id",
+  "offerid": "@id",
+  "serverid": "@id",
+  "scateid1": "@id",
+  "scateid2": "@id",
+  "scatename1": '@ctitle(3, 6)',                 // 项目类型
+  "scatename2": '@ctitle(3, 10)',              // 服务项目
+  "pskuids": "803054742275125248,803104112571871232",
+  "motorbrandids": "[{\"brand\":{\"brand\":\"%E5%AE%9D%E9%AA%8F\",\"firstletter\":\"B\",\"id\":9,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoJun.png\"}},{\"brand\":{\"brand\":\"%E5%AE%9D%E9%A9%AC\",\"firstletter\":\"B\",\"id\":11,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png\"}}]",
+  "warranty": _.random(0, 121),
+  "saleprice": _.random(0.00, 999.99),                        // 工时费
+  "groupprice": 0,
+  "status|0-2": 0,                     // 子订单状态
+  "productcost": _.random(0.00, 999.99),       // 商品价格
+  "salenums": _.random(0, 999),
+  "createtime": '@date("yyyy-MM-dd HH:mm:ss")',
+  "uploadtime": '@date("yyyy-MM-dd HH:mm:ss")'
+}, 30).data;
+
 // 服务完成
 router.post('/trade/sorder/finish', function (req, res, next) {
+  console.log(req.query);
+  res.json({
+    "status": "0",
+    "data": ""
+  });
+});
+// 子订单服务完成
+router.post('/trade/sorder/childFinish', function (req, res, next) {
   console.log(req.query);
   res.json({
     "status": "0",
@@ -117,30 +146,7 @@ router.post('/trade/sorder/pickupMotor', function (req, res, next) {
     "data": ""
   });
 });
-
-
-// 获得服务报价列表
 router.post('/trade/sorder/offerprice', function (req, res, next) {
-  var data = generateJSON({
-    "cateid": 2,
-    "createtime": '@date("yyyy-MM-dd HH:mm:ss")',
-    "groupprice": 0,
-    "guid": "@id",
-    "motorbrandids": "[{\"brand\":{\"brand\":\"%E5%AE%9D%E9%AA%8F\",\"firstletter\":\"B\",\"id\":9,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoJun.png\"}},{\"brand\":{\"brand\":\"%E5%AE%9D%E9%A9%AC\",\"firstletter\":\"B\",\"id\":11,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png\"}}]",
-    "offerid": "801397400173326336",
-    "productcost": _.random(0.00, 999.99),       // 商品价格
-    "productid": "@id",                           // 商品id
-    "pskuids": "803054742275125248,803104112571871232",
-    "pskuvalues": "[{\"guid\":0,\"id\":1,\"items\":[{\"guid\":0,\"id\":1,\"skuid\":1,\"skuvalue\":\"汽机油\",\"sort\":1}],\"skuname\":\"机油类别\",\"skutype\":\"text\",\"sort\":0},{\"guid\":0,\"id\":2,\"items\":[{\"guid\":0,\"id\":6,\"skuid\":2,\"skuvalue\":\"全合成机油\",\"sort\":1}],\"skuname\":\"机油分类\",\"skutype\":\"text\",\"sort\":0}]#[{\"guid\":0,\"id\":6,\"items\":[{\"guid\":0,\"id\":39,\"skuid\":6,\"skuvalue\":\"欧洲\",\"sort\":3}],\"skuname\":\"海外直采\",\"skutype\":\"text\",\"sort\":0},{\"guid\":0,\"id\":3,\"items\":[{\"guid\":0,\"id\":11,\"skuid\":3,\"skuvalue\":\"5W-30\",\"sort\":1}],\"skuname\":\"机油粘度\",\"skutype\":\"text\",\"sort\":0}]",
-    "salenums": 0,
-    "saleprice": 1,                        // 工时费
-    "scatename1": '@ctitle(3, 6)',                 // 项目类型
-    "scatename2": '@ctitle(3, 10)',              // 服务项目
-    "servercateid": 14,
-    "serverid": "@id",
-    "status|0-2": 0,                     // 子订单状态
-    "warranty": 12
-  }, 30).data;
   var page = req.query.page || 1;
   var total = data ? data.length : 0;
   data = _.chunk(data, 5)[page*1 - 1] || [];
@@ -187,7 +193,253 @@ router.post('/trade/sorder/motor', function (req, res, next) {
   });
 });
 
-
+// 获得服务报价列表
+router.post('/trade/sorder/detail', function (req, res, next) {
+  res.json({
+    "status": "0",
+    "data": {
+        "order": {
+          "confirm": "0",
+            "content": "服务项目保养",
+            "createtime": 1480925509000,
+            "enginenumber": "",
+            "finishtime": 1480925509000,
+            "guid": 805685985663832000,
+            "licence": "京A23456",
+            "meettime": 1480925509000,
+            "mobile": "15271468663",
+            "motorid": "804286926814191616",
+            "motormodel": "比亚迪G3 2012款 1.8L CVT豪华型",
+            "motortime": 1480925509000,
+            "orderid": "805685985663832064",
+            "ordertype": "0",
+            "overtime": 1480925509000,
+            "paystatus": "0",
+            "paytime": 1480925509000,
+            "realname": "刚",
+            "status": "1",
+            "storeid": "802334963159543808",
+            "totalcost": 738,
+            "totalmile": 0,
+            "totalsale": 644,
+            "userid": "784694265933463552",
+            "vin": ""
+        },
+        "childs": [
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998531960832",
+            "guid": 805685998531960800,
+            "offerid": "805646209036365824",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 738,
+            "salenums": 0,
+            "saleprice": 200,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998548738048",
+            "guid": 805685998548738000,
+            "offerid": "805376534083842048",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 111,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998565515264",
+            "guid": 805685998565515300,
+            "offerid": "805368660863528960",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 333,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998531960832",
+            "guid": 805685998531960800,
+            "offerid": "805646209036365824",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 738,
+            "salenums": 0,
+            "saleprice": 200,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998548738048",
+            "guid": 805685998548738000,
+            "offerid": "805376534083842048",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 111,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998565515264",
+            "guid": 805685998565515300,
+            "offerid": "805368660863528960",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 333,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998531960832",
+            "guid": 805685998531960800,
+            "offerid": "805646209036365824",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 738,
+            "salenums": 0,
+            "saleprice": 200,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998548738048",
+            "guid": 805685998548738000,
+            "offerid": "805376534083842048",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 111,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998565515264",
+            "guid": 805685998565515300,
+            "offerid": "805368660863528960",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 333,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998531960832",
+            "guid": 805685998531960800,
+            "offerid": "805646209036365824",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 738,
+            "salenums": 0,
+            "saleprice": 200,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998548738048",
+            "guid": 805685998548738000,
+            "offerid": "805376534083842048",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 111,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998565515264",
+            "guid": 805685998565515300,
+            "offerid": "805368660863528960",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 333,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998531960832",
+            "guid": 805685998531960800,
+            "offerid": "805646209036365824",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 738,
+            "salenums": 0,
+            "saleprice": 200,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998548738048",
+            "guid": 805685998548738000,
+            "offerid": "805376534083842048",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 111,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          },
+          {
+            "createtime": 1480925512000,
+            "detailid": "805685998565515264",
+            "guid": 805685998565515300,
+            "offerid": "805368660863528960",
+            "orderid": "805685985663832064",
+            "packegid": "0",
+            "productcost": 0,
+            "salenums": 0,
+            "saleprice": 333,
+            "scatename1": "保养",
+            "scatename2": "保养",
+            "status": "0"
+          }
+        ]
+    }
+  });
+});
 
 
 module.exports = router;

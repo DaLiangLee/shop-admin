@@ -52,7 +52,7 @@
                       "id": 5,
                       "name": "商品类型",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.pcatename"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.pcatename1 +\' - \'+item.pcatename2"></span>'
                     },
                     {
                       "id": 6,
@@ -62,21 +62,21 @@
                     },
                     {
                       "id": 7,
-                      "name": "商品单价（￥）",
+                      "name": "商品单价(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.saleprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | moneyFilter"></span>'
                     },
                     {
                       "id": 8,
-                      "name": "总价格（￥）",
+                      "name": "总价格(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.saleprice | computeTotalPriceFilter : item.servernum"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | computeTotalPriceFilter : item.salenums"></span>'
                     },
                     {
                       "id": 9,
                       "name": "数量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.servernum"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.salenums"></span>'
                     },
                     {
                       "id": 10,
@@ -88,7 +88,7 @@
                       "id": 11,
                       "name": "车辆信息",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.model"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.motormodel"></span>'
                     },
                     {
                       "id": 12,
@@ -100,18 +100,18 @@
                       "id": 13,
                       "name": "订单状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'porder_order_status\'"></span><span bo-if="item.status == 2" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'porder_order_status\'"></span><br  /><u class="text-primary" style="cursor: pointer;" bo-if="item.status == 4" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderStatusTipsPopoverTemplate.html" popover-template-data="item.finishtime">详情</u>'
                     },
                     {
                       "id": 14,
                       "name": "付款状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span><span bo-if="item.paystatus == 0" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span><br /><u class="text-primary" style="cursor: pointer;" bo-if="item.paystatus == 1" cb-popover="" popover-placement="bottom" popover-template-id="cbTradePorderPaystatusTipsPopoverTemplate.html" popover-template-data="item.paytime">详情</u>'
                     },
                     {
                         "id": 15,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50103" ui-sref="trade.sorder.detail({detailid: item.detailid})">查看服务订单</button>',
+                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="trade" data-parentid="50100" data-sectionid="50103" ui-sref="trade.sorder.detail({orderid: item.orderid})">查看服务订单</button>',
                         "name": '操作',
                         "width": 50
                     }

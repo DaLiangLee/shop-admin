@@ -4,9 +4,8 @@
     <h5 class="modal-title">选择会员</h5>
   </div>
   <div class="modal-body">
-    <form class="form-horizontal" autocomplete="off" name="price" role="form" novalidate>
+      <div class="alert alert-warning" ng-if="gridSearch.tips">请先输入用户姓名或者联系方式再点击搜索</div>
       <div simple-search config="gridSearch.config" search-handler="gridSearch.handler(data)" class="row"></div>
       <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList" pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config" page-changed="gridModel.pageChanged(page)"></div>
-    </form>
   </div>
 </div>

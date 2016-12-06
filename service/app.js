@@ -35,6 +35,7 @@ app.use('/shopservice/admin', require('./api/motor'));
 app.use('/shopservice/admin', require('./api/category'));
 
 
+
 // 店铺管理
 app.use('/shopservice/admin', require('./api/store'));
 

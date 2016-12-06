@@ -22,7 +22,7 @@ const DEFAULT_DATA = generateJSON({
   "paytime": '@date("yyyy-MM-dd HH:mm:ss")',      // 付款时间
   "pcateid": "@id",
   "pcatename": '@ctitle(2, 7)',
-  "porderid": "1",
+  "porderid": "@id",
   "pcatename1": "1",                              // 商品一级类目
   "pcatename2": "1",                              // 商品二级类目
   "scatename1": "1",                              // 服务一级类目
@@ -40,7 +40,6 @@ const DEFAULT_DATA = generateJSON({
     "个", "桶", "毫米", "公斤", "件"
   ],
   "mobile": phone,    // 客户联系方式
-  "username": phone,   // 客户账户
   "motormodel": "奔驰GLC 2016款 GLC 300 4MATIC 豪华型",     // 车型
   "psaleprice": 0,
   "pskuvalues": "1",
@@ -49,7 +48,11 @@ const DEFAULT_DATA = generateJSON({
   "servername": "1",                      // 服务名称
   "ssaleprice": 0,                        //
   "sskuvalues": "1",
-  "storeid": "@id"    // 店铺id
+  "storeid": "@id",    // 店铺id
+
+
+  "paystatus": "0",
+  "salenums": 18
 }, 30);
 
 var UID = 30;

@@ -382,7 +382,7 @@
                 }
             })
             .state('trade.sorder.detail', {     // 服务订单详情
-                url: '/detail/:detailid',
+                url: '/detail/:orderid',
                 templateUrl: 'app/pages/trade_sorder/detail.html',
                 controller: 'TradePorderDetailController',
                 controllerAs: 'vm',
