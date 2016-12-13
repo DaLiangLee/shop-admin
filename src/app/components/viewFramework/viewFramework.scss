@@ -1,13 +1,14 @@
 $mini: 50px;
 $full: 180px;
+body{
+  position: relative;
+}
 
 .viewFramework-main {
-  position: absolute;
-  width: 100%;
-  top: 106px;
-  bottom: 0;
-  background-color: #000;
-  z-index: 100;
+  position: relative;
+  margin-left: 180px;
+  padding-top: 106px;
+  min-height: 500px;
 }
 
 .viewFramework-scroll-wrap {

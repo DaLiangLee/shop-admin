@@ -2,116 +2,133 @@
  * Created by Administrator on 2016/10/18.
  */
 (function () {
-    'use strict';
-    angular
-        .module('shopApp')
-        .provider('cbDialogConfig', cbDialogConfig)
-        .factory('cbDialog', cbDialog);
+  'use strict';
+  angular
+    .module('shopApp')
+    .provider('cbDialogConfig', cbDialogConfig)
+    .factory('cbDialog', cbDialog);
 
 
-    /** @ngInject */
-    function cbDialogConfig() {
-        var data = {
-            defaultButtonConfig: [
-                {
-                    result: true,
-                    label: "确定",
-                    cssClass: "btn-primary"
-                },
-                {
-                    result: false,
-                    label: "取消",
-                    cssClass: "btn-default"
-                }
-            ]
-        };
-        return {
-            setButtonLabels: function (t) {
-                angular.forEach(data.defaultButtonConfig, function (e, n) {
-                    e.label = t[n]
-                })
-            },
-            setProviderOptions: function (t) {
-                angular.extend(data, t)
-            },
-            $get: function () {
-                return data;
-            }
+  /** @ngInject */
+  function cbDialogConfig() {
+    var data = {
+      defaultButtonConfig: [
+        {
+          result: true,
+          label: "确定",
+          cssClass: "btn-primary"
+        },
+        {
+          result: false,
+          label: "取消",
+          cssClass: "btn-default"
         }
+      ]
+    };
+    return {
+      setButtonLabels: function (t) {
+        angular.forEach(data.defaultButtonConfig, function (e, n) {
+          e.label = t[n]
+        })
+      },
+      setProviderOptions: function (t) {
+        angular.extend(data, t)
+      },
+      $get: function () {
+        return data;
+      }
     }
+  }
 
-    /** @ngInject */
-    function cbDialog($rootScope, $modal, $modalStack, cbDialogConfig) {
-        var showDialog = function (e) {
-                var r = {
-                        backdrop: "static"
-                    },
-                    i = angular.extend({}, r, e),
-                    s = $modal.open(i);
-                return s;
+  /** @ngInject */
+  function cbDialog($rootScope, $window, $document, $timeout, $modal, $modalStack, cbDialogConfig) {
+    var body = $document.find('body');
+    var bodyPad;
+    var showDialog = function (config) {
+        bodyPad = parseInt((body.css('padding-right') || 0), 10);
+        body.css({'overflow': 'hidden','padding-right': $window.innerWidth - body[0].clientWidth + bodyPad});
+        return $modal.open(angular.extend({}, {
+          backdrop: "static"
+        }, config));
+      },
+      showDialogByUrl = function (template, handler, passedConfig) {
+        var showdialogload,
+          locationChangeSuccess,
+          config = {
+            templateUrl: template,
+            resolve: {
+              passedObject: function () {
+                return passedConfig;
+              }
             },
-            showDialogByUrl = function (e, t, r) {
-                var i, o,
-                    u = {
-                        templateUrl: e,
-                        resolve: {
-                            passedObject: function () {
-                                return r
-                            }
-                        },
-                        controller: ["$scope", "$modalInstance", "$rootScope", "$modalStack", "passedObject", function (e, r, s, u, a) {
-                            o = e.$on("$locationChangeSuccess", function () {
-                                i && e._dialogShow == 1 && e.close(!1)
-                            });
-                            var f = "icon-warning-2";
-                            a != undefined && a.iconClass && (f = a.iconClass);
-                            var l = "text-warning";
-                            a != undefined && a.iconColor && (l = a.iconColor), e.iconClass = f + " " + l, e._passedObject = a, e._dialogShow = !0, e.close = function (t) {
-                                e._dialogShow = !1, r.close(t), i = null
-                            }, angular.isFunction(t) && t(e)
-                        }]
-                    };
-                r && r.windowClass && (u.windowClass = r.windowClass), i = showDialog(u);
-                var a = function (e) {
-                    return o && o(), e
-                };
-                return i.result.then(function (e) {
-                    return a(e)
-                }, function (e) {
-                    return a(e)
-                }), i
-            },
-            showMessageDialog = function (e, t, r) {
-                var s = "app/components/dialog/dialog.html",
-                    u = cbDialogConfig.defaultButtonConfig;
-                t = t || e.callback;
-                r = r || e.passedObject;
-                var a = e.buttons || u,
-                    f = function (r) {
-                        r.title = e.title;
-                        r.message = e.message;
-                        r.buttons = a;
-                        r.eventHandler = function (e) {
-                            r.close(e);
-                        };
-                        angular.isFunction(t) && t(r)
-                    };
-                return showDialogByUrl(s, f, r);
-            },
-            showMessageDialogSimple = function (e, t, n, r) {
-                return showMessageDialog({
-                    title: e,
-                    message: t,
-                    buttons: n,
-                    passedObject: r
+            controller: ["$scope", "$modalInstance", "$rootScope", "$modalStack", "passedObject",
+              function ($scope, $modalInstance, $rootScope, $modalStack, passedObject) {
+                locationChangeSuccess = $scope.$on("$locationChangeSuccess", function () {
+                  showdialogload && $scope._dialogShow == 1 && $scope.close(false) && resetScrollbar();
                 });
+                var icon = "icon-warning-2";
+                passedObject != undefined && passedObject.iconClass && (icon = passedObject.iconClass);
+                var textColor = "text-warning";
+                passedObject != undefined && passedObject.iconColor && (textColor = passedObject.iconColor);
+                $scope.iconClass = icon + " " + textColor;
+                $scope._passedObject = passedObject;
+                $scope._dialogShow = true;
+                $scope.close = function (event) {
+                  $scope._dialogShow = false;
+                  $modalInstance.close(event);
+                  showdialogload = null;
+                };
+                angular.isFunction(handler) && handler($scope);
+              }]
+          };
+        passedConfig && passedConfig.windowClass && (config.windowClass = passedConfig.windowClass);
+        showdialogload = showDialog(config);
+        var resultFn = function (result) {
+          var timer = $timeout(function(){
+            resetScrollbar();
+            $timeout.cancel(timer);
+          },300, false);
+          return locationChangeSuccess && locationChangeSuccess(), result;
+        };
+        var resetScrollbar = function(){
+          body.css({'overflow': '','padding-right': ''});
+        };
+        return showdialogload.result.then(function (result) {
+          return resultFn(result);
+        }, function (error) {
+          return resultFn(error);
+        }), showdialogload;
+      },
+      showMessageDialog = function (config, callback, passedObject) {
+        var template = "app/components/dialog/message.html",
+          defaultButtonConfig = cbDialogConfig.defaultButtonConfig,
+          callback = callback || config.callback,
+          passedObject = passedObject || config.passedObject,
+          handler = function (child) {
+            child.title = config.title;
+            child.message = config.message;
+            child.buttons = config.buttons || defaultButtonConfig;
+            child.eventHandler = function (e) {
+              child.close(e);
             };
-        return {
-            showDialog: showDialog,
-            showDialogByUrl: showDialogByUrl,
-            showMessageDialog: showMessageDialog,
-            showMessageDialogSimple: showMessageDialogSimple
-        }
+            angular.isFunction(callback) && callback(passedObject)
+          };
+        return showDialogByUrl(template, handler, passedObject);
+      },
+      showMessageDialogSimple = function (title, message, buttons, passedObject) {
+        return showMessageDialog({
+          title: title,
+          message: message,
+          buttons: buttons,
+          passedObject: passedObject
+        });
+      };
+    return {
+      showDialog: showDialog,
+      showDialogByUrl: showDialogByUrl,
+      showMessageDialog: showMessageDialog,
+      showMessageDialogSimple: showMessageDialogSimple
     }
+  }
 
 })();

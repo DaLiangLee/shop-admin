@@ -67,7 +67,7 @@
       showLoaderOnConfirm: false   // 显示加载器确认
     };
     AlertDialog.close = function(){
-      angular.element('body').removeClass('.stop-scrolling').find('.k-alert-dialog').hide().remove();
+      angular.element('body').removeClass('stop-scrolling').find('.k-alert-dialog').hide().remove();
     };
     AlertDialog.prototype.constructor = AlertDialog;
     /**
@@ -78,6 +78,7 @@
       this.timer = null;
       this.$modal = null;
       this.option = this._getOptions(this._getDefaults(), arguments);
+      this.bodyPad = parseInt((angular.element('body').css('padding-right') || 0), 10);
       this.mount();
       this._openModal(arguments[1]);
     };
@@ -133,14 +134,16 @@
     AlertDialog.prototype.mount = function () {
       var _this = this;
       var element = angular.element;
+      var body = element('body');
+      var fullWindowWidth = body[0].clientWidth;
       if(!this.isModal()){
         this.$modal = element('<div class="k-alert-dialog" tabindex="-1"></div>');
         this.$modal.append(element('<div class="alert-overlay"></div>'));
         this.$modal.append('<div class="alert-dialog" data-animation="pop">'+template()+'</div>');
-        element('body').append(this.$modal).addClass('stop-scrolling');
+        body.append(this.$modal).addClass('stop-scrolling').css('padding-right', body[0].clientWidth - fullWindowWidth + this.bodyPad);
         this.$modal.show().find('.alert-dialog').addClass('showAlertDialog');
       }else{
-        this.$modal = element('body').find('.k-alert-dialog');
+        this.$modal = body.find('.k-alert-dialog');
         this.$modal.find('.alert-dialog').html(template()).show();
       }
       if(this.isAnimation){
@@ -322,7 +325,10 @@
         });
         this.$modal.find('.alert-dialog').removeClass('showAlertDialog').addClass('hideAlertDialog');
       }else{
-        this.$modal.fadeOut(250).remove();
+        this.$modal.fadeOut(250, function () {
+          _this.$modal.remove();
+          _this.destory();
+        });
       }
       return true;
     };
@@ -331,7 +337,7 @@
      */
     AlertDialog.prototype.destory = function () {
       this.$modal = null;
-      angular.element('body').removeClass('stop-scrolling');
+      angular.element('body').removeClass('stop-scrolling').css('padding-right', '');
       clearTimeout(this.timer);
     };
   /** @ngInject */
