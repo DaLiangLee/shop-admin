@@ -21,8 +21,6 @@
  *
  */
 
-
-
 (function () {
     'use strict';
     angular

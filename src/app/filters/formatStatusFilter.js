@@ -1,12 +1,16 @@
 /**
  * Created by Administrator on 2016/12/5.
  */
-(function() {
+(function () {
   'use strict';
 
   angular
     .module('shopApp')
     .constant('STATUS_COLLECTION', {
+      "sex": {
+        '0': '男',
+        '1': '女'
+      },
       "server_order_status": {
         '0': '已预约',
         '1': '已下单',
@@ -79,8 +83,8 @@
 
   /** @ngInject */
   function formatStatusFilter(STATUS_COLLECTION) {
-    return function(name, type) {
-      if(angular.isUndefined(name) || angular.isUndefined(type)){
+    return function (name, type) {
+      if (angular.isUndefined(name) || angular.isUndefined(type)) {
         return name;
       }
       return STATUS_COLLECTION[type][name];

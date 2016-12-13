@@ -4,7 +4,7 @@
             <h2>基本信息</h2>
             <hr>
         </div>
-        <div class="form-horizontal">
+        <div class="row form-horizontal">
           <div class="row form-group">
             <label class="col-md-1 control-label">商户名称：</label>
             <div class="col-md-7">
@@ -25,7 +25,7 @@
                 ng-bind="vm.dataBase.store.closetime"></span>
               </p>
             </div>
-            <div class="col-md-2" ng-if="vm.dataBase.store.storename"><button class="btn btn-success" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置营业时间</button></div>
+            <div class="col-md-2"><button class="btn btn-success" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置营业时间</button></div>
           </div>
           <div class="row form-group">
             <label class="col-md-1 control-label">入驻状态：</label>
@@ -56,7 +56,9 @@
                 <span ng-bind="vm.dataBase.store.telephone | numberFormatFilter"></span>
               </p>
             </div>
-            <button class="btn btn-success" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置客服电话</button>
+            <div class="col-md-2">
+              <button class="btn btn-success" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置客服电话</button>
+            </div>
           </div>
           <div class="row form-group">
             <label class="col-md-1 control-label">店铺二维码：</label>
@@ -69,7 +71,7 @@
             <div class="row col-md-6">
               <div class="col-md-4" ng-repeat="item in vm.dataBase.store.photos track by $index" ng-if="vm.dataBase.store.photos.length">
                 <div style="width: 110%;">
-                  <img ng-src="{{item}}?x-oss-process=image/resize,m_fill,w_300,h_180" style="width: 100%;" class="img-thumbnail" alt="">
+                  <img ng-src="{{item}}?x-oss-process=image/resize,m_fill,w_300,h_180" style="width: 100%; max-width: 300px;" class="img-thumbnail" alt="">
                 </div>
                 <br>
                 <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
@@ -91,7 +93,7 @@
               <p class="text-border" style="height: auto;word-break:break-all;word-wrap:break-word; " ng-bind="vm.dataBase.store.description"></p>
             </div>
             <div class="col-md-2">
-              <button class="btn btn-success" cb-access-control="store" data-parentid="30000" data-sectionid="30004" cb-message-board="editor" content="vm.dataBase.description" data-transmit="{{vm.dataBase.store.id}}" config="vm.description" title="商户介绍" review-item="vm.reviewHandler(data)">商户介绍</button>
+              <button class="btn btn-success" cb-access-control="store" data-parentid="30000" data-sectionid="30004" cb-message-board="editor" content="vm.dataBase.store.description" data-transmit="{{vm.dataBase.store.id}}" config="vm.description" title="商户介绍" review-item="vm.reviewHandler(data)">商户介绍</button>
             </div>
           </div>
         </div>
@@ -99,38 +101,38 @@
           <h2>结算账户信息</h2>
           <hr>
         </div>
-        <div class="form-horizontal">
+        <div class="row form-horizontal">
           <div ng-repeat="item in vm.dataBase.accountList">
             <div class="row form-group">
-              <div class="col-md-4">
-                <label class="col-md-4 control-label">结算方式：</label>
-                <div class="col-md-8">
+              <div class="col-md-6 col-lg-4">
+                <label class="col-md-4 col-lg-4 control-label">结算方式：</label>
+                <div class="col-md-8 col-lg-8">
                   <p class="text-border" ng-bind="item.ptypeid | formatStatusFilter : 'billing_cycle'"></p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <label class="col-md-4 control-label">结算周期：</label>
-                <div class="col-md-8">
+              <div class="col-md-6 col-lg-4">
+                <label class="col-md-4 col-lg-4 control-label">结算周期：</label>
+                <div class="col-md-8 col-lg-8">
                   <p class="text-border"></p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <label class="col-md-4 control-label">上次结算日期：</label>
-                <div class="col-md-8">
+              <div class="col-md-6 col-lg-4">
+                <label class="col-md-4 col-lg-4 control-label">上次结算日期：</label>
+                <div class="col-md-8 col-lg-8">
                   <p class="text-border" ng-bind="item.lasttime | date : 'yyyy-MM-dd HH:mm:ss'"></p>
                 </div>
               </div>
             </div>
             <div class="row form-group">
-              <div class="col-md-4">
-                <label class="col-md-4 control-label">结算打款银行：</label>
-                <div class="col-md-8">
+              <div class="col-md-6 col-lg-4">
+                <label class="col-md-4 col-lg-4 control-label">结算打款银行：</label>
+                <div class="col-md-8 col-lg-8">
                   <p class="text-border" ng-bind="item.bankfullname"></p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <label class="col-md-4 control-label">银行卡号：</label>
-                <div class="col-md-8">
+              <div class="col-md-6 col-lg-4">
+                <label class="col-md-4 col-lg-4 control-label">银行卡号：</label>
+                <div class="col-md-8 col-lg-8">
                   <p class="text-border" ng-bind="item.accountkey | numberEncryptFilter : 'bank'"></p>
                 </div>
               </div>

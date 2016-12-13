@@ -1,16 +1,18 @@
 .viewFramework-sidebar {
-  width: 0px;
-  display: none;
+  width: 180px;
+  top: 66px;
+  left: 0;
+  z-index: 1001;
+  display: block;
+  min-height: 100%;
+  background-color: #282828;
+  height: 100%;
   position: fixed;
-  top: 100px;
-  bottom: 0px;
-  background-color: #1a1a1a;
-  z-index: 102;
-  overflow-x: hidden
+  overflow: hidden;
 }
 
 .viewFramework-sidebar .sidebar-content {
-  width: 260px;
+  width: 200px;
   height: 100%;
   overflow: auto;
   overflow-x: hidden
@@ -26,7 +28,7 @@
 .viewFramework-sidebar .sidebar-fold {
   position: relative;
   height: 40px;
-  width: 240px;
+  width: 180px;
   color: #aeb9c2;
   text-align: center;
   font-size: 12px;
@@ -147,7 +149,7 @@
 }
 
 .viewFramework-sidebar .sidebar-nav {
-  width: 240px;
+  width: 180px;
   margin-bottom: 1px;
   .icon-sidebar{
     display: inline-block;
@@ -557,13 +559,6 @@
 .viewFramework-sidebar-mini .viewFramework-sidebar .entrance-nav .nav-item:hover .nav-comment,.viewFramework-sidebar.sidebar-mini .entrance-nav .nav-item:hover .nav-comment {
   display: none
 }
-
-.viewFramework-sidebar-full .viewFramework-sidebar,.viewFramework-sidebar.sidebar-full {
-  width: 240px;
-  display: block
-}
-
-
 
 .viewFramework-sidebar-dialog .modal-dialog {
   width: 730px

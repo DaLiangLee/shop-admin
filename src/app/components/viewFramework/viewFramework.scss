@@ -1,135 +1,75 @@
-html,body,
-.view-framework{
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-.viewFramework-body {
-  position: absolute;
-  width: 100%;
-  top: 50px;
-  bottom: 0px;
-  background-color: #000;
-  z-index: 100
-}
-
-.viewFramework-body {
-  position: absolute;
-  width: 100%;
-  top: 100px;
-  bottom: 0px;
-  background-color: #000;
-  z-index: 100
-}
-
-.viewFramework-body .console-global-notice .console-global-notice-nav {
-  top: 14px
-}
-
-.viewFramework-body .console-global-notice .console-global-notice-list {
-  margin: 0;
-  height: 40px
-}
-
-.viewFramework-body .console-global-notice .console-global-notice-list .console-global-notice-item {
-  padding: 11px 12px;
-  border: none
-}
-
-.viewFramework-body .console-global-notice .console-global-notice-list .console-global-notice-item .console-global-notice-nomore {
-  top: 10px
-}
-
-.viewFramework-body.viewFramework-topbar-hide {
-  top: 0;
-}
-
-.viewFramework-body.viewFramework-topbar-hide .viewFramework-sidebar {
-  top: 0;
-}
-
+$mini: 50px;
+$full: 180px;
 
 .viewFramework-main {
-  width: auto;
   position: absolute;
-  top: 40px;
+  width: 100%;
+  top: 106px;
+  bottom: 0;
+  background-color: #000;
+  z-index: 100;
+}
+
+.viewFramework-scroll-wrap {
+  position: absolute;
+  top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   overflow: hidden;
-  background: #FFF
-}
-.viewFramework-main-body {
-  position: absolute;
   width: auto;
+  background: #fff;
+}
+
+.viewFramework-scroll {
+  position: absolute;
+  overflow: hidden;
+  overflow-y: auto;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
-  overflow-y: auto;
+  width: auto;
   -o-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.viewFramework-sidebar-mini .viewFramework-main {
-  left: 50px;
+.viewFramework-topbar-hide {
+  .viewFramework-main {
+    padding: 0;
+  }
 }
 
-.viewFramework-sidebar-full .viewFramework-main {
-  left: 240px;
+.viewFramework-sidebar-hide {
+  .viewFramework-scroll-wrap {
+    margin-left: 0;
+  }
+  .viewFramework-preference-nav ul {
+    margin-left: 0;
+  }
 }
 
+.viewFramework-sidebar-mini {
+  .viewFramework-scroll-wrap {
+    margin-left: $mini;
+  }
+  .viewFramework-preference-nav ul {
+    margin-left: $mini;
+  }
+}
 
+.viewFramework-sidebar-full {
+  .viewFramework-scroll-wrap {
+    margin-left: $full;
+  }
+  .viewFramework-preference-nav ul {
+    margin-left: $full;
+  }
+}
 
-.g-view{
+.viewFramework-body, .g-view {
   padding: 40px;
-}
-
-
-
-.viewFramework-animate {
-  -webkit-animation-duration: 0.1s;
-  animation-duration: 0.1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both
-}
-
-.viewFramework-fadeIn {
-  -webkit-animation-name: viewFrameworkFadeIn;
-  animation-name: viewFrameworkFadeIn
-}
-
-@-webkit-keyframes viewFrameworkFadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1
-  }
-}
-
-@keyframes viewFrameworkFadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-
-
-
-.k-form-error{
-  padding: 0;
-  padding-top: 10px;
-  list-style: none;
-  li{
-    color: red;
-  }
 }

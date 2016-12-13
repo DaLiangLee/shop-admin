@@ -50,6 +50,8 @@
           childScope.type = iAttrs.cbMessageBoard || 'editor';
           childScope.title = iAttrs.title;
           childScope.content = scope.content;
+          console.log(scope);
+          
           childScope.message = scope.message;
           childScope.interceptor = angular.copy(scope.config.interceptor);
           childScope.maxLength = angular.copy(scope.config.maxLength);

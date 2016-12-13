@@ -41,7 +41,7 @@
         var prev = iElement.find('.prev');
         var next = iElement.find('.next');
         function create(data){
-          if(!data || !data.length){
+          if(!angular.isArray(data) || !data.length){
             return "";
           }
           var str = "";

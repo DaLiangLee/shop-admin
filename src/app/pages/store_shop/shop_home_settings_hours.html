@@ -14,9 +14,11 @@
           <div timepicker ng-model="hours.end" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
         </div>
       </div>
-    <div class="alert alert-danger" ng-if="hours.start > hours.end">
-      <p>歇业时间不能比开业时间小</p>
-    </div>
+      {{hours.start}}
+      {{hours.end}}
+      <div class="alert alert-danger" ng-if="hours.start > hours.end">
+        <p>歇业时间不能比开业时间小</p>
+      </div>
   </div>
   <div class="modal-footer">
     <div class="alert alert-danger" ng-if="interceptor">
@@ -27,7 +29,7 @@
       <button class="btn btn-default" ng-click="close(false)">暂不设置</button>
     </div>
     <div class="inline-block margin-right" ng-if="!interceptor">
-      <button class="btn btn-primary" ng-click="confirm()">确定</button>
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="hours.start > hours.end">确定</button>
       <button class="btn btn-default" ng-click="close(false)">取消</button>
     </div>
   </div>

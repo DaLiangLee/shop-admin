@@ -17,34 +17,35 @@
             transclude: true,
             templateUrl: "app/components/viewFramework/viewFramework.html",
             controller: ["$scope", "$rootScope", "$timeout", "viewFrameworkSetting", "viewFrameworkConfigData", "viewFrameworkHelper", function ($scope, $rootScope, $timeout, viewFrameworkSetting, viewFrameworkConfigData, viewFrameworkHelper) {
+                var vm = this;
                 /**
                  * 默认数据
                  * @type {any}
                  */
                 var DEFAULT_DATA = viewFrameworkConfigData;
                 viewFrameworkSetting.setVersion("1.0.0");
-                $scope.config = $rootScope.viewFrameworkConfig;
-
-
+                vm.config = $rootScope.viewFrameworkConfig;
                 var viewContentLoaded = $rootScope.$on("$viewContentLoaded", function () {
                     viewFrameworkSetting.promise.resolve();
                 });
 
-                $scope.$watch("config", function (newValue) {
-                    (newValue.productNavBar != $window.productNavBar || newValue.sidebar != $window.sidebar) && $timeout(function () {
+                $scope.$watch("view.config", function (newValue) {
+
+                    (newValue.sidebar != $window.sidebar) && $timeout(function () {
                         angular.element(window).resize();
                     }, 500, false);
                 }, true);
                 $scope.$on("updateViewFrameworkConfigSidebar", function (event, data) {
-                    if($scope.config){
-                        $scope.config.sidebar = data;
-                        viewFrameworkHelper.setCookie(DEFAULT_DATA.SIDEBAR_FOLD_COOKIENAME, data, DEFAULT_DATA.SIDEBAR_FOLD_COOKIEDOMAIN);
+                    if(vm.config){
+                      vm.config.sidebar = data;
+                      viewFrameworkHelper.setCookie(DEFAULT_DATA.SIDEBAR_FOLD_COOKIENAME, data, DEFAULT_DATA.SIDEBAR_FOLD_COOKIEDOMAIN);
                     }
                 });
                 $scope.$on("$destroy", function () {
                     viewContentLoaded();
                 })
-            }]
+            }],
+            controllerAs: "view"
         }
     }
 })();

@@ -82,7 +82,6 @@
                 var permissionsChanged = $rootScope.$on('permissionsChanged', function () {
                     getPermissions();
                 });
-
                 // 获取权限控制
                 function getPermissions() {
                     timer = $timeout(function () {

@@ -32,7 +32,8 @@
     </script>
   </head>
   <body>
-    <div view-framework class="view-framework"></div>
+    <div view-framework class="view-framework" ng-class="{'viewFramework-sidebar-mini':(!view.config.disableNavigation && !view.config.hideSidebar) && view.config.sidebar == 'mini', 'viewFramework-sidebar-full': (!view.config.disableNavigation && !view.config.hideSidebar) && view.config.sidebar == 'full','viewFramework-topbar-hide': view.config.disableNavigation || view.config.hideTopbar}"></div>
+    <div view-framework-preloader></div>
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->
     <!-- run `gulp inject` to automatically populate bower script dependencies -->

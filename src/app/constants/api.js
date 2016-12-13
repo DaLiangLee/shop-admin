@@ -232,6 +232,18 @@
                     }
                   }
                 },
+                "user": {
+                  "customer": {
+                    "list": {
+                      "url": "/user/customer",
+                      "type": "GET"
+                    },
+                    "save": {
+                      "url": "/trade/sorder/save",
+                      "type": "POST"
+                    }
+                  }
+                },
                 "member": {
                   "employee": {
                     "get": {
