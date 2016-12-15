@@ -1,13 +1,12 @@
 .viewFramework-preference-nav{
-  position: fixed;
-  top: 66px;
+  position: absolute;
+  top:0;
   right: 0;
-  z-index: 102;
+  z-index: 10;
   height: 40px;
-  width: 100%;
   background-color: #1a1a1a;
   ul{
-    margin-left: 180px;
+
   }
   li{
     position: relative;
@@ -55,5 +54,15 @@
     &.active{
       background-color: #fe771d;
     }
+  }
+}
+.viewFramework-sidebar-mini{
+  .viewFramework-preference-nav{
+    left:30px;
+  }
+}
+.viewFramework-sidebar-full{
+  .viewFramework-preference-nav{
+    left:200px;
   }
 }

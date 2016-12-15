@@ -6,7 +6,7 @@
     "e2e": "gulp protractor",
     "unit": "gulp test",
     "debug": "gulp buildTest",
-    "api": "supervisor service/index.js",
+    "api": "node service/app",
     "build": "gulp build",
     "start": "gulp serve"
   },
@@ -47,6 +47,7 @@
     "http-proxy-middleware": "~0.9.0",
     "karma": "~0.13.10",
     "karma-angular-filesort": "~1.0.0",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "~0.5.2",
     "karma-jasmine": "~0.3.6",
     "karma-ng-html2js-preprocessor": "~0.2.0",

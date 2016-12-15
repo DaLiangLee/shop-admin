@@ -47,6 +47,7 @@
               vm.dataBase.store.photos.push(item.url);
             });
           }
+          console.log(vm.dataBase.store.photos, index);
         }
       };
       vm.removePhotos = function (index) {

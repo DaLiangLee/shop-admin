@@ -125,7 +125,7 @@
                 <div>
                   <a target="_blank" ng-href="{{item}}">下载</a>
                   <button ng-click="vm.removePhotos($index)">删除</button>
-                  <button cb-upload-file="images" title="店招图片上传" data-upload-type="productCase" data-value-max="1" upload-item="vm.uploadHandler(data, $index)">重新上传</button>
+                  <button cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase" data-value-max="1" upload-item="vm.uploadHandler(data, $index)">重新上传</button>
                 </div>
               </div>
               <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
@@ -133,7 +133,7 @@
                   <p class="text-warning">必须要传一张商品图片</p>
                 </div>
                 <div>
-                  <button cb-upload-file="images" title="商品图片上传" data-upload-type="productCase" data-value-max="1" upload-item="vm.uploadHandler(data)">商品图片上传</button>
+                  <button cb-upload-file="images" title="商品图片上传" data-upload-type="storeCase" data-value-max="1" upload-item="vm.uploadHandler(data)">商品图片上传</button>
                 </div>
               </div>
             </div>

@@ -17,11 +17,6 @@ $ npm install bower -g
 ```sh
 $ npm install && bower install
 ```
-```
-#### 全局安装pm2 自动重启node
-```sh
-$ npm install pm2 -g
-```
 #### 开启服务（node模拟api请求）
 ```sh
 $ npm api

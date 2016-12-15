@@ -1,28 +1,36 @@
 <div>
-    <div class="sidebar-inner" ng-if="loadingState">
-        <div class="sidebar-fold" ng-class="{'icon-unfold': !isSidebarFold,'icon-fold':isSidebarFold}" ng-click="toggleSidebarStatus()">
-            <span class="icon">
-              <span class="line"></span>
-              <span class="piece"></span>
-              <span class="arrow"></span>
-            </span>
-        </div>
-        <div class="sidebar-nav main-nav" ng-repeat="group in navConfig" ng-class="{'sidebar-nav-fold':group.folded}">
-            <div class="sidebar-title" ng-click="toggleFoldStatus($index, group.folded)">
-                <div class="sidebar-title-inner" sidebar-group-tooltip states="isSidebarFold" group="group">
-                    <div class="nav-icon sidebar-trans"><span class="icon-sidebar {{group.icon}}"></span></div>
-                    <span class="sidebar-title-text" ng-bind="group.menuname"></span>
-                    <span class="icon-sidebar icon-arrow-down"></span>
-                </div>
-            </div>
-            <ul class="sidebar-trans">
-                <li ng-repeat="item in group.items track by $index" class="nav-item" ng-class="{'active':$state.includes(item.router)}">
-                    <a ui-sref="{{item.uisref}}" class="sidebar-trans" sidebar-tooltip="{{type =='mini'?item.menuname:''}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="true">
-                        <span class="nav-title" style="padding-left: 70px;">{{item.menuname}}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+  <div class="sidebar-inner" ng-if="loadingState">
+    <div class="sidebar-nav toggle-sidebar">
+        <span class="icon" ng-click="toggleSidebarStatus()">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </span>
     </div>
-    <div class="sidebar-loading" ng-if="loadingState"></div>
+    <div class="sidebar-nav" ng-repeat="group in navConfig track by $index" ng-if="group.category == 'desktop'" ng-class="{'sidebar-nav-fold':group.folded, 'sidebar-nav-active': $state.includes(group.category)}">
+      <a class="sidebar-title" ui-sref="{{group.category}}" sidebar-group-tooltip
+         states="isSidebarFold" group="group">
+        <div class="nav-icon"><span class="icon-sidebar {{group.icon}}"></span></div>
+        <span class="sidebar-title-text" ng-bind="group.menuname"></span>
+        <span class="icon-arrow-down"></span>
+      </a>
+    </div>
+    <div class="sidebar-nav" ng-repeat="group in navConfig track by $index" ng-if="group.category != 'desktop'" ng-class="{'sidebar-nav-fold':group.folded, 'sidebar-nav-active': $state.includes(group.category)}">
+      <div class="sidebar-title" ng-click="toggleFoldStatus($index, group.folded)" sidebar-group-tooltip
+           states="isSidebarFold" group="group">
+        <div class="nav-icon"><span class="icon-sidebar {{group.icon}}"></span></div>
+        <span class="sidebar-title-text" ng-bind="group.menuname"></span>
+        <span class="icon-arrow-down"></span>
+      </div>
+      <ul class="sidebar-trans">
+        <li ng-repeat="item in group.items track by $index" class="nav-item"
+            ng-class="{'active': $state.includes(item.router)}">
+          <a ui-sref="{{item.uisref}}" sidebar-tooltip="{{type =='mini'? item.menuname :''}}"
+             tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="true">
+            <span class="nav-title">{{item.menuname}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

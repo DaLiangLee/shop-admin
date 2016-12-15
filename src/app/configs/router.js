@@ -20,6 +20,8 @@
             .otherwise('/notfound')         // 页面找不到
             .when('', '/desktop/home')       // 工作台
             .when('/', '/desktop/home')       // 工作台
+            .when('/desktop', '/desktop/home')       // 工作台
+            .when('/desktop/', '/desktop/home')       // 工作台
             .when('/store', '/store/shop/')      // 店铺管理
             .when('/store/', '/store/shop/')
             .when('/store/shop', '/store/shop/home')
@@ -34,22 +36,10 @@
             .when('/product/server/', '/product/server/list/')
             .when('/product/server/list', '/product/server/list/1')
             .when('/product/server/list/', '/product/server/list/1')
-            .when('/trade', '/notfound')                  // 抛出异常
-            .when('/trade/', '/notfound')                 // 抛出异常
             .when('/trade/porder', '/trade/porder/list/')              // 商品订单管理
             .when('/trade/porder/', '/trade/porder/list/')
             .when('/trade/porder/list', '/trade/porder/list/1')
             .when('/trade/porder/list/', '/trade/porder/list/1')
-            .when('/trade/sorder', '/trade/sorder/list/')              // 服务订单管理
-            .when('/trade/sorder/', '/trade/sorder/list/')
-            .when('/trade/sorder/list', '/trade/sorder/list/1')
-            .when('/trade/sorder/list/', '/trade/sorder/list/1')
-            .when('/user', '/notfound')                  // 抛出异常
-            .when('/user/', '/notfound')                 // 抛出异常
-            .when('/user/customer', '/user/customer/list/')              // 会员管理
-            .when('/user/customer/', '/user/customer/list/')
-            .when('/user/customer/list', '/user/customer/list/1')
-            .when('/user/customer/list/', '/user/customer/list/1')
             .when('/member', '/member/employee/list/')                  // 服务管理
             .when('/member/', '/member/employee/list/')
             .when('/member/employee', '/member/employee/list/')
@@ -104,7 +94,7 @@
             .state('desktop', {
                 url: '/desktop',
                 title: '工作台首页',
-                template: '<div ui-view></div>',
+                template: '<div ui-view class="desktop"></div>',
                 permission: {
                     parentid: 1,
                     category: "desktop",

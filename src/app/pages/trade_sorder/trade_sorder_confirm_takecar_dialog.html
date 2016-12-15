@@ -6,13 +6,13 @@
   <div class="modal-body">
     <form class="form-horizontal" autocomplete="off" name="price" role="form" novalidate>
       <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">客户姓名：</label>
+        <label for="inputEmail3" class="col-sm-3 control-label">客户姓名：</label>
         <div class="col-sm-8">
           <p class="h4" ng-bind="item.realname"></p>
         </div>
       </div>
       <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">车辆信息：</label>
+        <label for="inputEmail3" class="col-sm-3 control-label">车辆信息：</label>
         <div class="col-sm-8">
           <p class="h4" ng-bind="item.motormodel"></p>
         </div>
@@ -20,12 +20,9 @@
       <div class="form-group clearfix">
         <label for="inputEmail3" class="col-sm-3 control-label">当前里程：</label>
         <div class="col-sm-8">
-          <input type="text" id="inputEmail3" class="form-control" ng-model="item.totalmile" cb-number-range>
+          <input type="text" class="form-control" ng-model="item.totalmile" cb-number-range>
         </div>
         公里
-      </div>
-      <div class="col-sm-offset-3" ng-if="price.$invalid">
-        <p class="alert alert-danger">超过最大里程</p>
       </div>
     </form>
   </div>

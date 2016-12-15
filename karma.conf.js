@@ -44,10 +44,11 @@ module.exports = function(config) {
   var configuration = {
     files: listFiles(),
 
-    singleRun: true,
+    singleRun: false,
 
     autoWatch: false,
-
+    // run karma in the background
+    background: true,
     ngHtml2JsPreprocessor: {
       stripPrefix: conf.paths.src + '/',
       moduleName: 'shopApp'
@@ -61,10 +62,11 @@ module.exports = function(config) {
       whitelist: [path.join(conf.paths.src, '/**/!(*.html|*.spec|*.mock).js')]
     },
 
-    browsers : ['PhantomJS'],
+    browsers : ['Chrome', 'PhantomJS'],
 
     plugins : [
       'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-angular-filesort',
       'karma-phantomjs-shim',
       'karma-coverage',

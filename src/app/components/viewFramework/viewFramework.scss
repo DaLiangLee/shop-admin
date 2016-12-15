@@ -1,76 +1,90 @@
-$mini: 50px;
-$full: 180px;
-body{
+$mini: 40px;
+$full: 200px;
+$topbar: 110px;
+body {
   position: relative;
+}
+
+.viewFramework-topbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 102;
+  width: 100%;
+  height: $topbar;
+  background-color: #282828;
+  box-shadow: 2px 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.viewFramework-sidebar {
+  position: fixed;
+  top: $topbar;
+  bottom: 0;
+  width: $full;
+  background-color: #4c4c4c;
+  z-index: 102;
+  overflow-x: hidden;
+  .sidebar-content {
+    width: $full + 20px;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+  .sidebar-inner {
+    width: $full;
+  }
 }
 
 .viewFramework-main {
   position: relative;
-  margin-left: 180px;
-  padding-top: 106px;
+  margin-left: $full;
+  padding-top: $topbar;
   min-height: 500px;
-}
-
-.viewFramework-scroll-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  overflow: hidden;
-  width: auto;
   background: #fff;
 }
 
-.viewFramework-scroll {
-  position: absolute;
-  overflow: hidden;
-  overflow-y: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: auto;
-  -o-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  transition: all 0.2s ease;
-}
-
-.viewFramework-topbar-hide {
-  .viewFramework-main {
-    padding: 0;
-  }
-}
-
-.viewFramework-sidebar-hide {
-  .viewFramework-scroll-wrap {
-    margin-left: 0;
-  }
-  .viewFramework-preference-nav ul {
-    margin-left: 0;
-  }
-}
 
 .viewFramework-sidebar-mini {
-  .viewFramework-scroll-wrap {
-    margin-left: $mini;
+  .viewFramework-sidebar {
+    width: $mini;
+    .sidebar-content {
+      width: $mini + 20px;
+    }
+    .sidebar-inner {
+      width: $mini;
+    }
   }
-  .viewFramework-preference-nav ul {
+  .viewFramework-main{
     margin-left: $mini;
   }
 }
 
 .viewFramework-sidebar-full {
-  .viewFramework-scroll-wrap {
-    margin-left: $full;
+  .viewFramework-sidebar {
+    width: $full;
+    .sidebar-content {
+      width: $full + 20px;
+    }
+    .sidebar-inner {
+      width: $full;
+    }
   }
-  .viewFramework-preference-nav ul {
+  .viewFramework-main{
     margin-left: $full;
   }
 }
 
-.viewFramework-body, .g-view {
+
+
+.g-view, .viewFramework-body {
   padding: 40px;
+}
+
+.k-form-error {
+  padding: 0;
+  padding-top: 10px;
+  list-style: none;
+  li {
+    color: red;
+  }
 }

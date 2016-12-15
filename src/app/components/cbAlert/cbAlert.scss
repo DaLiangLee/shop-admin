@@ -1,42 +1,43 @@
-.stop-scrolling{
+.stop-scrolling {
   overflow: hidden;
 }
-.k-alert-dialog{
+
+.k-alert-dialog {
   /*
 * Animations
 */
-  &.notAnimation{
-    .alert-overlay{
-      background-color: rgb(0, 0, 0); /* IE8 */
-      filter: alpha(opacity=40);    /*IE8支持*/
+  &.notAnimation {
+    .alert-overlay {
+      background-color: #000; /* IE8 */
+      filter: alpha(opacity=40); /*IE8支持*/
     }
-    .alert-dialog{
-      .icon{
+    .alert-dialog {
+      .icon {
         margin: 24px auto;
         border: none;
         overflow: hidden;
         background: url(../assets/images/icon-alert-dialog.png) 0 0 no-repeat;
-        &.error{
+        &.error {
           background-position: 0 -160px;
-          span{
+          span {
             display: none;
           }
         }
-        &.warning{
+        &.warning {
           background-position: 0 -80px;
-          span{
+          span {
             display: none;
           }
         }
-        &.info{
+        &.info {
           background-position: 0 0;
-          &:before,&:after{
+          &:before, &:after {
             display: none;
           }
         }
-        &.success{
+        &.success {
           background-position: 0 -240px;
-          span,div,&:before,&:after{
+          span, div, &:before, &:after {
             display: none;
           }
         }
@@ -63,7 +64,7 @@
   bottom: 0;
   z-index: 10000;
   display: none;
-  .alert-overlay{
+  .alert-overlay {
     position: absolute;
     left: 0;
     right: 0;
@@ -72,7 +73,7 @@
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.4);
   }
-  .alert-dialog{
+  .alert-dialog {
     $width: 478px;
     $padding: 15px;
     position: fixed;
@@ -88,20 +89,20 @@
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-align: center;
     border-radius: 5px;
-    .show-loader-text{
+    .show-loader-text {
       text-align: center;
       line-height: 30px;
       font-size: 14px;
       color: #ff9900;
       display: none;
     }
-    .icon{
-      $red:     #F27474;
-      $orange:  #F8BB86;
-      $orange2:  #F8D486;
-      $blue:    #C9DAE1;
-      $green:   #A5DC86;
-      $white:   #ffffff;
+    .icon {
+      $red: #F27474;
+      $orange: #F8BB86;
+      $orange2: #F8D486;
+      $blue: #C9DAE1;
+      $green: #A5DC86;
+      $white: #ffffff;
       position: relative;
       width: 80px;
       height: 80px;
@@ -142,14 +143,41 @@
           }
         }
         @include keyframes(animateErrorIcon) {
-          0%    { transform: rotateX(100deg); -webkit-transform: rotateX(100deg); opacity: 0; }
-          100%  { transform: rotateX(0deg);   -webkit-transform: rotateX(0deg);   opacity: 1; }
+          0% {
+            transform: rotateX(100deg);
+            -webkit-transform: rotateX(100deg);
+            opacity: 0;
+          }
+          100% {
+            transform: rotateX(0deg);
+            -webkit-transform: rotateX(0deg);
+            opacity: 1;
+          }
         }
         @include keyframes(animateXMark) {
-          0%    { transform: scale(0.4);  -webkit-transform: scale(0.4);  margin-top: 26px; opacity: 0; }
-          50%   { transform: scale(0.4);  -webkit-transform: scale(0.4);  margin-top: 26px; opacity: 0; }
-          80%   { transform: scale(1.15); -webkit-transform: scale(1.15); margin-top: -6px;             }
-          100%  { transform: scale(1);    -webkit-transform: scale(1);    margin-top: 0;    opacity: 1; }
+          0% {
+            transform: scale(0.4);
+            -webkit-transform: scale(0.4);
+            margin-top: 26px;
+            opacity: 0;
+          }
+          50% {
+            transform: scale(0.4);
+            -webkit-transform: scale(0.4);
+            margin-top: 26px;
+            opacity: 0;
+          }
+          80% {
+            transform: scale(1.15);
+            -webkit-transform: scale(1.15);
+            margin-top: -6px;
+          }
+          100% {
+            transform: scale(1);
+            -webkit-transform: scale(1);
+            margin-top: 0;
+            opacity: 1;
+          }
         }
         &.animate {
           @include animation('animateErrorIcon 0.5s');
@@ -160,7 +188,7 @@
       }
       &.warning {
         border-color: $orange;
-        .body { // Exclamation mark body
+        .body {
           position: absolute;
           width: 5px;
           height: 47px;
@@ -171,7 +199,7 @@
           margin-left: -2px;
           background-color: $orange;
         }
-        .dot { // Exclamation mark dot
+        .dot {
           position: absolute;
           width: 7px;
           height: 7px;
@@ -183,15 +211,23 @@
           background-color: $orange;
         }
         @include keyframes(pulseWarning) {
-          0% {  border-color: $orange2; }
-          100% {  border-color: $orange;  }
+          0% {
+            border-color: $orange2;
+          }
+          100% {
+            border-color: $orange;
+          }
         }
         &.pulseWarning {
           @include animation('pulseWarning 0.75s infinite alternate');
         }
         @include keyframes(pulseWarningIns) {
-          0% {  background-color: $orange2; }
-          100% {  background-color: $orange;  }
+          0% {
+            background-color: $orange2;
+          }
+          100% {
+            background-color: $orange;
+          }
         }
         .pulseWarningIns {
           @include animation('pulseWarningIns 0.75s infinite alternate');
@@ -199,7 +235,7 @@
       }
       &.info {
         border-color: $blue;
-        &:before { // i-letter body
+        &:before {
           content: "";
           position: absolute;
           width: 5px;
@@ -210,7 +246,7 @@
           margin-left: -2px;
           background-color: $blue;
         }
-        &:after { // i-letter dot
+        &:after {
           content: "";
           position: absolute;
           width: 7px;
@@ -224,7 +260,7 @@
       &.success {
         border-color: $green;
 
-        &::before, &::after { // Emulate moving circular line
+        &::before, &::after {
           content: '';
           border-radius: 50%;
           position: absolute;
@@ -257,7 +293,7 @@
           transform-origin: 0 60px;
         }
 
-        .placeholder { // Ring
+        .placeholder {
           width: 80px;
           height: 80px;
           border: 4px solid rgba($green, 0.2);
@@ -270,7 +306,7 @@
           z-index: 2;
         }
 
-        .fix { // Hide corners left from animation
+        .fix {
           width: 5px;
           height: 90px;
           background-color: white;
@@ -313,23 +349,71 @@
           }
         }
         @include keyframes(animateSuccessTip) {
-          0%    { width: 0;     left: 1px;    top: 19px; }
-          54%   { width: 0;     left: 1px;    top: 19px; }
-          70%   { width: 50px;  left: -8px;   top: 37px; }
-          84%   { width: 17px;  left: 21px;   top: 48px; }
-          100%  { width: 25px;  left: 14px;   top: 45px; }
+          0% {
+            width: 0;
+            left: 1px;
+            top: 19px;
+          }
+          54% {
+            width: 0;
+            left: 1px;
+            top: 19px;
+          }
+          70% {
+            width: 50px;
+            left: -8px;
+            top: 37px;
+          }
+          84% {
+            width: 17px;
+            left: 21px;
+            top: 48px;
+          }
+          100% {
+            width: 25px;
+            left: 14px;
+            top: 45px;
+          }
         }
         @include keyframes(animateSuccessLong) {
-          0%    { width: 0;     right: 46px;  top: 54px; }
-          65%   { width: 0;     right: 46px;  top: 54px; }
-          84%   { width: 55px;  right: 0;   top: 35px; }
-          100%  { width: 47px;  right: 8px;   top: 38px; }
+          0% {
+            width: 0;
+            right: 46px;
+            top: 54px;
+          }
+          65% {
+            width: 0;
+            right: 46px;
+            top: 54px;
+          }
+          84% {
+            width: 55px;
+            right: 0;
+            top: 35px;
+          }
+          100% {
+            width: 47px;
+            right: 8px;
+            top: 38px;
+          }
         }
         @include keyframes(rotatePlaceholder) {
-          0%    { transform: rotate(-45deg);  -webkit-transform: rotate(-45deg);  }
-          5%    { transform: rotate(-45deg);  -webkit-transform: rotate(-45deg);    }
-          12%   { transform: rotate(-405deg); -webkit-transform: rotate(-405deg); }
-          100%  { transform: rotate(-405deg); -webkit-transform: rotate(-405deg); }
+          0% {
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+          }
+          5% {
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+          }
+          12% {
+            transform: rotate(-405deg);
+            -webkit-transform: rotate(-405deg);
+          }
+          100% {
+            transform: rotate(-405deg);
+            -webkit-transform: rotate(-405deg);
+          }
         }
         &.animate:after {
           @include animation('rotatePlaceholder 4.25s ease-in');
@@ -347,7 +431,7 @@
         height: 80px;
         overflow: hidden;
         border-radius: 0;
-        img{
+        img {
           width: 100%;
           height: 100%;
         }
@@ -363,7 +447,7 @@
       color: #575757;
       text-align: center;
     }
-    .text{
+    .text {
       position: relative;
       margin: 0;
       padding: 0;
@@ -372,7 +456,7 @@
       text-align: center;
       line-height: 26px;
     }
-    .input-container{
+    .input-container {
       padding: 10px 0;
     }
     .input {
@@ -449,10 +533,10 @@
         line-height: 24px;
       }
     }
-    .button-container{
+    .button-container {
       position: relative;
     }
-    .button-container button{
+    .button-container button {
       $btnBlue: #8CD4F5;
       $btnGray: #C1C1C1;
 
@@ -512,14 +596,32 @@
   }
   // Modal animation
   @include keyframes(showAlertDialog) {
-    0%    { transform: scale(0.7);  -webkit-transform: scale(0.7);  }
-    45%   { transform: scale(1.05); -webkit-transform: scale(1.05); }
-    80%   { transform: scale(0.95); -webkit-transform: scale(0.95);   }
-    100%  { transform: scale(1);    -webkit-transform: scale(1);    }
+    0% {
+      transform: scale(0.7);
+      -webkit-transform: scale(0.7);
+    }
+    45% {
+      transform: scale(1.05);
+      -webkit-transform: scale(1.05);
+    }
+    80% {
+      transform: scale(0.95);
+      -webkit-transform: scale(0.95);
+    }
+    100% {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+    }
   }
   @include keyframes(hideAlertDialog) {
-    0%    { transform: scale(1);    -webkit-transform: scale(1);    }
-    100%  { transform: scale(0.5);  -webkit-transform: scale(0.5);  }
+    0% {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+    }
+    100% {
+      transform: scale(0.5);
+      -webkit-transform: scale(0.5);
+    }
   }
 
   .showAlertDialog {

@@ -5,11 +5,8 @@
   <div class="viewFramework-sidebar" ng-if="(!view.config.disableNavigation && !view.config.hideSidebar)">
     <div cb-shop-sidebar type="{{view.config.sidebar}}" class="sidebar-content"></div>
   </div>
-  <div class="viewFramework-preference-nav" cb-shop-preferencenav></div>
-  <div class="viewFramework-main">
-    <div ui-view id="j-viewFramework-scrollTop"></div>
-    <!--div class="viewFramework-scroll-wrap">
-
-    </div>-->
-  </div>
+  <div class="viewFramework-main" ui-view id="j-viewFramework-scrollTop"></div>
 </div>
+
+
+

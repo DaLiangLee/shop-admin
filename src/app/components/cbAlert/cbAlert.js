@@ -2,36 +2,43 @@
  * Created by Administrator on 2016/11/19.
  */
 (function() {
+  /**
+   * 图片缩略图hover查看大图
+   * maxWidth   最大宽度
+   * maxheight  最大高度
+   * url        图片地址
+   *
+   */
   'use strict';
-  function supportCss3(style) {
-    var prefix = ['webkit', 'Moz', 'ms', 'o'],
-      i,
-      humpString = [],
-      htmlStyle = document.documentElement.style,
-      _toHumb = function (string) {
-        return string.replace(/-(\w)/g, function ($0, $1) {
-          return $1.toUpperCase();
-        });
-      };
 
-    for (i in prefix){
-      humpString.push(_toHumb(prefix[i] + '-' + style));
-    }
-
-    humpString.push(_toHumb(style));
-
-    for (i in humpString){
-      if (humpString[i] in htmlStyle) {
-        return true;
-      }
-    }
-
-    return false;
-  }
   angular
     .module('shopApp')
     .factory('cbAlert', cbAlert);
+    function supportCss3(style) {
+      var prefix = ['webkit', 'Moz', 'ms', 'o'],
+        i,
+        humpString = [],
+        htmlStyle = document.documentElement.style,
+        _toHumb = function (string) {
+          return string.replace(/-(\w)/g, function ($0, $1) {
+            return $1.toUpperCase();
+          });
+        };
 
+      for (i in prefix){
+        humpString.push(_toHumb(prefix[i] + '-' + style));
+      }
+
+      humpString.push(_toHumb(style));
+
+      for (i in humpString){
+        if (humpString[i] in htmlStyle) {
+          return true;
+        }
+      }
+
+      return false;
+    }
     /**
      * alert弹窗
      * @param options   配置参数
@@ -47,6 +54,7 @@
       title: '',       //标题
       text: '',        //提示文字
       type: null,      //类型
+      showOverlay: true,          //显示遮罩背景
       allowOutsideClick: false,   //允许外部点击
       showConfirmButton: true,    //显示确认按钮
       showCancelButton: false,    //显示取消按钮
@@ -138,13 +146,14 @@
       var fullWindowWidth = body[0].clientWidth;
       if(!this.isModal()){
         this.$modal = element('<div class="k-alert-dialog" tabindex="-1"></div>');
-        this.$modal.append(element('<div class="alert-overlay"></div>'));
+        this.option.showOverlay && this.$modal.append(element('<div class="alert-overlay"></div>'));
         this.$modal.append('<div class="alert-dialog" data-animation="pop">'+template()+'</div>');
-        body.append(this.$modal).addClass('stop-scrolling').css('padding-right', body[0].clientWidth - fullWindowWidth + this.bodyPad);
+        body.append(this.$modal);
+        this.option.showOverlay && body.addClass('stop-scrolling').css('padding-right', body[0].clientWidth - fullWindowWidth + this.bodyPad);
         this.$modal.show().find('.alert-dialog').addClass('showAlertDialog');
       }else{
         this.$modal = body.find('.k-alert-dialog');
-        this.$modal.find('.alert-dialog').html(template()).show();
+        this.option.showOverlay && this.$modal.find('.alert-dialog').html(template()).show();
       }
       if(this.isAnimation){
         this.$modal.find('.success').addClass('animate');
@@ -318,7 +327,7 @@
     AlertDialog.prototype.close = function () {
       var _this = this;
       if(this.isAnimation){
-        this.$modal.find('.alert-overlay').fadeOut(250);
+        this.option.showOverlay && this.$modal.find('.alert-overlay').fadeOut(250);
         this.$modal.find('.alert-dialog').fadeOut(250, function () {
           _this.$modal.remove();
           _this.destory();
@@ -337,14 +346,14 @@
      */
     AlertDialog.prototype.destory = function () {
       this.$modal = null;
-      angular.element('body').removeClass('stop-scrolling').css('padding-right', '');
+      this.option.showOverlay && angular.element('body').removeClass('stop-scrolling').css('padding-right', '');
       clearTimeout(this.timer);
     };
   /** @ngInject */
   function cbAlert($rootScope, $timeout){
     var temporary = null;
     return {
-      dialog: function( arg1, arg2, arg3 ) {      // 自定义提示，警告，输入框
+      dialog: function( arg1, arg2, arg3 ) {
         $rootScope.$evalAsync(function(){
           if( angular.isFunction(arg2) ) {
             temporary = new AlertDialog( arg1, function(isConfirm){
@@ -357,12 +366,12 @@
           }
         });
       },
-      alert: function( arg1, arg2, arg3 ) {       // alert警告框
+      alert: function( arg1, arg2, arg3 ) {
         $rootScope.$evalAsync(function(){
           new AlertDialog( arg1, arg2, arg3 );
         });
       },
-      ajax: function(title, callback, message, type){    // ajax提交提醒框确认框
+      ajax: function(title, callback, message, type){
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
             throw Error('callback is not a function');
@@ -373,7 +382,7 @@
             type: type || 'none',
             showConfirmButton: true,    //显示确认按钮
             showCancelButton: true,    //显示取消按钮
-            showLoaderOnConfirm: true  //显示提交效果
+            showLoaderOnConfirm: true
           }, function(isConfirm){
             $rootScope.$evalAsync( function(){
               callback(isConfirm);
@@ -381,44 +390,7 @@
           });
         });
       },
-      reconfirm: function (parameter) {   // 2次确认提醒框，防止用户误操作
-        $rootScope.$evalAsync(function(){
-          if(!angular.isFunction(callback)){
-            throw Error('callback is not a function');
-          }
-          temporary = new AlertDialog({
-            title: parameter.once.title,       //标题
-            text: parameter.once.message ||　"",        //提示文字
-            type: parameter.once.type || 'none',
-            showConfirmButton: true,    //显示确认按钮
-            showCancelButton: true    //显示取消按钮
-          }, function(isConfirm){
-            if(isConfirm){
-              $rootScope.$evalAsync(function(){
-                if(!angular.isFunction(parameter.twice.callback)){
-                  throw Error('callback is not a function');
-                }
-                temporary = new AlertDialog({
-                  title: parameter.twice.title,       //标题
-                  text: parameter.twice.message ||　"",        //提示文字
-                  type: parameter.twice.type || 'none',
-                  showConfirmButton: true,    //显示确认按钮
-                  showCancelButton: true,    //显示取消按钮
-                  showLoaderOnConfirm: true  //显示提交效果
-                }, function(isReconfirm){
-                  $rootScope.$evalAsync( function(){
-                    parameter.twice.callback(isReconfirm);
-                  });
-                });
-              });
-            }else{
-              temporary.close();
-              temporary = null;
-            }
-          });
-        });
-      },
-      confirm: function (title, callback, message, type) {    // 确认框
+      confirm: function (title, callback, message, type) {
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
             throw Error('callback is not a function');
@@ -436,7 +408,7 @@
           });
         });
       },
-      prompt: function (title, callback) {    // 输入框
+      prompt: function (title, callback) {
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
             throw Error('callback is not a function');
@@ -455,38 +427,39 @@
           });
         });
       },
-      tips: function(title, delay, type) {   // 消息提醒框，2秒后自动消失
+      success: function(title, message) {
+        $rootScope.$evalAsync(function(){
+          new AlertDialog( title, message || "", 'success' );
+        });
+      },
+      tips: function(title, delay, type) {
         $rootScope.$evalAsync(function(){
           new AlertDialog({
             title: title,       //标题
             text: '',        //提示文字
             type: type || 'success',      //类型
             showConfirmButton: false,    //显示确认按钮
+            showOverlay: false,      // 提示消息不显示背景遮罩效果
             delay: delay || 2000     //延迟时间
           });
         });
       },
-      success: function(title, message) {   // 成功显示框
-        $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message || "", 'success' );
-        });
-      },
-      error: function(title, message) {    // 失败显示框
+      error: function(title, message) {
         $rootScope.$evalAsync(function(){
           new AlertDialog( title, message || "", 'error' );
         });
       },
-      warning: function(title, message) {  // 警告显示框
+      warning: function(title, message) {
         $rootScope.$evalAsync(function(){
           new AlertDialog( title, message || "", 'warning' );
         });
       },
-      info: function(title, message) {    // 信息显示框
+      info: function(title, message) {
         $rootScope.$evalAsync(function(){
           new AlertDialog( title, message || "", 'info' );
         });
       },
-      close: function() {             // 关闭所有框
+      close: function() {
         $rootScope.$evalAsync(function(){
           temporary.close();
           temporary = null;

@@ -215,7 +215,6 @@ router.post('/product/goods/putup', function (req, res, next) {
  */
 router.post('/product/goods/putdown', function (req, res, next) {
   console.log(req.query.productid);
-
   var index = _.findIndex(goods.data, {skuid: req.query.skuid});
   goods.data[index].status = 0;
   res.json({

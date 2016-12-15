@@ -2,6 +2,7 @@
  * Created by Administrator on 2016/11/4.
  */
 describe('Unit: Directive Test', function () {
+  var $compile, $rootScope, element;
   /**
    * 模拟模块
    */
@@ -9,10 +10,10 @@ describe('Unit: Directive Test', function () {
   /**
    * 注入依赖
    */
-  var scope, iElement, body;
-  beforeEach(inject(function($compile, $rootScope) {
-    scope = $rootScope;
-    scope.list = [
+  beforeEach(inject(function(_$compile_, _$rootScope_) {
+    $compile = _$compile_;
+    $rootScope = _$rootScope_;
+    $rootScope.list = [
       {"id":"1","group":"A","name":"AC Schnitzer","logo":"/motor/logo/A_AC-Schnitzer.png"},
       {"id":"2","group":"A","name":"Arash","logo":"/motor/logo/A_Arash.png"},
       {"id":"3","group":"A","name":"Artega","logo":"/motor/logo/A_Artega.png"},
@@ -38,44 +39,23 @@ describe('Unit: Directive Test', function () {
       {"id":"23","group":"B","name":"比亚迪","logo":"/motor/logo/B_BiYaDi.png"},
       {"id":"24","group":"B","name":"标致","logo":"/motor/logo/B_BiaoZhi.png"}
     ];
-    scope.select = "1";
-    body = angular.element('body');
-    iElement = $compile('<div simple-select="id,name" store="scope.list" select="scope.select"></div>')(scope);
-    scope.$digest();
   }));
 
-/*  function compileDirective(tpl) {
-    // function to compile a fresh directive with the given template, or a default one
-    // compile the tpl with the $rootScope created above
-    // wrap our directive inside a form to be able to test
-    // that our form integration works well (via ngModelController)
-    // our directive instance is then put in the global 'elm' variable for further tests
-
-    // inject allows you to use AngularJS dependency injection
-    // to retrieve and use other services
-    inject(function($compile) {
-
-      elm = select.find('div');
-    });
-    // $digest is necessary to finalize the directive generation
-
-  }*/
   /**
    * 测试代码
    */
-  describe('initialisation', function() {
-    // before each test in this block, generates a fresh directive
-    /*beforeEach(function() {
-      compileDirective();
-    });*/
-    // a single test example, check the produced DOM
-    it('should produce 2 buttons and a div', function() {
-      //$digest 方法对于生成指令是必要的。
-      expect(iElement.find('button').length).toEqual(2);
-      expect(iElement.find('div').length).toEqual(1);
-    });
-    it('should check validity on init', function() {
-      //expect(scope.form.$valid).toBeTruthy();
-    });
+
+  // a single test example, check the produced DOM
+  it('should produce 2 buttons and a div', function() {
+
+    $rootScope.select = "2";
+    // inject allows you to use AngularJS dependency injection
+    // to retrieve and use other services
+    element = $compile('<div simple-select="id,name" store="list" select="select"></div>')($rootScope);
+    // $digest is necessary to finalize the directive generation
+    //$digest 方法对于生成指令是必要的。
+    $rootScope.$digest();
+    console.log(element.html());
+    expect(element.find('.text span').text()).toEqual("AC Schnitzer");
   });
 });

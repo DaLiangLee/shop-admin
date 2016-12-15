@@ -55,6 +55,9 @@
           name: getOptions()[1],
           iamge: getOptions()[2]
         };
+        if(scope.config.multiple && !angular.isArray(scope.select)){
+          scope.select = [];
+        }
         var placeholder = angular.isDefined(iAttrs.placeholder) ? iAttrs.placeholder : "请点击选择";
         /**
          * 获取字段参数  格式 options="value,name,image"
@@ -80,11 +83,7 @@
           text: "-- "+placeholder+" --",
           toggle: function ($event) {
             $event.stopPropagation();
-            /**
-             * 把页面上面的所有simpleSelect的focus状态去掉
-             */
             $document.find('.k-simple-select .select').hide();
-            $document.find('.k-simple-select .value').removeClass('focus');
             if(this.once){   // 如果是只能点击一次关闭了，就不能再点击了
               return ;
             }
