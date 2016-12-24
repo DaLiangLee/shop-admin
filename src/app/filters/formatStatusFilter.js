@@ -73,6 +73,10 @@
         "1": "美元",
         "2": "欧元",
         "3": "其他货币"
+      },
+      "sex": {
+        "0": "女",
+        "1": "男"
       }
     })
     .filter('formatStatusFilter', formatStatusFilter);

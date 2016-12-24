@@ -91,7 +91,6 @@
              * 批量操作
              * 直接获取已删除的项，把id添加到transmit当中
              */
-            $log(removal, leftover);
             _.forEach(removal, function(value){
                 transmit.push(value[mark]);
             });

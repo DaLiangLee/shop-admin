@@ -27,7 +27,7 @@
     .directive('simpleSelect', simpleSelect);
 
   /** @ngInject */
-  function simpleSelect($document, $filter) {
+  function simpleSelect($document, $filter, $timeout) {
     return {
       restrict: "A",
       scope: {
@@ -55,9 +55,12 @@
           name: getOptions()[1],
           iamge: getOptions()[2]
         };
+
         if(scope.config.multiple && !angular.isArray(scope.select)){
           scope.select = [];
         }
+        var $list,$select;
+
         var placeholder = angular.isDefined(iAttrs.placeholder) ? iAttrs.placeholder : "请点击选择";
         /**
          * 获取字段参数  格式 options="value,name,image"
@@ -81,15 +84,23 @@
           once: false,
           image: "",
           text: "-- "+placeholder+" --",
+          list: [],
           toggle: function ($event) {
             $event.stopPropagation();
             $document.find('.k-simple-select .select').hide();
+
             if(this.once){   // 如果是只能点击一次关闭了，就不能再点击了
               return ;
             }
             if(!this.focus){   // 打开下拉选项
               if(scope.config.multiple){
                 scope.choose.text = "-- 连续点击可以选择多项 --";
+                $timeout(function(){
+                  $list = iElement.find('.value');
+                  $select = iElement.find('.select');
+                  // 更新高度
+                  $select.css({'top': $list.height()});
+                },1);
               }
             }else{    // 关闭下拉选项
 
@@ -119,6 +130,8 @@
             scope.searchHandler({data: data});
           }
         };
+
+
         /**
          * 监听数据变化
          * @type {(()=>void)|*|(())}
@@ -135,6 +148,7 @@
             }else{
               if(scope.config.multiple){
                 scope.choose.text = "-- "+placeholder+" --";
+                value && (scope.choose.list = getList(value, scope.select));
               }else{
                 scope.choose.text = getValue(scope.items, scope.select).text;
                 scope.choose.image = getValue(scope.items, scope.select).image;
@@ -142,6 +156,20 @@
             }
           }
         });
+
+        function getList(store, select){
+          if(angular.isUndefined(select) || !select.length || !store.length){
+            return ;
+          }
+          var results = [];
+          angular.forEach(select, function (item) {
+            results.push(_.find(store, function (key) {
+              return key[value] == item;
+            }));
+          });
+          return results;
+        }
+
         /**
          * 监听数据变化
          * @type {(()=>void)|*|(())}
@@ -183,9 +211,17 @@
             });
             if(index < 0){
               scope.select.push(item[value]);
+              scope.choose.list.push(item);
             }else{
               scope.select.splice(index, 1);
+              _.remove(scope.choose.list, function(key){
+                return key[value] == item[value];
+              });
             }
+            // 更新高度
+            $timeout(function(){
+              $select.css({'top': $list.height()});
+            },1);
           }else{   //单选
             scope.select = item[value];
             scope.choose.text = item[name];
@@ -197,6 +233,25 @@
             data: scope.select
           });
         };
+        scope.remove = function ($event, item) {
+          $event.stopPropagation();
+          var index = _.findIndex(scope.select, function (key) {
+            return key == item[value];
+          });
+          scope.select.splice(index, 1);
+          _.remove(scope.choose.list, function(key){
+            return key[value] == item[value];
+          });
+          // 更新高度
+          $timeout(function(){
+            $select.css({'top': $list.height()});
+          },1);
+          scope.selectHandler({
+            data: scope.select
+          });
+        };
+
+
         $document.on('click', function () {
           scope.$apply(function(){
             scope.choose.hide();

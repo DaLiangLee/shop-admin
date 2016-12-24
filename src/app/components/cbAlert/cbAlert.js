@@ -350,7 +350,7 @@
       clearTimeout(this.timer);
     };
   /** @ngInject */
-  function cbAlert($rootScope, $timeout){
+  function cbAlert($rootScope){
     var temporary = null;
     return {
       dialog: function( arg1, arg2, arg3 ) {
@@ -397,8 +397,8 @@
           }
           temporary = new AlertDialog({
             title: title,       //标题
-            text: message ||　"",        //提示文字
-            type: type || 'none',
+            text: message || "",        //提示文字
+            type: type || "none",
             showConfirmButton: true,    //显示确认按钮
             showCancelButton: true    //显示取消按钮
           }, function(isConfirm){
@@ -460,6 +460,10 @@
         });
       },
       close: function() {
+        // 防止空调用出错
+        if(temporary === null){
+          return ;
+        }
         $rootScope.$evalAsync(function(){
           temporary.close();
           temporary = null;

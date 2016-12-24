@@ -38,7 +38,7 @@
                 var subScope = scope.$new(true);
                 // 是否需要显示错误消息
                 subScope.hasError = function(){
-                    // 判断是否有效并且用户已经输入过，解决angular不能控制在什么状态下验证的问题，默认是input事件验证，很多情况需要在focus
+                    // 判断是否有效并且用户已经输入过，解决angular不能控制在什么状态下验证的问题，默认是input事件验证，很多情况需要在bulur
                     return ngModel.$invalid && ngModel.$dirty;
                 };
                 // 返回所以的错误信息

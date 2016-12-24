@@ -31,7 +31,6 @@
             start: timeChange(scope.startTime, 0),
             end : timeChange(scope.endTime, 1)
           };
-          console.log(childScope.hours);
           childScope.hstep = 1;
           childScope.mstep = 5;
           childScope.ismeridian = false;
@@ -72,10 +71,8 @@
           if(time.indexOf(":") > -1){
             if(time.split(":")[0]*1+num > 23){
               time = "00:"+time.split(":")[1];
-              console.log('if1',time);
             }else{
               time = time.split(":")[0]*1+num +":"+ format(time.split(":")[1]*1, 5);
-              console.log('if2',time);
             }
           }else{
             if(time+num > 23){

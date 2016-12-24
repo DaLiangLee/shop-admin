@@ -1,0 +1,50 @@
+.cb-switch{
+  display: inline-block;
+  vertical-align: top;
+  width: 40px;
+  label{
+    position:relative;
+    display: block;
+    padding: 1px;
+    border-radius: 24px;
+    height: 22px;
+    margin-bottom: 15px;
+    background-color: #eee;
+    cursor: pointer;
+    vertical-align: top;
+    -webkit-user-select: none;
+  }
+  label:before{
+    content: '';
+    display: block;
+    border-radius: 24px;
+    height: 22px;
+    background-color: #ccc;
+  }
+
+  label:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -11px;
+    margin-left: -20px;
+    width: 22px;
+    height: 22px;
+    border-radius: 22px;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.08);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+  }
+  &.checked{
+    label:after{
+      margin-left: -2px;
+    }
+    label:before{
+      background-color:green;
+    }
+  }
+}

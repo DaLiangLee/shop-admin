@@ -8,7 +8,10 @@
         .run(permissionsRun)
         .run(configurationRun)
         .run(backRun)
-        .run(routerRun);
+        .run(routerRun)
+      .config(function($httpProvider){
+        //console.log($httpProvider);
+      });
 
         /** @ngInject */
         function permissionsRun(permissions) {
@@ -19,6 +22,7 @@
         function configurationRun(configuration) {
           configuration.setConfig({
             storeid: userPermissionList.storeid,
+            storecode: userPermissionList.storecode,
             api: userPermissionList.api,
             avatar: userPermissionList.avatar,
             message: userPermissionList.message,
@@ -59,7 +63,6 @@
              $log.debug('toParams',toParams);
              $log.debug('fromState',fromState);
              $log.debug('fromParams',fromParams);*/
-
             preferencenav.setPreferences(toState, toParams);
             /**
              * 如果没有权限访问会跳到没有权限403页面
@@ -95,6 +98,13 @@
      * 手动启动angular
      * 保证在Angular运行之前获取到permission的映射关系
      */
+    $.post('http://localhost:3000/shopservice/login', {
+      storecode: 'A1',
+      username: '15267009225',
+      password: '111111'
+    }, function () {
+
+    });
     angular.element(document).ready(function() {
         angular.bootstrap(document, ['shopApp']);
     });

@@ -55,7 +55,6 @@ describe('Unit: Directive Test', function () {
     // $digest is necessary to finalize the directive generation
     //$digest 方法对于生成指令是必要的。
     $rootScope.$digest();
-    console.log(element.html());
     expect(element.find('.text span').text()).toEqual("AC Schnitzer");
   });
 });

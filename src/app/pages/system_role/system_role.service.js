@@ -10,26 +10,8 @@
         .factory('systemRoleConfig', systemRoleConfig);
 
     /** @ngInject */
-    function systemRole($http, webSiteApi, configuration) {
-        var API = webSiteApi.WEB_SITE_API['system']['role'];
-        var URL = configuration.getAPIConfig();
-        var doRequest = function(method, url, data){
-            return $http({
-                method : method,
-                url : url,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                params: data
-            })
-        };
-        return {
-            get : function(data){return doRequest(API['get'].type, URL+API['get'].url, data)},
-            add : function(data){return doRequest(API['add'].type, URL+API['add'].url, data)},
-            edit : function(data){return doRequest(API['edit'].type, URL+API['edit'].url, data)},
-            assign : function(data){return doRequest(API['assign'].type, URL+API['assign'].url, data)},
-            remove : function(data){return doRequest(API['remove'].type, URL+API['remove'].url, data)}
-        }
+    function systemRole(requestService) {
+        return requestService.request('system','role');
     }
 
     /** @ngInject */

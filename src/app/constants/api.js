@@ -234,16 +234,24 @@
                 },
                 "member": {
                   "employee": {
-                    "get": {
-                      "url": "/member/employee",
+                    "list": {
+                      "url": "/member/employee/list",
                       "type": "GET"
                     },
                     "add": {
                       "url": "/member/employee/add",
                       "type": "POST"
                     },
-                    "edit": {
-                      "url": "/member/employee/edit",
+                    "get": {
+                      "url": "/member/employee/get",
+                      "type": "GET"
+                    },
+                    "update": {
+                      "url": "/member/employee/update",
+                      "type": "POST"
+                    },
+                    "inservice": {
+                      "url": "/member/employee/inservice",
                       "type": "POST"
                     },
                     "enable": {
@@ -258,9 +266,13 @@
                       "url": "/member/employee/remove",
                       "type": "POST"
                     },
-                    "reset": {
-                      "url": "/member/employee/reset",
+                    "pwdReset": {
+                      "url": "/member/employee/pwdReset",
                       "type": "POST"
+                    },
+                    "positions": {
+                      "url": "/member/employee/positions",
+                      "type": "GET"
                     }
                   }
                 },
@@ -285,6 +297,10 @@
                         "remove": {
                             "url": "/system/role/remove",
                             "type": "POST"
+                        },
+                        "all": {
+                            "url": "/admin/system/role/all",
+                            "type": "GET"
                         }
                     },
                     "modpwd": {

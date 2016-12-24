@@ -21,10 +21,11 @@
       return $http({
         method : method,
         url : url,
+        params: method == "GET" ? data : undefined,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json'
         },
-        params: data
+        data: method == "POST" ? data : undefined
       });
     };
     this.request = function(parent, current){

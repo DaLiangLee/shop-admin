@@ -145,6 +145,54 @@
                     sectionid: 30001
                 }
             })
+            .state('store.shop.home', {   // 店铺信息管理
+              url: '/home',
+              templateUrl: 'app/pages/store_shop/home.html',
+              controller: 'StoreShopHomeController',
+              controllerAs: 'vm',
+              title: '店铺管理',
+              permission: {
+                parentid: 30000,
+                category: "store",
+                sectionid: 30001
+              }
+            })
+            .state('store.shop.home', {   // 店铺信息管理
+              url: '/home',
+              templateUrl: 'app/pages/store_shop/home.html',
+              controller: 'StoreShopHomeController',
+              controllerAs: 'vm',
+              title: '店铺管理',
+              permission: {
+                parentid: 30000,
+                category: "store",
+                sectionid: 30001
+              }
+            })
+            .state('store.shop.home', {   // 店铺信息管理
+              url: '/home',
+              templateUrl: 'app/pages/store_shop/home.html',
+              controller: 'StoreShopHomeController',
+              controllerAs: 'vm',
+              title: '店铺管理',
+              permission: {
+                parentid: 30000,
+                category: "store",
+                sectionid: 30001
+              }
+            })
+            .state('store.shop.home', {   // 店铺信息管理
+              url: '/home',
+              templateUrl: 'app/pages/store_shop/home.html',
+              controller: 'StoreShopHomeController',
+              controllerAs: 'vm',
+              title: '店铺管理',
+              permission: {
+                parentid: 30000,
+                category: "store",
+                sectionid: 30001
+              }
+            })
             .state('product', {     // 产品管理
                 url: '/product',
                 template: '<div ui-view></div>',
@@ -612,6 +660,30 @@
                     category: "member",
                     sectionid: 90001
                 }
+            })
+            .state('member.employee.add', {      // 添加新员工管理
+              url: '/add',
+              templateUrl: 'app/pages/member_employee/change.html',
+              controller: 'MemberEmployeeChangeController',
+              controllerAs: 'vm',
+              title: '添加新员工',
+              permission: {
+                parentid: 90000,
+                category: "member",
+                sectionid: 90002
+              }
+            })
+            .state('member.employee.edit', {      // 编辑员工员工管理
+              url: '/edit/:id',
+              templateUrl: 'app/pages/member_employee/change.html',
+              controller: 'MemberEmployeeChangeController',
+              controllerAs: 'vm',
+              title: '编辑员工',
+              permission: {
+                parentid: 90000,
+                category: "member",
+                sectionid: 90002
+              }
             })
             .state('system', {      // 系统管理
                 url: '/system',

@@ -1,0 +1,16 @@
+<div class="month">
+  <table class="grid">
+    <thead>
+    <tr>
+      <th><button class="btn btn-default" ng-click="move(-1)">&lt;</button></th>
+      <th><button class="btn btn-default" ng-click="toggleMode(2)"><strong ng-bind="title"></strong></button></th>
+      <th><button class="btn btn-default" ng-click="move(1)">&gt;</button></th>
+    </tr>
+    </thead>
+    <tbody dg-click="select(cols, $event)" selector="button">
+      <tr ng-repeat="row in rows track by $index" >
+        <td ng-repeat="cols in row track by $index" bindonce><button class="btn btn-default" ng-class="{'btn-info': cols.current, 'active': cols.selected}" bo-text="cols.label"></button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

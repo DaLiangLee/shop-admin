@@ -1,0 +1,117 @@
+<div class="g-view">
+  <div class="container-fluid">
+    <h2 ng-bind="vm.title"></h2>
+    <hr>
+    <form class="row form-horizontal" autocomplete="off" name="employee" role="form" novalidate ng-if="vm.isLoadData">
+      <div class="form-group">
+        <label class="col-md-1 control-label">工号：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="worknum" ng-model="vm.dataBase.worknum" ng-maxlength="40"
+                 placeholder="请输入员工工号" cb-placeholder="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 姓名：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="realname" ng-model="vm.dataBase.realname" ng-maxlength="40"
+                 placeholder="请输入员工姓名" cb-placeholder="" ng-required="true">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label">身份证号码：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.idcard" ng-maxlength="40"
+                 placeholder="请输入15或者18位身份证号码" cb-placeholder="" ng-required="true"
+                 ng-blur="vm.setGenderAndBirthday(vm.dataBase.idcard)">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 性别：</label>
+        <div class="col-md-7">
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="optionsRadios" ng-model="vm.dataBase.gender" value="1">
+              男
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="optionsRadios" ng-model="vm.dataBase.gender" value="0">
+              女
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 手机号：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="mobile" ng-model="vm.dataBase.mobile" placeholder="请输入员工手机号"
+                 cb-placeholder="" ng-required="true"
+                 ng-pattern="/^(13[0-9]{9}|15[012356789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|170[0-9]{8}|177[0-9]{8})$/">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 生日：</label>
+        <div class="col-md-7">
+          <div cb-datepicker="" datepicker-options="vm.dateOptions1" datepicker-model="vm.dataBase.birthday"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 入职时间：</label>
+        <div class="col-md-7">
+          <div cb-datepicker="" datepicker-options="vm.dateOptions2" datepicker-model="vm.dataBase.onboarddate"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 岗位：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.positionid" ng-maxlength="40"
+                 placeholder="请输入岗位" cb-placeholder="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label">员工简介：</label>
+        <div class="col-md-7">
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.description" ng-maxlength="40"
+                 placeholder="请输入员工姓名" cb-placeholder="">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-7 col-md-offset-1">
+          是否允许登录店铺后台
+          <div cb-switch checked="vm.dataBase.status"
+               ng-click="vm.statusItem(vm.dataBase.status, employee.mobile.$invalid)"></div>
+        </div>
+      </div>
+      <div ng-if="vm.dataBase.status == 1">
+        <div class="form-group">
+          <div class="col-md-7 col-md-offset-1">
+            系统将为您生成默认登录账号：
+            <div style="display: inline-block;"><span ng-bind="vm.storecode" class="text-border"
+                                                      style="display: inline-block; width: auto"></span> <span
+              ng-bind="vm.dataBase.mobile" class="text-border" style="display: inline-block; width: auto"></span></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-1 control-label"><span class="text-danger">*</span> 角色名称：</label>
+          <div class="col-md-7">
+            <div simple-select="id,name" store="vm.store" select="vm.select" data-multiple></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-7 col-md-offset-1 text-center">
+          <button type="button" class="btn btn-primary" ng-click="vm.submit()">&emsp;&emsp;&emsp;&emsp;{{vm.isChange
+            ? "修改" : "添加"}}&emsp;&emsp;&emsp;&emsp;
+          </button>
+          <button type="button" class="btn btn-default"
+                  cb-back-button="{'name':'member.employee.list','params':{'page': 1}}"
+                  data-router="member.employee.list"
+                  ng-if="vm.isChange">返回
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
