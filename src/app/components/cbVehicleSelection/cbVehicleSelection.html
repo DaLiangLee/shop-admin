@@ -28,13 +28,9 @@
                        ng-model="item.$checked"
                        ng-checked="item.$checked"
                        ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
-
                 <span ng-bind="item.brand"></span>
-
                 <span ng-click="selecthandle(2, item, 'series', 'seriesList')">{{item.open ? '收起': '展开'}}</span>
               </div>
-
-
               </li>
           </ul>
         </div>

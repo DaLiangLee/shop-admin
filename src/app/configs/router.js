@@ -26,6 +26,8 @@
             .when('/store/', '/store/shop/')
             .when('/store/shop', '/store/shop/home')
             .when('/store/shop/', '/store/shop/home')
+            .when('/store/shop/home', '/store/shop/home/info')
+            .when('/store/shop/home/', '/store/shop/home/info')
             .when('/product', '/notfound')                  // 抛出异常
             .when('/product/', '/notfound')                 // 抛出异常
             .when('/product/goods', '/product/goods/list/')     // 产品管理
@@ -134,8 +136,20 @@
                 }
             })
             .state('store.shop.home', {   // 店铺信息管理
-                url: '/home',
-                templateUrl: 'app/pages/store_shop/home.html',
+              url: '/home',
+              templateUrl: 'app/pages/store_shop/home.html',
+              controller: 'StoreShopHomeController',
+              controllerAs: 'vm',
+              title: '店铺管理',
+              permission: {
+                parentid: 30000,
+                category: "store",
+                sectionid: 30001
+              }
+            })
+            .state('store.shop.home.info', {   // 店铺信息管理信息
+                url: '/info',
+                templateUrl: 'app/pages/store_shop/info.html',
                 controller: 'StoreShopHomeController',
                 controllerAs: 'vm',
                 title: '店铺管理',
@@ -145,10 +159,10 @@
                     sectionid: 30001
                 }
             })
-            .state('store.shop.home', {   // 店铺信息管理
-              url: '/home',
-              templateUrl: 'app/pages/store_shop/home.html',
-              controller: 'StoreShopHomeController',
+            .state('store.shop.home.aptitude', {   // 店铺信息管理  店铺资质
+              url: '/aptitude',
+              templateUrl: 'app/pages/store_shop/aptitude.html',
+              controller: 'StoreShopHomeAptitudeController',
               controllerAs: 'vm',
               title: '店铺管理',
               permission: {
@@ -157,10 +171,10 @@
                 sectionid: 30001
               }
             })
-            .state('store.shop.home', {   // 店铺信息管理
-              url: '/home',
-              templateUrl: 'app/pages/store_shop/home.html',
-              controller: 'StoreShopHomeController',
+            .state('store.shop.home.contact', {   // 店铺信息管理 联系方式
+              url: '/contact',
+              templateUrl: 'app/pages/store_shop/contact.html',
+              controller: 'StoreShopHomeContactController',
               controllerAs: 'vm',
               title: '店铺管理',
               permission: {
@@ -169,22 +183,10 @@
                 sectionid: 30001
               }
             })
-            .state('store.shop.home', {   // 店铺信息管理
-              url: '/home',
-              templateUrl: 'app/pages/store_shop/home.html',
-              controller: 'StoreShopHomeController',
-              controllerAs: 'vm',
-              title: '店铺管理',
-              permission: {
-                parentid: 30000,
-                category: "store",
-                sectionid: 30001
-              }
-            })
-            .state('store.shop.home', {   // 店铺信息管理
-              url: '/home',
-              templateUrl: 'app/pages/store_shop/home.html',
-              controller: 'StoreShopHomeController',
+            .state('store.shop.home.bank', {   // 店铺信息管理  银行
+              url: '/bank',
+              templateUrl: 'app/pages/store_shop/bank.html',
+              controller: 'StoreShopHomeBankController',
               controllerAs: 'vm',
               title: '店铺管理',
               permission: {
@@ -575,6 +577,30 @@
                     sectionid: 70002
                 }
             })
+            .state('user.customer.add2', {      // 新增会员
+              url: '/add/:mobile',
+              templateUrl: 'app/pages/user_customer/change.html',
+              controller: 'UserCustomerChangeController',
+              controllerAs: 'vm',
+              title: '新增会员',
+              permission: {
+                parentid: 70000,
+                category: "user",
+                sectionid: 70002
+              }
+            })
+            /*.state('user.customer.add2', {      // 新增会员
+              url: '/add/:mobile',
+              templateUrl: 'app/pages/user_customer/change.html',
+              controller: 'UserCustomerChangeController',
+              controllerAs: 'vm',
+              title: '新增会员',
+              permission: {
+                parentid: 70000,
+                category: "user",
+                sectionid: 70002
+              }
+            })*/
             .state('user.comment', {      // 评价管理
                 url: '/comment',
                 template: '<div ui-view></div>',
@@ -596,6 +622,28 @@
                     category: "user",
                     sectionid: 70201
                 }
+            })
+            .state('user.grade', {      // 会员等级
+              url: '/grade',
+              template: '<div ui-view></div>',
+              title: '会员管理',
+              permission: {
+                parentid: 7,
+                category: "user",
+                sectionid: 70000
+              }
+            })
+            .state('user.grade.list', {      // 会员等级列表
+              url: '/list',
+              templateUrl: 'app/pages/user_grade/list.html',
+              controller: 'UserGradeListController',
+              controllerAs: 'vm',
+              title: '会员等级',
+              permission: {
+                parentid: 70000,
+                category: "user",
+                sectionid: 70001
+              }
             })
             .state('stocks', {      // 货源中心
                 url: '/stocks',

@@ -14,7 +14,7 @@
     <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" ng-if="search.prefer" placeholder="请输入搜索内容" cb-placeholder>
     <ul class="list-unstyled" ng-if="items.length" dg-click="options($event, item)" selector="li">
       <li ng-repeat="item in items" ng-class="{'active': setClass(item)}">
-        <img ng-src="{{item[config.images]}}" alt="{{item[config.name]}}" ng-if="config.images" class="images">
+        <img width="24px" ng-src="{{item[config.image]}}" alt="{{item[config.name]}}" ng-if="config.image" class="images">
         <span ng-bind="item[config.name]"></span>
       </li>
     </ul>

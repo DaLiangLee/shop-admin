@@ -77,6 +77,24 @@
       "sex": {
         "0": "女",
         "1": "男"
+      },
+      "storeContactPeople": {
+        "0": "店铺运营联系人",
+        "1": "店铺财务联系人"
+      },
+      "storeType": {
+        "0": "非4S店",
+        "1": "4S店"
+      },
+      "storeRegType": {
+        "0": "个体工商户",
+        "1": "企业工商户"
+      },
+      "gradeTradeamount": {
+        "0": "无条件"
+      },
+      "gradeDiscount": {
+        "10": "无折扣"
       }
     })
     .filter('formatStatusFilter', formatStatusFilter);

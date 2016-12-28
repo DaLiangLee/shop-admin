@@ -42,10 +42,11 @@
          * 设置配置参数
          * @type config
          *  multiple: boolean,    是否多选
+         *  search: boolean，     是否开启搜索
          *  once: boolean,        是否只点击一此
          *  value: string,        指定返回的值的字段
          *  name: string          指定显示列表的字段
-         *
+         *  image: string         指定显示列表的字段
          */
         scope.config = {
           search: angular.isDefined(iAttrs.search),
@@ -53,7 +54,7 @@
           once: angular.isDefined(iAttrs.once),
           value: getOptions()[0],
           name: getOptions()[1],
-          iamge: getOptions()[2]
+          image: getOptions()[2]
         };
 
         if(scope.config.multiple && !angular.isArray(scope.select)){
@@ -63,19 +64,26 @@
 
         var placeholder = angular.isDefined(iAttrs.placeholder) ? iAttrs.placeholder : "请点击选择";
         /**
-         * 获取字段参数  格式 options="value,name,image"
+         * 获取字段参数  格式 options="value,name | value,name,image"
          * @returns {*}
          */
         function getOptions(){
-          if(!/^[a-z0-9]+\,([a-z0-9]+$)|([a-z0-9]+\,[a-z0-9]+$)/.test(iAttrs.simpleSelect)){
-            return ["id", "name", "image"];
+          // 如果参数里面没有一个‘,’ 直接抛异常，防止其他BUG
+          if(iAttrs.simpleSelect.indexOf(',') < 0){
+            throw Error('填写的格式有误，‘value,name | value,name,image’，value是提交的值')
           }
-          return iAttrs.simpleSelect.split(",");
+          var items = iAttrs.simpleSelect.split(",");
+          // 如果只填了value和name，image需要填充一个undefined来占位，防止获取报错
+          if(items.length === 2){
+            items[2] = undefined;
+          }
+          return items;
         }
 
         var value = scope.config.value;
         var name = scope.config.name;
         var image = scope.config.image;
+
         /**
          * 值相关操作
          * @type {{once: boolean, image: string, text: string, toggle: toggle}}

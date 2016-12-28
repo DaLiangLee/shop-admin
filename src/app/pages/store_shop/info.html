@@ -1,0 +1,147 @@
+<div class="row">
+  <h2>基本信息</h2>
+  <hr>
+</div>
+<div class="form-horizontal">
+  <div class="row form-group">
+    <label class="col-md-1 control-label">经营状态：</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.store.status | formatStatusFilter : 'store_shop'"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">工商注册类型：</label>
+    <div class="col-md-7">
+      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">店铺类型：</label>
+    <div class="col-md-7">
+      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">店铺编码：</label>
+    <div class="col-md-7">
+      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">店铺二维码：</label>
+    <div class="col-md-6">
+      <img ng-src="{{vm.dataBase.store.qrcode}}" alt="">
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <h2>店铺介绍</h2>
+  <hr>
+</div>
+<div class="form-horizontal">
+  <div class="row form-group">
+    <label class="col-md-1 control-label">商户名称：</label>
+    <div class="col-md-7">
+      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">服务项目：</label>
+    <div class="col-md-7">
+      <label ng-repeat="item in vm.dataBase.allonelevel" style="margin-right: 10px;"><input type="checkbox" disabled ng-checked="vm.getScopeStatus(item, vm.dataBase.selectedonelevel)">{{item.catename}}</label>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">店招图片：</label>
+    <div class="row col-md-6">
+      <div class="col-md-4" ng-repeat="item in vm.dataBase.store.photos track by $index" ng-if="vm.dataBase.store.photos.length">
+        <div style="width: 110%;">
+          <img ng-src="{{item}}?x-oss-process=image/resize,m_fill,w_300,h_180" style="width: 100%;" class="img-thumbnail" alt="">
+        </div>
+        <br>
+        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+          <button class="btn btn-danger" ng-click="vm.removePhotos($index)">删除</button>
+          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data, $index)">重新上传</button>
+          <button class="btn btn-default" cb-download="item">下载</button>
+        </div>
+      </div>
+      <div class="col-md-3" ng-if="!vm.dataBase.store.photos.length">
+        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">上传店招图片</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">商户地址：</label>
+    <div class="col-md-7">
+      <p class="text-border" ng-bind="vm.dataBase.store.address"></p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">硬件环境：</label>
+    <div class="row col-md-6">
+      <div class="col-md-4" ng-repeat="item in vm.dataBase.store.photos track by $index" ng-if="vm.dataBase.store.photos.length">
+        <div style="width: 110%;">
+          <img ng-src="{{item}}?x-oss-process=image/resize,m_fill,w_300,h_180" style="width: 100%;" class="img-thumbnail" alt="">
+        </div>
+        <br>
+        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+          <button class="btn btn-danger" ng-click="vm.removePhotos($index)">删除</button>
+          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data, $index)">重新上传</button>
+          <button class="btn btn-default" cb-download="item">下载</button>
+        </div>
+      </div>
+      <div class="col-md-3" ng-if="!vm.dataBase.store.photos.length">
+        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
+          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">上传店招图片</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">员工风采：</label>
+    <div class="col-md-6"  class="col-md-6">
+      <p class="text-border">
+        （<span ng-bind="vm.dataBase.store.opentime.length"></span>人）
+      </p>
+    </div>
+    <div class="col-md-2"><button class="btn btn-success" shop-home-settings-member member=""  setting-item="vm.memberHandler(data)" cb-access-control="member" data-parentid="9" data-sectionid="90000">去设置</button></div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-1 control-label">营业时间：</label>
+    <div class="col-md-6"  class="col-md-6" ng-if="vm.dataBase.store.opentime && vm.dataBase.store.closetime">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.store.opentime"></span> — <span
+        ng-bind="vm.dataBase.store.closetime"></span>
+      </p>
+    </div>
+    <div class="col-md-2" ng-if="vm.dataBase.store.storename"><button class="btn btn-success" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置营业时间</button></div>
+  </div>
+
+  <div class="row form-group">
+    <label class="col-md-1 control-label">客服电话：</label>
+    <div class="col-md-6">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.store.telephone | numberFormatFilter"></span>
+      </p>
+    </div>
+    <div class="col-md-2" ng-if="vm.dataBase.store.telephone">
+    <button class="btn btn-success" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置客服电话</button>
+    </div>
+  </div>
+
+
+  <div class="row form-group">
+    <label class="col-md-1 control-label">商户介绍：</label>
+    <div class="col-md-6" ng-if="vm.dataBase.store.description">
+      <p class="text-border" style="height: auto;word-break:break-all;word-wrap:break-word; " ng-bind="vm.dataBase.store.description"></p>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-success" cb-access-control="store" data-parentid="30000" data-sectionid="30004" cb-message-board="editor" content="vm.dataBase.description" data-transmit="{{vm.dataBase.store.id}}" config="vm.description" title="商户介绍" review-item="vm.reviewHandler(data)">商户介绍</button>
+    </div>
+  </div>
+</div>

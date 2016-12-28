@@ -1,0 +1,32 @@
+.user-grade{
+  .table{
+    td,th{
+      text-align: center;
+      width: 32%;
+      &:first-child{
+        width: 4%;
+      }
+      .form-control{
+        display: inline-block;
+        width: auto;
+        text-align: center;
+      }
+    }
+    th{
+      background-color: #d9edf7;
+    }
+    td{
+      border-bottom: 1px solid #ddd;
+    }
+    tr.even{
+      background-color: #f9f9f9;
+    }
+    .add{
+      border: none;
+      background: none;
+      font-size: 18px;
+      line-height: 40px;
+      color: #4f9fcf;
+    }
+  }
+}

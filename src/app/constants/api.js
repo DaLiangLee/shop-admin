@@ -29,6 +29,30 @@
                     "saveDescription": {
                       "url": "/store/shop/saveDescription",
                       "type": "POST"
+                    },
+                    "getStoreAptitude": {
+                      "url": "/store/shop/getStoreAptitude",
+                      "type": "POST"
+                    },
+                    "getStoreContact": {
+                      "url": "/store/shop/getStoreContact",
+                      "type": "GET"
+                    },
+                    "saveStoreContact": {
+                      "url": "/store/shop/saveStoreContact",
+                      "type": "POST"
+                    },
+                    "getStoreAccount": {
+                      "url": "/store/shop/getStoreAccount",
+                      "type": "GET"
+                    },
+                    "saveStoreAccount": {
+                      "url": "/store/shop/saveStoreAccount",
+                      "type": "POST"
+                    },
+                    "getBanks": {
+                      "url": "/common/getBanks",
+                      "type": "GET"
                     }
                   }
                 },
@@ -232,6 +256,50 @@
                     }
                   }
                 },
+                "users": {
+                    "customer": {
+                      "getUser": {
+                        "url": "/users/get",
+                        "type": "GET"
+                      },
+                      "getMotors": {
+                        "url": "/users/motors",
+                        "type": "GET"
+                      },
+                      "add": {
+                        "url": "/users/add",
+                        "type": "POST"
+                      },
+                      "userList": {
+                        "url": "/users/list",
+                        "type": "GET"
+                      },
+                      "motorList": {
+                        "url": "/users/motor/list",
+                        "type": "GET"
+                      },
+                      "grades": {
+                        "url": "/users/grades",
+                        "type": "GET"
+                      },
+                      "saveGrades": {
+                        "url": "/users/grades/add",
+                        "type": "POST"
+                      },
+                      "exist": {
+                        "url": "/users/exist",
+                        "type": "GET"
+                      },
+                      "verifyCode": {
+                        "url": "/users/joinStore/verifyCode",
+                        "type": "POST"
+                      },
+                      "verifyCodeCheck": {
+                        "url": "/users/joinStore/verifyCode/check",
+                        "type": "GET"
+                      }
+                    }
+                },
                 "member": {
                   "employee": {
                     "list": {
@@ -273,6 +341,10 @@
                     "positions": {
                       "url": "/member/employee/positions",
                       "type": "GET"
+                    },
+                    "changeshow": {
+                      "url": "/member/employee/changeshow",
+                      "type": "POST"
                     }
                   }
                 },
@@ -371,27 +443,27 @@
                   "motor": {
                     "brand": {
                       "url": "/public/motor/brand",
-                      "type": "POST"
+                      "type": "GET"
                     },
                     "series": {
                       "url": "/public/motor/series",
-                      "type": "POST"
+                      "type": "GET"
                     },
                     "year": {
                       "url": "/public/motor/year",
-                      "type": "POST"
+                      "type": "GET"
                     },
                     "output": {
                       "url": "/public/motor/output",
-                      "type": "POST"
+                      "type": "GET"
                     },
                     "model": {
                       "url": "/public/motor/model",
-                      "type": "POST"
+                      "type": "GET"
                     },
                     "prefix": {
                       "url": "/public/motor/prefix",
-                      "type": "POST"
+                      "type": "GET"
                     }
                   }
                 },

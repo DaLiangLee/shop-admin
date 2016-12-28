@@ -62,17 +62,19 @@
           }
         };
         scope.selectModel3 = {};
-        if(angular.isDefined(scope.select)){
-          console.log(scope.select.charAt(0));
+        scope.$watch('select', function (value) {
+          if(angular.isDefined(value)){
 
-          scope.selectModel1.select = scope.select.charAt(0);
-          scope.selectModel2.select = scope.select.charAt(1);
-          scope.selectModel3.text = scope.select.substring(2);
-        }else{
-          scope.selectModel1.select = dataLists[0].name;
-          scope.selectModel2.select = dataLists[0].items[0].name;
-          scope.selectModel3.text = "";
-        }
+            scope.selectModel1.select = value.charAt(0);
+            scope.selectModel2.select = value.charAt(1);
+            scope.selectModel3.text = value.substring(2);
+          }else{
+            scope.selectModel1.select = dataLists[0].name;
+            scope.selectModel2.select = dataLists[0].items[0].name;
+            scope.selectModel3.text = "";
+          }
+        });
+
         scope.$watch('[selectModel3 ,selectModel2 ,selectModel1]', function (value) {
             scope.select = scope.selectModel1.select + scope.selectModel2.select + scope.selectModel3.text;
         }, true);

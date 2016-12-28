@@ -1,0 +1,91 @@
+<div class="viewFramework-vehicle-selection">
+  <!--<div>
+    车款：<input type="text" name="" id="" ng-model="search.text"> <button ng-click="search.handler()">查找</button>
+  </div>-->
+  <!--<div class="category">
+    <h3>级别通用</h3>
+    <ul>
+      <li><input type="checkbox" name="">MPV</li>
+      <li><input type="checkbox" name="">SUV</li>
+      <li><input type="checkbox" name="">三厢车</li>
+      <li><input type="checkbox" name="">两厢车</li>
+      <li><input type="checkbox" name="">皮卡</li>
+      <li><input type="checkbox" name="">客车</li>
+    </ul>
+  </div>-->
+  <div class="clearfix">
+    <div class="list brands">
+      <input type="text" placeholder="搜索大写首字母或品牌名称" ng-model="searchText" ng-change="firsthandle(searchText)">
+      <div class="items">
+        <ul class="list-unstyled">
+          <li ng-repeat="item in brandList track by $index" ng-class="{'open': item.$$open}">
+            <div ng-if="item.group">
+              <span ng-bind="item.group"></span>
+            </div>
+            <div ng-if="!item.group">
+              <span ng-bind="item.brand"></span>
+              <span ng-click="selecthandle(2, item, 'series', 'seriesList')">{{item.$$open ? '收起': '展开'}}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    {{series}}
+    <div class="list series" ng-if="seriesList.length">
+      <input type="text" placeholder="搜索关键词" ng-model="seriesText">
+      <div class="items">
+        <ul class="list-unstyled">
+          <li ng-repeat="item in seriesList | filter: {series: seriesText}"  ng-class="{'open': item.$$open}">
+            <span ng-bind="item.series"></span>
+
+            <span ng-click="selecthandle(3, item, 'year', 'yearList')">展开</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="list years" ng-if="yearList.length">
+      <input type="text" placeholder="搜索关键词" ng-model="yearText">
+      <div class="items">
+        <ul class="list-unstyled">
+          <li ng-repeat="item in yearList | filter: {year: yearText}"  ng-class="{'open': item.$$open}">
+
+            <span ng-bind="item.year"></span>
+
+            <span ng-click="selecthandle(4, item, 'output', 'outputList')">展开</span>
+        </ul>
+      </div>
+    </div>
+    <div class="list outputs" ng-if="outputList.length">
+      <input type="text" placeholder="搜索关键词" ng-model="outputText">
+      <div class="items">
+        <ul class="list-unstyled">
+          <li ng-repeat="item in outputList | filter: {output: outputText}"  ng-class="{'open': item.$$open}">
+
+            <span ng-bind="item.output"></span>
+
+            <span ng-click="selecthandle(5, item, 'model', 'modelList')">展开</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="list models" ng-if="modelList.length">
+      <input type="text" placeholder="搜索关键词" ng-model="modelText">
+      <div class="items">
+        <ul class="list-unstyled">
+          <li ng-repeat="item in modelList | filter: {model: modelText}"  ng-class="{'open': item.$$open}">
+            <span ng-bind="item.model"  ng-click="selecthandle(6, item, 'model')"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h2>已选车型：</h2>
+    <hr>
+    <div>
+      <span ng-bind="selectitle"></span>
+    </div>
+  </div>
+  <!--<div>-->
+  <!--<button ng-click="save()">保存</button>-->
+  <!--</div>-->
+</div>

@@ -1,0 +1,50 @@
+<div class="g-view">
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">会员等级</div>
+    </div>
+    <div class="alert alert-warning">
+      温馨提醒：<br>
+      1, 会员等级或交易达成条件金额不能重复 <br>
+      2, 会员等级最多添加10项
+    </div>
+    <div class="user-grade">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>会员等级</th>
+            <th>条件</th>
+            <th>折扣</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(index,item) in vm.items track by $index" ng-class="{'even': $odd}">
+            <td ng-bind="index+1"></td>
+            <td>
+              <span ng-if="item.isdefault == 1" ng-bind="item.gradename"></span>
+              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$$samegradename}"><input type="text" name="" class="form-control" ng-model="item.gradename" ng-blur="vm.blurGradesName(item.gradename, index)"></span>
+            </td>
+            <td>
+              <span ng-if="item.isdefault == 1" ng-bind="item.tradeamount | formatStatusFilter : 'gradeTradeamount'"></span>
+              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$$sametradeamount}">交易额达 <input type="text" name="" class="form-control" ng-model="item.tradeamount" ng-blur="vm.blurTradeamount(item.tradeamount, index)"> 元</span>
+            </td>
+            <td>
+              <span ng-if="item.isdefault == 1" ng-bind="item.discount | formatStatusFilter : 'gradeDiscount'"></span>
+              <span ng-if="item.isdefault == 0"><input type="text" name="" class="form-control" ng-model="item.discount"> 折</span>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot ng-if="vm.items.length < 10">
+          <tr class="even">
+            <td colspan="4"><button ng-click="vm.addGrade()" class="add">+添加会员等级</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-primary" style="width: 300px;" ng-click="vm.saveGrade()">保存</button>
+    </div>
+  </div>
+</div>
+

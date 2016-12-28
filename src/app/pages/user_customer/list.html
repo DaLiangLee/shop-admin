@@ -1,5 +1,11 @@
 <div class="g-view">
-    <div class="container-fluid">
-        <h1>会员管理</h1>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">用户管理</div>
+      <div class="panel-body">
+        <div simple-search config="vm.gridSearch.config" search-pre-handler="vm.gridSearch.handler(data)"></div>
+      </div>
     </div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+  </div>
 </div>

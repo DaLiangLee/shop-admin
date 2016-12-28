@@ -1,0 +1,66 @@
+<div class="form-horizontal">
+  <div class="row form-group">
+    <label class="col-md-2 control-label">法定代表人<br> / 企业负责人</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.ownername"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">身份证号</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.idcard"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">工商注册名称</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.regname"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">注册号（营业执照号）</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.licensenumber"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">机动车维修经营许可证号</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.store.ownername"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">注册所在地</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.store.ownername"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">成立日期</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.createtime | date : 'yyyy-MM-dd'"></span>
+      </p>
+    </div>
+  </div>
+  <div class="row form-group">
+    <label class="col-md-2 control-label">营业期限</label>
+    <div class="col-md-7">
+      <p class="text-border">
+        <span ng-bind="vm.dataBase.limitetime"></span>
+      </p>
+    </div>
+  </div>
+</div>
