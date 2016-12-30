@@ -1,17 +1,14 @@
 <div class="g-view">
   <div class="container-fluid">
-    <div class="panel panel-default">
-      <div class="panel-heading">商品管理</div>
-      <div class="panel-body">
-        <div simple-search config="vm.gridSearch.config" search-pre-handler="vm.gridSearch.handler(data)"></div>
-      </div>
-    </div>
+    <ul class="list-inline">
+      <li><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted" ui-sref-active="text-success">在售商品库</a></li>
+      <li><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted" ui-sref-active="text-success">已下架</a></li>
+    </ul>
 
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)"
          page-changed="vm.gridModel.pageChanged(page)"></div>
-
     <div>
       <table class="table">
         <thead>
@@ -34,77 +31,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in vm.items.itmes">
-            <td style="vertical-align: middle;" rowspan="{{vm.items.itmes.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.itmes.length}}" ng-if="$first"><p class="text-center" ng-bind="vm.items.code"></p>
+          <tr ng-repeat="item in vm.items.items">
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><p class="text-center" ng-bind="vm.items.code"></p>
               <span class="state-unread" style="width: 150px; height: 150px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.itmes.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="10"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.itmes.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.cnname"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.itmes.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="10"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.cnname"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
             <td><span ng-bind="$index+1"></span></td>
-            <td><span class="state-unread" ng-bind="item.saleprice"></span></td>
-            <td><span class="state-unread" ng-bind="item.saleprice"></span> <span simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(vm.items)"></span></td>
-            <td><span class="state-unread"><span ng-bind="item.salenums"></span>件</span></td>
-            <td><span class="state-unread"><span ng-bind="item.stock"></span>件</span> <span simple-editable="int" editor="item.stock" editor-handler="vm.gridModel2.editorhandler(vm.items)"></span></td>
-            <td>零件码</td>
+            <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
+            <td><span class="state-unread" ng-bind="item.saleprice"></span> <span simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice')"></span></td>
+            <td><span class="state-unread"><span ng-bind="item.skusalenum"></span>件</span></td>
+            <td><span class="state-unread"><span ng-bind="item.stock"></span>件</span> <span simple-editable="int" editor="item.stock" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
+            <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
             <td>使用车型</td>
             <td><div cb-switch checked="item.status"
-                     ng-click="vm.statusItem(vm.dataBase.status, employee.mobile.$invalid)"></div></td>
-            <td>描述</td>
+                     ng-click="vm.statusItem(item)"></div></td>
+            <td><span ng-bind="item.skudescription"></span></td>
           </tr>
         </tbody>
       </table>
     </div>
-
   </div>
 </div>
-<script type="text/ng-template" id="cbSkuvaluesTipsPopoverTemplate.html">
-  <h3 class="h3 text-center">商品规格</h3>
-  <ul class="list-unstyled" style="padding: 0;">
-    <li bindonce ng-repeat="item in templateData ">
-      <span bo-text="item.skuname"></span>：<span bo-text="item.items[0].skuvalue"></span>
-    </li>
-  </ul>
-</script>
-
-
-{
-"status" : 0,
-"data" : {
-"guid" : "804997800063422464",
-"pcateid1" : 2,
-"pcateid2" : 9,
-"brandid" : 1,
-"storeid" : 802334963159543808,
-"transid" : 1,
-"productname" : "第二个商品",
-"abstracts" : "第二个商品",
-"motobrandids" : "[{\"brand\":{\"brand\":\"%E5%AE%9D%E9%A9%AC\",\"firstletter\":\"B\",\"id\":11,\"brandid\":11,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png\",\"isChecked\":true}},{\"brand\":{\"brand\":\"%E5%8C%97%E4%BA%AC%E6%B1%BD%E8%BD%A6\",\"firstletter\":\"B\",\"id\":14,\"brandid\":14,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BeiJingQiChe.png\",\"isChecked\":true}},{\"brand\":{\"brand\":\"%E5%AE%BE%E5%88%A9\",\"firstletter\":\"B\",\"id\":26,\"brandid\":26,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BingLi.png\",\"isChecked\":true}}]",
-"mainphoto" : "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1480761495287_CASE2",
-"audit" : "0",
-"recommend" : "0",
-"createtime" : "2016-12-05",
-"updatetime" : "2016-12-05",
-"code" : "424545",
-"remove" : "0",
-"cnname" : "3M",
-"catename" : "维修保养",
-"itmes" : [ {
-"guid" : "804997800151511040",
-"salenums" : "0",
-"skuvalues" : "[{\"guid\":0,\"id\":7,\"items\":[{\"guid\":0,\"id\":41,\"skuid\":7,\"skuvalue\":\"汽油添加剂\",\"sort\":1}],\"skuname\":\"添加剂类别\",\"skutype\":\"text\",\"sort\":0},{\"guid\":0,\"id\":8,\"items\":[{\"guid\":0,\"id\":48,\"skuid\":8,\"skuvalue\":\"节油型\",\"sort\":2}],\"skuname\":\"添加剂功能\",\"skutype\":\"text\",\"sort\":0}]",
-"saleprice" : 700.0,
-"stock" : 999,
-"status" : "1"
-}, {
-"guid" : "804998197347905536",
-"salenums" : "36",
-"motobrandids" : "[{\"brand\":{\"brand\":\"%E5%A5%A5%E8%BF%AA\",\"firstletter\":\"A\",\"id\":7,\"brandid\":7,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/A_AoDi.png\",\"isChecked\":true},\"series\":[{\"id\":49,\"brandid\":7,\"series\":\"%E5%A5%A5%E8%BF%AAA4(%E8%BF%9B%E5%8F%A3)\",\"seriesid\":49,\"isChecked\":false}],\"year\":[{\"id\":80,\"brandid\":7,\"seriesid\":49,\"year\":\"2014\",\"isChecked\":true}]},{\"brand\":{\"brand\":\"%E5%AE%9D%E9%A9%AC\",\"firstletter\":\"B\",\"id\":11,\"brandid\":11,\"logo\":\"http://localhost:9090/shopservice/public/logo/motor/B_BaoMa.png\",\"isChecked\":true}}]",
-"skuvalues" : "[{\"guid\":0,\"id\":8,\"items\":[{\"guid\":0,\"id\":49,\"skuid\":8,\"skuvalue\":\"养护清洗型\",\"sort\":3}],\"skuname\":\"添加剂功能\",\"skutype\":\"text\",\"sort\":0},{\"guid\":0,\"id\":7,\"items\":[{\"guid\":0,\"id\":44,\"skuid\":7,\"skuvalue\":\"变速箱添加剂\",\"sort\":4}],\"skuname\":\"添加剂类别\",\"skutype\":\"text\",\"sort\":0}]",
-"saleprice" : 140.0,
-"stock" : 68,
-"status" : "1"
-} ]
-}
-}

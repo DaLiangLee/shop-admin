@@ -83,7 +83,7 @@
           }
           scope.$apply(function(){
             scope.editor = $input.val();
-            scope.editorHandler();
+            scope.editorHandler({data: $input.val()});
             $input.val('');
           });
           hide();

@@ -1,0 +1,34 @@
+<div class="viewFramework-adjust-prices-dialog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+            aria-hidden="true">&times;</button>
+    <h5 class="modal-title">商品属性</h5>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal" autocomplete="off" name="price" role="form" novalidate>
+      <div alert type="warning" ng-if="alertWarning">
+        <p ng-bind="alertWarning"></p>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr ng-repeat="group in store">
+            <td class="skuname">
+              <span ng-bind="group.skuname"></span>
+            </td>
+            <td class="skuvalue">
+              <div class="pull-left valuelist" ng-if="group.$$items.length">
+                <div style="width: 160px;" class="pull-left" simple-select="id,skuvalue" store="group.$$items"
+                     select="group.$$select" select-handler="selectHandler(data, group)"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="inline-block text-center">
+      <button class="btn btn-primary" ng-click="confirm()">确定</button>
+    </div>
+  </div>
+</div>

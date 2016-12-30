@@ -10,11 +10,13 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($window, $state, $log, utils, productGoods, productGoodsConfig, cbAlert) {
+  function ProductGoodsListController($window, $state, $log, $timeout, utils, productGoods, productGoodsConfig, cbAlert) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
+    console.log($state.params);
+
     var total = 0;
 
     /**
@@ -127,18 +129,46 @@
      * 表格配置
      */
     vm.gridModel2 = {
-      editorhandler: function (data) {
-        console.log(data);
+      editorhandler: function (data, item, type) {
+        console.log(data, item);
+        item[type] = data;
+        productGoods.updateProductSku(angular.copy(item)).then(function (results) {
+          console.log(results);
+          if (results.data.status == '0') {
+            cbAlert.tips('修改成功');
+            getList();
+          }else{
+            cbAlert.error(results.data.rtnInfo);
+          }
+        });
       }
     };
 
 
-    function getProductSkus(id){
-      productGoods.getProductSkus({id:id}).then(function(results){
+    vm.statusItem = function (item) {
+      console.log(JSON.stringify(item));
+      cbAlert.ajax('是否确认禁用该商品SKU？', function (isConfirm) {
+        if (isConfirm) {
+          item.status = item.status === "0" ? "1" : "0";
+          productGoods.updateProductSku(item).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips('修改成功');
+              getList();
+            }else{
+              cbAlert.error(results.data.rtnInfo);
+            }
+          });
+        } else {
+          cbAlert.close();
+        }
+      }, "", 'warning');
+    };
+
+    function getProductSkus(id) {
+      productGoods.getProductSkus({id: id}).then(function (results) {
         vm.items = results.data.data;
       });
     }
-
 
 
     // 获取权限列表
@@ -217,9 +247,8 @@
       vm.isLoadData = true;
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
-      vm.dataBase.skuvalues = [];
-      vm.dataBase.motobrandids = [];
       vm.dataBase.mainphoto = [];
+      vm.dataBase.items = [];
     }
 
     function getCate(parentid, cateid) {
@@ -242,6 +271,55 @@
       return str;
     }
 
+    /**
+     * 属性添加
+     * @type {{}}
+     */
+    vm.skuvalues = {
+      store: [],
+      handler: function (data) {
+        console.log('属性添加', data);
+        if (data.status == 0) {
+          vm.dataBase.items.push({
+            skuvalues: data.data,
+            attrvalues: vm.dataBase.$$attrvalues,
+            status: "1",
+            $$skuname: getSkuname(data.data)
+          });
+        }
+      }
+    };
+
+    function getSkuname(name){
+      var result = "";
+      var num = 10;
+      if(!name){
+        return name;
+      }
+      if(angular.isString(name)){
+        name = JSON.parse(name);
+      }
+      var result = "";
+      if(angular.isArray(name)){
+        angular.forEach(name, function (item) {
+          result += item.skuname + "/"
+        });
+      }
+      result = result.substring(0, result.length - 1);
+      if(result.length > num){
+        result = result.substring(0, num);
+        if(result.lastIndexOf("/") === num - 1){
+          result = result.substring(0, result.length - 1);
+        }
+        result += " 等";
+      }
+      console.log(result, result.length);
+
+    }
+
+
+    getSkuname([{"guid":0,"id":12,"items":[{"guid":0,"id":57,"skuid":12,"skuvalue":"15寸","sort":1}],"skuname":"轮胎尺寸","skutype":"text","sort":0},{"guid":0,"id":14,"items":[{"guid":0,"id":68,"skuid":14,"skuvalue":"155","sort":1}],"skuname":"胎面宽度","skutype":"text","sort":0},{"guid":0,"id":13,"items":[{"guid":0,"id":63,"skuid":13,"skuvalue":"防爆轮胎","sort":1}],"skuname":"轮胎类型","skutype":"text","sort":0}])
+
     function getBrandname(data, id) {
       var item = _.remove(data, function (item) {
         return item.id == id;
@@ -261,6 +339,7 @@
         return item[value] == id;
       });
     };
+
     vm.brandModel = {
       select: undefined,
       store: [],
@@ -269,6 +348,7 @@
         console.log('brandModel', data);
       }
     };
+
     vm.selectModel2 = {
       select: undefined,
       store: [],
@@ -285,10 +365,11 @@
 
     function getAttrsku(id, callback) {
       productGoods.attrsku({id: id}).then(function (data) {
+        console.log(data);
         vm.brandModel.store = data.data.data.brand;
         vm.skuData = angular.copy(data.data.data.sku);
-        vm.sizeModel.store = angular.copy(data.data.data.sku);
-        vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
+        vm.skuvalues.store = angular.copy(data.data.data.sku);
+        vm.dataBase.$$attrvalues = data.data.data.attributeset[0].id;
         if (!callback) {
           vm.dataBase.brandid = undefined;
           vm.brandModel.select = undefined;
@@ -308,6 +389,7 @@
         console.log(vm.selectModel2.store);
       }
     };
+
     vm.sizeModel = {
       store: [],
       data: [],
@@ -318,6 +400,7 @@
         vm.sizeModel.data = data.data;
       }
     };
+
     function setTwoCategorie(id, cateid, unit) {
       if (!!getData(vm.selectModel.store, id)) {
         vm.selectModel2.store = getData(vm.selectModel.store, id).items;
@@ -335,22 +418,10 @@
      */
     function getDataBase(data) {
       var result = angular.extend({}, data);
-      result.productname = encodeURI(result.productname);
-      result.abstracts = encodeURI(result.abstracts);
-      angular.forEach(result.skuvalues, function (item) {
-        item.skuname = encodeURI(item.skuname);
-        item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
+      angular.forEach(result.items, function (item) {
+        item.skuvalues = JSON.stringify(item.skuvalues);
+        item.stock || (item.stock = -9999);
       });
-      /**
-       * 暂时屏蔽 官方指导价（￥）
-       * 防止后台出bug
-       */
-      result.officialprice = 0;
-      /**
-       * 防止后台数据出bug start
-       */
-      result.motobrandids.push({});
-      result.skuvalues.push({});
       /**
        * 防止后台数据出bug end
        */
@@ -361,6 +432,8 @@
       }
       delete result.$unit;
       delete result.$size;
+      console.log(JSON.stringify(result));
+
       return result;
     }
 
@@ -371,7 +444,7 @@
      */
     function setDataBase(data) {
       var result = angular.extend({}, data);
-      result.mainphoto = [result.mainphoto];
+      result.mainphoto = angular.isArray(result.mainphoto) ? result.mainphoto.join(",") : result.mainphoto;
       result.$unit = result.unit;
       vm.selectModel2.select = result.cateid;
       vm.brandModel.select = result.brandid;
@@ -401,21 +474,21 @@
      */
     vm.submit = function () {
       /*if (!vm.sizeModel.data.length) {
-        cbAlert.alert('您要至少选择一项规格');
-        return;
-      }
-      if (!vm.sizeModel.every) {
-        cbAlert.alert('规格对应的值没有选择');
-        return;
-      }
-      if (!vm.dataBase.mainphoto.length) {
-        cbAlert.alert('您需要上传一张商品图片');
-        return;
-      }
-      if (!vm.dataBase.motobrandids.length) {
-        cbAlert.alert('您还没有选择适用车型');
-        return;
-      }*/
+       cbAlert.alert('您要至少选择一项规格');
+       return;
+       }
+       if (!vm.sizeModel.every) {
+       cbAlert.alert('规格对应的值没有选择');
+       return;
+       }
+       if (!vm.dataBase.mainphoto.length) {
+       cbAlert.alert('您需要上传一张商品图片');
+       return;
+       }
+       if (!vm.dataBase.motobrandids.length) {
+       cbAlert.alert('您还没有选择适用车型');
+       return;
+       }*/
       productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
         console.log('save', data);
         if (data.data.status == 0) {

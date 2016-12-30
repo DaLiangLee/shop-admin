@@ -34,6 +34,8 @@
             .when('/product/goods/', '/product/goods/list/')
             .when('/product/goods/list', '/product/goods/list/1')
             .when('/product/goods/list/', '/product/goods/list/1')
+            .when('/product/goods/list/1', '/product/goods/list/1/0')
+            .when('/product/goods/list/1/', '/product/goods/list/1/0')
             .when('/product/server', '/product/server/list/')     // 产品管理
             .when('/product/server/', '/product/server/list/')
             .when('/product/server/list', '/product/server/list/1')
@@ -216,7 +218,7 @@
                 }
             })
             .state('product.goods.list', {     // 商品管理
-                url: '/list/:page',
+                url: '/list/:page/:remove',
                 templateUrl: 'app/pages/product_goods/list.html',
                 controller: 'ProductGoodsListController',
                 controllerAs: 'vm',

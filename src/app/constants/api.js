@@ -113,6 +113,14 @@
                     "getProductSkus": {
                       "url": "/product/goods/getProductSkus",
                       "type": "POST"
+                    },
+                    "updateProductSku": {
+                      "url": "/product/goods/updateProductSku",
+                      "type": "POST"
+                    },
+                    "resetProductSku": {
+                      "url": "/product/goods/resetProductSku",
+                      "type": "POST"
                     }
                   },
                   "server": {

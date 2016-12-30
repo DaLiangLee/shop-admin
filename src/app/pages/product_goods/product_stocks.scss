@@ -1,0 +1,17 @@
+.viewFramework-add-skuvalues-dialog {
+  .skuname {
+    vertical-align: top;
+    line-height: 36px;
+  }
+  .table > tbody > tr > td{
+    border: none;
+    border-bottom: 1px dotted #ccc;
+  }
+  .skuvalue {
+  }
+  .valuelist {
+    width: 200px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+}
