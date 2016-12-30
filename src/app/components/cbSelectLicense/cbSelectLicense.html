@@ -7,7 +7,7 @@
       <div simple-select="name,name" store="selectModel2.store" select="selectModel2.select" select-handler="selectModel2.handler(data)"></div>
     </div>
     <div class="pull-left">
-      <input type="text" class="form-control ng-scope ng-pristine ng-invalid ng-invalid-required" ng-model="selectModel3.text" name="stock" placeholder="请输入车牌号码" cb-placeholder="">
+      <input type="text" class="form-control ng-scope ng-pristine ng-invalid ng-invalid-required" ng-model="selectModel3.text" name="stock" placeholder="请输入车牌号码" cb-placeholder="" ng-blur="selectModel3.handler()">
     </div>
   </div>
 </div>

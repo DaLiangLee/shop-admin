@@ -11,11 +11,11 @@
         .controller('UserCustomerAddController', UserCustomerAddController);
 
     /** @ngInject */
-    function UserCustomerListController($state, cbAlert, userCustomer, userCustomerConfig) {
+    function UserCustomerListController($state, cbAlert, userCustomer, userCustomerConfig, userMotorConfig) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
-      var currentParams = $state.params;
+      var currentParams = angular.extend({}, $state.params, {pageSize: 5});
 
       /**
        * 表格配置
@@ -28,17 +28,47 @@
         loadingState: true,      // 加载数据
         pageChanged: function (data) {    // 监听分页
           var page = angular.extend({}, currentParams, {page: data});
-          $log.debug('updateGridPaginationInfo', page);
-          //console.log(page);
           $state.go(currentStateName, page);
+        },
+        selectHandler: function(item){
+          console.log(item);
+          getMotor(item.mobile);
         }
       };
 
       userCustomer.grades().then(function (results) {
         console.log(results);
-
       });
-
+      vm.gridModel2 = {
+        columns: angular.copy(userMotorConfig.DEFAULT_GRID.columns),
+        itemList: [],
+        config: {
+          'settingColumnsSupport': false,   // 设置表格列表项
+          'checkboxSupport': true,  // 是否有复选框
+          'sortSupport': true,
+          'paginationSupport': false,  // 是否有分页
+          'selectedProperty': "selected",  // 数据列表项复选框
+          'selectedScopeProperty': "selectedItems",
+          'useBindOnce': true  // 是否单向绑定
+        },
+        loadingState: true      // 加载数据
+      };
+      function getMotor(mobile){
+        vm.gridModel2.loadingState = true;
+        userCustomer.getMotors({mobile: mobile}).then(function(results){
+          var result = results.data;
+          if (result.status == 0) {
+            return result.data;
+          } else {
+            cbAlert.error("错误提示", result.rtnInfo);
+          }
+        }, function (data) {
+          $log.debug('getListError', data);
+        }).then(function(result){
+          vm.gridModel2.itemList = result;
+          vm.gridModel2.loadingState = false;
+        });
+      }
 
       /**
        * 获取员工列表
@@ -57,18 +87,31 @@
             if (!result.data.length && currentParams.page != 1) {
               $state.go(currentStateName, {page: 1});
             }
-            vm.gridModel.itemList = result.data;
-            vm.gridModel.paginationinfo = {
-              page: currentParams.page * 1,
-              pageSize: 10,
-              total: result.totalCount
-            };
-            vm.gridModel.loadingState = false;
+            var items = [];
+            _.forEach(result.data, function(item){
+              item.gradename = _.find(result.usergrades, function(key){
+                return key.guid === item.storegrade;
+              }).gradename;
+              items.push(item);
+            });
+            return {
+              items: items,
+              totalCount: result.totalCount
+            }
           } else {
             cbAlert.error("错误提示", result.rtnInfo);
           }
         }, function (data) {
           $log.debug('getListError', data);
+        }).then(function(result){
+          vm.gridModel.itemList = result.items;
+          vm.gridModel.paginationinfo = {
+            page: currentParams.page * 1,
+            pageSize: currentParams.pageSize,
+            total: result.totalCount
+          };
+          getMotor(result.items[0].mobile);
+          vm.gridModel.loadingState = false;
         });
       }
 
@@ -125,7 +168,7 @@
 
 
   /** @ngInject */
-  function UserCustomerChangeController($state, cbAlert, userCustomer, userCustomerConfig) {
+  function UserCustomerChangeController($state, $q, cbAlert, userCustomer, vehicleSelection) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -133,35 +176,57 @@
     vm.isLoadData = false;
     vm.dataBase = {};
     vm.dataLists = [];
-    userCustomer.getUser(currentParams).then(function(results){
-      console.log(results);
-      var result = results.data;
-      if (result.status == 0) {
 
-        if(!result.data){
+    vm.insuranceModel = {
+
+    };
+
+
+    $q.all([userCustomer.grades(), userCustomer.getUser(currentParams), userCustomer.getMotors(currentParams)]).then(function(results){
+      var grades = results[0].data,
+          getUser = results[1].data,
+          getMotors = results[2].data;
+      console.log(grades, getUser);
+
+      if(getUser.status == 0 && grades.status == 0){
+        if(!getUser.data){
           vm.dataBase.username =  currentParams.mobile;
           vm.dataBase.mobile =  currentParams.mobile;
         }else{
-          vm.dataBase = angular.copy(result.data);
+          vm.dataBase = angular.copy(getUser.data);
+          vm.dataBase.$$gradename = _.find(grades.data, function(item){
+            return item.guid === vm.dataBase.storegrade;
+          }).gradename;
         }
         vm.isLoadData = true;
+      }else {
+        if(grades.status != 0){
+          cbAlert.error("错误提示", grades.rtnInfo);
+        }
+        if(getUser.status != 0){
+          cbAlert.error("错误提示", getUser.rtnInfo);
+        }
+      }
+
+      if (getMotors.status == 0) {
+        vm.dataLists = angular.copy(getMotors.data);
+        showMotor(vm.dataLists[0]);
       } else {
         cbAlert.error("错误提示", result.rtnInfo);
       }
+
     });
 
-    userCustomer.getMotors(currentParams).then(function(results){
+    vehicleSelection.insurances().then(function(results){
       var result = results.data;
       if (result.status == 0) {
-        vm.dataLists = angular.copy(result.data);
-        showMotor(vm.dataLists[0]);
+        vm.insuranceModel.store = angular.copy(result.data);
       } else {
         cbAlert.error("错误提示", result.rtnInfo);
       }
     });
 
     vm.currentSelect = function ($event, item) {
-
       if(item.guid === vm.item.guid){
         return ;
       }
@@ -178,17 +243,40 @@
       vm.item = item;
     }
 
-
-    function getUserData(){
-      var user = {};
-      user = angular.extend({}, vm.dataBase);
-
-      return user;
-    }
+    vm.vehicleHandler = function(data){
+      console.log(data);
+      if(data.type === 'add'){
+        vm.dataLists.push(data.data);
+        showMotor(vm.dataLists[vm.dataLists.length-1]);
+      }
+    };
 
     vm.submitBtn = function(){
-      userCustomer.add(getUserData()).then(function (results) {
-
+      userCustomer.add(vm.dataBase).then(function (results) {
+        var result = results.data;
+        if (result.status == 0) {
+          var motors = _.filter(vm.dataLists, function(item){
+            return angular.isUndefined(item.guid);
+          });
+          _.forEach(motors, function(item){
+            item.userId = result.data;
+          });
+          return motors;
+        } else {
+          cbAlert.error("错误提示", result.rtnInfo);
+        }
+      }).then(function(results){
+        if(!results.length){
+          $state.go('user.customer.list', {'page': 1});
+        }
+        userCustomer.addMotors(results).then(function (results) {
+          var result = results.data;
+          if (result.status == 0) {
+            $state.go('user.customer.list', {'page': 1})
+          } else {
+            cbAlert.error("错误提示", result.rtnInfo);
+          }
+        });
       });
     }
   }

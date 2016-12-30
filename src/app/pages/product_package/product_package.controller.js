@@ -106,6 +106,8 @@
         console.log(1);
 
       }
+
+      vm.number = 10000;
     }
 
 })();

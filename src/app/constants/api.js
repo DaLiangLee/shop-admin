@@ -59,7 +59,7 @@
                 "product": {
                   "goods": {
                     "list": {
-                      "url": "/product/goods",
+                      "url": "/product/goods/list",
                       "type": "GET"
                     },
                     "add": {
@@ -108,6 +108,10 @@
                     },
                     "category": {
                       "url": "/product/goods/category",
+                      "type": "POST"
+                    },
+                    "getProductSkus": {
+                      "url": "/product/goods/getProductSkus",
                       "type": "POST"
                     }
                   },
@@ -270,12 +274,20 @@
                         "url": "/users/add",
                         "type": "POST"
                       },
+                      "addMotors": {
+                        "url": "/users/add/motors",
+                        "type": "POST"
+                      },
                       "userList": {
                         "url": "/users/list",
                         "type": "GET"
                       },
                       "motorList": {
                         "url": "/users/motor/list",
+                        "type": "GET"
+                      },
+                      "byMotor": {
+                        "url": "/users/byMotor",
                         "type": "GET"
                       },
                       "grades": {
@@ -463,6 +475,10 @@
                     },
                     "prefix": {
                       "url": "/public/motor/prefix",
+                      "type": "GET"
+                    },
+                    "insurances": {
+                      "url": "/public/insurances",
                       "type": "GET"
                     }
                   }

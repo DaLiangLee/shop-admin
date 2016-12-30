@@ -1,0 +1,19 @@
+.k-simple-editable{
+  display: inline-block;
+  vertical-align: middle;
+  .editable-panel{
+    display: none;
+    .form-control{
+
+    }
+  }
+  &.open{
+    position: absolute;
+    .editable-panel{
+      display: block;
+    }
+    .editable{
+      display: none;
+    }
+  }
+}

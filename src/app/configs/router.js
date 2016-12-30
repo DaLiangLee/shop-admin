@@ -589,8 +589,8 @@
                 sectionid: 70002
               }
             })
-            /*.state('user.customer.add2', {      // 新增会员
-              url: '/add/:mobile',
+            .state('user.customer.edit', {      // 新增会员
+              url: '/edit/:mobile',
               templateUrl: 'app/pages/user_customer/change.html',
               controller: 'UserCustomerChangeController',
               controllerAs: 'vm',
@@ -600,7 +600,7 @@
                 category: "user",
                 sectionid: 70002
               }
-            })*/
+            })
             .state('user.comment', {      // 评价管理
                 url: '/comment',
                 template: '<div ui-view></div>',
@@ -637,6 +637,28 @@
               url: '/list',
               templateUrl: 'app/pages/user_grade/list.html',
               controller: 'UserGradeListController',
+              controllerAs: 'vm',
+              title: '会员等级',
+              permission: {
+                parentid: 70000,
+                category: "user",
+                sectionid: 70001
+              }
+            })
+            .state('user.motor', {      // 会员等级
+              url: '/motor',
+              template: '<div ui-view></div>',
+              title: '会员管理',
+              permission: {
+                parentid: 7,
+                category: "user",
+                sectionid: 70000
+              }
+            })
+            .state('user.motor.list', {      // 会员等级列表
+              url: '/list/:page',
+              templateUrl: 'app/pages/user_motor/list.html',
+              controller: 'UserMotorListController',
               controllerAs: 'vm',
               title: '会员等级',
               permission: {

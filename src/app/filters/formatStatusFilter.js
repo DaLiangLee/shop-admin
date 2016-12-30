@@ -95,6 +95,10 @@
       },
       "gradeDiscount": {
         "10": "无折扣"
+      },
+      "followed": {
+        "0": "未关注",
+        "1": "已关注"
       }
     })
     .filter('formatStatusFilter', formatStatusFilter);

@@ -166,7 +166,7 @@
             statusShow = statusShow.substring(0, statusShow.length - 1) +　"}";
             var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";
             var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
-            return '<tbody ng-if="!loadingState"><tr '+statusShowClass+' '+bindonce+' '+ columnsClass +' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
+            return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" '+statusShowClass+' '+bindonce+' '+ columnsClass +' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
         }
         function tFootConfig(scope){
             var node = "",btn = "",page = "",config = scope.config;
@@ -243,7 +243,8 @@
                 paginationInfo: "=",  // 分页配置
                 selectionChange: "&",  // 多选单选回调
                 sortChanged: "&",       // 服务端排序回调
-                pageChanged: "&"   // 分页点击回调
+                pageChanged: "&",   // 分页点击回调
+                selectHandler: "&"   // 分页点击回调
             },
             templateUrl: "app/components/simpleGrid/simpleGrid.html",
             controller: ["$scope", function($scope) {
@@ -303,6 +304,8 @@
                     $scope.selectionChangeHandler(results);
                 };
 
+
+
                 // 单选和全选触发事件
                 $scope.selectionChangeHandler = function(item){
                     $scope.config.selectedItems = item;
@@ -313,6 +316,11 @@
                 $scope.pageSelectChanged = function(page){
                     $scope.pageChanged({page:page});
                 };
+
+                // 点击当前项
+                $scope.selectItem = function(item){
+                  $scope.selectHandler({item:item});
+                }
 
             }],
             link: function(scope, iElement){

@@ -27,7 +27,7 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
             "name": '头像',
             "width": 150
           },
@@ -41,7 +41,7 @@
           {
             "id": 3,
             "cssProperty": "state-column",
-            "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.guid})"></a>',
+            "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="user.customer.edit({mobile: item.mobile})"></a>',
             "name": '姓名'
           },
           {
@@ -61,7 +61,7 @@
           {
             "id": 6,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.grade"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.gradename"></span>',
             "name": '等级'
           },
           {
@@ -79,7 +79,7 @@
           {
             "id": 9,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.followed | formatStatusFilter :\'followed\'"></span>',
             "name": '关注状态'
           },
           {

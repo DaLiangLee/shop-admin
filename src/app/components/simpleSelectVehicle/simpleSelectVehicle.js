@@ -20,7 +20,8 @@
   function simpleSelectVehicle($filter, $timeout, $window, vehicleSelection) {
     function getSeriesTitle(collection, target){
       var regular = new RegExp('^'+target);
-      return regular.test(collection) ? collection : collection + " " + target;
+      console.log(regular.test(collection));
+      return regular.test(collection) ? collection : target + " " + collection;
     }
     /**
      * 设置格式化数据，供页面好操作
@@ -30,19 +31,18 @@
      */
     var setFormatData = function(level, data, item){
       console.log('setFormatData', level, data, item);
-
       _.forEach(data, function(value){
-        value.level = level;
-        if(!value.title && value.level == 1){
-          value.title = value.brand;
-        }else if(!value.title && value.level == 2){
-          value.title = getSeriesTitle(value.series, item.brand);
-        }else if(!value.title && value.level == 3){
-          value.title = item.title +" "+ value.year;
-        }else if(!value.title && value.level == 4){
-          value.title = item.title +" "+ value.output;
-        }else if(!value.title && value.level == 5){
-          value.title = value.model;
+        value.$$level = level;
+        if(!value.$$title && value.$$level == 1){
+          value.$$title = value.brand;
+        }else if(!value.$$title && value.$$level == 2){
+          value.$$title = getSeriesTitle(value.series, item.brand);
+        }else if(!value.$$title && value.$$level == 3){
+          value.$$title = item.$$title +" "+ value.year;
+        }else if(!value.$$title && value.$$level == 4){
+          value.$$title = item.$$title +" "+ value.output;
+        }else if(!value.$$title && value.$$level == 5){
+          value.$$title = value.model;
         }
         if(angular.isUndefined(value.logo)){
           value.logo = item.logo;
@@ -53,77 +53,45 @@
         if(angular.isUndefined(value.brand)){
           value.brand = item.brand;
         }
-        if(angular.isUndefined(value.brandid) && value.level == 1){
+        if(angular.isUndefined(value.brandid) && value.$$level == 1){
           value.brandid = value.id;
         }else{
           value.brandid = item.brandid;
         }
-        if(angular.isUndefined(value.seriesid) && value.level > 1){
+        if(angular.isUndefined(value.seriesid) && value.$$level > 1){
           if(item && item.seriesid){
             value.seriesid = item.seriesid
           }else{
             value.seriesid = value.id;
           }
         }
-        if(angular.isUndefined(value.series) && value.level > 1){
+        if(angular.isUndefined(value.series) && value.$$level > 1){
           value.series = item.series;
         }
-        if(angular.isUndefined(value.yearid) && value.level > 2){
+        if(angular.isUndefined(value.yearid) && value.$$level > 2){
           if(item && item.yearid){
             value.yearid = item.yearid
           }else{
             value.yearid = value.id;
           }
         }
-        if(angular.isUndefined(value.year) && value.level > 2){
+        if(angular.isUndefined(value.year) && value.$$level > 2){
           value.year = item.year;
         }
-        if(angular.isUndefined(value.outputid) && value.level > 3){
+        if(angular.isUndefined(value.output) && value.$$level > 3){
+          value.output = item.output;
+        }
+        if(angular.isUndefined(value.outputid) && value.$$level > 3){
           if(item && item.outputid){
             value.outputid = item.outputid
           }else{
             value.outputid = value.id;
-          }
-          if(angular.isUndefined(value.output)){
-            value.output = item.output;
           }
         }
       });
       return data;
     };
 
-    /**
-     * 根据等级来定义删除项
-     * @param item     当前项
-     * @param key      列表当前项
-     * @param level    当前等级
-     */
-    var isRemoveChecked = function(item, key, level){
-      return {
-        "1": key.brandid == item.brandid && angular.isUndefined(key.seriesid),
-        "2": key.brandid == item.brandid && key.seriesid == item.seriesid && angular.isUndefined(key.year),
-        "3": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && angular.isUndefined(key.outputid),
-        "4": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && angular.isUndefined(key.modelid),
-        "5": key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid && key.modelid == item.modelid
-      }[level];
-    };
-
-    /**
-     * 是否可以添加
-     * @param item
-     * @param key
-     * @param level
-     * @returns {*}
-     */
-    var isAddChecked = function (item, key, level) {
-      return {
-        1: key.brandid == item.brandid,
-        2: key.brandid == item.brandid,
-        3: key.brandid == item.brandid && key.seriesid == item.seriesid,
-        4: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year,
-        5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
-      }[level];
-    };
     return {
       restrict: "A",
       scope: {
@@ -146,17 +114,16 @@
           list = data.data.data;
           scope.brandList = setFormatData(1, data.data.data);
           scope.list = [];
-          if (!angular.isUndefined(scope.select)) {
-            if(angular.isArray(scope.select)){
-              getSelect(scope.select);
-            }else{
-              getSelect($window.eval(decodeURI(scope.select)));
-            }
-          }
+          scope.select && getSelect(scope.select);
         });
 
 
+        /**
+         * 设置数据
+         */
+        function getSelect() {
 
+        }
 
         /**
          * 设置列表
@@ -244,7 +211,7 @@
               key.$$open = false;
             });
             console.log(6,item);
-            scope.select = getResults(item);
+            scope.select = item;
           }else{
             _.forEach(clearSubkeys[type](), function (key) {
               key.$$open = false;
@@ -256,7 +223,7 @@
               loadingSubData(level, item, type, listType);
             }
           }
-          scope.selectitle = item.title;
+          scope.selectitle = item.$$title;
           item.$$open = !item.$$open;
         };
 
@@ -265,15 +232,14 @@
          * @param data
          */
         function getResults(data) {
-          var result = {};
+          var result = angular.copy(data);
           /*_.forEach(data, function (item) {
             if (!brand[item.brandid]) {
               brand[item.brandid] = [];
             }
             brand[item.brandid].push(item);
           });*/
-          console.log(data);
-
+          console.log(result);
           return result;
         }
       }

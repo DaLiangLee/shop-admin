@@ -20,6 +20,8 @@
   {{vm.checked.handler()}}
   <div cb-switch checked="vm.checked.checked" change-handler="vm.checked.handler(vm.checked.checked)"></div>
 -->
-  <div simple-select-vehicle="" item="" item-handler=""></div>
-
+  <!--<div simple-select-vehicle="" select="vm.select"></div>-->
+  <div style="width: 300px;">
+    {{vm.number}} <span simple-editable="money" editor="vm.number"></span>
+  </div>
 </div>

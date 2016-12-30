@@ -1,0 +1,15 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title">选择车辆</h5>
+  </div>
+  <div class="modal-body">
+    <div simple-select-vehicle="" select="select"></div>
+  </div>
+  <div class="modal-footer">
+    <div class="inline-block margin-right">
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!select.modelid">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
+  </div>
+</div>

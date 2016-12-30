@@ -14,7 +14,7 @@
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = $state.params;
+    var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     var total = 0;
 
     /**
@@ -123,6 +123,24 @@
       }
     };
 
+    /**
+     * 表格配置
+     */
+    vm.gridModel2 = {
+      editorhandler: function (data) {
+        console.log(data);
+      }
+    };
+
+
+    function getProductSkus(id){
+      productGoods.getProductSkus({id:id}).then(function(results){
+        vm.items = results.data.data;
+      });
+    }
+
+
+
     // 获取权限列表
     function getList() {
       /**
@@ -136,7 +154,7 @@
           if (!data.data.data.length && currentParams.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
-          total = data.data.count;
+          total = data.data.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(data.data.data, function (item) {
             /**
@@ -151,10 +169,11 @@
           });
           vm.gridModel.paginationinfo = {
             page: currentParams.page * 1,
-            pageSize: 10,
+            pageSize: currentParams.pageSize,
             total: total
           };
           vm.gridModel.loadingState = false;
+          getProductSkus(vm.gridModel.itemList[0].guid);
         }
       }, function (data) {
         $log.debug('getListError', data);
@@ -381,7 +400,7 @@
      * 表单提交
      */
     vm.submit = function () {
-      if (!vm.sizeModel.data.length) {
+      /*if (!vm.sizeModel.data.length) {
         cbAlert.alert('您要至少选择一项规格');
         return;
       }
@@ -396,7 +415,7 @@
       if (!vm.dataBase.motobrandids.length) {
         cbAlert.alert('您还没有选择适用车型');
         return;
-      }
+      }*/
       productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
         console.log('save', data);
         if (data.data.status == 0) {
