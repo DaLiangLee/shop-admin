@@ -10,12 +10,13 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($window, $state, $log, $timeout, utils, productGoods, productGoodsConfig, cbAlert) {
+  function ProductGoodsListController($window, $state, $log, $timeout, utils, productGoods, productGoodsConfig, cbAlert, webSiteApi) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     console.log($state.params);
+
 
     var total = 0;
 
@@ -25,11 +26,31 @@
     vm.gridModel = {
       columns: angular.copy(productGoodsConfig.DEFAULT_GRID.columns),
       itemList: [],
+      requestParams: {
+        params: currentParams,
+        request: "http://localhost:3000/shopservice/admin/product/goods/excelProduct"
+      },
       config: angular.copy(productGoodsConfig.DEFAULT_GRID.config),
       loadingState: true,      // 加载数据
       pageChanged: function (data) {    // 监听分页
         var page = angular.extend({}, currentParams, {page: data});
         $state.go(currentStateName, page);
+      },
+      sortChanged: function(data){
+        var orders = [];
+        angular.forEach(data.data, function(item, key){
+          orders.push({
+            "field": key,
+            "direction": item
+          });
+        });
+        var order = angular.extend({}, currentParams, {orders: JSON.stringify(orders)});
+        vm.gridModel.requestParams.params = order;
+        getList(order);
+      },
+      selectHandler: function(item){
+        console.log(item);
+        getProductSkus(item.guid);
       }
     };
     /*productGoods.category().then(function (data) {
@@ -40,88 +61,213 @@
      *
      */
     vm.gridModel.config.propsParams = {
+      currentStatus: currentParams.remove,
       removeItem: function (data) {
+        console.log(data);
         if (data.status == 0) {
-          /**
-           * 删除单页
-           */
-          var item = null;
-          if (data.removal.length == 1) {
-            item = {
-              productid: data.removal[0].productid,
-              pskuid: data.removal[0].pskuid
-            }
-          }
-          productGoods.remove(item).then(function (results) {
+          productGoods.deleteProduct(data.transmit).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.tips("删除成功");
             } else {
               cbAlert.error("错误提示", results.data.rtnInfo);
             }
-            getList();
+            getList(currentParams);
           }, function (results) {
             $log.debug('removeItemError', results);
           });
         }
-        // if(data.list.length <= 5 && total > 10){
-        //     vm.gridModel.loadingState = true;
-        //     $timeout(function (){
-        //         getList();
-        //     }, 3000);
-        // }
-        //vm.gridModel.itemList = data.list;
-
       },
       statusItem: function (data) {
+        console.log(data);
         if (data.status == 0) {
-          var item = null;
-          if (data.removal.length == 1) {
-            item = {
-              pskuid: data.removal[0].pskuid
-            }
-          }
-          productGoods[data.type](item).then(function (results) {
+          var message = data.type === 'removeProduct' ? "商品下架修改成功" : "商品上架修改成功";
+          productGoods[data.type](data.transmit).then(function (results) {
             if (results.data.status == '0') {
-              cbAlert.tips("商品状态修改成功");
+              cbAlert.tips(message);
             } else {
               cbAlert.error("错误提示", results.data.rtnInfo);
             }
-            getList();
+            getList(currentParams);
           }, function (results) {
             $log.debug('statusItemError', results);
-          });
-
-        }
-      },
-      pricesItem: function (data) {
-        if (data.status == 0) {
-          productGoods.price({
-            pskuid: data.data.pskuid,
-            saleprice: data.data.saleprice
-          }).then(function (results) {
-            if (results.data.status == '0') {
-              cbAlert.tips("调价成功");
-            } else {
-              cbAlert.error("错误提示", results.data.rtnInfo);
-            }
-            getList();
-          }, function (results) {
-            $log.debug('pricesItemError', results);
           });
         }
       }
     };
 
-    var config = angular.copy(productGoodsConfig.DEFAULT_SEARCH.config);
-    config.searchParams = $state.params;
     /**
      * 搜索操作
      *
      */
-    vm.gridSearch = {
-      'config': config,
+    vm.searchModel = {
+      'config': {
+        placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
+        searchDirective: [
+          {
+            label: "类目",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "汽车内饰"
+              },
+              {
+                id: 1,
+                label: "电子导航"
+              },
+              {
+                id: 2,
+                label: "轮胎"
+              },
+              {
+                id: 3,
+                label: "保养配件"
+              },
+              {
+                id: 4,
+                label: "工具"
+              }
+            ],
+            custom: false,
+            type: "list",
+            name: "pcateid1"
+          },
+          {
+            label: "销量",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "自定义"
+              }
+            ],
+            custom: true,
+            type: "number",
+            name: "salenums",
+            start: {
+              name: "salenums0",
+              config: {}
+            },
+            end: {
+              name: "salenums1",
+              config: {}
+            }
+          },
+          {
+            label: "库存",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "自定义"
+              }
+            ],
+            custom: true,
+            type: "number",
+            name: "stock",
+            start: {
+              name: "stock0",
+              config: {}
+            },
+            end: {
+              name: "stock1",
+              config: {}
+            }
+          },
+          {
+            label: "价格",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "自定义"
+              }
+            ],
+            custom: true,
+            type: "number",
+            name: "saleprice",
+            start: {
+              name: "saleprice0",
+              config: {}
+            },
+            end: {
+              name: "saleprice1",
+              config: {}
+            }
+          },
+          {
+            label: "保质期",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "自定义"
+              }
+            ],
+            custom: true,
+            type: "number",
+            name: "shelflife",
+            start: {
+              name: "shelflife0",
+              config: {}
+            },
+            end: {
+              name: "shelflife1",
+              config: {}
+            }
+          },
+          {
+            label: "类目",
+            all: true,
+            list: [
+              {
+                id: undefined,
+                label: "全部"
+              },
+              {
+                id: 0,
+                label: "自定义"
+              }
+            ],
+            custom: true,
+            type: "date",
+            name: "date",
+            start: {
+              name: "date0",
+              config: {}
+            },
+            end: {
+              name: "date1",
+              config: {}
+            }
+          }
+        ]
+      },
       'handler': function (data) {
-        $log.debug(data)
+        $log.debug(data);
+        var search = angular.extend({}, currentParams, data);
+        vm.gridModel.requestParams.params = search;
+        getList(search);
       }
     };
 
@@ -172,45 +318,38 @@
 
 
     // 获取权限列表
-    function getList() {
+    function getList(params) {
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
-      if (!currentParams.page) {
+      if (!params.page) {
         return;
       }
-      productGoods.list(currentParams).then(function (data) {
+      productGoods.list(params).then(function (data) {
         if (data.data.status == 0) {
-          if (!data.data.data.length && currentParams.page != 1) {
+          if (!data.data.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
           total = data.data.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(data.data.data, function (item) {
-            /**
-             * 这段代码处理skuvalues值的问题，请勿修改 start
-             */
-            item.skuvalues = $window.eval(item.skuvalues);
-            item.motobrandids = utils.getMotorbrandids(item.motobrandids);
-            /**
-             * 这段代码处理skuvalues值的问题，请勿修改 end
-             */
             vm.gridModel.itemList.push(item);
           });
           vm.gridModel.paginationinfo = {
-            page: currentParams.page * 1,
-            pageSize: currentParams.pageSize,
+            page: params.page * 1,
+            pageSize: params.pageSize,
             total: total
           };
           vm.gridModel.loadingState = false;
-          getProductSkus(vm.gridModel.itemList[0].guid);
+          !vm.gridModel.itemList.length && (vm.items = undefined);
+          vm.gridModel.itemList[0] && getProductSkus(vm.gridModel.itemList[0].guid);
         }
       }, function (data) {
         $log.debug('getListError', data);
       });
     }
 
-    getList();
+    getList(currentParams);
 
   }
 

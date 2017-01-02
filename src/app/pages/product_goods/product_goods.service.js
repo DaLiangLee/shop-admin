@@ -28,7 +28,8 @@
             "id": 1,
             "name": "类目",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-bind="item.catename"></span>'
+            "fieldDirective": '<span class="state-unread" bo-bind="item.catename"></span>',
+            "field": "catename"
           },
           {
             "id": 2,
@@ -79,10 +80,12 @@
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
           'checkboxSupport': true,  // 是否有复选框
-          'sortSupport': true,
+          'sortSupport': true,     // 排序
+          'sortPrefer': true,     //  服务端排序
           'paginationSupport': true,  // 是否有分页
           'selectedProperty': "selected",  // 数据列表项复选框
           'selectedScopeProperty': "selectedItems",
+          'exportDataSupport': true,
           'useBindOnce': true,  // 是否单向绑定
           'statusShow': [
             {
@@ -101,7 +104,10 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40001" ui-sref="product.goods.add()">+新增商品</button> '
+            '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40001" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0">+新增商品</button> ',
+            '<button class="btn btn-warning" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-change-status="removeProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品下架" ng-if="propsParams.currentStatus == 0">批量下架</button> ',
+            '<button class="btn btn-success" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-change-status="resetRemoveProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品上架" ng-if="propsParams.currentStatus == 1">批量上架</button> ',
+            '<button class="btn btn-danger" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">批量删除</button> '
           ]
         }
       },

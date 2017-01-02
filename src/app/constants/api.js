@@ -74,6 +74,18 @@
                       "url": "/product/goods/edit",
                       "type": "POST"
                     },
+                    "removeProduct": {
+                      "url": "/product/goods/removeProduct",
+                      "type": "POST"
+                    },
+                    "resetRemoveProduct": {
+                      "url": "/product/goods/resetRemoveProduct",
+                      "type": "POST"
+                    },
+                    "deleteProduct": {
+                      "url": "/product/goods/deleteProduct",
+                      "type": "POST"
+                    },
                     "putup": {
                       "url": "/product/goods/putup",
                       "type": "POST"
@@ -90,9 +102,9 @@
                       "url": "/product/goods/import",
                       "type": "POST"
                     },
-                    "export": {
-                      "url": "/product/goods/export",
-                      "type": "POST"
+                    "excelProduct": {
+                      "url": "/product/goods/excelProduct",
+                      "type": "GET"
                     },
                     "remove": {
                       "url": "/product/goods/remove",

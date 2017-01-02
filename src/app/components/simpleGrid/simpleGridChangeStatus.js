@@ -8,74 +8,6 @@
 
     .directive('simpleGridChangeStatus', simpleGridChangeStatus);
 
-
-  /*function simpleGridChangeStatus(){
-    return {
-      restrict: "A",
-      replace: true,
-      scope: {
-        item: "=",
-        list: "=",
-        changeStatus: "&"
-      },
-      link: function(scope, iElement, iAttrs){
-        iElement.on('click',function(){
-          var results = [],     // 返回结果
-            items,     // 返回当前修改的项目，和后台交互
-            mark = iAttrs.simpleGridChangeStatus || "id",    // 用来比较查找的对象
-            data = angular.copy(scope.item),   // 获取要修改的项目
-            statusText = iAttrs.statusText,   // 改变状态字段
-            statusCode = scope.$eval(iAttrs.statusCode);   // 改变状态的数值，返回一个数组，批量操作是一个数值，单个操作是两个值
-
-          if(angular.isArray(data)){  // 批量操作
-            if(!data.length){
-              return false;
-            }
-            items = [];
-            angular.forEach(data, function (value) {
-              if(value.selected){
-                value[statusText] = statusCode[0];
-                items.push(value);
-              }
-            });
-            if(!items.length){   //没有勾选项
-              return false;
-            }
-            results = data;
-          }else if(angular.isObject(data)){  // 单个操作
-            var list = angular.copy(scope.list);
-            if(!angular.isArray(list)) {  // 如果不是数组就返回 防止下面操作报错
-              return ;
-            }
-            angular.forEach(list, function (value) {
-              if(value[mark] === data[mark]){
-                if(value[statusText] === statusCode[0]){
-                  value[statusText] = statusCode[1];
-                }else{
-                  value[statusText] = statusCode[0];
-                }
-              }
-            });
-            results = list;
-            data[statusText] === statusCode[0] ? statusCode[1] : statusCode[0];
-            items = data;
-          }else{
-            throw Error('传递参数不对');
-          }
-          scope.$apply(function(){
-            scope.changeStatus({
-              data: {
-                list: results,
-                item: items
-              }
-            });
-          });
-        })
-      }
-    }
-  }  */
-
-
   /** @ngInject */
   function simpleGridChangeStatus($log, cbDialog){
     /**
@@ -163,7 +95,6 @@
              * 批量操作
              * 直接获取已删除的项，把id添加到transmit当中
              */
-            $log(removal, leftover);
             _.forEach(removal, function(value){
               transmit.push(value[mark]);
             });

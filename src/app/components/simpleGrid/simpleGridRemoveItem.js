@@ -8,7 +8,7 @@
     .directive('simpleGridRemoveItem', simpleGridRemoveItem);
 
   /** @ngInject */
-  function simpleGridRemoveItem($log, cbDialog){
+  function simpleGridRemoveItem(cbDialog){
     // REMOVE_MESSAGE
     /**
      * 删除逻辑
@@ -69,10 +69,10 @@
         function handler(childScope){
           childScope.config = {
             title: "删除操作提示",
-            message: "删除此项后，会影响其他账号权限，您确定要删除吗？",
+            message: iAttrs.message || "删除此项后，会影响其他账号权限，您确定要删除吗？",
             messageClass: "text-danger",
-            confirmText: "确定删除",
-            closeText: "暂不删除"
+            confirmText: "确定",
+            closeText: "取消"
           };
           childScope.confirm = function () {
             remove();

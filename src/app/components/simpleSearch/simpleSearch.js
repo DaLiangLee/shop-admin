@@ -5,7 +5,7 @@
  * simpleSearch是一个通用的表格组件搜索筛选
  * 包括表格
  * config  全局配置参数     必填
- * searchPreHandler  事件回调 返回搜索信息 必填
+ * searchHandler  事件回调 返回搜索信息 必填
  *
  * config    全局配置参数
  *    searchParams    绑定的搜索对象
@@ -91,7 +91,7 @@
                     $scope.searchPreHandler({data: searchParams});
                     $scope.searchHandler({data: searchParams});
                 };
-                $scope.cancel = function () {
+                /*$scope.cancel = function () {
                     var page = angular.copy($scope.searchParams);
                     angular.forEach(page, function (value, key) {
                         if(key !== 'page'){
@@ -101,7 +101,7 @@
                     $scope.searchParams = page;
                     $scope.searchPreHandler({data: $scope.searchParams});
                     $scope.searchHandler({data: $scope.searchParams});
-                };
+                };*/
             }]
         }
     }

@@ -1,49 +1,59 @@
 <div>
-    <div class="searchSection">
-        <form class="form-horizontal f-cb" autocomplete="off" ng-submit="setSearch()">
-            <div class="form-group col-sm-4" ng-repeat="item in items">
-                <label for="{{searchID}}-{{item.$$hashKey}}" class="col-sm-3 control-label">{{item.label}}：</label>
-                <div class="col-sm-9">
-
-                    <input type="text" class="form-control" id="{{searchID}}-{{item.$$hashKey}}" ng-if="item.type === 'text'" ng-model="searchParams[item.searchText]" placeholder="{{item.placeholder}}">
-
-                    <div  ng-if="item.type === 'select'" simple-select="{{item.value}},{{item.name}}" store="item.list" select="searchParams[item.searchText]"></div>
-                    <div class="row" ng-if="item.type === 'select2'">
-                        <div class="col-sm-6">
-                            <div simple-select="{{item.data[0].value}},{{item.data[0].name}}" store="item.data[0].list" select="searchParams[item.data[0].searchText]"></div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div simple-select="{{item.data[1].value}},{{item.data[1].name}}" store="item.data[1].list" select="searchParams[item.data[1].searchText]"></div>
-                        </div>
-                    </div>
-                    <div class="row" ng-if="item.type === 'date'">
-                        <div class="col-sm-6">
-                            <p class="input-group">
-                                <input type="text" id="{{searchID}}-{{item.$$hashKey}}" class="form-control" datepicker-popup="{{item.data[0].format}}" ng-model="searchParams[item.data[0].searchText]" is-open="item.data[0].opened" datepicker-options="dateOptions" close-text="关闭" placeholder="{{item.data[0].placeholder}}" min-date="item.data[0].minDate" max-date="item.data[0].maxDate" datepicker-append-to-body="true" current-text="今天" clear-text="清除" />
-                                <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="item.data[0].opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
-                </span>
-                            </p>
-                        </div>
-                        <span style="position: absolute; width: 10px; height: 2px; background-color: #7d7d7d; left:50%; margin-left: -5px; top: 15px;"></span>
-                        <div class="col-sm-6">
-                            <p class="input-group">
-                                <input type="text" id="{{searchID}}-{{item.$$hashKey}}" class="form-control" datepicker-popup="{{item.data[1].format}}" ng-model="searchParams[item.data[1].searchText]" is-open="item.data[1].opened" datepicker-options="dateOptions" close-text="关闭" alt-input-formats="altInputFormats" placeholder="{{item.data[1].placeholder}}" min-date="item.data[1].minDate" max-date="item.data[1].maxDate" datepicker-append-to-body="true" current-text="今天" clear-text="清除" />
-                                <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="item.data[1].opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
+  <div class="searchSection">
+    <form class="form-horizontal f-cb" autocomplete="off" ng-submit="setSearch()">
+      <div class="form-group">
+        <input type="text" name="" id="" ng-model="searchParams.keyword" placeholder="{{config.placeholder}}">
+        <span>
+                <button>搜索</button>
+              </span>
+        <span class="more" ng-click="openMore()">更多 <i></i></span>
+      </div>
+      <div class="form-group" ng-repeat="item in items">
+        <label for="{{item.$$hashKey}}" class="col-sm-1 control-label">{{item.label}}：</label>
+        <div class="col-sm-9">
+          <div class="list" ng-if="!item.custom">
+            <div class="radio-inline" ng-repeat="list in item.list">
+              <label>
+                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
+                       class="ng-pristine ng-valid">
+                {{list.label}}
+              </label>
             </div>
-            <div class="form-group col-sm-4">
-                <div class="col-sm-offset-3 col-sm-9">
-                    <button type="submit" class="btn btn-success">搜索</button>
-                    <button type="button" class="btn btn-warning" ng-click="cancel()">重置</button>
-                </div>
+          </div>
+          <div class="list" ng-if="item.custom">
+            <div class="radio-inline" ng-repeat="list in item.list">
+              <label>
+                <input type="radio" name="{{item.name}}" ng-model="item.name" ng-value="list.id"
+                       class="ng-pristine ng-valid">
+                {{list.label}}
+              </label>
             </div>
-        </form>
-    </div>
+            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="item.name == 0 && item.type == 'number'">
+              <div class="pull-left" style="width: 200px;">
+                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+              </div>
+              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+              <div class="pull-left" style="width: 200px;">
+                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+              </div>
+            </div>
+            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="item.name == 0 && item.type == 'date'">
+              <div class="pull-left" style="width: 200px;">
+                <div cb-datepicker="" datepicker-options="item.start.config" datepicker-model="searchParams[item.start.name]"></div>
+              </div>
+              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+              <div class="pull-left" style="width: 200px;">
+                <div cb-datepicker="" datepicker-options="item.end.config" datepicker-model="searchParams[item.end.name]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="text-center">
+          <button type="submit" style="width: 300px;" class="btn btn-success">查询</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
