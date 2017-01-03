@@ -1,21 +1,50 @@
 <div class="g-view">
   <div class="container-fluid">
-    <div class="panel panel-default">
-      <div class="panel-heading">服务管理</div>
-      <div class="panel-body">
-        <div simple-search config="vm.gridSearch.config" search-pre-handler="vm.gridSearch.handler(data)"></div>
-      </div>
-    </div>
+    <ul class="list-inline">
+      <li><a ui-sref="product.server.list({page: 1, status: 1})" class="text-muted" ui-sref-active="text-success">在售服务库</a></li>
+      <li><a ui-sref="product.server.list({page: 1, status: 0})" class="text-muted" ui-sref-active="text-success">已下架</a></li>
+    </ul>
+    <div cb-access-control="chebian:store:product:goods:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
 
-    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams" select-handler="vm.gridModel.selectHandler(item)"></div>
+    <div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>类目</th>
+          <th>编码/图片</th>
+          <th>名称</th>
+          <th>保质期（天）</th>
+          <th>序号</th>
+          <th>属性</th>
+          <th>工时</th>
+          <th>单价（元）</th>
+          <th>工时费（元）</th>
+          <th>销量</th>
+          <th>使用车型</th>
+          <th>启用状态</th>
+          <th>描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in vm.items.serverSkus">
+          <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
+          <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><p class="text-center" ng-bind="vm.items.code"></p>
+            <span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></td>
+          <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.servername}}" text-length="10"></span></td>
+          <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
+          <td><span ng-bind="$index+1"></span></td>
+          <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
+          <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime')"></span></td>
+          <td><span class="state-unread" ng-bind="item.serverprice"></span></span></td>
+          <td><span class="state-unread" ng-bind="item.serverprice * item.servertime"></span></span></td>
+          <td>使用车型</td>
+          <td><div cb-switch checked="item.status"
+                   ng-click="vm.gridModel2.statusItem(item)"></div></td>
+          <td><span ng-bind="item.skudescription"></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
-<div ng-if="vm.message.loadingState" cb-message-tips config="vm.message.config"></div>
-<script type="text/ng-template" id="cbSkuvaluesTipsPopoverTemplate.html">
-  <h3 class="h3 text-center">商品规格</h3>
-  <ul class="list-unstyled" style="padding: 0;">
-    <li bindonce ng-repeat="item in templateData">
-      <span bo-text="item.skuname"></span>：<span bo-text="item.items[0].skuvalue"></span>
-    </li>
-  </ul>
-</script>

@@ -108,7 +108,7 @@
 
     // 导出数据
     function exportDataConfig() {
-      return '<a export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span class="glyphicon glyphicon-import">导出数据</span></a>'
+      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span class="glyphicon glyphicon-import">导出数据</span></a>'
     }
 
     // 自定义列表项

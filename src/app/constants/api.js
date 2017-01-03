@@ -137,11 +137,27 @@
                   },
                   "server": {
                     "list": {   // 服务列表
-                      "url": "/product/server",
+                      "url": "/product/server/list",
                       "type": "GET"
                     },
-                    "removeServer": {   //删除服务
-                      "url": "/product/server/removeServer",
+                    "removeServerAll": {   //删除服务
+                      "url": "/product/server/removeServerAll",
+                      "type": "POST"
+                    },
+                    "getServerSkus": {    //获取子sku
+                      "url": "/product/server/getServerSkus",
+                      "type": "POST"
+                    },
+                    "updateServerSku": {   //更新子sku
+                      "url": "/product/server/updateServerSku",
+                      "type": "POST"
+                    },
+                    "removeServers": {   //下架服务
+                      "url": "/product/server/removeServers",
+                      "type": "POST"
+                    },
+                    "resetRemoveServers": {   //上架服务
+                      "url": "/product/server/resetRemoveServers",
                       "type": "POST"
                     },
                     "putdownserver": {   // 暂停服务
@@ -196,9 +212,9 @@
                       "url": "/product/server/pskulist",
                       "type": "POST"
                     },
-                    "export": {  // 导出
-                      "url": "/product/server/export",
-                      "type": "POST"
+                    "excelServer": {  // 导出
+                      "url": "/product/server/excelServer",
+                      "type": "GET"
                     },
                     "import": {   // 导入
                       "url": "/product/server/import",
@@ -378,35 +394,35 @@
                       "url": "/member/employee/changeshow",
                       "type": "POST"
                     }
+                  },
+                  "role": {
+                    "get": {
+                      "url": "/member/role",
+                      "type": "GET"
+                    },
+                    "add": {
+                      "url": "/member/role/add",
+                      "type": "POST"
+                    },
+                    "edit": {
+                      "url": "/member/role/edit",
+                      "type": "POST"
+                    },
+                    "assign": {
+                      "url": "/member/role/assign",
+                      "type": "POST"
+                    },
+                    "remove": {
+                      "url": "/member/role/remove",
+                      "type": "POST"
+                    },
+                    "all": {
+                      "url": "/member/role/all",
+                      "type": "GET"
+                    }
                   }
                 },
                 "system": {
-                    "role": {
-                        "get": {
-                            "url": "/system/role",
-                            "type": "GET"
-                        },
-                        "add": {
-                            "url": "/system/role/add",
-                            "type": "POST"
-                        },
-                        "edit": {
-                            "url": "/system/role/edit",
-                            "type": "POST"
-                        },
-                        "assign": {
-                            "url": "/system/role/assign",
-                            "type": "POST"
-                        },
-                        "remove": {
-                            "url": "/system/role/remove",
-                            "type": "POST"
-                        },
-                        "all": {
-                            "url": "/admin/system/role/all",
-                            "type": "GET"
-                        }
-                    },
                     "modpwd": {
                         "edit": {
                           "url": "/system/modpwd",

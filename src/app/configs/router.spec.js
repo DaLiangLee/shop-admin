@@ -232,7 +232,7 @@ describe('Router test', function () {
    */
   describe('system router', function () {
     beforeEach(inject(function($httpBackend) {
-      $httpBackend.expectGET('app/pages/system_role/list.html').respond('200', 'system_role')
+      $httpBackend.expectGET('app/pages/member_role/list.html').respond('200', 'member_role')
     }));
   });
   it('system', function () {

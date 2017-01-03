@@ -4,7 +4,7 @@
       <li><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted" ui-sref-active="text-success">在售商品库</a></li>
       <li><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted" ui-sref-active="text-success">已下架</a></li>
     </ul>
-    <div simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+    <div cb-access-control="chebian:store:product:goods:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
@@ -40,14 +40,14 @@
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
             <td><span ng-bind="$index+1"></span></td>
             <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
-            <td><span class="state-unread" ng-bind="item.saleprice"></span> <span simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice')"></span></td>
+            <td><span class="state-unread" ng-bind="item.saleprice"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice')"></span></td>
             <td><span class="state-unread"><span ng-bind="item.skusalenum"></span>件</span></td>
-            <td><span class="state-unread"><span ng-bind="item.stock"></span>件</span> <span simple-editable="int" editor="item.stock" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
+            <td><span class="state-unread"><span ng-bind="item.stock"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.stock" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
             <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
             <td>使用车型</td>
-            <td><div cb-switch checked="item.status"
-                     ng-click="vm.statusItem(item)"></div></td>
+            <td><div cb-switch checked="item.status" cb-access-control="chebian:store:product:goods:edit"
+                     ng-click="vm.statusItem(item)"></div><div cb-switch checked="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
             <td><span ng-bind="item.skudescription"></span></td>
           </tr>
         </tbody>

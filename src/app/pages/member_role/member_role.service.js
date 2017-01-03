@@ -6,16 +6,16 @@
 
     angular
         .module('shopApp')
-        .factory('systemRole', systemRole)
-        .factory('systemRoleConfig', systemRoleConfig);
+        .factory('memberRole', memberRole)
+        .factory('memberRoleConfig', memberRoleConfig);
 
     /** @ngInject */
-    function systemRole(requestService) {
-        return requestService.request('system','role');
+    function memberRole(requestService) {
+        return requestService.request('member','role');
     }
 
     /** @ngInject */
-    function systemRoleConfig() {
+    function memberRoleConfig() {
         return {
             DEFAULT_GRID: {
                 "columns": [
@@ -27,22 +27,15 @@
                     {
                         "id": 1,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
+                        "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span> <button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="edit" title="编辑角色" item="item" role-item="propsParams.roleItem(data)">编辑</button>',
                         "name": '角色名',
-                        "width": 200
+                        "width": 300
                     },
                     {
                         "id": 2,
                         "cssProperty": "state-column",
                         "fieldDirective": '<span class="state-unread"><span ng-repeat="role in item.items"><i bo-text="role.menuname"></i>    </span><span bo-if="!item.items.length">无</span></span>',
-                        "name": '现有权限'
-                    },
-                    {
-                        "id": 3,
-                        "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="system" data-parentid="100000" data-sectionid="100002" system-role-dialog="edit" title="编辑角色" item="item" role-item="propsParams.roleItem(data)">编辑</button> <button class="btn btn-danger" cb-access-control="system" data-parentid="100000" data-sectionid="100004" simple-grid-remove-item="id" item="item" list="store" remove-item="propsParams.removeItem(data)">删除</button>',
-                        "name": '操作',
-                        "width": 200
+                        "name": '权限范围'
                     }
                 ],
                 "config": {
@@ -58,10 +51,8 @@
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                        '<button class="btn btn-primary" cb-access-control="system" data-parentid="100000" data-sectionid="100001" system-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">+添加角色</button> '
-                    ],
-                    'batchOperationBarDirective': [
-                        '<button class="btn btn-danger" cb-access-control="system" data-parentid="100000" data-sectionid="100004" simple-grid-remove-item="id" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
+                        '<button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">+添加角色</button> ',
+                      '<button class="btn btn-danger" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
                     ]
                 }
             },

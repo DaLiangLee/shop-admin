@@ -44,46 +44,45 @@
                     },
                     {
                       "id": 1,
-                      "name": "项目ID",
-                      "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.serverid"></span>'
-                    },
-                    {
-                      "id": 2,
-                      "name": "项目名称",
-                      "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename2"></span>'
-                    },
-                    {
-                      "id": 3,
-                      "name": "项目类型",
+                      "name": "服务类目",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>'
                     },
                     {
-                      "id": 4,
-                      "name": "服务品牌",
+                      "id": 2,
+                      "name": "服务编码/图片",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<div cb-carbrand store="item.motorbrandids"></div>'
+                      "fieldDirective": '<div><p class="text-center" bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></div>'
+                    },
+                    {
+                      "id": 3,
+                      "name": "服务名称",
+                      "cssProperty": "state-column",
+                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>'
+                    },
+                    {
+                      "id": 4,
+                      "name": "工时费（元）",
+                      "cssProperty": "state-column",
+                      "fieldDirective": '<span class="state-unread" bo-text="item.serverprice"></span>'
                     },
                     {
                       "id": 5,
-                      "name": "项目简介",
+                      "name": "销量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.abstracts}}" text-length="10"></span>'
+                      "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span>件</span>'
                     },
                     {
                       "id": 6,
-                      "name": "服务状态",
+                      "name": "保修期（天）",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status == 0 ? \'暂停服务\' : \'正常服务\'"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>'
                     },
                     {
-                        "id": 7,
-                        "cssProperty": "state-column",
-                        "fieldDirective": '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40002" ui-sref="product.server.edit({serverid: item.serverid})">编辑</button>  <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40005" simple-grid-change-status="putupserver" item="item" status-item="propsParams.statusItem(data)" list="store" data-status-id="id" ng-if="item.status == 0">正常</button> <button class="btn" cb-access-control="product" data-parentid="40000" data-sectionid="40004" simple-grid-change-status="putdownserver" item="item" status-item="propsParams.statusItem(data)" data-status-id="id" list="store" ng-if="item.status == 1">暂停</button> <button class="btn btn-danger"  cb-access-control="product" data-parentid="40000" data-sectionid="40009" simple-grid-remove-item item="item" list="store" remove-item="propsParams.removeItem(data)" ng-if="item.status == 0">删除</button>',
-                        "name": '操作',
-                        "width": 200
+                      "id": 7,
+                      "name": "描述",
+                      "cssProperty": "state-column",
+                      "fieldDirective": '<span class="state-unread" bo-text="item.seodescription"></span>'
                     }
                 ],
                 "config": {
@@ -93,13 +92,17 @@
                     'paginationSupport': true,  // 是否有分页
                     'selectedProperty': "selected",  // 数据列表项复选框
                     'selectedScopeProperty': "selectedItems",
+                    'exportDataSupport': true,
                     'useBindOnce': true,  // 是否单向绑定
                     "paginationInfo": {   // 分页配置信息
                         maxSize: 5,
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                        '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40001" ui-sref="product.server.add()">+新增服务</button> '
+                      '<button class="btn btn-primary" cb-access-control="product" data-parentid="40000" data-sectionid="40001" ui-sref="product.server.add()" ng-if="propsParams.currentStatus == 1">+新增服务</button> ',
+                      '<button class="btn btn-warning" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-change-status="removeServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务下架" ng-if="propsParams.currentStatus == 1">批量下架</button> ',
+                      '<button class="btn btn-success" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-change-status="resetRemoveServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务上架" ng-if="propsParams.currentStatus == 0">批量上架</button> ',
+                      '<button class="btn btn-danger" cb-access-control="product" data-parentid="40000" data-sectionid="40001" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的服务删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 0">批量删除</button> '
                     ]
                 }
             },

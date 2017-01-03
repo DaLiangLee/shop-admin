@@ -10,13 +10,17 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($window, $state, $log, $timeout, utils, productGoods, productGoodsConfig, cbAlert, webSiteApi) {
+  function ProductGoodsListController($state, $timeout, $log, productGoods, productGoodsConfig, cbAlert, categoryGoods) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     console.log($state.params);
-
+    /**
+     * 记录当前子项
+     * @type {string}
+     */
+    var recordChild = "";
 
     var total = 0;
 
@@ -28,7 +32,8 @@
       itemList: [],
       requestParams: {
         params: currentParams,
-        request: "http://localhost:3000/shopservice/admin/product/goods/excelProduct"
+        request: "product,goods,excelProduct",
+        permission: "chebian:store:product:goods:export"
       },
       config: angular.copy(productGoodsConfig.DEFAULT_GRID.config),
       loadingState: true,      // 加载数据
@@ -36,9 +41,9 @@
         var page = angular.extend({}, currentParams, {page: data});
         $state.go(currentStateName, page);
       },
-      sortChanged: function(data){
+      sortChanged: function (data) {
         var orders = [];
-        angular.forEach(data.data, function(item, key){
+        angular.forEach(data.data, function (item, key) {
           orders.push({
             "field": key,
             "direction": item
@@ -48,14 +53,14 @@
         vm.gridModel.requestParams.params = order;
         getList(order);
       },
-      selectHandler: function(item){
-        console.log(item);
-        getProductSkus(item.guid);
+      selectHandler: function (item) {
+        // 拦截用户恶意点击
+        recordChild != item.guid && getProductSkus(item.guid);
       }
     };
-    /*productGoods.category().then(function (data) {
-     console.log(data.data.data);
-     });*/
+    categoryGoods.goods().then(function (data) {
+      console.log(data.data.data);
+    });
     /**
      * 组件数据交互
      *
@@ -108,10 +113,6 @@
             all: true,
             list: [
               {
-                id: undefined,
-                label: "全部"
-              },
-              {
                 id: 0,
                 label: "汽车内饰"
               },
@@ -132,133 +133,65 @@
                 label: "工具"
               }
             ],
-            custom: false,
             type: "list",
             name: "pcateid1"
           },
           {
             label: "销量",
-            all: true,
-            list: [
-              {
-                id: undefined,
-                label: "全部"
-              },
-              {
-                id: 0,
-                label: "自定义"
-              }
-            ],
-            custom: true,
-            type: "number",
             name: "salenums",
+            all: true,
+            custom: true,
+            type: "int",
             start: {
-              name: "salenums0",
-              config: {}
+              name: "salenums0"
             },
             end: {
-              name: "salenums1",
-              config: {}
+              name: "salenums1"
             }
           },
           {
             label: "库存",
             all: true,
-            list: [
-              {
-                id: undefined,
-                label: "全部"
-              },
-              {
-                id: 0,
-                label: "自定义"
-              }
-            ],
             custom: true,
-            type: "number",
+            type: "int",
             name: "stock",
             start: {
               name: "stock0",
-              config: {}
+              placeholder: ""
             },
             end: {
               name: "stock1",
-              config: {}
+              placeholder: ""
             }
           },
           {
             label: "价格",
             all: true,
-            list: [
-              {
-                id: undefined,
-                label: "全部"
-              },
-              {
-                id: 0,
-                label: "自定义"
-              }
-            ],
             custom: true,
-            type: "number",
+            type: "money",
             name: "saleprice",
             start: {
               name: "saleprice0",
-              config: {}
+              placeholder: ""
             },
             end: {
               name: "saleprice1",
-              config: {}
+              placeholder: ""
             }
           },
           {
             label: "保质期",
             all: true,
-            list: [
-              {
-                id: undefined,
-                label: "全部"
-              },
-              {
-                id: 0,
-                label: "自定义"
-              }
-            ],
             custom: true,
-            type: "number",
+            type: "int",
             name: "shelflife",
             start: {
               name: "shelflife0",
-              config: {}
+              placeholder: ""
             },
             end: {
               name: "shelflife1",
-              config: {}
-            }
-          },
-          {
-            label: "类目",
-            all: true,
-            list: [
-              {
-                id: undefined,
-                label: "全部"
-              },
-              {
-                id: 0,
-                label: "自定义"
-              }
-            ],
-            custom: true,
-            type: "date",
-            name: "date",
-            start: {
-              name: "date0",
-              config: {}
-            },
-            end: {
-              name: "date1",
-              config: {}
+              placeholder: ""
             }
           }
         ]
@@ -283,7 +216,7 @@
           if (results.data.status == '0') {
             cbAlert.tips('修改成功');
             getList();
-          }else{
+          } else {
             cbAlert.error(results.data.rtnInfo);
           }
         });
@@ -293,14 +226,20 @@
 
     vm.statusItem = function (item) {
       console.log(JSON.stringify(item));
-      cbAlert.ajax('是否确认禁用该商品SKU？', function (isConfirm) {
+      var tips = item.status === "0" ? '是否确认启用该商品SKU？' : '是否确认禁用该商品SKU？';
+      cbAlert.ajax(tips, function (isConfirm) {
         if (isConfirm) {
           item.status = item.status === "0" ? "1" : "0";
           productGoods.updateProductSku(item).then(function (results) {
             if (results.data.status == '0') {
-              cbAlert.tips('修改成功');
+              cbAlert.success('修改成功');
+              var statusTime = $timeout(function(){
+                cbAlert.close();
+                $timeout.cancel(statusTime);
+                statusTime = null;
+              }, 1200, false);
               getList();
-            }else{
+            } else {
               cbAlert.error(results.data.rtnInfo);
             }
           });
@@ -312,7 +251,12 @@
 
     function getProductSkus(id) {
       productGoods.getProductSkus({id: id}).then(function (results) {
-        vm.items = results.data.data;
+        if (results.data.status == 0) {
+          recordChild = id;
+          vm.items = results.data.data;
+        } else {
+          cbAlert.error(results.data.rtnInfo);
+        }
       });
     }
 
@@ -429,25 +373,25 @@
       }
     };
 
-    function getSkuname(name){
+    function getSkuname(name) {
       var result = "";
       var num = 10;
-      if(!name){
+      if (!name) {
         return name;
       }
-      if(angular.isString(name)){
+      if (angular.isString(name)) {
         name = JSON.parse(name);
       }
       var result = "";
-      if(angular.isArray(name)){
+      if (angular.isArray(name)) {
         angular.forEach(name, function (item) {
           result += item.skuname + "/"
         });
       }
       result = result.substring(0, result.length - 1);
-      if(result.length > num){
+      if (result.length > num) {
         result = result.substring(0, num);
-        if(result.lastIndexOf("/") === num - 1){
+        if (result.lastIndexOf("/") === num - 1) {
           result = result.substring(0, result.length - 1);
         }
         result += " 等";
@@ -457,7 +401,28 @@
     }
 
 
-    getSkuname([{"guid":0,"id":12,"items":[{"guid":0,"id":57,"skuid":12,"skuvalue":"15寸","sort":1}],"skuname":"轮胎尺寸","skutype":"text","sort":0},{"guid":0,"id":14,"items":[{"guid":0,"id":68,"skuid":14,"skuvalue":"155","sort":1}],"skuname":"胎面宽度","skutype":"text","sort":0},{"guid":0,"id":13,"items":[{"guid":0,"id":63,"skuid":13,"skuvalue":"防爆轮胎","sort":1}],"skuname":"轮胎类型","skutype":"text","sort":0}])
+    getSkuname([{
+      "guid": 0,
+      "id": 12,
+      "items": [{"guid": 0, "id": 57, "skuid": 12, "skuvalue": "15寸", "sort": 1}],
+      "skuname": "轮胎尺寸",
+      "skutype": "text",
+      "sort": 0
+    }, {
+      "guid": 0,
+      "id": 14,
+      "items": [{"guid": 0, "id": 68, "skuid": 14, "skuvalue": "155", "sort": 1}],
+      "skuname": "胎面宽度",
+      "skutype": "text",
+      "sort": 0
+    }, {
+      "guid": 0,
+      "id": 13,
+      "items": [{"guid": 0, "id": 63, "skuid": 13, "skuvalue": "防爆轮胎", "sort": 1}],
+      "skuname": "轮胎类型",
+      "skutype": "text",
+      "sort": 0
+    }])
 
     function getBrandname(data, id) {
       var item = _.remove(data, function (item) {

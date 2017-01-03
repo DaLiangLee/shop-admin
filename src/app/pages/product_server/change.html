@@ -1,88 +1,140 @@
 <div class="g-view">
-    <div class="container-fluid">
-        <h2>添加编辑服务</h2>
-        <hr>
-        <form class="form-horizontal" autocomplete="off" name="goods" role="form" novalidate  ng-if="vm.isLoadData">
-        <h3>基本信息</h3>
-        <hr>
-          <div class="form-group" ng-if="vm.isChange">
-            <label class="col-sm-2 control-label">项目ID：</label>
-            <div class="col-sm-7">
-              <p class="text-border" ng-bind="vm.dataBase.serverid"></p>
+  <div class="container-fluid">
+    <h2>添加编辑服务</h2>
+    <hr>
+    <form class="form-horizontal" autocomplete="off" name="goods" role="form" novalidate ng-if="vm.isLoadData">
+      <h3>基本信息</h3>
+      <hr>
+      <div class="form-group" ng-if="vm.isChange">
+        <label class="col-sm-2 control-label">项目ID：</label>
+        <div class="col-sm-7">
+          <p class="text-border" ng-bind="vm.dataBase.serverid"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger">*</span> 类目：</label>
+        <div class="col-sm-7">
+          <div ng-if="!vm.isChange">
+            <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.scateid1">
+            <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.scateid1"
+                 select-handler="vm.selectModel.handler(data)"></div>
+          </div>
+          <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename1"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">编码：</label>
+        <div class="col-sm-7">
+          <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
+                 ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger">*</span> 名称：</label>
+        <div class="col-sm-7">
+          <div ng-if="!vm.isChange">
+            <div ng-if="!vm.dataBase.scateid1">
+              <p class="text-border text-border-warning">请先选择服务类目</p>
+            </div>
+            <div ng-if="vm.dataBase.scateid1">
+              <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.scateid2">
+              <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.scateid2"
+                   select-handler="vm.selectModel2.handler(data)"></div>
+              <p class="text-warning" ng-if="!vm.dataBase.scateid2">服务名称是必选的</p>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 项目类型：</label>
-            <div class="col-sm-7">
-              <div ng-if="!vm.isChange">
-                  <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.scateid1">
-                  <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.scateid1" select-handler="vm.selectModel.handler(data)"></div>
-              </div>
-              <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename1"></p>
-            </div>
+          <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename2"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">简介：</label>
+        <div class="col-sm-7">
+          <input type="text" id="goods_add_name" class="form-control" name="servername"
+                 ng-model="vm.dataBase.servername"
+                 ng-maxlength="40" placeholder="请输入长度为40以内的服务名称" cb-placeholder>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger">*</span> 车辆属性：</label>
+        <div class="col-sm-7">
+          <div ng-if="!vm.dataBase.scateid1">
+            <p class="text-border text-border-warning">请先选择服务类目</p>
           </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 项目名称：</label>
-            <div class="col-sm-7">
-              <div ng-if="!vm.isChange">
-                <div ng-if="!vm.dataBase.scateid1">
-                  <p class="text-border text-border-warning">请先选择项目类型</p>
-                </div>
-                <div ng-if="vm.dataBase.scateid1">
-                  <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.scateid2">
-                  <div  simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.scateid2" select-handler="vm.selectModel2.handler(data)"></div>
-                  <p class="text-warning" ng-if="!vm.dataBase.scateid2">项目名称是必选的</p>
-                </div>
-              </div>
-              <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename2"></p>
-            </div>
-          </div>
-          <!--<div class="form-group">
-            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 规格：</label>
-            <div class="col-sm-7">
-              <div ng-if="!vm.isAttributesetLoad">
-                <p class="text-border text-border-warning">请先选择项目名称</p>
-              </div>
-              <div cb-modified-items store="vm.sizeModel.store" select="vm.dataBase.sku" select-handler="vm.sizeModel.handler(data)"  ng-if="vm.isAttributesetLoad"></div>
-            </div>
-          </div>-->
-          <div class="form-group">
-            <label class="col-sm-2 control-label"><span class="text-danger">*</span> 服务状态：</label>
-            <div class="col-sm-7">
-              <div class="radio-inline">
-                <label>
-                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.serverstatus" value="0">
-                  暂停服务
-                </label>
-              </div>
-              <div class="radio-inline">
-                <label>
-                  <input type="radio" name="optionsRadios" ng-model="vm.dataBase.serverstatus" value="1">
-                  正常服务
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">商品简介：</label>
-            <div class="col-sm-7">
-              <div text-editor="" editor="vm.dataBase.abstracts" data-max-length="30" data-filter=""></div>
-            </div>
-          </div>
-          <div ng-if="vm.isAddData">
-          <div class="text-center">
-            <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="goods.$invalid">保存</button>
-          </div>
-          </div>
-        <div ng-if="!vm.isAddData">
-        <h3>报价规格</h3>
-        <hr>
-          <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
-          <div class="text-center">
-            <button type="button" class="btn btn-primary" ng-click="vm.submit()">{{vm.isChange ? "修改" : "完成"}}</button>
-            <button type="button" class="btn btn-default" cb-back-button="{'name':'product.server.list','params':{'page': 1}}" data-router="product.server.edit" ng-if="vm.isChange">返回</button>
+          <div ng-if="vm.dataBase.scateid1">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>*如 车辆类型 等</th>
+                <th>工时</th>
+                <th>单价（元）</th>
+                <th>工时费（元）</th>
+                <th>适用车型</th>
+                <th>描述</th>
+                <th>启用状态</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="item in vm.dataBase.items">
+                <td>
+                  <div class="text-border"><span ng-bind="item.$$skuname | skuvaluesFilter"></span></div>
+                </td>
+                <td><input class="form-control" type="text" name="" ng-model="item.servertime" placeholder=""></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.serverprice"></td>
+                <td><p class="text-border" ng-bind="item.serverprice * item.servertime"></p></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.skudescription"></td>
+                <td>
+                  <div cb-switch checked="item.status" ng-click="vm.statusItem(vm.dataBase.status)"></div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <button class="btn btn-primary" ng-click="vm.addSkuvalues()">添加属性</button>
           </div>
         </div>
-        </form>
-    </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">图片：</label>
+        <div class="col-sm-7">
+          <div class="col-md-3" ng-repeat="item in vm.dataBase.mainphoto track by $index"
+               ng-if="vm.dataBase.mainphoto.length">
+            <div style="width: 300px; height:300px; overflow: hidden">
+              <img ng-src="{{item}}?x-oss-process=image/resize,w_300" style="vertical-align: middle;" alt=""
+                   class="img-thumbnail">
+            </div>
+            <div>
+              <a target="_blank" ng-href="{{item}}">下载</a>
+              <button ng-click="vm.removePhotos($index)">删除</button>
+              <button cb-upload-file="images" title="店招图片上传" data-upload-type="serverMain" data-value-max="1"
+                      upload-item="vm.uploadHandler(data, $index)">重新上传
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
+            <div>
+              <p class="text-warning">必须要传一张服务图片</p>
+            </div>
+            <div>
+              <button cb-upload-file="images" title="商品图片上传" data-upload-type="serverMain" data-value-max="1"
+                      upload-item="vm.uploadHandler(data)">商品图片上传
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">保质期（天）：</label>
+        <div class="col-sm-7">
+          <input type="text" id="goods_add_name" class="form-control" name="shelflife"
+                 ng-model="vm.dataBase.shelflife"
+                 ng-maxlength="40" placeholder="请输入长度为40以内的服务名称" cb-placeholder>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="text-center">
+          <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="goods.$invalid">保存</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

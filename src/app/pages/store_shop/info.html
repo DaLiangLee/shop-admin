@@ -109,7 +109,7 @@
         （<span ng-bind="vm.dataBase.store.opentime.length"></span>人）
       </p>
     </div>
-    <div class="col-md-2"><button class="btn btn-success" shop-home-settings-member member=""  setting-item="vm.memberHandler(data)" cb-access-control="member" data-parentid="9" data-sectionid="90000">去设置</button></div>
+    <div class="col-md-2"><button class="btn btn-success" shop-home-settings-member member=""  setting-item="vm.memberHandler(data)" cb-access-control="chebian:store:store:shop:edit">去设置</button></div>
   </div>
   <div class="row form-group">
     <label class="col-md-1 control-label">营业时间：</label>
@@ -130,7 +130,7 @@
       </p>
     </div>
     <div class="col-md-2" ng-if="vm.dataBase.store.telephone">
-    <button class="btn btn-success" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置客服电话</button>
+    <button class="btn btn-success" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置客服电话</button>
     </div>
   </div>
 

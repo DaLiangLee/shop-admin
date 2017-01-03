@@ -6,10 +6,10 @@
 
     angular
         .module('shopApp')
-        .directive('systemRoleDialog', systemRoleDialog);
+        .directive('memberRoleDialog', memberRoleDialog);
 
     /** @ngInject */
-    function systemRoleDialog($log, cbDialog, permissions, treeService, systemRole){
+    function memberRoleDialog($log, cbDialog, configuration, treeService, memberRole){
         function getData(data){
             if(!data){
                 return ;
@@ -122,6 +122,7 @@
                     m.items = undefined;
                 });
             });
+
             return [arr];
         }
 
@@ -240,9 +241,10 @@
             },
             link: function(scope, iElement, iAttrs){
                 var iEle = angular.element(iElement),
-                    type = iAttrs.systemRoleDialog,
+                    type = iAttrs.memberRoleDialog,
                     transmit = [],
-                    roleList  = angular.copy(permissions.getPermissions());
+                    roleList  = angular.copy(configuration.getMenu());
+
                 /**
                  * 弹窗处理事件
                  */
@@ -254,6 +256,7 @@
                      * 添加操作
                      */
                     if(type === 'add'){
+                      console.log(roleList);
                         childScope.item.roleid = undefined;
                         addData();
                     }
@@ -282,10 +285,13 @@
                             addData();
                         }
                     }
+
                     /**
                      * 设置无权限的树形列表
                      */
                     function addData(){
+
+
                         childScope.item.items = generatedTreeData(roleList);
                         treeService.enhance(childScope.item.items, 'items');
                     }
@@ -347,7 +353,7 @@
                         /**
                          * 提交数据
                          */
-                        systemRole[type](transmit).then(function (data) {
+                        memberRole[type](transmit).then(function (data) {
                             scope.roleItem({data: {"type": type, "data": data.data}});
                         });
                     }
@@ -360,8 +366,8 @@
                     scope.roleItem({data: {"status":"-1", "data":"打开成功"}});
                     t.preventDefault();
                     t.stopPropagation();
-                    cbDialog.showDialogByUrl("app/pages/system_role/system_role_dialog.html", handler, {
-                        windowClass: "viewFramework-system-role-dialog"
+                    cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {
+                        windowClass: "viewFramework-member-role-dialog"
                     });
                 })
             }

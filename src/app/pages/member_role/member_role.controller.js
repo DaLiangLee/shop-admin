@@ -6,9 +6,9 @@
 
     angular
         .module('shopApp')
-        .controller('SystemRoleLsitController', SystemRoleLsitController);
+        .controller('MemberRoleLsitController', MemberRoleLsitController);
     /** @ngInject */
-    function SystemRoleLsitController($timeout, $state, $log, systemRole, systemRoleConfig, permissions, preferencenav) {
+    function MemberRoleLsitController($timeout, $state, $log, memberRole, memberRoleConfig, permissions, preferencenav) {
         var vm = this;
         var currentState = $state.current;
         var currentStateName = currentState.name;
@@ -26,9 +26,9 @@
         * 表格配置
         */
         vm.gridModel = {
-            columns: angular.copy(systemRoleConfig.DEFAULT_GRID.columns),
+            columns: angular.copy(memberRoleConfig.DEFAULT_GRID.columns),
             itemList: [],
-            config: angular.copy(systemRoleConfig.DEFAULT_GRID.config),
+            config: angular.copy(memberRoleConfig.DEFAULT_GRID.config),
             loadingState: true,      // 加载数据
             pageChanged: function(data){    // 监听分页
                 var page = angular.extend({}, currentParams, {page:data});
@@ -46,7 +46,7 @@
                 if(data.status == -1){
                     vm.message.loadingState = false;
                 }else{
-                    systemRole.remove({id:data.transmit}).then(function(data) {
+                    memberRole.remove({id:data.transmit}).then(function(data) {
                         var message = "";
                         if(_.isObject(data.data.data) || _.isEmpty(data.data.data)){
                             message = "删除成功";
@@ -181,22 +181,22 @@
       };
 
         // 获取数据列表
-        function getList(){
+        function getList(params){
             /**
              * 路由分页跳转重定向有几次跳转，先把空的选项过滤
              */
-            if(!currentParams.page){
+            if(!params.page){
                 return ;
             }
-            systemRole.get(currentParams).then(function(data) {
+            memberRole.get(params).then(function(data) {
                 if(data.data.status == 0){
-                    if(!data.data.data.length && currentParams.page !=1){
-                        $state.go(currentStateName, {page: 1});
+                    if(!data.data.data.length && params.page !=1){
+                        $state.go(params, {page: 1});
                     }
                     total = data.data.count;
                     vm.gridModel.itemList = data.data.data;
                     vm.gridModel.paginationinfo = {
-                        page:  currentParams.page*1,
+                        page:  params.page*1,
                         pageSize: 10,
                         total: total
                     };
@@ -206,7 +206,7 @@
               $log.debug('getListError', data);
             });
         }
-        getList();
+        getList(currentParams);
     }
 
 })();

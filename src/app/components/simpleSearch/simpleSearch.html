@@ -2,20 +2,22 @@
   <div class="searchSection">
     <form class="form-horizontal f-cb" autocomplete="off" ng-submit="setSearch()">
       <div class="form-group">
-        <input type="text" name="" id="" ng-model="searchParams.keyword" placeholder="{{config.placeholder}}">
-        <span>
-                <button>搜索</button>
-              </span>
-        <span class="more" ng-click="openMore()">更多 <i></i></span>
+        <div class="pull-left" style="width: 400px;">
+          <input type="text" name="keyword" class="form-control" ng-model="searchParams.keyword" placeholder="{{config.placeholder}}">
+          <span><i></i></span>
+        </div>
+        <div class="pull-left" style="width: 200px;">
+          <span class="more" ng-click="showMore = !showMore">更多 <i></i></span>
+        </div>
+
       </div>
-      <div class="form-group" ng-repeat="item in items">
-        <label for="{{item.$$hashKey}}" class="col-sm-1 control-label">{{item.label}}：</label>
+      <div class="form-group" ng-repeat="item in items" ng-if="showMore">
+        <label class="col-sm-1 control-label">{{item.label}}：</label>
         <div class="col-sm-9">
           <div class="list" ng-if="!item.custom">
             <div class="radio-inline" ng-repeat="list in item.list">
               <label>
-                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
-                       class="ng-pristine ng-valid">
+                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id">
                 {{list.label}}
               </label>
             </div>
@@ -23,12 +25,13 @@
           <div class="list" ng-if="item.custom">
             <div class="radio-inline" ng-repeat="list in item.list">
               <label>
-                <input type="radio" name="{{item.name}}" ng-model="item.name" ng-value="list.id"
+
+                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
                        class="ng-pristine ng-valid">
                 {{list.label}}
               </label>
             </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="item.name == 0 && item.type == 'number'">
+            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
               <div class="pull-left" style="width: 200px;">
                 <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
               </div>
@@ -37,7 +40,16 @@
                 <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
               </div>
             </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="item.name == 0 && item.type == 'date'">
+            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'money'">
+              <div class="pull-left" style="width: 200px;">
+                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+              </div>
+              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+              <div class="pull-left" style="width: 200px;">
+                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+              </div>
+            </div>
+            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'date'">
               <div class="pull-left" style="width: 200px;">
                 <div cb-datepicker="" datepicker-options="item.start.config" datepicker-model="searchParams[item.start.name]"></div>
               </div>

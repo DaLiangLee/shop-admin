@@ -15,7 +15,7 @@
 
         /** @ngInject */
         function permissionsRun(permissions) {
-          permissions.setPermissions(userPermissionList.menu);
+          permissions.setPermissions(userPermissionList.permissions);
         }
 
         /** @ngInject */
@@ -27,7 +27,8 @@
             avatar: userPermissionList.avatar,
             message: userPermissionList.message,
             role: userPermissionList.role,
-            username: userPermissionList.username
+            username: userPermissionList.username,
+            menu: userPermissionList.menu
           });
         }
 
@@ -63,11 +64,11 @@
              $log.debug('toParams',toParams);
              $log.debug('fromState',fromState);
              $log.debug('fromParams',fromParams);*/
-            preferencenav.setPreferences(toState, toParams);
+            //preferencenav.setPreferences(toState, toParams);
             /**
              * 如果没有权限访问会跳到没有权限403页面
              */
-            if(!permissions.getPermissions(toState.permission)){
+            if(!permissions.findPermissions(toState.permission)){
               return $state.go('forbidden');
             }
           });

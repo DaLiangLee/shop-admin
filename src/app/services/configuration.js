@@ -25,6 +25,9 @@
             getConfig: function () {
                 return config;
             },
+            getMenu: function () {
+              return config.menu;
+            },
             getAPIConfig: function(admin) {
                 /**
                  * 如果有传这个就表示是logout

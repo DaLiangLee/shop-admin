@@ -11,17 +11,26 @@
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
-    function ProductServerListController($state, $log, utils, productServer, productServerConfig, cbAlert) {
+    function ProductServerListController($state, $log, $timeout,  productServer, productServerConfig, cbAlert) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
-      var currentParams = $state.params;
+      var currentParams = angular.extend({}, $state.params, {pageSize: 5});
       var total = 0;
-
+      /**
+       * 记录当前子项
+       * @type {string}
+       */
+      var recordChild = "";
       /**
        * 表格配置
        */
       vm.gridModel = {
+        requestParams: {
+          params: currentParams,
+          request: "product,server,excelServer",
+          permission: "chebian:store:product:goods:export"
+        },
         columns: angular.copy(productServerConfig.DEFAULT_GRID.columns),
         itemList: [],
         config: angular.copy(productServerConfig.DEFAULT_GRID.config),
@@ -29,6 +38,22 @@
         pageChanged: function (data) {    // 监听分页
           var page = angular.extend({}, currentParams, {page: data});
           $state.go(currentStateName, page);
+        },
+        sortChanged: function (data) {
+          var orders = [];
+          angular.forEach(data.data, function (item, key) {
+            orders.push({
+              "field": key,
+              "direction": item
+            });
+          });
+          var order = angular.extend({}, currentParams, {orders: JSON.stringify(orders)});
+          vm.gridModel.requestParams.params = order;
+          getList(order);
+        },
+        selectHandler: function (item) {
+          // 拦截用户恶意点击
+          recordChild != item.guid && getServerSkus(item.guid);
         }
       };
 
@@ -37,6 +62,7 @@
        *
        */
       vm.gridModel.config.propsParams = {
+        currentStatus: currentParams.status,
         removeItem: function (data) {
           if (data.status == 0) {
             /**
@@ -54,9 +80,7 @@
               }else{
                 cbAlert.error(data.data.rtnInfo);
               }
-              getList();
-            }, function (data) {
-              $log.debug('removeItemError', data);
+              getList(currentParams);
             });
           }
           // if(data.list.length <= 5 && total > 10){
@@ -69,88 +93,207 @@
         },
         statusItem: function (data) {
           if (data.status == 0) {
-            var item = null;
-            if(data.removal.length == 1){
-              item = {
-                serverid: data.removal[0].serverid
-              }
-            }
-            productServer[data.type](item).then(function (data) {
-              if(data.data.status === '0'){
-                cbAlert.tips("服务状态修改成功");
+            var message = data.type === 'removeServers' ? "服务下架修改成功" : "服务上架修改成功";
+            productServer[data.type](data.transmit).then(function (results) {
+              if(results.data.status === '0'){
+                cbAlert.tips(message);
               }else{
-                cbAlert.error(data.data.rtnInfo);
+                cbAlert.error(results.data.data);
               }
-              getList();
-            }, function (data) {
-              $log.debug('statusItemError', data);
+              getList(currentParams);
             });
           }
         }
       };
 
-      var config = angular.copy(productServerConfig.DEFAULT_SEARCH.config);
-      config.searchParams = $state.params;
       /**
        * 搜索操作
        *
        */
-      vm.gridSearch = {
-        'config': config,
+      vm.searchModel = {
+        'config': {
+          placeholder: "请输入服务编码、服务名称、服务属性",
+          searchDirective: [
+            {
+              label: "服务类目",
+              all: true,
+              list: [
+                {
+                  id: 0,
+                  label: "汽车内饰"
+                },
+                {
+                  id: 1,
+                  label: "电子导航"
+                },
+                {
+                  id: 2,
+                  label: "轮胎"
+                },
+                {
+                  id: 3,
+                  label: "保养配件"
+                },
+                {
+                  id: 4,
+                  label: "工具"
+                }
+              ],
+              type: "list",
+              name: "pcateid1"
+            },
+            {
+              label: "销量",
+              name: "salenums",
+              all: true,
+              custom: true,
+              type: "int",
+              start: {
+                name: "salenums0"
+              },
+              end: {
+                name: "salenums1"
+              }
+            },
+            {
+              label: "库存",
+              all: true,
+              custom: true,
+              type: "int",
+              name: "stock",
+              start: {
+                name: "stock0",
+                placeholder: ""
+              },
+              end: {
+                name: "stock1",
+                placeholder: ""
+              }
+            },
+            {
+              label: "价格",
+              all: true,
+              custom: true,
+              type: "money",
+              name: "saleprice",
+              start: {
+                name: "saleprice0",
+                placeholder: ""
+              },
+              end: {
+                name: "saleprice1",
+                placeholder: ""
+              }
+            },
+            {
+              label: "保质期",
+              all: true,
+              custom: true,
+              type: "int",
+              name: "shelflife",
+              start: {
+                name: "shelflife0",
+                placeholder: ""
+              },
+              end: {
+                name: "shelflife1",
+                placeholder: ""
+              }
+            }
+          ]
+        },
         'handler': function (data) {
           $log.debug(data)
         }
       };
 
-      // 获取权限列表
-      function getList() {
+
+      function getServerSkus(id) {
+        productServer.getServerSkus({id: id}).then(function (results) {
+          if (results.data.status == 0) {
+            recordChild = id;
+            vm.items = results.data.data;
+          } else {
+            cbAlert.error(results.data.data);
+          }
+        });
+      }
+
+      /**
+       * 表格配置
+       */
+      vm.gridModel2 = {
+        editorhandler: function (data, item, type) {
+          console.log(data, item);
+          item[type] = data;
+          productServer.updateServerSku(angular.copy(item)).then(function (results) {
+            console.log(results);
+            if (results.data.status == '0') {
+              cbAlert.tips('修改成功');
+              getList(currentParams);
+            } else {
+              cbAlert.error(results.data.data);
+            }
+          });
+        },
+        statusItem: function (item) {
+          console.log(JSON.stringify(item));
+          var tips = item.status === "0" ? '是否确认启用该服务SKU？' : '是否确认禁用该服务SKU？';
+          cbAlert.ajax(tips, function (isConfirm) {
+            if (isConfirm) {
+              item.status = item.status === "0" ? "1" : "0";
+              productServer.updateServerSku(item).then(function (results) {
+                if (results.data.status == '0') {
+                  cbAlert.success('修改成功');
+                  var statusTime = $timeout(function(){
+                    cbAlert.close();
+                    $timeout.cancel(statusTime);
+                    statusTime = null;
+                  }, 1200, false);
+                  getList(currentParams);
+                } else {
+                  cbAlert.error(results.data.data);
+                }
+              });
+            } else {
+              cbAlert.close();
+            }
+          }, "", 'warning');
+        }
+      };
+
+      // 获取服务列表
+      function getList(params) {
         /**
          * 路由分页跳转重定向有几次跳转，先把空的选项过滤
          */
-        if (!currentParams.page) {
+        if (!params.page) {
           return;
         }
-        productServer.list(currentParams).then(function (data) {
+        productServer.list(params).then(function (data) {
           if (data.data.status == 0) {
-            if (!data.data.data.length && currentParams.page != 1) {
-              $state.go(currentStateName, {page: 1});
+            if (!data.data.data.length && params.page != 1) {
+              $state.go(params, {page: 1});
             }
-            total = data.data.count;
+            total = data.data.totalCount;
             vm.gridModel.itemList = [];
             angular.forEach(data.data.data, function (item) {
-              /**
-               * 处理motorbrandids和logos
-               */
-              if(angular.isDefined(item.logos)){
-                item.logos = item.logos.split('#');
-              }
-              if(angular.isDefined(item.motorbrandids)){
-
-                item.motorbrandids = utils.getMotorbrandids(item.motorbrandids);
-              }
-              /**
-               * 这段代码处理skuvalues值的问题，请勿修改 start
-               */
-              item.skuvalues = window.eval(item.skuvalues);
-              /**
-               * 这段代码处理skuvalues值的问题，请勿修改 end
-               */
               vm.gridModel.itemList.push(item);
             });
             console.log(vm.gridModel.itemList);
 
             vm.gridModel.paginationinfo = {
-              page: currentParams.page * 1,
-              pageSize: 10,
+              page: params.page * 1,
+              pageSize: params.pageSize,
               total: total
             };
             vm.gridModel.loadingState = false;
+            !vm.gridModel.itemList.length && (vm.items = undefined);
+            vm.gridModel.itemList[0] && getServerSkus(vm.gridModel.itemList[0].guid);
           }
-        }, function (data) {
-          $log.debug('getListError', data);
         });
       }
-      getList();
+      getList(currentParams);
     }
 
     /** @ngInject */
@@ -195,7 +338,13 @@
        * 基本信息数据
        * @type {{}}
        */
-      vm.dataBase = {};
+      vm.dataBase = {
+
+      };
+
+
+
+
 
       /**
        * 报价表格配置
@@ -311,8 +460,21 @@
         vm.isLoadData = true;
         vm.dataBase.serverstatus = 1;
         vm.dataBase.mainphoto = [];
+        vm.dataBase.items = [
+
+        ];
       }
 
+      function setSkuvalues(obj){
+        return {
+
+        }
+      }
+
+
+      vm.addSkuvalues = function(){
+        vm.dataBase.items = [];
+      }
 
       function getOfferpriceList(){
         productServer.edit({serverid: vm.gridModel.config.propsParams.serverid}).then(function (results) {
@@ -413,7 +575,7 @@
           console.log('selectModel2', data);
           console.log(getData(vm.selectModel2.store, data));
           //vm.dataBase.cateid = data;
-          //getAttrsku(data);
+          getAttrsku(data);
         }
       };
       vm.sizeModel = {
@@ -449,8 +611,10 @@
       function getAttrsku(id, callback){
         console.log(id);
         productServer.attrsku({id: id}).then(function (data) {
-          vm.sizeModel.store = angular.copy(data.data.data.sku);
-          vm.dataBase.attrvalues = data.data.data.attributeset[0].id;
+          /*vm.sizeModel.store = angular.copy(data.data.data.sku);
+          vm.dataBase.attrvalues = data.data.data.attributeset[0].id;*/
+          console.log(data);
+
           if(!callback){
             vm.isAttributesetLoad = true;
           }

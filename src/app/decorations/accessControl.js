@@ -17,17 +17,10 @@
             priority: 2000,
             scope: false,
             link: function(scope, iElement, iAttrs){
-                if(angular.isUndefined(iAttrs.cbAccessControl) || angular.isUndefined(iAttrs.parentid) || angular.isUndefined(iAttrs.sectionid)){
-                    throw Error('没有写category或父id或当前id');
+                if(angular.isUndefined(iAttrs.cbAccessControl)){
+                    throw Error('没有写权限');
                 }
-                var category = iAttrs.cbAccessControl,
-                    parentid = iAttrs.parentid*1,
-                    sectionid = iAttrs.sectionid*1;
-                !permissions.findPermissions({
-                    parentid: parentid,
-                    category: category,
-                    sectionid: sectionid
-                }) && iElement.remove();
+                !permissions.findPermissions(iAttrs.cbAccessControl) && iElement.remove();
             }
         };
     }

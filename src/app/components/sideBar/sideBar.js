@@ -12,7 +12,8 @@
 
 
   /** @ngInject */
-  function cbShopSidebar($timeout, $rootScope, viewFrameworkHelper, permissions) {
+  function cbShopSidebar($timeout, $rootScope, viewFrameworkHelper, configuration) {
+    var defaultRouter = ["chebian:store:store:shop:view", "chebian:store:system:modpwd:view", "chebian:store:user:customer:grades:view"];
     /**
      * 获取侧栏菜单显示
      * @param data       后台返回权限列表
@@ -36,7 +37,7 @@
         item.showManageButton = true;
         item.items = setItems(item.items, item.id);
       });
-      function setItems(items, parentid) {
+      function setItems(items) {
         /**
          * 过滤不显示的菜单项
          */
@@ -51,9 +52,7 @@
             var router = item.href.substring(1).replace("/", ".");
           }
           var uisref = "";
-          if (parentid == 3 && item.id == 30000 || parentid == 6 && item.id == 60000) {   // 店铺管理 and 账号管理
-            uisref = router;
-          } else if (parentid == 10 && item.id == 100200) {   // 修改密码
+          if (_.findIndex(defaultRouter, function(key){return key === item.permission}) > -1) {   // 修改密码
             uisref = router;
           } else {
             uisref = router + ".list({page:1})";
@@ -83,7 +82,7 @@
         function getPermissions() {
           timer = $timeout(function () {
             scope.loadingState = true;
-            scope.navConfig = getNavConfig(permissions.getPermissions());
+            scope.navConfig = getNavConfig(configuration.getMenu());
           }, 0);
         }
 
