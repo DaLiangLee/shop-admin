@@ -167,7 +167,7 @@
 
         function getList(store, select){
           if(angular.isUndefined(select) || !select.length || !store.length){
-            return ;
+            return [];
           }
           var results = [];
           angular.forEach(select, function (item) {
@@ -214,6 +214,8 @@
         scope.options = function ($event, item) {
           $event.stopPropagation();
           if(scope.config.multiple){   // 多选
+            console.log(scope.choose);
+
             var index = _.findIndex(scope.select, function (key) {
               return key == item[value];
             });

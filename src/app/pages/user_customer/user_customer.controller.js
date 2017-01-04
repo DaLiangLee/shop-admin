@@ -16,7 +16,11 @@
       var currentState = $state.current;
       var currentStateName = currentState.name;
       var currentParams = angular.extend({}, $state.params, {pageSize: 5});
-
+      /**
+       * 记录当前子项
+       * @type {string}
+       */
+      var recordChild = "";
       /**
        * 表格配置
        *
@@ -24,6 +28,11 @@
       vm.gridModel = {
         columns: angular.copy(userCustomerConfig.DEFAULT_GRID.columns),
         itemList: [],
+        requestParams: {
+          params: currentParams,
+          request: "users,customer,export",
+          permission: "chebian:store:user:customer:export"
+        },
         config: angular.copy(userCustomerConfig.DEFAULT_GRID.config),
         loadingState: true,      // 加载数据
         pageChanged: function (data) {    // 监听分页
@@ -31,8 +40,8 @@
           $state.go(currentStateName, page);
         },
         selectHandler: function(item){
-          console.log(item);
-          getMotor(item.mobile);
+          // 拦截用户恶意点击
+          recordChild != item.mobile && getMotor(item.mobile);
         }
       };
 
@@ -65,6 +74,7 @@
         }, function (data) {
           $log.debug('getListError', data);
         }).then(function(result){
+          recordChild = mobile;
           vm.gridModel2.itemList = result;
           vm.gridModel2.loadingState = false;
         });
@@ -89,9 +99,6 @@
             }
             var items = [];
             _.forEach(result.data, function(item){
-              item.gradename = _.find(result.usergrades, function(key){
-                return key.guid === item.storegrade;
-              }).gradename;
               items.push(item);
             });
             return {
@@ -116,6 +123,73 @@
       }
 
       getList();
+
+
+      /**
+       * 搜索操作
+       *
+       */
+      vm.searchModel = {
+        'config': {
+          placeholder: "请输入会员名称、手机号、车牌号、品牌",
+          searchDirective: [
+            {
+              label: "会员等级",
+              all: true,
+              list: [
+                {
+                  id: 0,
+                  label: "汽车内饰"
+                },
+                {
+                  id: 1,
+                  label: "电子导航"
+                },
+                {
+                  id: 2,
+                  label: "轮胎"
+                },
+                {
+                  id: 3,
+                  label: "保养配件"
+                },
+                {
+                  id: 4,
+                  label: "工具"
+                }
+              ],
+              type: "list",
+              name: "grade"
+            },
+            {
+              label: "创建时间",
+              name: "date",
+              all: true,
+              custom: true,
+              type: "date",
+              start: {
+                name: "startDate",
+                config: {}
+              },
+              end: {
+                name: "endDate",
+                config: {}
+              }
+            }
+          ]
+        },
+        'handler': function (data) {
+          if(_.isEmpty(data)){
+            return ;
+          }
+          var search = angular.extend({}, currentParams, data);
+          vm.gridModel.requestParams.params = search;
+          getList(search);
+        }
+      };
+
+
+
     }
 
 

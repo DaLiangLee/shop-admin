@@ -1,10 +1,10 @@
 <div class="g-view">
     <div class="container-fluid">
-      <ul class="list-inline">
-        <li><a ui-sref="store.shop.home.info" class="text-muted" ui-sref-active="text-success">店铺信息</a></li>
-        <li><a ui-sref="store.shop.home.aptitude" class="text-muted" ui-sref-active="text-success">店铺资质</a></li>
-        <li><a ui-sref="store.shop.home.contact" class="text-muted" ui-sref-active="text-success">联系方式</a></li>
-        <li><a ui-sref="store.shop.home.bank" class="text-muted" ui-sref-active="text-success">银行账号</a></li>
+      <ul class="nav nav-tabs">
+        <li ui-sref-active="active"><a ui-sref="store.shop.home.info" class="text-muted">店铺信息</a></li>
+        <li ui-sref-active="active"><a ui-sref="store.shop.home.aptitude" class="text-muted">店铺资质</a></li>
+        <li ui-sref-active="active"><a ui-sref="store.shop.home.contact" class="text-muted">联系方式</a></li>
+        <li ui-sref-active="active"><a ui-sref="store.shop.home.bank" class="text-muted">银行账号</a></li>
       </ul>
       <div class="">
         <div ui-view=""></div>

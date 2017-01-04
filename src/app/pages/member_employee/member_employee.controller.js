@@ -14,11 +14,8 @@
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = $state.params;
+    var currentParams = angular.extend({}, $state.params, {pageSize: 10});
     var total = 0;
-    memberEmployee.positions().then(function(results){
-      console.log('positions', results);
-    });
     /**
      * 表格配置
      *
@@ -28,6 +25,11 @@
       itemList: [],
       config: angular.copy(memberEmployeeConfig.DEFAULT_GRID.config),
       loadingState: true,      // 加载数据
+      requestParams: {
+        params: currentParams,
+        request: "member,employee,export",
+        permission: "chebian:store:member:employee:export"
+      },
       pageChanged: function (data) {    // 监听分页
         var page = angular.extend({}, currentParams, {page: data});
         $log.debug('updateGridPaginationInfo', page);
@@ -133,82 +135,129 @@
     /**
      * 获取员工列表
      */
-    function getList() {
+    function getList(params) {
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
-      if (!currentParams.page) {
+      if (!params.page) {
         return;
       }
-      console.log(currentParams);
-      memberEmployee.list(currentParams).then(function (results) {
+      console.log(params);
+      memberEmployee.list(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
-          if (!result.data.length && currentParams.page != 1) {
+          if (!result.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
           total = result.totalCount;
-          vm.gridModel.itemList = filterDate(result.data, result.positions, result.roles);
+          vm.gridModel.itemList = [];
+          angular.forEach(result.data, function (item) {
+            console.log(item.onboarddate);
+            if(item.onboarddate && item.onboarddate.indexOf("-") > -1){
+              item.onboarddate.replace(/\-/gi, "/");
+            }
+            item.onboarddate && (item.onboarddate = new Date(item.onboarddate));
+
+            vm.gridModel.itemList.push(item);
+          });
           vm.gridModel.paginationinfo = {
-            page: currentParams.page * 1,
-            pageSize: 10,
+            page: params.page * 1,
+            pageSize: params.pageSize,
             total: total
           };
           vm.gridModel.loadingState = false;
         } else {
-          cbAlert.error("错误提示", result.rtnInfo);
+          cbAlert.error("错误提示", result.data);
         }
       }, function (data) {
         $log.debug('getListError', data);
       });
     }
 
-    getList();
-
+    getList(currentParams);
     /**
-     * 格式化 岗位和角色
+     * 搜索操作
+     *
      */
-    function filterDate(list, positions, roles){
+    vm.searchModel = {
+      'handler': function (data) {
+        console.log(data);
+        var search = angular.extend({}, currentParams, data);
+        vm.gridModel.requestParams.params = search;
+        getList(search);
+      }
+    };
+    memberEmployee.all().then(function (results) {
+      var result = results.data;
+      if (result.status == 0) {
+        console.log(result.data);
+        vm.searchModel.config = {
+          placeholder: "请输入员工姓名、账号、手机、岗位",
+          searchDirective: [
+            {
+              label: "状态",
+              all: true,
+              list: [
+                {
+                  id: 1,
+                  label: "在职"
+                },
+                {
+                  id: 0,
+                  label: "离职"
+                }
+              ],
+              type: "list",
+              name: "inService"
+            },
+            {
+              label: "入职时间",
+              name: "date",
+              all: true,
+              custom: true,
+              type: "date",
+              start: {
+                name: "startDate",
+                config: {}
+              },
+              end: {
+                name: "endDate",
+                config: {}
+              }
+            },
+            {
+              label: "权限名称",
+              all: true,
+              type: "list",
+              name: "role",
+              list: getRoleList(result.data)
+            }
+          ]
+        }
+      } else {
+        cbAlert.error("错误提示", result.data);
+      }
+    });
+    /**
+     * 格式化权限数据
+     * @param arr
+     * @returns {Array}
+     */
+    function getRoleList(arr){
       var results = [];
-      _.forEach(list, function (item) {
-        item.position = getPositions(item.positionid, positions);
-        item.roleStore = [];
-        item.rolename = getRolename(item.roleStore, roles);
-        results.push(item);
+      angular.forEach(arr, function (item) {
+        results.push({
+          id: item.id,
+          label: item.rolename
+        })
       });
       return results;
     }
-
-    function getPositions(id, list){
-      if(angular.isUndefined(id) || angular.isUndefined(list)){
-        return "";
-      }
-      var item =  _.find(list, function(item){
-        return item.sguid == id;
-      });
-      return angular.isObject(item) ? item.posname : "";
-    }
-
-    function getRolename(roles, list){
-      if(angular.isUndefined(roles) || angular.isUndefined(list)){
-        return "";
-      }
-      var results = [];
-      _.forEach(roles, function (role) {
-        var items =  _.find(list, function(item){
-          return item.sguid == role.id;
-        });
-        angular.isObject(items) && results.push(items.rolename);
-      });
-
-      return results.join(" ");
-    }
-
   }
 
 
   /** @ngInject */
-  function MemberEmployeeChangeController($state, $scope, dateFilter, cbAlert, configuration, memberEmployee, systemRole) {
+  function MemberEmployeeChangeController($state, $scope, dateFilter, cbAlert, configuration, memberEmployee, memberRole) {
     var vm = this;
     //  是否是编辑
     var currentParams = $state.params;
@@ -224,9 +273,24 @@
         positions = results.data.data.concat([]);
       }
     });
-    systemRole.all().then(function(results){
+
+
+    /**
+     * 角色名称
+     * @type {{}}
+     */
+    vm.selectModel = {};
+    memberEmployee.all().then(function(results){
       console.log('systemRole', results);
+      if (results.data.status == 0) {
+        vm.selectModel.store = results.data.data;
+      } else {
+        cbAlert.error("错误提示", results.data.error);
+      }
     });
+
+
+
     vm.dataBase = {
       position: {
         posname: "新家的"
@@ -370,8 +434,6 @@
 
     function setDataBase(data) {
       console.log('setDataBase',data);
-
-
       vm.dataBase = angular.copy(data);
     }
 
@@ -383,6 +445,18 @@
       var base = angular.extend({}, data);
       base.birthday = getSubmitTime(base.birthday);
       base.onboarddate = getSubmitTime(base.onboarddate);
+      _.map(base.roleStore, function(item){
+        return {"id": item};
+      });
+      var roleStore = [];
+      angular.forEach(base.roleStore, function(item){
+        if(angular.isString(item)){
+          roleStore.push({"id": item});
+        }else{
+          roleStore.push(item);
+        }
+      });
+      base.roleStore = roleStore;
       return base;
     }
     function getSubmitTime(time){

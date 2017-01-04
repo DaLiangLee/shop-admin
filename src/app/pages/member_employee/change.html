@@ -3,6 +3,32 @@
     <h2 ng-bind="vm.title"></h2>
     <hr>
     <form class="row form-horizontal" autocomplete="off" name="employee" role="form" novalidate ng-if="vm.isLoadData">
+      <!--<div class="form-group">
+        <label class="col-sm-2 control-label">上传头像：</label>
+        <div class="col-sm-7">
+          <div class="col-md-3" ng-repeat="item in vm.dataBase.mainphoto track by $index"
+               ng-if="vm.dataBase.mainphoto.length">
+            <div style="width: 300px; height:300px; overflow: hidden">
+              <img ng-src="{{item}}?x-oss-process=image/resize,w_300" style="vertical-align: middle;" alt=""
+                   class="img-thumbnail">
+            </div>
+            <div>
+              <a target="_blank" ng-href="{{item}}">下载</a>
+              <button ng-click="vm.removePhotos($index)">删除</button>
+              <button cb-upload-file="images" title="店招图片上传" data-upload-type="productMain" data-value-max="1"
+                      upload-item="vm.uploadHandler(data, $index)">重新上传
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
+            <div>
+              <button cb-upload-file="images" title="员工头像上传" data-upload-type="productMain" data-value-max="1"
+                      upload-item="vm.uploadHandler(data)">上传头像
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>-->
       <div class="form-group">
         <label class="col-md-1 control-label">工号：</label>
         <div class="col-md-7">
@@ -65,7 +91,7 @@
       <div class="form-group">
         <label class="col-md-1 control-label"><span class="text-danger">*</span> 岗位：</label>
         <div class="col-md-7">
-          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.positionid" ng-maxlength="40"
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.position.posname" ng-maxlength="40"
                  placeholder="请输入岗位" cb-placeholder="">
         </div>
       </div>
@@ -95,16 +121,13 @@
         <div class="form-group">
           <label class="col-md-1 control-label"><span class="text-danger">*</span> 角色名称：</label>
           <div class="col-md-7">
-            <div simple-select="id,name" store="vm.store" select="vm.select" data-multiple></div>
+            <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore" data-multiple></div>
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="col-md-7 col-md-offset-1 text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
-          </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
-          </button>
+          <button type="button" class="btn btn-primary" ng-click="vm.submit()">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>
           <button type="button" class="btn btn-default"
                   cb-back-button="{'name':'member.employee.list','params':{'page': 1}}"
                   data-router="member.employee.list"

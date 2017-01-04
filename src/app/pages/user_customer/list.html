@@ -1,15 +1,11 @@
 <div class="g-view">
   <div class="container-fluid">
-    <ul class="list-inline">
-      <li><span class="text-muted text-success">按会员</span></li>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="javascript:;" class="text-muted text-success">按会员</a></li>
       <li><a ui-sref="user.motor.list({page:1})" class="text-muted">按车辆</a></li>
     </ul>
-    <div class="panel panel-default">
-
-      <div class="panel-body">
-        <div simple-search config="vm.gridSearch.config" search-pre-handler="vm.gridSearch.handler(data)"></div>
-      </div>
-    </div>
+    <br>
+    <div cb-access-control="chebian:store:user:customer:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
 
     <div ng-if="vm.gridModel2.columns.length" simple-grid columns="vm.gridModel2.columns" store="vm.gridModel2.itemList" loading-state="vm.gridModel2.loadingState" config="vm.gridModel2.config"></div>

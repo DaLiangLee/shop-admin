@@ -197,7 +197,9 @@
         ]
       },
       'handler': function (data) {
-        $log.debug(data);
+        if(_.isEmpty(data)){
+          return ;
+        }
         var search = angular.extend({}, currentParams, data);
         vm.gridModel.requestParams.params = search;
         getList(search);

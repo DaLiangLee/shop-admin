@@ -439,7 +439,7 @@
             text: '',        //提示文字
             type: type || 'success',      //类型
             showConfirmButton: false,    //显示确认按钮
-            showOverlay: false,      // 提示消息不显示背景遮罩效果
+            showOverlay: true,      // 提示消息不显示背景遮罩效果
             delay: delay || 2000     //延迟时间
           });
         });

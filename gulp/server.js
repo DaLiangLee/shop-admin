@@ -34,9 +34,9 @@ function browserSyncInit(baseDir, browser) {
    * For more details and option, https://github.com/chimurai/http-proxy-middleware/blob/v0.9.0/README.md
    */
   // 代理刘易
-  //server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.127:8080', changeOrigin: true});
+  server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.127:8080', changeOrigin: true});
   // 代理姚东
-  server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.130:8081', changeOrigin: true});
+  //server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.130:8081', changeOrigin: true});
 
   browserSync.instance = browserSync.init({
     startPath: '/',

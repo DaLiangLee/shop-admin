@@ -28,7 +28,7 @@
                         "id": 1,
                         "cssProperty": "state-column",
                         "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span> <button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="edit" title="编辑角色" item="item" role-item="propsParams.roleItem(data)">编辑</button>',
-                        "name": '角色名',
+                        "name": '权限名称',
                         "width": 300
                     },
                     {
@@ -52,20 +52,7 @@
                     },
                     'addColumnsBarDirective': [
                         '<button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">+添加角色</button> ',
-                      '<button class="btn btn-danger" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
-                    ]
-                }
-            },
-            DEFAULT_SEARCH: {
-                "config": {
-                    "searchID": 'system-role',
-                    "searchDirective": [
-                        {
-                            'label': "角色名称",
-                            'type': 'text',
-                            'searchText': "name",
-                            'placeholder': '角色名称'
-                        }
+                      '<button class="btn btn-danger" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
                     ]
                 }
             }

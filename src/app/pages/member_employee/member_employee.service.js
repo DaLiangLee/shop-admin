@@ -34,7 +34,7 @@
           {
             "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.sguid})"></a>',
+            "fieldDirective": '<a cb-access-control="chebian:store:member:employee:edit" class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.guid})"></a><span cb-access-control="chebian:store:member:employee:edit:forbidden" class="state-unread" bo-text="item.realname"></span>',
             "name": '员工姓名',
             "width": 150
           },
@@ -55,7 +55,7 @@
           {
             "id": 5,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.position"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.posname"></span>',
             "name": '岗位'
           },
           {
@@ -67,22 +67,23 @@
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-switch checked="item.status" ng-click="propsParams.statusItem(item)"></div>',
+            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checked="item.status" ng-click="propsParams.statusItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checked="item.status"></div>',
             "name": '是否允许登录店铺后台',
             "width": 160
           },
           {
             "id": 8,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-switch checked="item.inservice" ng-click="propsParams.inserviceItem(item)"></div>',
+            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checked="item.inservice" ng-click="propsParams.inserviceItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checked="item.status"></div>',
             "name": '在职状态',
             "width": 80
           },
           {
             "id": 9,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-bind="item.onboardDate | date : \'yyyy年mm月dd日\'"></span>',
-            "name": '入职时间'
+            "fieldDirective": '<span class="state-unread" bo-bind="item.onboarddate | date : \'yyyy年MM月dd日\'"></span>',
+            "name": '入职时间',
+            "width": 140
           }
         ],
         "config": {
@@ -93,14 +94,15 @@
           'selectedProperty': "selected",  // 数据列表项复选框
           'selectedScopeProperty': "selectedItems",
           'useBindOnce': true,  // 是否单向绑定
+          'exportDataSupport': true,
           "paginationInfo": {   // 分页配置信息
             maxSize: 5,
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<button class="btn btn-primary" cb-access-control="member" data-parentid="90000" data-sectionid="90002" ui-sref="member.employee.add()">+添加员工</button> ',
-            '<button class="btn btn-danger" cb-access-control="member" data-parentid="90000" data-sectionid="90009" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> ',
-            '<button class="btn btn-warning" cb-access-control="member" data-parentid="90000" data-sectionid="90004" ng-click="propsParams.resetItem()">重置密码</button> '
+            '<a class="btn btn-primary" cb-access-control="chebian:store:member:employee:add" ui-sref="member.employee.add()">+添加员工</a> ',
+            '<button class="btn btn-danger" cb-access-control="chebian:store:member:employee:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> ',
+            '<button class="btn btn-warning" cb-access-control="chebian:store:member:employee:reset" ng-click="propsParams.resetItem()">重置密码</button> '
           ]
         }
       },

@@ -51,10 +51,6 @@
      * 默认配置
      * @type {{searchParams: string, searchPrefer: boolean, searchDirective: Array}}
      */
-    var DEFAULT_CONFIG = {
-      searchID: "",               //表单id
-      searchDirective: []        //自定义列表项配置    必填项
-    };
     return {
       restrict: "A",
       scope: {
@@ -63,58 +59,61 @@
       },
       templateUrl: "app/components/simpleSearch/simpleSearch.html",
       controller: ["$scope", function ($scope) {
-        // config 配置默认参数
-        $scope.config = angular.extend({}, DEFAULT_CONFIG, $scope.config);
-        $scope.searchID = $scope.config.searchID;
         $scope.items = [];
         $scope.searchParams = {};
-        angular.forEach($scope.config.searchDirective, function (item) {
-          if(!angular.isArray(item.list) && !item.all){
-            throw Error(item.label + '：的配置项不全');
-          }
-          if(angular.isArray(item.list) && !item.list.length && !item.all){
-            throw Error(item.label + '：的配置项list为0');
-          }
-          /**
-           * 如果是自定义需要吧当前想绑定的name+$$在后期处理
-           */
-          item.custom && (item.name = "$$" + item.name);
-          /**
-           * 如果model没有填就默认是全部
-           */
-          angular.isUndefined(item.model) && (item.model = -1);
-          if(item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
-            item.model = -2;
-          }
-          /**
-           * 生成绑定的默认数据
-           */
-          $scope.searchParams[item.name] = item.model;
-          angular.isDefined(item.start) && ($scope.searchParams[item.start.name] = item.start.model);
-          angular.isDefined(item.end) && ($scope.searchParams[item.end.name] = item.end.model);
-          /**
-           * 检查list是不是数组
-           */
-          if (!angular.isArray(item.list)) {
-            item.list = [];
-          }
-          // 全部 添加在数组第一项
-          if (item.all) {
-            item.list.unshift({
-              id: -1,
-              label: "全部"
+        var config = $scope.$watch('config', function(value){
+          if(value){
+            $scope.items = [];
+            $scope.searchParams = {};
+            angular.forEach($scope.config.searchDirective, function (item) {
+              if(!angular.isArray(item.list) && !item.all){
+                throw Error(item.label + '：的配置项不全');
+              }
+              if(angular.isArray(item.list) && !item.list.length && !item.all){
+                throw Error(item.label + '：的配置项list为0');
+              }
+              /**
+               * 如果是自定义需要吧当前想绑定的name+$$在后期处理
+               */
+              item.custom && (item.name = "$$" + item.name);
+              /**
+               * 如果model没有填就默认是全部
+               */
+              angular.isUndefined(item.model) && (item.model = -1);
+              if(item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
+                item.model = -2;
+              }
+              /**
+               * 生成绑定的默认数据
+               */
+              $scope.searchParams[item.name] = item.model;
+              angular.isDefined(item.start) && ($scope.searchParams[item.start.name] = item.start.model);
+              angular.isDefined(item.end) && ($scope.searchParams[item.end.name] = item.end.model);
+              /**
+               * 检查list是不是数组
+               */
+              if (!angular.isArray(item.list)) {
+                item.list = [];
+              }
+              // 全部 添加在数组第一项
+              if (item.all) {
+                item.list.unshift({
+                  id: -1,
+                  label: "全部"
+                });
+              }
+              // 自定义 添加在数组第最后一项项
+              if (item.custom) {
+                item.list.push({
+                  id: -2,
+                  label: "自定义"
+                });
+              }
+              (!item.custom && !item.type) && (item.type = 'list');
+              (item.custom && !item.type) && (item.type = 'number');
+              $scope.items.push(item);
             });
           }
-          // 自定义 添加在数组第最后一项项
-          if (item.custom) {
-            item.list.push({
-              id: -2,
-              label: "自定义"
-            });
-          }
-          (!item.custom && !item.type) && (item.type = 'list');
-          (item.custom && !item.type) && (item.type = 'number');
-          $scope.items.push(item);
         });
 
         // 给date设置默认配置

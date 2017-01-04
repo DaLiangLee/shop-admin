@@ -93,7 +93,7 @@
         url: '/desktop',
         title: '工作台首页',
         template: '<div ui-view class="desktop"></div>',
-        permission: ""
+        permission: "desktop"
       })
       .state('desktop.home', {
         url: '/home',
@@ -101,11 +101,7 @@
         controller: 'DesktopHomeController',
         controllerAs: 'vm',
         title: '工作台管理',
-        permission: {
-          parentid: 1,
-          category: "desktop",
-          sectionid: 2
-        }
+        permission: "desktop"
       })
       .state('store', {   // 店铺管理
         url: '/store',
@@ -133,11 +129,7 @@
         controller: 'StoreShopHomeController',
         controllerAs: 'vm',
         title: '店铺管理',
-        permission: {
-          parentid: 30000,
-          category: "store",
-          sectionid: 30001
-        }
+        permission: "chebian:store:store:shop:index"
       })
       .state('store.shop.home.aptitude', {   // 店铺信息管理  店铺资质
         url: '/aptitude',
@@ -145,11 +137,7 @@
         controller: 'StoreShopHomeAptitudeController',
         controllerAs: 'vm',
         title: '店铺管理',
-        permission: {
-          parentid: 30000,
-          category: "store",
-          sectionid: 30001
-        }
+        permission: "chebian:store:store:shop:index"
       })
       .state('store.shop.home.contact', {   // 店铺信息管理 联系方式
         url: '/contact',
@@ -157,11 +145,7 @@
         controller: 'StoreShopHomeContactController',
         controllerAs: 'vm',
         title: '店铺管理',
-        permission: {
-          parentid: 30000,
-          category: "store",
-          sectionid: 30001
-        }
+        permission: "chebian:store:store:shop:index"
       })
       .state('store.shop.home.bank', {   // 店铺信息管理  银行
         url: '/bank',
@@ -169,11 +153,7 @@
         controller: 'StoreShopHomeBankController',
         controllerAs: 'vm',
         title: '店铺管理',
-        permission: {
-          parentid: 30000,
-          category: "store",
-          sectionid: 30001
-        }
+        permission: "chebian:store:store:shop:index"
       })
       .state('product', {     // 产品管理
         url: '/product',
@@ -201,7 +181,7 @@
         controller: 'ProductGoodsChangeController',
         controllerAs: 'vm',
         title: '添加商品',
-        permission: ""
+        permission: "chebian:store:product:goods:add"
       })
       .state('product.goods.edit', {     // 编辑商品
         url: '/edit/:pskuid',
@@ -209,21 +189,13 @@
         controller: 'ProductGoodsChangeController',
         controllerAs: 'vm',
         title: '编辑商品',
-        permission: {
-          parentid: 40000,
-          category: "product",
-          sectionid: 40003
-        }
+        permission: "chebian:store:product:goods:edit"
       })
       .state('product.server', {     // 服务项目管理
         url: '/server',
         template: '<div ui-view></div>',
         title: '服务管理',
-        permission: {
-          parentid: 4,
-          category: "product",
-          sectionid: 40100
-        }
+        permission: "chebian:store:product:server:view"
       })
       .state('product.server.list', {     // 服务项目管理
         url: '/list/:page/:status',
@@ -231,11 +203,7 @@
         controller: 'ProductServerListController',
         controllerAs: 'vm',
         title: '服务管理',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40101
-        }
+        permission: "chebian:store:product:server:view"
       })
       .state('product.server.add', {     // 新增项目
         url: '/add',
@@ -243,23 +211,7 @@
         controller: 'ProductServerChangeController',
         controllerAs: 'vm',
         title: '新增服务',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40101
-        }
-      })
-      .state('product.server.addGoods', {     // 新增服务报价商品添加
-        url: '/addGoods?serverid&offerid&edit',
-        templateUrl: 'app/pages/product_server/add_goods.html',
-        controller: 'ProductServerAddGoodsController',
-        controllerAs: 'vm',
-        title: '管理商品',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40101
-        }
+        permission: "chebian:store:product:server:edit"
       })
       .state('product.server.edit', {     // 编辑项目
         url: '/edit/:serverid',
@@ -267,21 +219,13 @@
         controller: 'ProductServerChangeController',
         controllerAs: 'vm',
         title: '编辑服务',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40103
-        }
+        permission: "chebian:store:product:server:edit"
       })
       .state('product.package', {     // 套餐管理
         url: '/package',
         template: '<div ui-view></div>',
         title: '套餐管理',
-        permission: {
-          parentid: 4,
-          category: "product",
-          sectionid: 40200
-        }
+        permission: "chebian:store:product:package:view"
       })
       .state('product.package.list', {     // 套餐管理
         url: '/list/:page',
@@ -289,11 +233,7 @@
         controller: 'ProductPackageListController',
         controllerAs: 'vm',
         title: '套餐管理',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40201
-        }
+        permission: "chebian:store:product:package:view"
       })
       .state('product.package.add', {     // 新增套餐
         url: '/add',
@@ -301,11 +241,7 @@
         controller: 'ProductPackageChangeController',
         controllerAs: 'vm',
         title: '新增套餐',
-        permission: {
-          parentid: 40200,
-          category: "product",
-          sectionid: 40202
-        }
+        permission: "chebian:store:product:package:add"
       })
       .state('product.package.edit', {     // 编辑套餐
         url: '/edit/:id',
@@ -313,31 +249,19 @@
         controller: 'ProductPackageChangeController',
         controllerAs: 'vm',
         title: '编辑套餐',
-        permission: {
-          parentid: 40200,
-          category: "product",
-          sectionid: 40203
-        }
+        permission: "chebian:store:product:package:edit"
       })
       .state('trade', {      // 交易管理
         url: '/trade',
         template: '<div ui-view></div>',
         title: '交易管理',
-        permission: {
-          parentid: 40100,
-          category: "product",
-          sectionid: 40103
-        }
+        permission: "chebian:store:trade:porder:view"
       })
       .state('trade.porder', {      // 商品订单管理
         url: '/porder',
         template: '<div ui-view></div>',
         title: '商品订单管理',
-        permission: {
-          parentid: 5,
-          category: "trade",
-          sectionid: 50000
-        }
+        permission: "chebian:store:trade:porder:view"
       })
       .state('trade.porder.list', {      // 商品订单管理
         url: '/list/:page',
@@ -345,21 +269,13 @@
         controller: 'TradePorderListController',
         controllerAs: 'vm',
         title: '商品订单管理',
-        permission: {
-          parentid: 50000,
-          category: "trade",
-          sectionid: 50000
-        }
+        permission: "chebian:store:trade:porder:view"
       })
       .state('trade.sorder', {      // 服务订单管理
         url: '/sorder',
         template: '<div ui-view></div>',
         title: '服务订单管理',
-        permission: {
-          parentid: 5,
-          category: "trade",
-          sectionid: 50100
-        }
+        permission: "chebian:store:trade:sorder:view"
       })
       .state('trade.sorder.list', {      // 服务订单管理
         url: '/list/:page',
@@ -367,11 +283,7 @@
         controller: 'TradeSorderListController',
         controllerAs: 'vm',
         title: '服务订单管理',
-        permission: {
-          parentid: 50100,
-          category: "trade",
-          sectionid: 50100
-        }
+        permission: "chebian:store:trade:sorder:view"
       })
       .state('trade.sorder.add', {     // 新增服务订单
         url: '/add',
@@ -379,11 +291,7 @@
         controller: 'TradeSorderChangeController',
         controllerAs: 'vm',
         title: '新增服务订单',
-        permission: {
-          parentid: 50100,
-          category: "trade",
-          sectionid: 50101
-        }
+        permission: "chebian:store:trade:sorder:add"
       })
       .state('trade.sorder.edit', {     // 编辑服务订单
         url: '/edit/:id',
@@ -391,11 +299,7 @@
         controller: 'TradeSorderChangeController',
         controllerAs: 'vm',
         title: '编辑服务订单',
-        permission: {
-          parentid: 50100,
-          category: "trade",
-          sectionid: 50101
-        }
+        permission: "chebian:store:trade:sorder:add"
       })
       .state('trade.sorder.detail', {     // 服务订单详情
         url: '/detail/:orderid',
@@ -403,21 +307,13 @@
         controller: 'TradePorderDetailController',
         controllerAs: 'vm',
         title: '服务订单详情',
-        permission: {
-          parentid: 50100,
-          category: "trade",
-          sectionid: 50103
-        }
+        permission: "chebian:store:trade:sorder:detail"
       })
       .state('trade.comment', {      // 评价管理
         url: '/comment',
         template: '<div ui-view></div>',
         title: '评价管理',
-        permission: {
-          parentid: 7,
-          category: "user",
-          sectionid: 70200
-        }
+        permission: "chebian:store:user:comment:view"
       })
       .state('trade.comment.list', {      // 评价管理
         url: '/list/:page',
@@ -425,31 +321,19 @@
         controller: 'TradeCommentListController',
         controllerAs: 'vm',
         title: '评价管理',
-        permission: {
-          parentid: 70200,
-          category: "user",
-          sectionid: 70201
-        }
+        permission: "chebian:store:user:comment:view"
       })
       .state('finance', {      // 财务管理
         url: '/finance',
         template: '<div ui-view></div>',
         title: '财务管理',
-        permission: {
-          parentid: 6,
-          category: "finance",
-          sectionid: 60000
-        }
+        permission: "chebian:store:finance:account:view"
       })
       .state('finance.account', {      // 账户管理
         url: '/account',
         template: '<div ui-view></div>',
         title: '账户管理',
-        permission: {
-          parentid: 6,
-          category: "finance",
-          sectionid: 60000
-        }
+        permission: "chebian:store:finance:account:view"
       })
       .state('finance.account.home', {      // 账户管理
         url: '/home',
@@ -457,11 +341,7 @@
         controller: 'FinanceAccountHomeController',
         controllerAs: 'vm',
         title: '账户管理',
-        permission: {
-          parentid: 60000,
-          category: "finance",
-          sectionid: 60001
-        }
+        permission: "chebian:store:finance:account:view"
       })
       .state('finance.account.list', {      // 交易记录
         url: '/home',
@@ -469,21 +349,13 @@
         controller: 'FinanceAccountListController',
         controllerAs: 'vm',
         title: '交易记录',
-        permission: {
-          parentid: 60000,
-          category: "finance",
-          sectionid: 60001
-        }
+        permission: "chebian:store:finance:account:view"
       })
       .state('finance.receivable', {      // 收款管理
         url: '/receivable',
         template: '<div ui-view></div>',
         title: '收款管理',
-        permission: {
-          parentid: 6,
-          category: "finance",
-          sectionid: 60100
-        }
+        permission: "chebian:store:finance:receivable:view"
       })
       .state('finance.receivable.list', {      // 收款管理
         url: '/list/:page',
@@ -491,21 +363,13 @@
         controller: 'FinanceReceivableLsitController',
         controllerAs: 'vm',
         title: '收款管理',
-        permission: {
-          parentid: 60100,
-          category: "finance",
-          sectionid: 60101
-        }
+        permission: "chebian:store:finance:receivable:view"
       })
       .state('finance.refund', {      // 退款管理
         url: '/refund',
         template: '<div ui-view></div>',
         title: '退款管理',
-        permission: {
-          parentid: 6,
-          category: "finance",
-          sectionid: 60200
-        }
+        permission: "chebian:store:finance:refund:view"
       })
       .state('finance.refund.list', {      // 退款管理
         url: '/list/:page',
@@ -513,11 +377,7 @@
         controller: 'FinanceRefundListController',
         controllerAs: 'vm',
         title: '退款管理',
-        permission: {
-          parentid: 60200,
-          category: "finance",
-          sectionid: 60201
-        }
+        permission: "chebian:store:finance:refund:view"
       })
       .state('user', {      // 会员管理
         url: '/user',
@@ -595,21 +455,13 @@
         url: '/stocks',
         template: '<div ui-view></div>',
         title: '货源中心',
-        permission: {
-          parentid: 1,
-          category: "stocks",
-          sectionid: 8
-        }
+        permission: "chebian:store:stocks:terminal:view"
       })
       .state('stocks.terminal', {      // 硬件出库安装
         url: '/terminal',
         template: '<div ui-view></div>',
         title: '硬件出库安装',
-        permission: {
-          parentid: 8,
-          category: "stocks",
-          sectionid: 80000
-        }
+        permission: "chebian:store:stocks:terminal:view"
       })
       .state('stocks.terminal.list', {      // 硬件出库安装
         url: '/list/:page',
@@ -617,31 +469,19 @@
         controller: 'StocksTerminalListController',
         controllerAs: 'vm',
         title: '硬件出库安装',
-        permission: {
-          parentid: 80000,
-          category: "goods",
-          sectionid: 80001
-        }
+        permission: "chebian:store:stocks:terminal:view"
       })
       .state('member', {      // 员工管理
         url: '/member',
         template: '<div ui-view></div>',
         title: '员工管理',
-        permission: {
-          parentid: 1,
-          category: "member",
-          sectionid: 9
-        }
+        permission: "chebian:store:member:employee:view"
       })
       .state('member.employee', {      // 员工管理
         url: '/employee',
         template: '<div ui-view></div>',
         title: '员工管理',
-        permission: {
-          parentid: 9,
-          category: "member",
-          sectionid: 90000
-        }
+        permission: "chebian:store:member:employee:view"
       })
       .state('member.employee.list', {      // 员工管理
         url: '/list/:page',
@@ -649,11 +489,7 @@
         controller: 'MemberEmployeeListController',
         controllerAs: 'vm',
         title: '员工管理',
-        permission: {
-          parentid: 90000,
-          category: "member",
-          sectionid: 90001
-        }
+        permission: "chebian:store:member:employee:view"
       })
       .state('member.employee.add', {      // 添加新员工管理
         url: '/add',
@@ -661,11 +497,7 @@
         controller: 'MemberEmployeeChangeController',
         controllerAs: 'vm',
         title: '添加新员工',
-        permission: {
-          parentid: 90000,
-          category: "member",
-          sectionid: 90002
-        }
+        permission: "chebian:store:member:employee:add"
       })
       .state('member.employee.edit', {      // 编辑员工员工管理
         url: '/edit/:id',
@@ -673,11 +505,7 @@
         controller: 'MemberEmployeeChangeController',
         controllerAs: 'vm',
         title: '编辑员工',
-        permission: {
-          parentid: 90000,
-          category: "member",
-          sectionid: 90002
-        }
+        permission: "chebian:store:member:employee:edit"
       })
       .state('member.role', {      // 权限管理
         url: '/role',

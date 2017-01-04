@@ -28,12 +28,21 @@
         /**
          * 没有访问权限和页面没找到做特殊处理
          */
-        if (permission === 'forbidden' || permission === 'notfound') {
+        if (permission === 'forbidden' || permission === 'notfound' || permission === "desktop") {
           return true;
         }
-        return _.findIndex(permissionList, function(item){
-            return item === permission;
-          }) > -1;
+        var forbidden = false;
+        if(/\:forbidden$/.test(permission)){
+          forbidden = true;
+          permission = permission.replace(/\:forbidden$/, "");
+        }
+        var index = _.findIndex(permissionList, function(item){
+          return item === permission;
+        });
+        if(forbidden){
+          return index === -1;
+        }
+        return index > -1;
       }
     };
   }

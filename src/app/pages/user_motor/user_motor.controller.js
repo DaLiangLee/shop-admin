@@ -15,6 +15,11 @@
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     /**
+     * 记录当前子项
+     * @type {string}
+     */
+    var recordChild = "";
+    /**
      * 表格配置
      *
      */
@@ -29,8 +34,8 @@
         $state.go(currentStateName, page);
       },
       selectHandler: function(item){
-        console.log(item);
-        getUser(item.guid);
+        // 拦截用户恶意点击
+        recordChild != item.guid && getUser(item.guid);
       }
     };
 
@@ -61,11 +66,7 @@
       }, function (data) {
         $log.debug('getListError', data);
       }).then(function(result){
-        _.forEach(result, function(item){
-          item.gradename = _.find(usergrades, function(key){
-            return key.guid === item.storegrade;
-          }).gradename;
-        });
+        recordChild = guid;
         vm.gridModel2.itemList = result;
         vm.gridModel2.loadingState = false;
       });

@@ -9,7 +9,7 @@
         .directive('memberRoleDialog', memberRoleDialog);
 
     /** @ngInject */
-    function memberRoleDialog($log, cbDialog, configuration, treeService, memberRole){
+    function memberRoleDialog($log, cbDialog, configuration, cbAlert, treeService, memberRole){
         function getData(data){
             if(!data){
                 return ;
@@ -220,19 +220,18 @@
          */
         function getEditorData(data, childrenName) {
             if(!data.length){
-                return [];
+              return [];
             }
             childrenName = childrenName || "items";
             var results = [1];
             _.forEach(data, function (item) {
-                results.push(item.id);
-                item[childrenName] && _.forEach(item[childrenName], function (subItem) {
-                    results.push(subItem.id);
-                });
+              results.push(item.id*1);
+              item[childrenName] && _.forEach(item[childrenName], function (subItem) {
+                results.push(subItem.id*1);
+              });
             });
-            return results;
+            return _.uniq(results, true);
         }
-
         return {
             restrict: "A",
             scope: {
@@ -243,58 +242,23 @@
                 var iEle = angular.element(iElement),
                     type = iAttrs.memberRoleDialog,
                     transmit = [],
-                    roleList  = angular.copy(configuration.getMenu());
+                    roleList  = angular.copy(configuration.getMenu()),
+                    copyDiff = [1, 10, 100200];
 
                 /**
                  * 弹窗处理事件
                  */
                 function handler(childScope) {
-                    childScope.item = {};
+                    childScope.item = angular.extend({}, scope.item);
+                    angular.isUndefined(childScope.item.datascope) && (childScope.item.datascope = "0");
                     childScope.alertWarning = "";
                     childScope.interceptor = false;
-                    /**
-                     * 添加操作
-                     */
-                    if(type === 'add'){
-                      console.log(roleList);
-                        childScope.item.roleid = undefined;
-                        addData();
-                    }
-                    /**
-                     * 编辑操作
-                     */
-                    if(type === 'edit'){
-                        var item = angular.copy(scope.item);
-                        var copyDiff;
-                        $log.debug(scope.item);
-                        childScope.item = angular.copy(item);
-                        if(item.items.length) {
-                            /**
-                             * 如果有权限数据 就设置
-                             */
-                            copyDiff = getEditorData(item.items);
-
-                            addData();
-                            treeService.setCheckState(childScope.item.items, copyDiff, "id");
-
-                        }else{
-                            /**
-                             * 如果没有权限数据 就添加
-                             */
-                            copyDiff = [];
-                            addData();
-                        }
-                    }
-
-                    /**
-                     * 设置无权限的树形列表
-                     */
-                    function addData(){
 
 
-                        childScope.item.items = generatedTreeData(roleList);
-                        treeService.enhance(childScope.item.items, 'items');
-                    }
+                    childScope.item.items = generatedTreeData(roleList);
+                    treeService.enhance(childScope.item.items, 'items');
+                    treeService.setCheckState(childScope.item.items, copyDiff, "id");
+
                     childScope.title = iAttrs.title;
                     childScope.confirm = function () {
                         /**
@@ -305,10 +269,10 @@
                             childScope.alertWarning = '需要填写角色名字';
                             return ;
                         }
-                        if(!transmit.datascope){
+                        /*if(!transmit.datascope){
                             childScope.alertWarning = '需要选择角色范围';
                             return ;
-                        }
+                        }*/
                         $log.debug(transmit.items);
                         /**
                          * 获取提交数据
@@ -345,9 +309,6 @@
                          * 如果没有修改设置权限菜单
                          * 就返回给后台一个空数组，减少后端的查询次数
                          */
-                        if(angular.equals(transmit.items, copyDiff)){
-                            transmit.items = [];
-                        }
                         childScope.alertWarning = "";
                         childScope.close();
                         /**
@@ -366,9 +327,26 @@
                     scope.roleItem({data: {"status":"-1", "data":"打开成功"}});
                     t.preventDefault();
                     t.stopPropagation();
-                    cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {
+                    console.log(scope.item);
+                    if(type === 'edit'){
+                      memberRole.get({roleid: scope.item.id}).then(function(results){
+                        if (results.data.status == 0) {
+                          copyDiff = getEditorData(results.data.data);
+                          console.log(copyDiff);
+
+                          cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {
+                            windowClass: "viewFramework-member-role-dialog"
+                          });
+                        } else {
+                          cbAlert.error("错误提示", results.data.data);
+                        }
+
+                      });
+                    }else{
+                      cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {
                         windowClass: "viewFramework-member-role-dialog"
-                    });
+                      });
+                    }
                 })
             }
         }

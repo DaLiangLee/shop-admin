@@ -13,17 +13,17 @@
                 <input type="text" autocomplete="off" id="inputEmail3" class="form-control" ng-model="item.rolename">
             </div>
         </div>
-        <div class="form-group clearfix">
+        <!--<div class="form-group clearfix">
             <label for="inputEmail3" class="col-sm-3 control-label"><i class="text-danger">*</i> 角色范围：</label>
             <div class="col-sm-8">
                 <select class="form-control" ng-model="item.datascope">
-                    <option value="">-- 请选择角色范围 --</option>
+                    <option value="">&#45;&#45; 请选择角色范围 &#45;&#45;</option>
                     <option value="0">所有数据</option>
                     <option value="1">所在店铺及以下数据</option>
                     <option value="2">仅个人数据</option>
                 </select>
             </div>
-        </div>
+        </div>-->
         <hr>
         <h5><i class="text-danger">*</i> 设置权限（至少选择一项）</h5>
         <hr>
@@ -62,7 +62,7 @@
             <button class="btn btn-default" ng-click="close(false)">暂不编辑</button>
         </div>
         <div class="inline-block margin-right" ng-if="!interceptor">
-            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!item.rolename || !item.datascope">确定</button>
+            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!item.rolename">确定</button>
             <button class="btn btn-default" ng-click="close(false)">取消</button>
         </div>
     </div>

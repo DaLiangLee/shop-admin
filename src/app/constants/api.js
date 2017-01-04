@@ -345,6 +345,10 @@
                       "verifyCodeCheck": {
                         "url": "/users/joinStore/verifyCode/check",
                         "type": "GET"
+                      },
+                      "export": {
+                        "url": "/users/export",
+                        "type": "GET"
                       }
                     }
                 },
@@ -393,11 +397,23 @@
                     "changeshow": {
                       "url": "/member/employee/changeshow",
                       "type": "POST"
+                    },
+                    "export": {
+                      "url": "/member/employee/export",
+                      "type": "GET"
+                    },
+                    "all": {
+                      "url": "/member/role/all",
+                      "type": "GET"
                     }
                   },
                   "role": {
-                    "get": {
+                    "list": {
                       "url": "/member/role",
+                      "type": "GET"
+                    },
+                    "get": {
+                      "url": "/member/role/get",
                       "type": "GET"
                     },
                     "add": {
@@ -415,10 +431,6 @@
                     "remove": {
                       "url": "/member/role/remove",
                       "type": "POST"
-                    },
-                    "all": {
-                      "url": "/member/role/all",
-                      "type": "GET"
                     }
                   }
                 },

@@ -59,7 +59,10 @@
       },
       link: function(scope, iElement, iAttrs){
         var request = getRequest(iAttrs.exportData);
+
+
         var params = scope.$watch('params', function (value) {
+          console.log(value);
           (value && removePage(value)) && iElement.attr('href', request+"?"+removePage(value));
         });
         /**

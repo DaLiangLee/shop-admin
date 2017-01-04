@@ -47,4 +47,9 @@
       background-color:green;
     }
   }
+  &[cb-switch='forbidden']{
+    label{
+      cursor: default;
+    }
+  }
 }

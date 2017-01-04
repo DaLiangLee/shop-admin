@@ -194,6 +194,10 @@
         <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange
           ? "修改" : "添加"}}
         </button>
+        <button type="button" class="btn btn-primary" ng-click="vm.submitBack()">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
+        </button>
         <button type="button" class="btn btn-default"
                 cb-back-button="{'name':'product.goods.list','params':{'page': 1}}" data-router="product.goods.edit"
                 ng-if="vm.isChange">返回

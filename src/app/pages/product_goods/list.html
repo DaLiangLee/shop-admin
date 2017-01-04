@@ -1,9 +1,10 @@
 <div class="g-view">
   <div class="container-fluid">
-    <ul class="list-inline">
-      <li><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted" ui-sref-active="text-success">在售商品库</a></li>
-      <li><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted" ui-sref-active="text-success">已下架</a></li>
+    <ul class="nav nav-tabs">
+      <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted">在售商品库</a></li>
+      <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted">已下架</a></li>
     </ul>
+    <br>
     <div cb-access-control="chebian:store:product:goods:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"

@@ -61,7 +61,7 @@
           {
             "id": 6,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.gradename"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
             "name": '等级'
           },
           {

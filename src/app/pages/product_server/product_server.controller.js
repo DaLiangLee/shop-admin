@@ -29,7 +29,7 @@
         requestParams: {
           params: currentParams,
           request: "product,server,excelServer",
-          permission: "chebian:store:product:goods:export"
+          permission: "chebian:store:product:server:export"
         },
         columns: angular.copy(productServerConfig.DEFAULT_GRID.columns),
         itemList: [],
@@ -65,31 +65,15 @@
         currentStatus: currentParams.status,
         removeItem: function (data) {
           if (data.status == 0) {
-            /**
-             * 删除单页
-             */
-            var item = null;
-            if(data.removal.length == 1){
-              item = {
-                serverid: data.removal[0].serverid
-              }
-            }
-            productServer.removeServer(item).then(function (data) {
-              if(data.data.status === '0'){
+            productServer.removeServerAll(data.transmit).then(function (results) {
+              if(results.data.status === '0'){
                 cbAlert.tips("删除成功");
               }else{
-                cbAlert.error(data.data.rtnInfo);
+                cbAlert.error(results.data.data);
               }
               getList(currentParams);
             });
           }
-          // if(data.list.length <= 5 && total > 10){
-          //     vm.gridModel.loadingState = true;
-          //     $timeout(function (){
-          //         getList();
-          //     }, 3000);
-          // }
-          //vm.gridModel.itemList = data.list;
         },
         statusItem: function (data) {
           if (data.status == 0) {

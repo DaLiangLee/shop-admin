@@ -51,14 +51,14 @@
         }
 
         /** @ngInject */
-        function routerRun($rootScope, $state, $log, permissions, preferencenav) {
+        function routerRun($rootScope, $state, $log, permissions) {
           $rootScope.userPermissionList = permissions.getPermissions();
           $rootScope.$state = $state;
           /**
            * event, toState, toParams, fromState, fromParams
            *
            */
-          var stateChangeStart = $rootScope.$on('$stateChangeStart', function(event, toState, toParams){
+          var stateChangeStart = $rootScope.$on('$stateChangeStart', function(event, toState){
             /*$log.debug('event',event);
              $log.debug('toState',toState);
              $log.debug('toParams',toParams);
@@ -69,6 +69,7 @@
              * 如果没有权限访问会跳到没有权限403页面
              */
             if(!permissions.findPermissions(toState.permission)){
+              event.preventDefault();// 取消默认跳转行为
               return $state.go('forbidden');
             }
           });
@@ -88,8 +89,8 @@
            * 销毁操作
            */
           $rootScope.$on('$destroy',function() {
-            stateChangeStart();
-            stateChangeStart = null;
+            //stateChangeStart();
+            //stateChangeStart = null;
             stateChangeError();
             stateChangeError = null;
           });
