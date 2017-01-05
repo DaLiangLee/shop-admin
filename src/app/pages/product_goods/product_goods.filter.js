@@ -27,10 +27,10 @@
       if(!name){
         return name;
       }
+      var result = "";
       if(angular.isString(name)){
         name = JSON.parse(name);
       }
-      var result = "";
       if(angular.isArray(name)){
         angular.forEach(name, function (item) {
           result += item.skuname + "/"

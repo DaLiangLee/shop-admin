@@ -43,6 +43,17 @@
         });
       }
     };
+
+    vm.uploadModel = {
+      config: {
+        uploadtype: "storeCase",
+        title: "上传店招图片"
+      },
+      handler: function(data){
+
+      }
+    };
+
     vm.uploadHandler = function (data, index) {
       if (data.status == 0) {
         if (angular.isDefined(index)) {

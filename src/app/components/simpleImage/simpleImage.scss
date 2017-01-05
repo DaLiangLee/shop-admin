@@ -1,0 +1,82 @@
+.k-simple-image{
+  .list{
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    img{
+      vertical-align: middle;
+    }
+    .close{
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 5;
+      width: 30px;
+      height: 30px;
+      background-color: #000;
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+      border-radius: 30px;
+      text-align: center;
+      line-height: 30px;
+      span{
+        color: #fff;
+      }
+    }
+  }
+  .add{
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    .add-icon{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      margin-left: -30px;
+      margin-top: -30px;
+      &:before{
+        position: absolute;
+        top: 0;
+        left: 50%;
+        bottom: 0;
+        content: "";
+        width: 4px;
+        margin-left: -2px;
+        background-color: #999;
+      }
+      &:after{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        content: "";
+        height: 4px;
+        margin-top: -2px;
+        background-color: #999;
+      }
+    }
+    .message{
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      font-size: 14px;
+      line-height: 16px;
+      text-align: center;
+      color: #666;
+    }
+    &:hover{
+      border-color: #337ab7;
+    }
+  }
+}

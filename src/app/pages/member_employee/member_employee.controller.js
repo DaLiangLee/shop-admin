@@ -10,7 +10,7 @@
     .controller('MemberEmployeeChangeController', MemberEmployeeChangeController);
 
   /** @ngInject */
-  function MemberEmployeeListController($timeout, $state, $log, cbAlert, permissions, preferencenav, memberEmployee, memberEmployeeConfig) {
+  function MemberEmployeeListController($timeout, $state, $log, cbAlert, permissions, memberEmployee, memberEmployeeConfig) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -32,8 +32,6 @@
       },
       pageChanged: function (data) {    // 监听分页
         var page = angular.extend({}, currentParams, {page: data});
-        $log.debug('updateGridPaginationInfo', page);
-        //console.log(page);
         $state.go(currentStateName, page);
       }
     };
@@ -51,7 +49,7 @@
           memberEmployee.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
               cbAlert.tips("删除成功");
-              getList();
+              getList(currentParams);
             } else {
               cbAlert.error("错误提示", results.data.rtnInfo);
             }
@@ -66,7 +64,7 @@
           cbAlert.confirm("是否关闭允许登录店铺后台", function (isConfirm) {
             console.log(isConfirm);
             if (isConfirm) {
-              setStatus('enable', {'memberId': data.sguid, 'status': '0'});
+              setStatus('enable', {'memberId': data.guid, 'status': '0'});
             }
             cbAlert.close();
           }, '关闭以后不允许登录店铺后台', 'warning');
@@ -80,7 +78,7 @@
           cbAlert.confirm("是否关闭在职状态", function (isConfirm) {
             console.log(isConfirm);
             if (isConfirm) {
-              setStatus('inservice', {'memberId': data.sguid, 'inservice': '0'});
+              setStatus('inservice', {'memberId': data.guid, 'inservice': '0'});
             }
             cbAlert.close();
           }, '关闭以后不允许登录店铺后台', 'warning');
@@ -100,7 +98,7 @@
         var items = [];
         _.forEach(filters, function (item) {
           items.push({
-            guid: item.sguid,
+            guid: item.guid,
             realname: angular.isUndefined(item.realname) ? "" : item.realname,
             username: item.username
           });
@@ -108,7 +106,7 @@
         console.log(items);
         memberEmployee.pwdReset(items).then(function (results) {
           if (results.data.status == 0) {
-            getList();
+            getList(currentParams);
           } else {
             cbAlert.error("错误提示", results.data.rtnInfo);
           }
@@ -122,7 +120,7 @@
       memberEmployee[api](data).then(function (results) {
         if (results.data.status == 0) {
           cbAlert.tips("修改成功");
-          getList();
+          getList(currentParams);
         } else {
           cbAlert.error("错误提示", results.data.rtnInfo);
         }
@@ -152,7 +150,6 @@
           total = result.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(result.data, function (item) {
-            console.log(item.onboarddate);
             if(item.onboarddate && item.onboarddate.indexOf("-") > -1){
               item.onboarddate.replace(/\-/gi, "/");
             }
@@ -181,10 +178,8 @@
      */
     vm.searchModel = {
       'handler': function (data) {
-        console.log(data);
         var search = angular.extend({}, currentParams, data);
-        vm.gridModel.requestParams.params = search;
-        getList(search);
+        $state.go(currentStateName, search);
       }
     };
     memberEmployee.all().then(function (results) {
@@ -192,6 +187,7 @@
       if (result.status == 0) {
         console.log(result.data);
         vm.searchModel.config = {
+          keyword: currentParams.keyword,
           placeholder: "请输入员工姓名、账号、手机、岗位",
           searchDirective: [
             {
@@ -208,21 +204,32 @@
                 }
               ],
               type: "list",
-              name: "inService"
+              name: "inService",
+              model: currentParams.inService
             },
             {
               label: "入职时间",
-              name: "date",
+              name: "Date",
               all: true,
               custom: true,
               type: "date",
               start: {
                 name: "startDate",
-                config: {}
+                model: currentParams.startDate,
+                config: {
+                  placeholder: "起始时间",
+                  minDate: new Date("1950/01/01 00:00:00"),
+                  maxDate: new Date()
+                }
               },
               end: {
                 name: "endDate",
-                config: {}
+                model: currentParams.endDate,
+                config: {
+                  placeholder: "截止时间",
+                  minDate: new Date("1950/01/01 00:00:00"),
+                  maxDate: new Date()
+                }
               }
             },
             {
@@ -230,6 +237,7 @@
               all: true,
               type: "list",
               name: "role",
+              model: currentParams.role,
               list: getRoleList(result.data)
             }
           ]
@@ -298,10 +306,16 @@
     };
     vm.dateOptions1 = {
       startingDay: 1,
-      showLunar: true
+      showLunar: true,
+      placeholder: "请选择员工生日",
+      minDate: new Date("1930/01/01 00:00:00"),
+      maxDate: new Date()
     };
     vm.dateOptions2 = {
-      startingDay: 1
+      startingDay: 1,
+      placeholder: "请选择员工入职时间",
+      minDate: new Date("1950/01/01 00:00:00"),
+      maxDate: new Date()
     };
     /*
      * 身份证获取规则

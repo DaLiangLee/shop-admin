@@ -15,7 +15,6 @@
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
-    console.log($state.params);
     /**
      * 记录当前子项
      * @type {string}
@@ -107,6 +106,7 @@
     vm.searchModel = {
       'config': {
         placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
+        keyword: currentParams.keyword,
         searchDirective: [
           {
             label: "类目",
@@ -134,6 +134,7 @@
               }
             ],
             type: "list",
+            model: currentParams.pcateid1,
             name: "pcateid1"
           },
           {
@@ -143,10 +144,12 @@
             custom: true,
             type: "int",
             start: {
-              name: "salenums0"
+              name: "salenums0",
+              model: currentParams.salenums0
             },
             end: {
-              name: "salenums1"
+              name: "salenums1",
+              model: currentParams.salenums1
             }
           },
           {
@@ -157,11 +160,11 @@
             name: "stock",
             start: {
               name: "stock0",
-              placeholder: ""
+              model: currentParams.stock0
             },
             end: {
               name: "stock1",
-              placeholder: ""
+              model: currentParams.stock1
             }
           },
           {
@@ -172,11 +175,11 @@
             name: "saleprice",
             start: {
               name: "saleprice0",
-              placeholder: ""
+              model: currentParams.saleprice0
             },
             end: {
               name: "saleprice1",
-              placeholder: ""
+              model: currentParams.saleprice1
             }
           },
           {
@@ -187,22 +190,18 @@
             name: "shelflife",
             start: {
               name: "shelflife0",
-              placeholder: ""
+              model: currentParams.shelflife0
             },
             end: {
               name: "shelflife1",
-              placeholder: ""
+              model: currentParams.shelflife1
             }
           }
         ]
       },
       'handler': function (data) {
-        if(_.isEmpty(data)){
-          return ;
-        }
         var search = angular.extend({}, currentParams, data);
-        vm.gridModel.requestParams.params = search;
-        getList(search);
+        $state.go(currentStateName, search);
       }
     };
 
@@ -300,7 +299,7 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $window, $log, categoryGoods, productGoods, preferencenav, cbAlert) {
+  function ProductGoodsChangeController($state, $window, $filter, categoryGoods, productGoods, cbAlert) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -308,9 +307,7 @@
     vm.isAttributesetLoad = false;
     //  是否是编辑
     vm.isChange = !_.isEmpty(currentParams);
-    $log.debug('isChange', vm.isChange);
     vm.dataBase = {};
-    console.log(vm.isChange);
     categoryGoods.goods().then(function (data) {
       vm.selectModel.store = data.data.data;
     });
@@ -332,7 +329,7 @@
       vm.isLoadData = true;
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
-      vm.dataBase.mainphoto = [];
+      vm.dataBase.mainphoto = "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1480761495287_CASE2,http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1480761495287_CASE2";
       vm.dataBase.items = [];
     }
 
@@ -369,62 +366,12 @@
             skuvalues: data.data,
             attrvalues: vm.dataBase.$$attrvalues,
             status: "1",
-            $$skuname: getSkuname(data.data)
+            $$skuname: $filter('skuvaluesFilter')(data.data)
           });
         }
       }
     };
 
-    function getSkuname(name) {
-      var result = "";
-      var num = 10;
-      if (!name) {
-        return name;
-      }
-      if (angular.isString(name)) {
-        name = JSON.parse(name);
-      }
-      var result = "";
-      if (angular.isArray(name)) {
-        angular.forEach(name, function (item) {
-          result += item.skuname + "/"
-        });
-      }
-      result = result.substring(0, result.length - 1);
-      if (result.length > num) {
-        result = result.substring(0, num);
-        if (result.lastIndexOf("/") === num - 1) {
-          result = result.substring(0, result.length - 1);
-        }
-        result += " 等";
-      }
-      console.log(result, result.length);
-
-    }
-
-
-    getSkuname([{
-      "guid": 0,
-      "id": 12,
-      "items": [{"guid": 0, "id": 57, "skuid": 12, "skuvalue": "15寸", "sort": 1}],
-      "skuname": "轮胎尺寸",
-      "skutype": "text",
-      "sort": 0
-    }, {
-      "guid": 0,
-      "id": 14,
-      "items": [{"guid": 0, "id": 68, "skuid": 14, "skuvalue": "155", "sort": 1}],
-      "skuname": "胎面宽度",
-      "skutype": "text",
-      "sort": 0
-    }, {
-      "guid": 0,
-      "id": 13,
-      "items": [{"guid": 0, "id": 63, "skuid": 13, "skuvalue": "防爆轮胎", "sort": 1}],
-      "skuname": "轮胎类型",
-      "skutype": "text",
-      "sort": 0
-    }])
 
     function getBrandname(data, id) {
       var item = _.remove(data, function (item) {
@@ -559,6 +506,17 @@
       return result;
     }
 
+    vm.uploadModel = {
+      config: {
+        uploadtype: "productMain",
+        title: "商品图片上传"
+      },
+      handler: function(data){
+
+      }
+    };
+
+
     vm.uploadHandler = function (data, index) {
       if (data.status == 0) {
         if (angular.isDefined(index)) {
@@ -575,35 +533,32 @@
       vm.dataBase.mainphoto.splice(index, 1);
     };
 
+
     /**
-     * 表单提交
+     * 保存并返回
      */
-    vm.submit = function () {
-      /*if (!vm.sizeModel.data.length) {
-       cbAlert.alert('您要至少选择一项规格');
-       return;
-       }
-       if (!vm.sizeModel.every) {
-       cbAlert.alert('规格对应的值没有选择');
-       return;
-       }
-       if (!vm.dataBase.mainphoto.length) {
-       cbAlert.alert('您需要上传一张商品图片');
-       return;
-       }
-       if (!vm.dataBase.motobrandids.length) {
-       cbAlert.alert('您还没有选择适用车型');
-       return;
-       }*/
-      productGoods.save(getDataBase(vm.dataBase)).then(function (data) {
-        console.log('save', data);
-        if (data.data.status == 0) {
+    vm.submitBack = function(){
+      productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
+        if (results.data.status == 0) {
           goto();
+        }else{
+          cbAlert.error("错误提示", results.data.data);
         }
       });
     };
+
+    /**
+     * 保存并复制新建
+     */
+    vm.submitNewCopy = function(){
+      productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
+        if (data.data.status != 0) {
+          cbAlert.error("错误提示", results.data.data);
+        }
+      });
+    };
+
     function goto() {
-      preferencenav.removePreference($state.current);
       $state.go('product.goods.list', {'page': 1});
     }
   }

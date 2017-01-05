@@ -9,7 +9,7 @@
     </thead>
     <tbody dg-click="select(cols, $event)" selector="button">
     <tr ng-repeat="row in rows track by $index">
-      <td ng-repeat="cols in row track by $index"><button class="btn btn-default" ng-class="{'btn-info': cols == year}" ng-bind="cols.label"></button></td>
+      <td ng-repeat="cols in row track by $index"><button class="btn btn-default" ng-class="{'btn-info': cols == year}" ng-bind="cols.label" ng-disabled="cols.disabled"></button></td>
     </tr>
     </tbody>
   </table>

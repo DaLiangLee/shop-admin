@@ -30,7 +30,7 @@
                             <input type="password"
                                    class="form-control"
                                    id="inputPassword2"
-                                   ng-model="vm.form.password"
+                                   ng-model="vm.form.newPassword"
                                    placeholder="新密码"
                                    name="password"
                                    ng-required="true"
@@ -50,12 +50,12 @@
                                    id="inputPassword3"
                                    ng-blur="vm.$change3 = !vm.$change3"
                                    ng-focus="vm.$change3 = !vm.$change3"
-                                   ng-model="vm.form.$confirm_password"
+                                   ng-model="vm.$$confirm_password"
                                    cb-field-change="vm.$change3"
                                    ng-required="true"
                                    ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/"
                                    cb-field-error="{pattern:'密码为6-30位长度',same:'确认密码必须和新密码相同'}"
-                                   cb-assert-same-as="vm.form.password"
+                                   cb-assert-same-as="vm.form.newPassword"
                                    placeholder="确认密码">
                         </div>
                     </div>

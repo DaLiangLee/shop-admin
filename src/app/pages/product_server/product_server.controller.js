@@ -97,6 +97,7 @@
       vm.searchModel = {
         'config': {
           placeholder: "请输入服务编码、服务名称、服务属性",
+          keyword: currentParams.keyword,
           searchDirective: [
             {
               label: "服务类目",
@@ -124,49 +125,37 @@
                 }
               ],
               type: "list",
-              name: "pcateid1"
+              model: currentParams.scateid1,
+              name: "scateid1"
             },
             {
               label: "销量",
-              name: "salenums",
+              name: "sumserverorder",
               all: true,
               custom: true,
               type: "int",
               start: {
-                name: "salenums0"
+                name: "sumserverorder0",
+                model: currentParams.sumserverorder0
               },
               end: {
-                name: "salenums1"
+                name: "sumserverorder1",
+                model: currentParams.sumserverorder1
               }
             },
             {
-              label: "库存",
+              label: "工时费",
               all: true,
               custom: true,
               type: "int",
-              name: "stock",
+              name: "serverprice",
               start: {
-                name: "stock0",
-                placeholder: ""
+                name: "serverprice0",
+                model: currentParams.serverprice0
               },
               end: {
-                name: "stock1",
-                placeholder: ""
-              }
-            },
-            {
-              label: "价格",
-              all: true,
-              custom: true,
-              type: "money",
-              name: "saleprice",
-              start: {
-                name: "saleprice0",
-                placeholder: ""
-              },
-              end: {
-                name: "saleprice1",
-                placeholder: ""
+                name: "serverprice1",
+                model: currentParams.serverprice1
               }
             },
             {
@@ -177,20 +166,20 @@
               name: "shelflife",
               start: {
                 name: "shelflife0",
-                placeholder: ""
+                model: currentParams.shelflife0
               },
               end: {
                 name: "shelflife1",
-                placeholder: ""
+                model: currentParams.shelflife1
               }
             }
           ]
         },
         'handler': function (data) {
-          $log.debug(data)
+          var search = angular.extend({}, currentParams, data);
+          $state.go(currentStateName, search);
         }
       };
-
 
       function getServerSkus(id) {
         productServer.getServerSkus({id: id}).then(function (results) {
@@ -287,6 +276,12 @@
       vm.attributeset = [];
       vm.isLoadData = false;
       vm.isAttributesetLoad = false;
+      /**
+       * 提交的serverskus中的一个属性attrvalues
+       * 选择类目和名称获取
+       * @type {{}}
+       */
+      var attrvalues = {};
       /**
        * 清除报价添加
        */
@@ -443,10 +438,8 @@
       } else {
         vm.isLoadData = true;
         vm.dataBase.serverstatus = 1;
-        vm.dataBase.mainphoto = [];
-        vm.dataBase.items = [
-
-        ];
+        vm.dataBase.mainphoto = "";
+        vm.dataBase.serverskus = [];
       }
 
       function setSkuvalues(obj){
@@ -457,8 +450,11 @@
 
 
       vm.addSkuvalues = function(){
-        vm.dataBase.items = [];
-      }
+        vm.dataBase.serverskus.push({
+          $$add: true,
+          status: "1"
+        });
+      };
 
       function getOfferpriceList(){
         productServer.edit({serverid: vm.gridModel.config.propsParams.serverid}).then(function (results) {
@@ -494,25 +490,10 @@
        * 保存基本信息到服务器
        */
       vm.save = function(){
-        /*if(!vm.sizeModel.data.length){
-          cbAlert.alert('您要至少选择一项规格');
-          return ;
-        }
-        if(!vm.sizeModel.every){
-          cbAlert.alert('规格对应的值没有选择');
-          return ;
-        }*/
+        console.log(getDataBase(vm.dataBase));
+
         productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
           console.log('saveServer', data);
-          if(data.data.status == 0) {
-            /**
-             * 返回新增服务id，供添加报价使用
-             */
-            vm.gridModel.config.propsParams.serverid = data.data.data;
-            vm.isAddData = false;
-          }else{
-            cbAlert.error(data.data.rtnInfo);
-          }
         });
       };
 
@@ -525,15 +506,10 @@
        */
       function getDataBase(data) {
         var result = angular.extend({}, data);
-        result.abstracts = encodeURI(result.abstracts);
-       /* angular.forEach(result.sku, function (item) {
-          item.skuname = encodeURI(item.skuname);
-          item.items[0].skuvalue = encodeURI(item.items[0].skuvalue);
-        });*/
-        /**
-         * 防止后台数据出bug
-         */
-        /*result.sku.push({});*/
+        angular.forEach(result.serverskus, function (item) {
+          item.attrvalues = JSON.stringify(attrvalues);
+        });
+
         /**
          * 防止后台数据出bug
          */
@@ -551,6 +527,7 @@
           console.log('selectModel', data);
           setTwoCategorie(data);
           vm.isAttributesetLoad = false;
+          attrvalues = getData(vm.selectModel.store, data);
         }
       };
       vm.selectModel2 = {
@@ -558,18 +535,13 @@
         handler: function (data) {
           console.log('selectModel2', data);
           console.log(getData(vm.selectModel2.store, data));
-          //vm.dataBase.cateid = data;
+          vm.dataBase.servername = getData(vm.selectModel2.store, data).catename;
           getAttrsku(data);
-        }
-      };
-      vm.sizeModel = {
-        store: [],
-        data: [],
-        every: undefined,
-        handler: function (data) {
-          console.log('sizeModel', data);
-          this.every = data.every;
-          this.data = data.data;
+          _.remove(attrvalues.items, function(item){
+            return item.id != data;
+          });
+          console.log(attrvalues);
+
         }
       };
       /**

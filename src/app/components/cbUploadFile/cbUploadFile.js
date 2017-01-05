@@ -99,7 +99,6 @@
                   'top': div.css('top'),
                   'z-index': 10
                 });
-
               }
               start.removeClass('upload-disabled').prop('disabled', false).click();
               angular.forEach(files, function (file) {
@@ -136,6 +135,7 @@
             upload.bind('UploadComplete', function (up, file, info) {
               $log.debug('UploadComplete', info);
               if(isClear && !isError){
+                console.log(results);
                 scope.uploadItem({data: {"status":"0", "data": results, type: uploadType}});
                 childScope.close();
               }

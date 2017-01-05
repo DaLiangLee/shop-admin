@@ -104,11 +104,13 @@
      */
     vm.searchModel = {
       'config': {
+        keyword: currentParams.keyword,
         placeholder: "请输入权限名称"
       },
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
-        getList(search);
+        //getList(search);
+        $state.go(currentStateName, search);
       }
     };
 

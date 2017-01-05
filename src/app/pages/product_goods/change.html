@@ -6,16 +6,16 @@
       <h3>基本信息</h3>
       <hr>
       <div class="form-group">
-        <label class="col-sm-2 control-label"><span class="text-danger">*</span> 类目：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 类目：</label>
+        <div class="col-lg-7">
           <div ng-if="!vm.isChange">
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-lg-6">
                 <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.pcateid1">
                 <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.pcateid1"
                      select-handler="vm.selectModel.handler(data)"></div>
               </div>
-              <div class="col-sm-6">
+              <div class="col-lg-6">
                 <input type="hidden" name="hao2" ng-required="true" ng-model="vm.dataBase.pcateid2">
                 <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.pcateid2"
                      select-handler="vm.selectModel2.handler(data)"></div>
@@ -28,15 +28,15 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">编码：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label">编码：</label>
+        <div class="col-lg-7">
           <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.code"
                  ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
         </div>
       </div>
       <div class="form-group">
-        <label for="goods_add_name" class="col-sm-2 control-label"><span class="text-danger">*</span> 名称：</label>
-        <div class="col-sm-7">
+        <label for="goods_add_name" class="col-lg-1 control-label"><span class="text-danger">*</span> 名称：</label>
+        <div class="col-lg-7">
           <div ng-if="!vm.isChange">
             <input type="text" id="goods_add_name" class="form-control" name="productname"
                    ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder
@@ -50,8 +50,8 @@
       </div>
 
       <div class="form-group">
-        <label class="col-sm-2 control-label">品牌：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label">品牌：</label>
+        <div class="col-lg-7">
           <div ng-if="!vm.isChange">
             <div ng-if="!vm.isAttributesetLoad">
               <p class="text-border text-border-warning">请先选择商品类目</p>
@@ -64,21 +64,21 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">零售单位：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label">零售单位：</label>
+        <div class="col-lg-7">
           <p class="text-border" ng-bind="vm.dataBase.$unit"></p>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">卖点：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label">卖点：</label>
+        <div class="col-lg-7">
           <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.seodescription"
                  ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label"><span class="text-danger">*</span> 属性：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 属性：</label>
+        <div class="col-lg-7">
           <div ng-if="!vm.isAttributesetLoad">
             <p class="text-border text-border-warning">请先选择商品类目</p>
           </div>
@@ -98,7 +98,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="item in vm.dataBase.items">
-                  <td><div class="text-border"><span ng-bind="item.$$skuname | skuvaluesFilter"></span></div></td>
+                  <td><div class="text-border"><span ng-bind="item.$$skuname"></span></div></td>
                   <td><input class="form-control" type="text" name="" ng-model="item.stock" placeholder="不填无限"></td>
                   <td><input class="form-control" type="text" name="" ng-model="item.saleprice"></td>
                   <td><input class="form-control" type="text" name="" ng-model="item.skucode"></td>
@@ -132,37 +132,14 @@
         private String skudescription;// SKU说明
       -->
       <div class="form-group">
-        <label class="col-sm-2 control-label">商品图片：</label>
-        <div class="col-sm-7">
-          <div class="col-md-3" ng-repeat="item in vm.dataBase.mainphoto track by $index"
-               ng-if="vm.dataBase.mainphoto.length">
-            <div style="width: 300px; height:300px; overflow: hidden">
-              <img ng-src="{{item}}?x-oss-process=image/resize,w_300" style="vertical-align: middle;" alt=""
-                   class="img-thumbnail">
-            </div>
-            <div>
-              <a target="_blank" ng-href="{{item}}">下载</a>
-              <button ng-click="vm.removePhotos($index)">删除</button>
-              <button cb-upload-file="images" title="店招图片上传" data-upload-type="productMain" data-value-max="1"
-                      upload-item="vm.uploadHandler(data, $index)">重新上传
-              </button>
-            </div>
-          </div>
-          <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
-            <div>
-              <p class="text-warning">必须要传一张商品图片</p>
-            </div>
-            <div>
-              <button cb-upload-file="images" title="商品图片上传" data-upload-type="productMain" data-value-max="1"
-                      upload-item="vm.uploadHandler(data)">商品图片上传
-              </button>
-            </div>
-          </div>
+        <label class="col-lg-1 control-label">商品图片：</label>
+        <div class="col-lg-7">
+          <div simple-image config="vm.uploadModel.config" image="vm.dataBase.mainphoto" upload-handler="vm.uploadModel.handler(data)"></div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">保质期（天）：</label>
-        <div class="col-sm-7">
+        <label class="col-lg-1 control-label">保质期（天）：</label>
+        <div class="col-lg-7">
           <input type="text" class="form-control" ng-model="vm.dataBase.shelflife" name="stock" cb-number-range=""
                  data-value-min="0" data-value-max="99999999" placeholder="请输入0-99,999,999以内的整数" cb-placeholder>
           <div class="alert alert-danger" ng-if="goods.stock.$dirty && goods.stock.$error.cbNumberRange">
@@ -171,9 +148,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="goods_add_name" class="col-sm-2 control-label">供应商：</label>
-        <div class="col-sm-7">
-          <input type="text" id="goods_add_name" class="form-control" name="productname"
+        <label for="goods_provider" class="col-lg-1 control-label">供应商：</label>
+        <div class="col-lg-7">
+          <input type="text" id="goods_provider" class="form-control" name="provider"
                  ng-model="vm.dataBase.provider" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
           <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
             请输入长度为40以内的商品名称
@@ -181,8 +158,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="goods_add_name" class="col-sm-2 control-label">供应商电话：</label>
-        <div class="col-sm-7">
+        <label for="goods_add_name" class="col-lg-1 control-label">供应商电话：</label>
+        <div class="col-lg-7">
           <input type="text" id="goods_add_name" class="form-control" name="productname"
                  ng-model="vm.dataBase.providertel" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
           <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
@@ -191,16 +168,11 @@
         </div>
       </div>
       <div class="text-center">
-        <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="goods.$invalid">{{vm.isChange
-          ? "修改" : "添加"}}
+        <button type="button" class="btn btn-primary" ng-click="vm.submitBack()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
         </button>
-        <button type="button" class="btn btn-primary" ng-click="vm.submitBack()">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
+        <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
         </button>
-        <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
-        </button>
-        <button type="button" class="btn btn-default"
-                cb-back-button="{'name':'product.goods.list','params':{'page': 1}}" data-router="product.goods.edit"
-                ng-if="vm.isChange">返回
+        <button type="button" class="btn btn-default" cb-back-button="{'name':'product.goods.list','params':{'page': 1}}" data-router="product.goods.edit">返回
         </button>
       </div>
     </form>

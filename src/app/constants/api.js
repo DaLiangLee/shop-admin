@@ -405,6 +405,10 @@
                     "all": {
                       "url": "/member/role/all",
                       "type": "GET"
+                    },
+                    "changepwd": {
+                      "url": "/member/employee/changepwd",
+                      "type": "POST"
                     }
                   },
                   "role": {

@@ -65,6 +65,12 @@
           if(value){
             $scope.items = [];
             $scope.searchParams = {};
+            if(angular.isDefined(value.keyword)){
+              $scope.searchParams = {
+                "keyword": value.keyword
+              };
+            }
+            var model = 0;
             angular.forEach($scope.config.searchDirective, function (item) {
               if(!angular.isArray(item.list) && !item.all){
                 throw Error(item.label + '：的配置项不全');
@@ -79,9 +85,13 @@
               /**
                * 如果model没有填就默认是全部
                */
+              if(angular.isDefined(item.model)){
+                model++;
+              }
               angular.isUndefined(item.model) && (item.model = -1);
               if(item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
                 item.model = -2;
+                model++;
               }
               /**
                * 生成绑定的默认数据
@@ -113,6 +123,7 @@
               (item.custom && !item.type) && (item.type = 'number');
               $scope.items.push(item);
             });
+            $scope.config.showMore = model > 0;
           }
         });
 
@@ -141,14 +152,34 @@
         };
 
         $scope.setSearch = function () {
+          console.log($scope.searchParams);
+
            $scope.searchHandler({data: getParams($scope.searchParams)});
         };
 
+        function getCustom(value, params){
+          console.log(value, params);
+          var temp = [];
+          angular.forEach(params, function (key, value) {
+            if(/^\$\$/.test(value) && key === -1){
+              temp.push(value.replace(/^\$\$/ig, ""));
+            }
+          });
+          var result = false;
+          temp.length && angular.forEach(temp, function (key) {
+            if(value.indexOf(key) > -1){
+              result = true;
+              return false;
+            }
+          });
+          return result;
+        }
         function getParams(params){
           var searchParams = {};
           angular.forEach(params, function (key, value) {
             if(!angular.isUndefined(key) && value.indexOf('$$') != 0){
               (key != -1) && (searchParams[value] = key);
+              ((key == -1) || getCustom(value, params)) && (searchParams[value] = undefined);
             }
           });
           return searchParams;

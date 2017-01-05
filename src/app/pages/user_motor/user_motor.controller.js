@@ -9,7 +9,7 @@
     .controller('UserMotorListController', UserMotorListController);
 
   /** @ngInject */
-  function UserMotorListController($state, cbAlert, userCustomer, userMotorConfig, userCustomerConfig) {
+  function UserMotorListController($state, cbAlert, userCustomer, userMotorConfig, userCustomerConfig, configuration) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -25,6 +25,11 @@
      */
     var usergrades = [];
     vm.gridModel = {
+      requestParams: {
+        params: currentParams,
+        request: "users,customer,export",
+        permission: "chebian:store:user:customer:export"
+      },
       columns: angular.copy(userMotorConfig.DEFAULT_GRID.columns),
       itemList: [],
       config: angular.copy(userMotorConfig.DEFAULT_GRID.config),
@@ -75,18 +80,18 @@
     /**
      * 获取员工列表
      */
-    function getList() {
+    function getList(params) {
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
-      if (!currentParams.page) {
+      if (!params.page) {
         return;
       }
-      console.log(currentParams);
-      userCustomer.motorList(currentParams).then(function (results) {
+      console.log(params);
+      userCustomer.motorList(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
-          if (!result.data.length && currentParams.page != 1) {
+          if (!result.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
           var items = [];
@@ -104,10 +109,13 @@
       }, function (data) {
         $log.debug('getListError', data);
       }).then(function(result){
-        vm.gridModel.itemList = result.items;
+        angular.forEach(result.items, function (item) {
+          item.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + item.guid;
+          vm.gridModel.itemList.push(item);
+        });
         vm.gridModel.paginationinfo = {
-          page: currentParams.page * 1,
-          pageSize: currentParams.pageSize,
+          page: params.page * 1,
+          pageSize: params.pageSize,
           total: result.totalCount
         };
         getUser(result.items[0].guid);
@@ -115,7 +123,7 @@
       });
     }
 
-    getList();
+    getList(currentParams);
   }
 })();
 

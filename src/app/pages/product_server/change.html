@@ -50,7 +50,7 @@
         <label class="col-sm-2 control-label">简介：</label>
         <div class="col-sm-7">
           <input type="text" id="goods_add_name" class="form-control" name="servername"
-                 ng-model="vm.dataBase.servername"
+                 ng-model="vm.dataBase.seodescription"
                  ng-maxlength="40" placeholder="请输入长度为40以内的服务名称" cb-placeholder>
         </div>
       </div>
@@ -74,15 +74,16 @@
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="item in vm.dataBase.items">
+              <tr ng-repeat="item in vm.dataBase.serverskus">
                 <td>
-                  <div class="text-border"><span ng-bind="item.$$skuname | skuvaluesFilter"></span></div>
+                  <div class="text-border" ng-if="!item.$$add"><span ng-bind="item.$$skuname | skuvaluesFilter"></span></div>
+                  <input ng-if="item.$$add" class="form-control" type="text" name="" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
                 </td>
-                <td><input class="form-control" type="text" name="" ng-model="item.servertime" placeholder=""></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.serverprice"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.servertime" placeholder="请输入工时"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价"></td>
                 <td><p class="text-border" ng-bind="item.serverprice * item.servertime"></p></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.skudescription"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
                 <td>
                   <div cb-switch checked="item.status" ng-click="vm.statusItem(vm.dataBase.status)"></div>
                 </td>

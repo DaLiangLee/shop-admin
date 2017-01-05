@@ -9,7 +9,7 @@
         .controller('SystemModpwdController', SystemModpwdController);
 
     /** @ngInject */
-    function SystemModpwdController($log) {
+    function SystemModpwdController(memberEmployee, cbAlert) {
         var vm = this;
         /**
          * 表单对象  提交api用
@@ -21,7 +21,13 @@
          * 提交按钮
          */
         vm.submitBtn = function () {
-            $log(vm.form);
+          memberEmployee.changepwd(vm.form).then(function (results) {
+            if (results.data.status == 0) {
+              cbAlert.tips("修改密码成功");
+            } else {
+              cbAlert.error("错误提示", results.data.rtnInfo);
+            }
+          });
         }
     }
 

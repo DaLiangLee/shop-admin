@@ -26,7 +26,6 @@
           <div class="list" ng-if="item.custom">
             <div class="radio-inline" ng-repeat="list in item.list">
               <label>
-
                 <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
                        class="ng-pristine ng-valid">
                 {{list.label}}

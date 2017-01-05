@@ -96,14 +96,15 @@
           'paginationSupport': true,  // 是否有分页
           'selectedProperty': "selected",  // 数据列表项复选框
           'selectedScopeProperty': "selectedItems",
+          'exportDataSupport': true,
           'useBindOnce': true,  // 是否单向绑定
           "paginationInfo": {   // 分页配置信息
             maxSize: 5,
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<button class="btn btn-primary" cb-access-control="member" data-parentid="90000" data-sectionid="90002" ui-sref="user.customer.add()">+新增会员</button> ',
-            '<button class="btn btn-danger" cb-access-control="member" data-parentid="90000" data-sectionid="90009" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
+            '<a class="btn btn-primary" cb-access-control="chebian:store:user:customer:add" ui-sref="user.customer.add()">+新增会员</a> ',
+            '<button class="btn btn-danger" cb-access-control="chebian:store:user:customer:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
           ]
         }
       },

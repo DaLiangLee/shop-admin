@@ -41,16 +41,26 @@
 
   /** @ngInject */
   function exportData(webSiteApi, configuration) {
-    function removePage(value){
-      var obj = angular.copy(value);
-      delete obj.page;
-      delete obj.pageSize;
-      return toKeyValue(obj);
+    function removePage(data){
+      var params = {};
+      angular.forEach(data, function (key, value) {
+        if(value !== "page" && value !== "pageSize"){
+          angular.isDefined(key) && (params[value] = key);
+        }
+      });
+      return toKeyValue(params);
     }
     function getRequest(api){
       var WEB_SITE_API = webSiteApi.WEB_SITE_API;
       api = api.split(',');
-      return configuration.getAPIConfig() + WEB_SITE_API[api[0]][api[1]][api[2]].url;
+      if(api.length !== 3){
+        throw Error("传递配置参数不是3个");
+      }
+      var params = WEB_SITE_API[api[0]][api[1]][api[2]];
+      if(_.isEmpty(params)){
+        throw Error("api.js配置和传入参数不对应");
+      }
+      return configuration.getAPIConfig() + params.url;
     }
     return {
       restrict: "A",
@@ -58,21 +68,8 @@
         params: "="
       },
       link: function(scope, iElement, iAttrs){
-        var request = getRequest(iAttrs.exportData);
-
-
-        var params = scope.$watch('params', function (value) {
-          console.log(value);
-          (value && removePage(value)) && iElement.attr('href', request+"?"+removePage(value));
-        });
-        /**
-         * 销毁操作
-         */
-        // 确保工具提示被销毁和删除。
-        scope.$on('$destroy', function() {
-          params();
-          request = null;
-        });
+        var request = _.isEmpty(removePage(scope.params)) ? getRequest(iAttrs.exportData) : getRequest(iAttrs.exportData)+"?"+removePage(scope.params);
+        iElement.attr('href', request);
       }
     }
   }

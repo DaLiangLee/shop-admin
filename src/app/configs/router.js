@@ -168,7 +168,7 @@
         permission: "chebian:store:product:goods:view"
       })
       .state('product.goods.list', {     // 商品管理
-        url: '/list/:page/:remove',
+        url: '/list/:page/:remove?keyword&pcateid1&salenums0&salenums1&stock0&stock1&saleprice0&saleprice1&shelflife0&shelflife1',
         templateUrl: 'app/pages/product_goods/list.html',
         controller: 'ProductGoodsListController',
         controllerAs: 'vm',
@@ -198,7 +198,7 @@
         permission: "chebian:store:product:server:view"
       })
       .state('product.server.list', {     // 服务项目管理
-        url: '/list/:page/:status',
+        url: '/list/:page/:status?keyword&scateid1&sumserverorder0&sumserverorder1&serverprice0&serverprice1&shelflife0&shelflife1',
         templateUrl: 'app/pages/product_server/list.html',
         controller: 'ProductServerListController',
         controllerAs: 'vm',
@@ -392,7 +392,7 @@
         permission: "chebian:store:user:customer:view"
       })
       .state('user.customer.list', {      // 会员管理
-        url: '/list/:page',
+        url: '/list/:page?keyword&grade&startDate&endDate&role',
         templateUrl: 'app/pages/user_customer/list.html',
         controller: 'UserCustomerListController',
         controllerAs: 'vm',
@@ -484,7 +484,7 @@
         permission: "chebian:store:member:employee:view"
       })
       .state('member.employee.list', {      // 员工管理
-        url: '/list/:page',
+        url: '/list/:page?keyword&inService&startDate&endDate&role',
         templateUrl: 'app/pages/member_employee/list.html',
         controller: 'MemberEmployeeListController',
         controllerAs: 'vm',
@@ -514,7 +514,7 @@
         permission: "chebian:store:member:role:view"
       })
       .state('member.role.list', {      // 权限管理列表
-        url: '/list/:page',
+        url: '/list/:page?keyword',
         templateUrl: 'app/pages/member_role/list.html',
         controller: 'MemberRoleLsitController',
         controllerAs: 'vm',
