@@ -120,27 +120,33 @@
   }
 
   /** @ngInject */
-  function StoreShopHomeBankController($log, shopHome, cbAlert) {
+  function StoreShopHomeBankController(shopHome, cbAlert) {
     var vm = this;
     vm.dataBase = {};
     shopHome.getBanks().then(function (results) {
       if (results.data.status == '0') {
         vm.binkStore = results.data.data;
       } else {
-        cbAlert.error(results.data.rtnInfo);
+        cbAlert.error(results.data.data);
       }
     });
 
     vm.submitBtn = function () {
-      console.log(vm.dataBase);
+      shopHome.saveStoreAccount(vm.dataBase).then(function (results) {
+        if (results.data.status == '0') {
+          cbAlert.tips("修改成功！");
+        } else {
+          cbAlert.error(results.data.data);
+        }
+      });
     }
   }
 
   /** @ngInject */
-  function StoreShopHomeContactController($log, shopHome, cbAlert) {
+  function StoreShopHomeContactController(shopHome, cbAlert) {
     var vm = this;
     vm.dataLists = [];
-
+    var temporaryData = null;
     var contactType = ['0', '1'];    // 联系人类型列表
     angular.forEach(contactType, function (item) {
       vm.dataLists.push({
@@ -156,7 +162,7 @@
       if (results.data.status == '0') {
         setDataLists(results.data.data);
       } else {
-        cbAlert.error(results.data.rtnInfo);
+        cbAlert.error(results.data.data);
       }
     });
 
@@ -171,6 +177,7 @@
         });
         vm.dataLists[index] = item;
       });
+      temporaryData = angular.copy(vm.dataLists);
     }
 
     /**
@@ -192,14 +199,30 @@
       return results;
     }
 
+    function isChange(){
+      var result = 0;
+      angular.forEach(temporaryData, function (key) {
+        angular.forEach(vm.dataLists, function (item) {
+          if(key.contactname === item.contactname && key.telephone === item.telephone && key.email === item.email && key.guid === item.guid){
+            result++;
+          }
+        });
+      });
+      return result > 0;
+    }
+
     vm.submitBtn = function(){
-      console.log(getDataLists(vm.dataLists));
+      if(isChange()){
+        cbAlert.alert("没有修改联系人姓名，电话，邮箱");
+        return ;
+      }
+
       shopHome.saveStoreContact(getDataLists(vm.dataLists)).then(function (results) {
         if (results.data.status == '0') {
-          console.log(results);
-          setDataLists(results.data.data)
+          setDataLists(results.data.data);
+          cbAlert.tips("修改成功！");
         } else {
-          cbAlert.error(results.data.rtnInfo);
+          cbAlert.error(results.data.data);
         }
       });
     };

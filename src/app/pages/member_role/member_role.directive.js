@@ -292,7 +292,6 @@
                          */
                         if(type === 'edit'){
                             if(angular.isDefined(scope.item)){
-                                $log.debug(scope.item)
                                 if(angular.equals(transmit.items, copyDiff) && transmit.rolename === scope.item.rolename && transmit.datascope === scope.item.datascope){
                                     childScope.alertWarning = '没有修改权限项目';
                                     return ;
@@ -315,7 +314,7 @@
                          * 提交数据
                          */
                         memberRole[type](transmit).then(function (data) {
-                            scope.roleItem({data: {"type": type, "data": data.data}});
+                            scope.roleItem({data: {"status": 0, "data": data.data}});
                         });
                     }
                 }
@@ -324,23 +323,19 @@
                  * 点击按钮
                  */
                 iEle.click(function (t) {
-                    scope.roleItem({data: {"status":"-1", "data":"打开成功"}});
+                    scope.roleItem({data: {"status": -1, "data":"打开成功"}});
                     t.preventDefault();
                     t.stopPropagation();
-                    console.log(scope.item);
                     if(type === 'edit'){
                       memberRole.get({roleid: scope.item.id}).then(function(results){
                         if (results.data.status == 0) {
                           copyDiff = getEditorData(results.data.data);
-                          console.log(copyDiff);
-
                           cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {
                             windowClass: "viewFramework-member-role-dialog"
                           });
                         } else {
                           cbAlert.error("错误提示", results.data.data);
                         }
-
                       });
                     }else{
                       cbDialog.showDialogByUrl("app/pages/member_role/member_role_dialog.html", handler, {

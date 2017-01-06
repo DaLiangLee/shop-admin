@@ -26,7 +26,7 @@
   <div class="row form-group">
     <label class="col-md-1 control-label">店铺编码：</label>
     <div class="col-md-7">
-      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+      <p class="text-border" ng-bind="vm.dataBase.store.storecode"></p>
     </div>
   </div>
   <div class="row form-group">
@@ -93,7 +93,7 @@
         ng-bind="vm.dataBase.store.closetime"></span>
       </p>
     </div>
-    <div class="col-md-2" ng-if="vm.dataBase.store.storename"><button class="btn btn-success" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="store" data-parentid="30000" data-sectionid="30004">设置营业时间</button></div>
+    <div class="col-md-2" ng-if="vm.dataBase.store.storename"><button class="btn btn-success" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置营业时间</button></div>
   </div>
 
   <div class="row form-group">

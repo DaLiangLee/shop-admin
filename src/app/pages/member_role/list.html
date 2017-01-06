@@ -4,6 +4,6 @@
         <div class="panel-heading">权限管理</div>
       </div>
       <div cb-access-control="chebian:store:member:role:view" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
-        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
+      <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
     </div>
 </div>

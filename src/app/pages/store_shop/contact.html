@@ -3,7 +3,7 @@
     车边支持电话：123 4567 8910
   </p>
 </div>
-<form name="contact" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate>
+<form name="contact" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate autocomplete="off">
   <div ng-repeat="item in vm.dataLists">
     <div class="form-group">
       <label for="inputPassword1" class="col-sm-2 control-label"><span ng-bind="item.type | formatStatusFilter : 'storeContactPeople'"></span>：</label>

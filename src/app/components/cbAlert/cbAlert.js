@@ -328,11 +328,11 @@
       var _this = this;
       if(this.isAnimation){
         this.option.showOverlay && this.$modal.find('.alert-overlay').fadeOut(250);
-        this.$modal.find('.alert-dialog').fadeOut(250, function () {
+        this.$modal && this.$modal.find('.alert-dialog').fadeOut(250, function () {
           _this.$modal.remove();
           _this.destory();
         });
-        this.$modal.find('.alert-dialog').removeClass('showAlertDialog').addClass('hideAlertDialog');
+        this.$modal && this.$modal.find('.alert-dialog').removeClass('showAlertDialog').addClass('hideAlertDialog');
       }else{
         this.$modal.fadeOut(250, function () {
           _this.$modal.remove();

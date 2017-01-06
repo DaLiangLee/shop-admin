@@ -18,10 +18,14 @@
   function requestService($http, webSiteApi, configuration) {
     var URL = configuration.getAPIConfig();
     var doRequest = function(method, url, data){
+      var params = undefined;
+      if(method === "GET"){
+        params = angular.extend({'t': (new Date).getTime()}, data);
+      }
       return $http({
         method : method,
         url : url,
-        params: method == "GET" ? data : undefined,
+        params: params,
         headers: {
           'Content-Type': 'application/json'
         },

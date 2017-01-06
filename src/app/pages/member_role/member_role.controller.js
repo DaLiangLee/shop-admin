@@ -36,9 +36,7 @@
     vm.gridModel.config.propsParams = {
       removeItem: function (data) {
         $log.debug('removeItem', data);
-        if (data.status == -1) {
-          vm.message.loadingState = false;
-        } else {
+        if (data.status == 0) {
           memberRole.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
               var message = "";
@@ -88,7 +86,6 @@
             if (_.isObject(data.data.data)) {
               permissions.setPermissions(data.data.data);
               if (!permissions.findPermissions(currentState.permission)) {
-                vm.message.loadingState = false;
                 $state.go('desktop.home');
               }
             }
@@ -109,7 +106,6 @@
       },
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
-        //getList(search);
         $state.go(currentStateName, search);
       }
     };
@@ -120,19 +116,19 @@
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
       if (!params.page) {
-        return;
+        return ;
       }
+      vm.gridModel.loadingState = true;      // 加载数据
       memberRole.list(params).then(function (data) {
         if (data.data.status == 0) {
           if (!data.data.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
-          total = data.data.count;
           vm.gridModel.itemList = data.data.data;
           vm.gridModel.paginationinfo = {
             page: params.page * 1,
             pageSize: params.pageSize,
-            total: total
+            total: data.data.count
           };
           vm.gridModel.loadingState = false;
         }

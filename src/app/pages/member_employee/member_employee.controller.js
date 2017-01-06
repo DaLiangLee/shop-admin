@@ -60,7 +60,7 @@
       },
       statusItem: function (data) {
         $log.debug('statusItem', data);
-        if (data.inservice === '1') {
+        if (data.status === '1') {
           cbAlert.confirm("是否关闭允许登录店铺后台", function (isConfirm) {
             console.log(isConfirm);
             if (isConfirm) {
@@ -69,11 +69,17 @@
             cbAlert.close();
           }, '关闭以后不允许登录店铺后台', 'warning');
         } else {
-          //setInservice(data.sguid, 1);
+          cbAlert.confirm("是否允许该员工登录店铺后台", function (isConfirm) {
+            console.log(isConfirm);
+            if (isConfirm) {
+              setStatus('enable', {'memberId': data.guid, 'status': '1'});
+            }
+            cbAlert.close();
+          }, '开启以后就可以登录后台，是否继续？', 'warning');
         }
       },
       inserviceItem: function (data) {
-        $log.debug('statusItem', data);
+        $log.debug('inserviceItem', data);
         if (data.inservice === '1') {
           cbAlert.confirm("是否关闭在职状态", function (isConfirm) {
             console.log(isConfirm);
@@ -83,7 +89,13 @@
             cbAlert.close();
           }, '关闭以后不允许登录店铺后台', 'warning');
         } else {
-          //setInservice(data.sguid, 1);
+          cbAlert.confirm("是否开启在职状态", function (isConfirm) {
+            console.log(isConfirm);
+            if (isConfirm) {
+              setStatus('inservice', {'memberId': data.guid, 'inservice': '1'});
+            }
+            cbAlert.close();
+          }, '', 'warning');
         }
       },
       resetItem: function () {
@@ -166,8 +178,6 @@
         } else {
           cbAlert.error("错误提示", result.data);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       });
     }
 

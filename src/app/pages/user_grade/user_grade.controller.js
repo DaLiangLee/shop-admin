@@ -42,10 +42,12 @@
      */
     // 失去焦点时候先去检查有没有重名的，如果就提示用户，把值还原回去
     vm.blurGradesName = function(name, index) {
+      if(!name){
+        return ;
+      }
       var items = _.filter(vm.items, function(item){
         return item.gradename === name;
       });
-      console.log(items);
       if(items.length > 1){
         cbAlert.alert(name + "已经存在");
         vm.items[index].$$samegradename = true;
@@ -55,32 +57,19 @@
     };
 
     vm.blurTradeamount = function(name, index) {
+      if(!name){
+        return ;
+      }
       var items = _.filter(vm.items, function(item){
         return item.tradeamount === name;
       });
-      console.log(items);
       if(items.length > 1){
-        cbAlert.alert("交易额达"+ name + "条件已经存在");
+        cbAlert.alert("交易额达 "+ name + " 条件已经存在");
         vm.items[index].$$sametradeamount = true;
       }else{
         vm.items[index].$$sametradeamount = false;
       }
     };
-
-/*    vm.focusGradesName = function (item) {
-      item.$$beforeChangeGradesName = item.gradename;
-    };
-
-    vm.blurGradesName = function(items) {
-      console.log(item);
-      angular.forEach(vm.items, function (item) {
-        if (item.gradename === items.gradename) {
-          cbAlert.alert(name + "已经存在，请重新填写");
-          items.gradename = item.$$beforeChangeGradesName;
-          return false;
-        }
-      });
-    };*/
 
     /**
      * 添加新等级
@@ -98,14 +87,11 @@
      * 保存所有等级给服务器
      */
     vm.saveGrade = function () {
-      console.log(vm.items);
-
       userCustomer.saveGrades(vm.items).then(function (results) {
-        console.log(results);
         if (results.data.status == 0) {
           cbAlert.tips("修改成功");
         } else {
-          cbAlert.error(results.data.rtnInfo);
+          cbAlert.error(results.data.data);
         }
       });
     };
