@@ -487,16 +487,39 @@
 
 
       /**
-       * 保存基本信息到服务器
+       * 保存并返回
        */
-      vm.save = function(){
-        console.log(getDataBase(vm.dataBase));
-
+      vm.submitBack = function(){
         productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
-          console.log('saveServer', data);
+          if (results.data.status == 0) {
+            goto();
+          }else{
+            cbAlert.error("错误提示", results.data.data);
+          }
         });
       };
 
+      /**
+       * 保存并复制新建
+       */
+      vm.submitNewCopy = function(){
+        productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
+          if (data.data.status != 0) {
+            cbAlert.error("错误提示", results.data.data);
+          }
+        });
+      };
+
+
+      vm.uploadModel = {
+        config: {
+          uploadtype: "serverMain",
+          title: "服务图片上传"
+        },
+        handler: function(data){
+
+        }
+      };
 
 
       /**
@@ -596,17 +619,6 @@
         return results;
       }
 
-      /**
-       * 表单提交
-       */
-      vm.submit = function () {
-        if(!vm.gridModel.itemList.length){
-          cbAlert.tips('至少要有一条报价规格');
-          return ;
-        }
-        compareDiff(vm.dataBase, diffData);
-        goto();
-      };
       function goto() {
         preferencenav.removePreference($state.current);
         $state.go('product.server.list', {'page': 1});

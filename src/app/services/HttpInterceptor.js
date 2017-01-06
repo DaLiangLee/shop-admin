@@ -35,11 +35,14 @@
           case -1:
             cbAlert.error("系统提醒", "远程服务器无响应");
             break;
-          case 404:
-            cbAlert.error("系统提醒", "找不到资源");
+          case 401:
+            cbAlert.error("系统提醒", "未登陆");
             break;
           case 403:
             cbAlert.error("系统提醒", "没有访问权限");
+            break;
+          case 404:
+            cbAlert.error("系统提醒", "找不到资源");
             break;
           case 500:
             cbAlert.error("系统提醒", "系统运行错误");

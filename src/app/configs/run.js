@@ -100,13 +100,13 @@
      * 手动启动angular
      * 保证在Angular运行之前获取到permission的映射关系
      */
-    $.post('http://localhost:3000/shopservice/login', {
+    /*$.post('http://localhost:3000/shopservice/login', {
       storecode: 'A1',
       username: '15267009225',
       password: '123456'
     }, function () {
 
-    });
+    });*/
     angular.element(document).ready(function() {
         angular.bootstrap(document, ['shopApp']);
     });

@@ -6,6 +6,7 @@
     "e2e": "gulp protractor",
     "unit": "gulp test",
     "debug": "gulp buildTest",
+    "serveDebug": "gulp serve:debug",
     "api": "node service/app",
     "build": "gulp build",
     "start": "gulp serve"

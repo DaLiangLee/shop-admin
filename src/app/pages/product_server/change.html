@@ -97,30 +97,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">图片：</label>
         <div class="col-sm-7">
-          <div class="col-md-3" ng-repeat="item in vm.dataBase.mainphoto track by $index"
-               ng-if="vm.dataBase.mainphoto.length">
-            <div style="width: 300px; height:300px; overflow: hidden">
-              <img ng-src="{{item}}?x-oss-process=image/resize,w_300" style="vertical-align: middle;" alt=""
-                   class="img-thumbnail">
-            </div>
-            <div>
-              <a target="_blank" ng-href="{{item}}">下载</a>
-              <button ng-click="vm.removePhotos($index)">删除</button>
-              <button cb-upload-file="images" title="店招图片上传" data-upload-type="serverMain" data-value-max="1"
-                      upload-item="vm.uploadHandler(data, $index)">重新上传
-              </button>
-            </div>
-          </div>
-          <div class="col-md-3" ng-if="!vm.dataBase.mainphoto.length">
-            <div>
-              <p class="text-warning">必须要传一张服务图片</p>
-            </div>
-            <div>
-              <button cb-upload-file="images" title="商品图片上传" data-upload-type="serverMain" data-value-max="1"
-                      upload-item="vm.uploadHandler(data)">商品图片上传
-              </button>
-            </div>
-          </div>
+          <div simple-image config="vm.uploadModel.config" image="vm.dataBase.mainphoto" upload-handler="vm.uploadModel.handler(data)"></div>
         </div>
       </div>
       <div class="form-group">
@@ -133,10 +110,11 @@
       </div>
       <div class="form-group">
         <div class="text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="goods.$invalid">保存</button>
-          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
+          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
+          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
+          </button>
+          <button type="button" class="btn btn-default" cb-back-button="{'name':'product.server.list','params':{'page': 1}}" data-router="product.goods.edit">返回
           </button>
         </div>
       </div>
