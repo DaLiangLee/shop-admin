@@ -67,7 +67,7 @@
             "id": 9,
             "name": "库存",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><span bo-text="item.stock"></span>件</span>'
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.$$stockShow"></span>件</span>'
           },
           {
             "id": 9,

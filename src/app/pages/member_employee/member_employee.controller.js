@@ -312,20 +312,33 @@
     vm.dataBase = {
       position: {
         posname: "新家的"
+      },
+      status: "1"
+    };
+    vm.date1 = {
+      options: {
+        startingDay: 1,
+        showLunar: true,
+        placeholder: "请选择员工生日",
+        minDate: new Date("1950/01/01 00:00:00"),
+        maxDate: new Date()
+      },
+      opened: false,
+      open: function(){
+        vm.date2.opened = false;
       }
     };
-    vm.dateOptions1 = {
-      startingDay: 1,
-      showLunar: true,
-      placeholder: "请选择员工生日",
-      minDate: new Date("1930/01/01 00:00:00"),
-      maxDate: new Date()
-    };
-    vm.dateOptions2 = {
-      startingDay: 1,
-      placeholder: "请选择员工入职时间",
-      minDate: new Date("1950/01/01 00:00:00"),
-      maxDate: new Date()
+    vm.date2 = {
+      options: {
+        startingDay: 1,
+        placeholder: "请选择员工入职时间",
+        minDate: new Date("1950/01/01 00:00:00"),
+        maxDate: new Date()
+      },
+      opened: false,
+      open: function(){
+        vm.date1.opened = false;
+      }
     };
     /*
      * 身份证获取规则
@@ -411,14 +424,8 @@
       }
     };
 
-    $scope.onboardDateConfig = {
-      opened: false,
-      minDate: "",
-      maxDate: ""
-    };
-    vm.openedHandler = function () {
-      vm.opened = true;
-    };
+
+
     vm.isLoadData = false;
     if (vm.isChange) {
       memberEmployee.get({memberId:currentParams.id}).then(function(results){
@@ -438,22 +445,15 @@
      * 1，需要验证手机号有没有填，如果没有就报错提示
      * 2，关闭时候需要提示，如果是修改时候，就需要提交api来
      */
-    vm.statusItem = function(status, isMobile){
-      console.log(status, isMobile);
-      if(angular.isUndefined(status) || status === '0'){
-        if(isMobile){
-          cbAlert.alert("请先填写员工手机号");
-        }else{
-          vm.dataBase.status = '1';
+    vm.statusItem = function(status){
+      var title = vm.dataBase.status === "1" ? "是否关闭允许登录店铺后台" : "是否开启允许登录店铺后台";
+      var message = vm.dataBase.status === "1" ? "关闭以后不允许登录店铺后台，您确定？" : "开启以后就允许登录店铺后台，您确定？";
+      cbAlert.confirm(title, function (isConfirm) {
+        if (isConfirm) {
+          vm.dataBase.status = vm.dataBase.status === "1" ? "0" : "1";
         }
-      }else{
-        cbAlert.confirm("是否关闭允许登录店铺后台", function (isConfirm) {
-          if (isConfirm) {
-            vm.dataBase.status = '0';
-          }
-          cbAlert.close();
-        }, '关闭以后不允许登录店铺后台，您确定？', 'warning');
-      }
+        cbAlert.close();
+      }, message, 'warning');
     };
 
     function setDataBase(data) {
@@ -501,7 +501,7 @@
           if (results.data.status == 0) {
             goto();
           } else {
-            cbAlert.error("错误提示", results.data.error);
+            cbAlert.error("错误提示", results.data.data);
           }
         });
       }else{
@@ -509,7 +509,7 @@
           if (results.data.status == 0) {
             goto();
           } else {
-            cbAlert.error("错误提示", results.data.error);
+            cbAlert.error("错误提示", results.data.data);
           }
         });
       }

@@ -172,7 +172,7 @@
           var results = [];
           angular.forEach(select, function (item) {
             results.push(_.find(store, function (key) {
-              return key[value] == item;
+              return key[value] == item[value];
             }));
           });
           return results;
@@ -205,7 +205,7 @@
           }
           if(scope.config.multiple){
             return  _.findIndex(scope.select, function (key) {
-                return key == item[value];
+                return key[value] == item[value];
               }) > -1;
           }else{
             return item[value] == scope.select;
@@ -214,8 +214,6 @@
         scope.options = function ($event, item) {
           $event.stopPropagation();
           if(scope.config.multiple){   // 多选
-            console.log(scope.choose);
-
             var index = _.findIndex(scope.select, function (key) {
               return key == item[value];
             });
@@ -245,8 +243,11 @@
         };
         scope.remove = function ($event, item) {
           $event.stopPropagation();
+          console.log('remove', item);
+          console.log(scope.choose.list);
+
           var index = _.findIndex(scope.select, function (key) {
-            return key == item[value];
+            return key[value] == item[value];
           });
           scope.select.splice(index, 1);
           _.remove(scope.choose.list, function(key){

@@ -11,7 +11,7 @@
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
-    function ProductServerListController($state, $log, $timeout,  productServer, productServerConfig, cbAlert) {
+    function ProductServerListController($state, $timeout,  productServer, productServerConfig, cbAlert, computeService) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
@@ -185,7 +185,11 @@
         productServer.getServerSkus({id: id}).then(function (results) {
           if (results.data.status == 0) {
             recordChild = id;
+            results.data.data.serverSkus && angular.forEach(results.data.data.serverSkus, function (item) {
+              item.$$servertimeprice = computeService.multiply(item.serverprice, item.servertime);
+            });
             vm.items = results.data.data;
+            console.log(vm.items);
           } else {
             cbAlert.error(results.data.data);
           }
@@ -490,7 +494,7 @@
        * 保存并返回
        */
       vm.submitBack = function(){
-        productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
+        productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
           if (results.data.status == 0) {
             goto();
           }else{
@@ -503,8 +507,8 @@
        * 保存并复制新建
        */
       vm.submitNewCopy = function(){
-        productServer.saveServer(getDataBase(vm.dataBase)).then(function (data) {
-          if (data.data.status != 0) {
+        productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
+          if (results.data.status != 0) {
             cbAlert.error("错误提示", results.data.data);
           }
         });

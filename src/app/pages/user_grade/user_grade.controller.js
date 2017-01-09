@@ -38,10 +38,12 @@
 
     /**
      * 修改会员等级名称
-     *
+     * @param name    当前的值
+     * @param index   当前的索引
      */
     // 失去焦点时候先去检查有没有重名的，如果就提示用户，把值还原回去
     vm.blurGradesName = function(name, index) {
+      // 检查值是不是空的。如果是空的就停止执行了，可以为空
       if(!name){
         return ;
       }
@@ -56,7 +58,14 @@
       }
     };
 
+    /**
+     * 修改交易额达到条件
+     * @param name    当前的值
+     * @param index   当前的索引
+     */
+    // 失去焦点时候先去检查有没有重复的，如果就提示用户，把值还原回去
     vm.blurTradeamount = function(name, index) {
+      // 检查值是不是空的。如果是空的就停止执行了，可以为空
       if(!name){
         return ;
       }
@@ -82,6 +91,7 @@
         "isdefault": "0"
       });
     };
+
 
     /**
      * 保存所有等级给服务器

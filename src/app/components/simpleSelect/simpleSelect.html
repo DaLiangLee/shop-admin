@@ -6,7 +6,7 @@
     </div>
     <div class="text list" ng-if="config.multiple">
       <span ng-bind="choose.text" ng-if="!choose.list.length"></span>
-      <ul dg-click="remove($event, item)" selector="li" ng-if="choose.list.length" class="clearfix"><li ng-repeat="item in choose.list" class="item"><strong ng-bind="item[config.name]"></strong><span class="close">&times;</span></li></ul>
+      <ul dg-click="remove($event, item)" selector="li" ng-if="choose.list.length" class="clearfix"><li ng-repeat="item in choose.list track by $index" class="item"><strong ng-bind="item[config.name]"></strong><span class="close">&times;</span></li></ul>
       <span class="caret"></span>
     </div>
   </div>

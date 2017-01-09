@@ -210,15 +210,19 @@
      */
     vm.gridModel2 = {
       editorhandler: function (data, item, type) {
-        console.log(data, item);
+        if(type === "stock" && item.stock != -9999 && data > item.stock){
+          cbAlert.alert('修改的库存不能当前库存大');
+          item.$$stock = item.stock;
+          return ;
+        }
         item[type] = data;
         productGoods.updateProductSku(angular.copy(item)).then(function (results) {
           console.log(results);
           if (results.data.status == '0') {
             cbAlert.tips('修改成功');
-            getList();
+            getList(currentParams);
           } else {
-            cbAlert.error(results.data.rtnInfo);
+            cbAlert.error(results.data.data);
           }
         });
       }
@@ -226,7 +230,6 @@
 
 
     vm.statusItem = function (item) {
-      console.log(JSON.stringify(item));
       var tips = item.status === "0" ? '是否确认启用该商品SKU？' : '是否确认禁用该商品SKU？';
       cbAlert.ajax(tips, function (isConfirm) {
         if (isConfirm) {
@@ -234,14 +237,14 @@
           productGoods.updateProductSku(item).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.success('修改成功');
-              var statusTime = $timeout(function(){
+              var statusTime = $timeout(function () {
                 cbAlert.close();
                 $timeout.cancel(statusTime);
                 statusTime = null;
               }, 1200, false);
-              getList();
+              getList(currentParams);
             } else {
-              cbAlert.error(results.data.rtnInfo);
+              cbAlert.error(results.data.data);
             }
           });
         } else {
@@ -254,9 +257,13 @@
       productGoods.getProductSkus({id: id}).then(function (results) {
         if (results.data.status == 0) {
           recordChild = id;
+          results.data.data.items && angular.forEach(results.data.data.items, function (item) {
+            item.$$stockShow = item.stock === -9999 ? "无限" : item.stock;
+            item.$$stock = item.stock === -9999 ? "" : item.stock;
+          });
           vm.items = results.data.data;
         } else {
-          cbAlert.error(results.data.rtnInfo);
+          cbAlert.error(results.data.data);
         }
       });
     }
@@ -278,6 +285,7 @@
           total = data.data.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(data.data.data, function (item) {
+            item.$$stockShow = item.stock <= -9999 ? "无限" : item.stock;
             vm.gridModel.itemList.push(item);
           });
           vm.gridModel.paginationinfo = {
@@ -329,7 +337,7 @@
       vm.isLoadData = true;
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
-      vm.dataBase.mainphoto = "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1480761495287_CASE2,http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1480761495287_CASE2";
+      vm.dataBase.mainphoto = "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1483955898668_CASE2";
       vm.dataBase.items = [];
     }
 
@@ -366,7 +374,7 @@
             skuvalues: data.data,
             attrvalues: vm.dataBase.$$attrvalues,
             status: "1",
-            $$skuname: $filter('skuvaluesFilter')(data.data)
+            $$skuname: $filter('skuvaluesFilter')(data.data, 8)
           });
         }
       }
@@ -413,6 +421,7 @@
         console.log(getData(vm.selectModel2.store, data));
         vm.dataBase.cateid = data;
         getAttrsku(data);
+        vm.dataBase.items = [];
       }
     };
 
@@ -422,7 +431,9 @@
         vm.brandModel.store = data.data.data.brand;
         vm.skuData = angular.copy(data.data.data.sku);
         vm.skuvalues.store = angular.copy(data.data.data.sku);
-        vm.dataBase.$$attrvalues = data.data.data.attributeset[0].id;
+        if(data.data.data.attributeset[0]){
+          vm.dataBase.$$attrvalues = data.data.data.attributeset[0].id;
+        }
         if (!callback) {
           vm.dataBase.brandid = undefined;
           vm.brandModel.select = undefined;
@@ -440,19 +451,10 @@
         setTwoCategorie(data, undefined, '请先选择商品类目');
         vm.isAttributesetLoad = false;
         console.log(vm.selectModel2.store);
+        vm.dataBase.items = [];
       }
     };
 
-    vm.sizeModel = {
-      store: [],
-      data: [],
-      every: undefined,
-      handler: function (data) {
-        console.log('sizeModel', data);
-        vm.sizeModel.every = data.every;
-        vm.sizeModel.data = data.data;
-      }
-    };
 
     function setTwoCategorie(id, cateid, unit) {
       if (!!getData(vm.selectModel.store, id)) {
@@ -462,32 +464,6 @@
       }
       vm.dataBase.cateid = cateid;
       vm.dataBase.$unit = unit;
-    }
-
-    /**
-     * 格式化 vm.dataBase数据供提交使用
-     * @param data
-     * @returns {{}}
-     */
-    function getDataBase(data) {
-      var result = angular.extend({}, data);
-      angular.forEach(result.items, function (item) {
-        item.skuvalues = JSON.stringify(item.skuvalues);
-        item.stock || (item.stock = -9999);
-      });
-      /**
-       * 防止后台数据出bug end
-       */
-      if (vm.isChange) {
-        delete result.parentid;
-        delete result.brandname;
-        delete result.productcategory;
-      }
-      delete result.$unit;
-      delete result.$size;
-      console.log(JSON.stringify(result));
-
-      return result;
     }
 
     /**
@@ -511,7 +487,7 @@
         uploadtype: "productMain",
         title: "商品图片上传"
       },
-      handler: function(data){
+      handler: function (data) {
 
       }
     };
@@ -534,14 +510,77 @@
     };
 
 
+    vm.statusItem = function (item) {
+      console.log(item);
+      var title = item.status === "1" ? "是否禁用该属性" : "是否开启该属性";
+      var message = item.status === "1" ? "禁用该属性不能再页面显示" : "开启该属性后在页面显示";
+      cbAlert.confirm(title, function(isConfirm){
+        if(isConfirm){
+          item.status = item.status === "1" ? "0" : "1";
+          cbAlert.tips("操作成功");
+        }else{
+          cbAlert.close();
+        }
+      }, message, "warning");
+    };
+
+
+    /**
+     * 格式化 vm.dataBase数据供提交使用
+     * @param data
+     * @returns {{}}
+     */
+    function getDataBase(data) {
+      var result = angular.extend({}, data);
+      angular.forEach(result.items, function (item) {
+        item.skuvalues = JSON.stringify(item.skuvalues);
+        item.stock = !item.$$stock && item.$$stock != 0 ? -9999 : item.$$stock;
+      });
+      /**
+       * 防止后台数据出bug end
+       */
+      if (vm.isChange) {
+        delete result.parentid;
+        delete result.brandname;
+        delete result.productcategory;
+      }
+      delete result.$unit;
+      delete result.$size;
+      return result;
+    }
+
+    /**
+     * 拦截提交
+     * 提交的需要参数全部符合才能为false
+     */
+    function interception() {
+      var result = false;
+      if (!vm.dataBase.items.length) {
+        cbAlert.alert("需要填写至少填写一个属性");
+        return true;
+      }
+      var saleprice = _.filter(vm.dataBase.items, function (item) {
+        return !item.saleprice && item.saleprice !== 0;
+      });
+      if (saleprice.length) {
+        cbAlert.alert("属性的零售单价没有填写");
+        return true;
+      }
+      return result;
+    }
+
+
     /**
      * 保存并返回
      */
-    vm.submitBack = function(){
+    vm.submitBack = function () {
+      if (interception()) {
+        return;
+      }
       productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
         if (results.data.status == 0) {
           goto();
-        }else{
+        } else {
           cbAlert.error("错误提示", results.data.data);
         }
       });
@@ -550,9 +589,14 @@
     /**
      * 保存并复制新建
      */
-    vm.submitNewCopy = function(){
+    vm.submitNewCopy = function () {
+      if (interception()) {
+        return;
+      }
       productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
-        if (data.data.status != 0) {
+        if (results.data.status == 0) {
+          cbAlert.tips("保存成功，请继续添加");
+        } else {
           cbAlert.error("错误提示", results.data.data);
         }
       });

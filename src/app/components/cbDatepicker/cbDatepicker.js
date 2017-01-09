@@ -78,8 +78,10 @@
       restrict: "A",
       replace: true,
       scope: {
+        isOpen: "=",              // 是否打开
         datepickerOptions: "=",   // 配置文件
         datepickerModel: "=",     // 绑定数据
+        datepickerOpen: "&",      // 弹窗打开
         datepickerHandler: "&"    // 回调函数
       },
       templateUrl: "app/components/cbDatepicker/cbDatepicker.html",
@@ -92,7 +94,7 @@
           'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'format', 'showLunar', 'showHour', 'shwoMinute', 'minDate', 'maxDate'], function (key) {
           _this[key] = configAttr[key];
         });
-        console.log(configAttr);
+
         $scope.datepicker = {
           model: $scope.datepickerModel
         }
@@ -102,11 +104,16 @@
         $scope.setOpen = function(){
           if(!$scope.isOpen){
             datepickerModel = $scope.datepicker.model;
+            $scope.datepickerOpen();
           }else{
             $scope.datepickerModel = $scope.datepicker.model;
           }
           $scope.isOpen = !$scope.isOpen;
         };
+
+        var isOpen = $scope.$watch('isOpen', function (value) {
+          $scope.isOpen = value;
+        });
 
         $scope.datepickerMode = 'day';
         this.activeDate = new Date();
@@ -150,13 +157,15 @@
           this._refreshView && this._refreshView();
         };
 
-        $scope.move = function (dir) {
+        $scope.move = function (dir, event) {
+          event.stopPropagation();
           var year = _this.activeDate.getFullYear() + dir * (_this.step.years || 0),
             month = _this.activeDate.getMonth() + dir * (_this.step.months || 0);
           _this.activeDate.setFullYear(year, month, 1);
           _this.refreshView();
         };
-        $scope.toggleMode = function (direction) {
+        $scope.toggleMode = function (direction, event) {
+          event.stopPropagation();
           $scope.datepickerMode = modes[direction];
         };
         $scope.isOpen = false;
@@ -168,6 +177,7 @@
           $scope.datepickerModel = $scope.datepicker.model;
         };
         $scope.select = function (day, event) {
+          event.stopPropagation();
           if (day == null) {
             $scope.datepicker.model = "";
           } else if (day == 'today') {
@@ -185,30 +195,26 @@
           }
           console.log('datepickerMode', $scope.datepickerMode, $scope.datepicker.model);
         };
+        $scope.$on('$destroy', function () {
+          isOpen();
+        });
       }],
       link: function (scope, iElement, iAttrs) {
-        var element = angular.element;
         $document.on('click', function(event){
-          scope.$apply(function(){
-            scope.close();
-          });
-        });
-        iElement.find('.datepicker-model').on('click', function(event) {
-          event.preventDefault();
           event.stopPropagation();
+          console.log(iElement.find(event.target).length, event.target);
+
+          if(!iElement.find(event.target).length){
+            scope.$apply(function(){
+              scope.close();
+            });
+          }
         });
+
         iElement.find('.datepicker-model').on('focus', function(event) {
           scope.$apply(function(){
             !scope.isOpen && scope.setOpen();
           });
-        });
-        iElement.find('.datepicker-open').on('click', function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-        });
-        iElement.find('.datepicker-popup').on('click', function(event) {
-          event.preventDefault();
-          event.stopPropagation();
         });
       }
     }
@@ -475,7 +481,6 @@
         }
 
         iCtrl._refreshView = function () {
-          console.log('_refreshView', Date.now());
           var year = iCtrl.activeDate.getFullYear(),
             month = iCtrl.activeDate.getMonth(),
             firstDayOfMonth = new Date(year, month, 1),

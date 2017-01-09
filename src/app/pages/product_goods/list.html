@@ -43,7 +43,7 @@
             <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
             <td><span class="state-unread" ng-bind="item.saleprice"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice')"></span></td>
             <td><span class="state-unread"><span ng-bind="item.skusalenum"></span>件</span></td>
-            <td><span class="state-unread"><span ng-bind="item.stock"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.stock" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
+            <td><span class="state-unread"><span ng-bind="item.$$stockShow"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
             <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
             <td>使用车型</td>

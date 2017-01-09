@@ -44,7 +44,13 @@
       },
       templateUrl: "app/components/simpleEditable/simpleEditable.html",
       link: function(scope, iElement, iAttrs){
+        // 获取提示显示
+        scope.placeholder = iAttrs.placeholder || "请输入内容";
+        // 是否可以为空不填
+        var isEmpty = (iAttrs.required || "true") === "false";
+        // 输入类型检查
         var type = iAttrs.simpleEditable || 'other';
+        // 根据类型正则检查
         var check = {
           'int': function(value){
             return /^(0|[1-9][0-9]*)$/.test(value);
@@ -59,6 +65,7 @@
             return !!value.length;
           }
         };
+        // 根据类型提示错误消息
         var message = {
           'int': "请输入整数",
           'float': "请输入小数",
@@ -76,15 +83,19 @@
             'top': parent.position().top
           });
         });
+        console.log(isEmpty);
+
         iElement.on('click', '.confirm', function(){
-          if(!check[type]($input.val())){
-            cbAlert.alert(message[type]);
-            return ;
+          if(isEmpty && !$input.val()){
+
+          }else{
+            if(!check[type]($input.val())){
+              cbAlert.alert(message[type]);
+              return ;
+            }
           }
           scope.$apply(function(){
-            scope.editor = $input.val();
             scope.editorHandler({data: $input.val()});
-            $input.val('');
           });
           hide();
         });
@@ -99,6 +110,7 @@
             'top': ''
           });
           iElement.removeClass('open');
+          $input.val('');
         }
 
       }

@@ -12,16 +12,20 @@
     .controller('StoreShopHomeAptitudeController', StoreShopHomeAptitudeController);
 
   /** @ngInject */
-  function StoreShopHomeController($log, shopHome, cbAlert) {
+  function StoreShopHomeController(shopHome, cbAlert) {
     var vm = this;
     vm.dataBase = {};
-    vm.editor = "sadas";
+
+    /**
+     * 获取商铺所有数据
+     */
     shopHome.manager().then(function (results) {
       if (results.data.status == '0') {
         vm.dataBase = results.data.data;
         vm.dataBase.store.photos = vm.dataBase.store.photos.split(',');
+        vm.dataBase.store.countIsshow = results.data.countIsshow;
       } else {
-        cbAlert.error(results.data.rtnInfo);
+        cbAlert.error(results.data.data);
       }
     });
     vm.getScopeStatus = function (item, list) {
@@ -29,6 +33,10 @@
         return key.id == item.id;
       }));
     };
+    /**
+     * 修改商户介绍
+     * @param data
+     */
     vm.reviewHandler = function (data) {
       if (data.status == '0') {
         shopHome.saveDescription({
@@ -38,12 +46,16 @@
             cbAlert.tips("修改商户介绍成功");
             vm.dataBase.store.description = data.content;
           } else {
-            cbAlert.error(results.data.rtnInfo);
+            cbAlert.error(results.data.data);
           }
         });
       }
     };
 
+    /**
+     * 店招图片配置和上传保存到服务器
+     * @type {{config: {uploadtype: string, title: string}, handler: StoreShopHomeController.uploadModel.handler}}
+     */
     vm.uploadModel = {
       config: {
         uploadtype: "storeCase",
@@ -65,6 +77,7 @@
         }
       }
     };
+
     vm.removePhotos = function (index) {
       var data = angular.copy(vm.dataBase.store.photos);
       data.splice(index, 1).join(",");
@@ -75,10 +88,14 @@
           cbAlert.tips("修改店招图片成功");
           vm.dataBase.store.photos.splice(index, 1);
         } else {
-          cbAlert.error(results.data.rtnInfo);
+          cbAlert.error(results.data.data);
         }
       });
     };
+    /**
+     * 修改营业时间
+     * @param data
+     */
     vm.hoursHandler = function (data) {
       if (data.status == '0') {
         shopHome.saveTime(data.data).then(function (results) {
@@ -87,11 +104,15 @@
             vm.dataBase.store.opentime = data.data.opentime;
             vm.dataBase.store.closetime = data.data.closetime;
           } else {
-            cbAlert.error(results.data.rtnInfo);
+            cbAlert.error(results.data.data);
           }
         });
       }
     };
+    /**
+     * 修改客服电话
+     * @param data
+     */
     vm.telephoneHandler = function (data) {
       if (data.status == '0') {
         shopHome.saveTelephone({telephone: data.data}).then(function (results) {
@@ -99,7 +120,7 @@
             cbAlert.tips("修改客服电话成功");
             vm.dataBase.store.telephone = data.data;
           } else {
-            cbAlert.error(results.data.rtnInfo);
+            cbAlert.error(results.data.data);
           }
         });
       }
@@ -107,14 +128,18 @@
   }
 
   /** @ngInject */
-  function StoreShopHomeAptitudeController($log, shopHome, cbAlert) {
+  function StoreShopHomeAptitudeController(shopHome, cbAlert) {
     var vm = this;
     vm.dataBase = {};
+    /**
+     * 获取店铺资质所有信息
+     * 只展示不做任何修改
+     */
     shopHome.getStoreAptitude().then(function (results) {
       if (results.data.status == '0') {
         vm.dataBase = results.data.data;
       } else {
-        cbAlert.error(results.data.rtnInfo);
+        cbAlert.error(results.data.data);
       }
     });
   }
@@ -143,7 +168,7 @@
   }
 
   /** @ngInject */
-  function StoreShopHomeContactController(shopHome, cbAlert) {
+  function StoreShopHomeContactController($scope, shopHome, cbAlert) {
     var vm = this;
     vm.dataLists = [];
     var temporaryData = null;
@@ -211,12 +236,32 @@
       return result > 0;
     }
 
+    function isAllowed() {
+      var result = {
+        validate: false,
+        message: ""
+      };
+      var list = $scope.contact.list;
+      console.log(list);
+      if(list.telephone.$dirty && list.telephone.$valid){
+        console.log(1);
+      }
+      if(list.email.$dirty && list.email.$valid){
+        console.log(2);
+      }
+      return result;
+    }
+
+
     vm.submitBtn = function(){
       if(isChange()){
         cbAlert.alert("没有修改联系人姓名，电话，邮箱");
         return ;
       }
-
+      if(isAllowed().validate){
+        cbAlert.alert(isAllowed().message);
+        return ;
+      }
       shopHome.saveStoreContact(getDataLists(vm.dataLists)).then(function (results) {
         if (results.data.status == '0') {
           setDataLists(results.data.data);

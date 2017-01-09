@@ -54,6 +54,7 @@
       },
       link: function(scope, iElement){
         function handler(childScope){
+          childScope.message = false;
           /**
            * 获取当前索引sku信息
            * @type {*}
@@ -74,8 +75,14 @@
             item.$$preValue = _.find(item.items, function (key) {
               return key.id == data;
             });
+            childScope.message = false;
           };
           childScope.confirm = function () {
+            if(childScope.store.length && !getData().length){
+              childScope.message = true;
+              return ;
+            }
+
             scope.itemHandler({data: {"status":"0", "data": getData()}});
             childScope.close();
           };

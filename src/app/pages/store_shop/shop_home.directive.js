@@ -40,6 +40,8 @@
             childScope.interceptor = true;
           };
           childScope.interceptorConfirm = function () {
+            console.log(childScope.hours.start);
+
             var opentime = $filter('date')(childScope.hours.start, 'HH:mm'),
               closetime = $filter('date')(childScope.hours.end, 'HH:mm');
             if (scope.startTime == opentime && closetime == scope.endTime) {
@@ -58,38 +60,17 @@
           }
         }
 
-        function format(time, num) {
-          if (time % num < num) {
-            time = time - time % num + num;
-          }
-          if (time < 10) {
-            time = "0" + time;
-          } else {
-            time = "" + time;
-          }
-          return time;
-        }
-
         function timeChange(time, num) {
-          var DATE = new Date();
-          if (time == '0') {
-            time = DATE.getHours() + ":" + DATE.getMinutes();
-          }
-          if (time.indexOf(":") > -1) {
-            if (time.split(":")[0] * 1 + num > 23) {
-              time = "00:" + time.split(":")[1];
-            } else {
-              time = time.split(":")[0] * 1 + num + ":" + format(time.split(":")[1] * 1, 5);
-            }
+          var DATE = new Date(),
+            hours, minutes;
+          if (/^(0[0-9]|1[0-9]|2[0-3])\:[0-5][0-9]$/.test(time)) {
+            hours = time.split(":")[0];
+            minutes = time.split(":")[1];
           } else {
-            if (time + num > 23) {
-              time = "00:00"
-            } else {
-              time = (time + num) + ":00";
-            }
+            hours = DATE.getHours() + num;
+            minutes = Math.ceil(DATE.getMinutes() / 5) >= 12 ? 0 : Math.ceil(DATE.getMinutes() / 5) * 5;
           }
-          var date = DATE.getFullYear() + "-" + DATE.getMonth() + "-" + DATE.getDay() + " " + time + ":00:00";
-          return (new Date(date)).getTime();
+          return DATE.setHours(hours, minutes, 0);
         }
 
         /**
@@ -157,6 +138,7 @@
       },
       link: function (scope, iElement) {
         function handler(childScope) {
+          var storageData = getSubmitData(scope.telephone);
           childScope.telephone = angular.copy(scope.telephone);
           var currentParams = {
             page: 1,
@@ -205,7 +187,7 @@
               {
                 "id": 8,
                 "cssProperty": "state-column",
-                "fieldDirective": '<div cb-switch checked="item.inservice" ng-click="propsParams.inserviceItem(item)"></div>',
+                "fieldDirective": '<div cb-switch="forbidden" checked="item.status"></div>',
                 "name": '状态',
                 "width": 80
               }
@@ -293,7 +275,7 @@
            * ,show为展示的员工guid数组, hide为从展示改为不展示的员工guid数组
            * @returns {{show: Array, hide: Array}}
            */
-          function getSubmitData(list){
+          function getSubmitData(list) {
             var show = _.filter(list, function (item) {
               return item.selected;
             });
@@ -305,8 +287,9 @@
               hide: getGuid(hide)
             }
           }
+
           function getGuid(array) {
-            if(!array.length){
+            if (!array.length) {
               return [];
             }
             var results = [];
@@ -316,18 +299,26 @@
             return results;
           }
 
-          
+          function isChange() {
+            return angular.equals(storageData, childScope.gridModel.itemList)
+          }
+
+
           childScope.interceptorConfirm = function () {
-            memberEmployee.changeshow(getSubmitData(childScope.gridModel.itemList)).then(function (results) {
-              console.log(results);
-              
-            });
-            if (scope.telephone == childScope.telephone) {
+
+            if(isChange()){
               scope.settingItem({data: {"status": "1", "data": ""}});
-            } else {
-              scope.settingItem({data: {"status": "0", "data": childScope.telephone}});
+              childScope.close();
+            }else{
+
+              memberEmployee.changeshow(getSubmitData(childScope.gridModel.itemList)).then(function (results) {
+                if(results.status == "0"){
+                  scope.settingItem({data: {"status": "0", "data": childScope.telephone}});
+                }
+                childScope.close();
+              });
             }
-            childScope.close();
+
           }
         }
 

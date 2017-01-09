@@ -32,7 +32,7 @@
       <div class="form-group">
         <label class="col-md-1 control-label">工号：</label>
         <div class="col-md-7">
-          <input type="text" class="form-control" name="worknum" ng-model="vm.dataBase.worknum" ng-maxlength="40"
+          <input type="text" class="form-control" name="worknum" ng-model="vm.dataBase.worknum"
                  placeholder="请输入员工工号" cb-placeholder="">
         </div>
       </div>
@@ -46,13 +46,13 @@
       <div class="form-group">
         <label class="col-md-1 control-label">身份证号码：</label>
         <div class="col-md-7">
-          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.idcard" ng-maxlength="40"
-                 placeholder="请输入15或者18位身份证号码" cb-placeholder="" ng-required="true"
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.idcard"
+                 placeholder="请输入15或者18位身份证号码" cb-placeholder=""
                  ng-blur="vm.setGenderAndBirthday(vm.dataBase.idcard)">
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 性别：</label>
+        <label class="col-md-1 control-label">性别：</label>
         <div class="col-md-7">
           <div class="radio-inline">
             <label>
@@ -77,21 +77,22 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 生日：</label>
+        <label class="col-md-1 control-label">生日：</label>
         <div class="col-md-7">
-          <div cb-datepicker="" datepicker-options="vm.dateOptions1" datepicker-model="vm.dataBase.birthday"></div>
+          <div cb-datepicker="" is-open="vm.date1.opened" datepicker-options="vm.date1.options" datepicker-open="vm.date1.open()" datepicker-model="vm.dataBase.birthday"></div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 入职时间：</label>
+        <label class="col-md-1 control-label">入职时间：</label>
         <div class="col-md-7">
-          <div cb-datepicker="" datepicker-options="vm.dateOptions2" datepicker-model="vm.dataBase.onboarddate"></div>
+          <div cb-datepicker="" is-open="vm.date2.opened" datepicker-options="vm.date2.options" datepicker-open="vm.date2.open()" datepicker-model="vm.dataBase.onboarddate"></div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 岗位：</label>
+        <label class="col-md-1 control-label">岗位：</label>
         <div class="col-md-7">
-          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.position.posname" ng-maxlength="40"
+          <input type="text" class="form-control" name="username" ng-model="vm.dataBase.position.posname"
+                 ng-maxlength="40"
                  placeholder="请输入岗位" cb-placeholder="">
         </div>
       </div>
@@ -109,25 +110,26 @@
                ng-click="vm.statusItem(vm.dataBase.status, employee.mobile.$invalid)"></div>
         </div>
       </div>
-      <div ng-if="vm.dataBase.status == 1">
-        <div class="form-group">
-          <div class="col-md-7 col-md-offset-1">
-            系统将为您生成默认登录账号：
-            <div style="display: inline-block;"><span ng-bind="vm.storecode" class="text-border"
-                                                      style="display: inline-block; width: auto"></span> <span
-              ng-bind="vm.dataBase.mobile" class="text-border" style="display: inline-block; width: auto"></span></div>
-          </div>
+      <div class="form-group">
+        <div class="col-md-7 col-md-offset-1">
+          系统将为您生成默认登录账号：
+          <div style="display: inline-block;"><span ng-bind="vm.storecode" class="text-border"
+                                                    style="display: inline-block; width: auto;vertical-align: middle;"></span>
+            <span
+              ng-bind="vm.dataBase.mobile" class="text-border"
+              style="display: inline-block; width: auto;vertical-align: middle;"></span></div>
         </div>
-        <div class="form-group">
-          <label class="col-md-1 control-label"><span class="text-danger">*</span> 角色名称：</label>
-          <div class="col-md-7">
-            <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore" data-multiple></div>
-          </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger">*</span> 角色名称：</label>
+        <div class="col-md-7">
+          <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore"
+               data-multiple></div>
         </div>
       </div>
       <div class="form-group">
         <div class="col-md-7 col-md-offset-1 text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submit()">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>
+          <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="employee.$invalid">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>
           <button type="button" class="btn btn-default"
                   cb-back-button="{'name':'member.employee.list','params':{'page': 1}}"
                   data-router="member.employee.list"

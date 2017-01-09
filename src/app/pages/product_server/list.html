@@ -38,7 +38,8 @@
           <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
           <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime')"></span></td>
           <td><span class="state-unread" ng-bind="item.serverprice"></span></span></td>
-          <td><span class="state-unread" ng-bind="item.serverprice * item.servertime"></span></span></td>
+          <td><span class="state-unread" ng-bind="item.$$servertimeprice"></span></span></td>
+          <td><span class="state-unread" ng-bind="item.$$servertimeprice"></span></span></td>
           <td>使用车型</td>
           <td><div cb-switch checked="item.status"
                    ng-click="vm.gridModel2.statusItem(item)"></div></td>

@@ -1,12 +1,18 @@
 <div class="alert alert-warning">
   <p>
+    温馨提醒：<br>
+    1，联系人电话可以是11位手机号码，例如：13412345678;<br>
+    2，联系人电话可以是带区号座机，例如：02712345678;<br>
+    3，联系人邮箱请输入常用邮箱;<br>
+    如果你有任何疑问可以联系我们：<br>
     车边支持电话：123 4567 8910
   </p>
 </div>
 <form name="contact" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate autocomplete="off">
-  <div ng-repeat="item in vm.dataLists">
+  <div ng-form name=list ng-repeat="item in vm.dataLists">
     <div class="form-group">
-      <label for="inputPassword1" class="col-sm-2 control-label"><span ng-bind="item.type | formatStatusFilter : 'storeContactPeople'"></span>：</label>
+      <label class="col-sm-2 control-label"><span
+        ng-bind="item.type | formatStatusFilter : 'storeContactPeople'"></span>：</label>
       <div class="col-sm-7">
         <input type="text"
                class="form-control"
@@ -16,36 +22,45 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="inputPassword2" class="col-sm-2 control-label">电话：</label>
+      <label class="col-sm-2 control-label">电话：</label>
       <div class="col-sm-7">
         <input type="text"
                class="form-control"
-               id="inputPassword2"
                ng-model="item.telephone"
                name="telephone"
+               cb-telephone-range
                placeholder="请输入{{item.type | formatStatusFilter : 'storeContactPeople'}}电话">
+        <div class="alert alert-danger" ng-if="list.telephone.$dirty && list.telephone.$invalid">
+          <p ng-if="!list.telephone.$error.required && list.telephone.$error.telephoneAll && contact.telephone.$error.telephonePhone">
+            手机号码格式不对</p>
+          <p ng-if="!list.telephone.$error.required && list.telephone.$error.telephoneAll && contact.telephone.$error.telephoneFixed">
+            固定座机电话格式不对</p>
+          <p
+            ng-if="!list.telephone.$error.required && list.telephone.$error.telephoneAll && !contact.telephone.$error.telephonePhone && !tel.phone.$error.telephoneFixed">
+            输入不是区号+座机，手机格式号码</p>
+        </div>
       </div>
     </div>
     <div class="form-group">
-      <label for="inputPassword3" class="col-sm-2 control-label">邮箱：</label>
+      <label class="col-sm-2 control-label">邮箱：</label>
       <div class="col-sm-7">
         <input type="text"
                class="form-control"
                name="email"
-               id="inputPassword3"
-               ng-blur="vm.$change3 = !vm.$change3"
-               ng-focus="vm.$change3 = !vm.$change3"
                ng-model="item.email"
+               ng-pattern="/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/"
                placeholder="请输入{{item.type | formatStatusFilter : 'storeContactPeople'}}邮箱">
+        <div class="alert alert-danger" ng-if="list.email.$dirty && list.email.$error.pattern">
+          <p>邮箱格式不对</p>
+        </div>
       </div>
     </div>
     <br>
     <br>
   </div>
-
   <div class="form-group">
     <div class="col-sm-7 col-sm-offset-2 text-center">
-      <button type="submit" class="btn btn-primary" style="width: 300px" ng-disabled="contact.$invalid">保存</button>
+      <button type="submit" class="btn btn-primary" style="width: 300px">保存</button>
     </div>
   </div>
 </form>
