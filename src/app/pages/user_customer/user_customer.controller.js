@@ -162,18 +162,14 @@
                 name: "startDate",
                 model: currentParams.startDate,
                 config: {
-                  placeholder: "起始时间",
-                  minDate: new Date("1950/01/01 00:00:00"),
-                  maxDate: new Date()
+                  minDate: new Date("2010/01/01 00:00:00")
                 }
               },
               end: {
                 name: "endDate",
                 model: currentParams.endDate,
                 config: {
-                  placeholder: "截止时间",
-                  minDate: new Date("1950/01/01 00:00:00"),
-                  maxDate: new Date()
+                  minDate: new Date("1950/01/01 00:00:00")
                 }
               }
             }
@@ -359,6 +355,59 @@
     function showMotor(item) {
       vm.item = item;
     }
+
+    /**
+     * 购车日期配置
+     * @type {{}}
+     */
+    vm.date1 = {
+      options: {
+        startingDay: 1,
+        placeholder: "请选择购车日期",
+        minDate: new Date("2000/01/01 00:00:00"),
+        maxDate: new Date()
+      },
+      opened: false,
+      open: function () {
+        vm.date2.opened = false;
+        vm.date3.opened = false;
+      }
+    };
+    /**
+     * 上次年检日期配置
+     * @type {{}}
+     */
+    vm.date2 = {
+      options: {
+        startingDay: 1,
+        placeholder: "请选择上次年检日期",
+        minDate: new Date("2010/01/01 00:00:00"),
+        maxDate: new Date()
+      },
+      opened: false,
+      open: function () {
+        vm.date1.opened = false;
+        vm.date3.opened = false;
+      }
+    };
+    /**
+     * 保险购买日期配置
+     * @type {{}}
+     */
+    vm.date3 = {
+      options: {
+        startingDay: 1,
+        placeholder: "请选择保险购买日期",
+        minDate: new Date("2010/01/01 00:00:00"),
+        maxDate: new Date()
+      },
+      opened: false,
+      open: function () {
+        vm.date1.opened = false;
+        vm.date2.opened = false;
+      }
+    };
+
 
     vm.vehicleHandler = function (data) {
       console.log(data);

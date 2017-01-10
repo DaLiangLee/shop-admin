@@ -31,7 +31,7 @@
         <label class="col-lg-1 control-label">编码：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.code" ng-required="true"
-                 ng-maxlength="40" placeholder="请输入长度为40以内的编码" cb-placeholder ad-field-error="{maxlength:'编码长度大于40'}" >
+                 ng-maxlength="40" placeholder="请输入长度40字符以内的编码" cb-placeholder ad-field-error="{maxlength:'编码长度大于40'}" >
         </div>
       </div>
       <div class="form-group">
@@ -39,7 +39,7 @@
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
             <input type="text" id="goods_add_name" class="form-control" name="productname"
-                   ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder
+                   ng-model="vm.dataBase.productname" ng-maxlength="40" placeholder="请输入长度40字符以内的商品名称" cb-placeholder
                    ng-required="true">
             <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
               请输入长度为40以内的商品名称
@@ -74,7 +74,7 @@
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="productname"
                  ng-model="vm.dataBase.seodescription"
-                 ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
+                 ng-maxlength="40" placeholder="请输入长度20字符以内的商品卖点" cb-placeholder>
         </div>
       </div>
       <div class="form-group">
@@ -87,7 +87,7 @@
             <table class="table">
               <thead>
               <tr>
-                <th>*如 规格/型号/颜色 等</th>
+                <th width="200px">*如&emsp;规格/型号/颜色&emsp;等</th>
                 <th>库存数量 <i tooltip="清空即为库存数量无限" tooltip-append-to-body="true" tooltip-placement="right"
                             tooltip-animation="true">？</i></th>
                 <th>零售单价（元）</th>
@@ -157,7 +157,7 @@
         <label for="goods_provider" class="col-lg-1 control-label">供应商：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_provider" class="form-control" name="provider"
-                 ng-model="vm.dataBase.provider" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
+                 ng-model="vm.dataBase.provider" ng-maxlength="40" placeholder="请输入供应商名称" cb-placeholder>
           <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
             请输入长度为40以内的商品名称
           </div>
@@ -167,7 +167,7 @@
         <label for="goods_add_name" class="col-lg-1 control-label">供应商电话：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="productname"
-                 ng-model="vm.dataBase.providertel" ng-maxlength="40" placeholder="请输入长度为40以内的商品名称" cb-placeholder>
+                 ng-model="vm.dataBase.providertel" ng-maxlength="40" placeholder="请输入供应商电话" cb-placeholder>
           <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
             请输入长度为40以内的商品名称
           </div>

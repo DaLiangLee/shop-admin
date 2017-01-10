@@ -45,7 +45,7 @@
 
 
   /** @ngInject */
-  function simpleSearch() {
+  function simpleSearch(cbAlert) {
 
     /**
      * 默认配置
@@ -61,6 +61,18 @@
       controller: ["$scope", function ($scope) {
         $scope.items = [];
         $scope.searchParams = {};
+        $scope.isDisabled = function(){
+          var disabled = 0;
+          angular.forEach($scope.items, function (item) {
+            if(angular.isDefined(item.start) && item.start.isDisabled){
+              disabled++;
+            }
+            if(angular.isDefined(item.end) && item.end.isDisabled){
+              disabled++;
+            }
+          });
+          return disabled > 0;
+        };
         var config = $scope.$watch('config', function(value){
           if(value){
             $scope.items = [];
@@ -97,8 +109,14 @@
                * 生成绑定的默认数据
                */
               $scope.searchParams[item.name] = item.model;
-              angular.isDefined(item.start) && ($scope.searchParams[item.start.name] = item.start.model);
-              angular.isDefined(item.end) && ($scope.searchParams[item.end.name] = item.end.model);
+              if(angular.isDefined(item.start)){
+                start(item);
+                $scope.searchParams[item.start.name] = item.start.model;
+              }
+              if(angular.isDefined(item.end)){
+                end(item);
+                $scope.searchParams[item.end.name] = item.end.model;
+              }
               /**
                * 检查list是不是数组
                */
@@ -127,29 +145,99 @@
           }
         });
 
-        // 给date设置默认配置
-        angular.forEach($scope.items, function (value1) {
-          if (value1.type === 'date') {
-            angular.forEach(value1.data, function (value2) {
-              if (angular.isUndefined(value2.opened)) {
-                value2.opened = false;
-              }
-              if (angular.isUndefined(value2.format)) {
-                value2.format = 'yyyy-MM-dd';
-              }
-              if (angular.isUndefined(value2.minDate)) {
-                value2.minDate = new Date();
-              }
-              if (angular.isUndefined(value2.maxDate)) {
-                value2.maxDate = new Date(2020, 12, 31);
-              }
-            });
+        /**
+         * 开始处理函数
+         * @param item
+         * @returns {*}
+         */
+        function start(item){
+          return {
+            date: startDate(item)
+          }[item.type];
+        }
+
+        /**
+         * 结束处理函数
+         * @param item
+         * @returns {*}
+         */
+        function end(item){
+          return {
+            date: endDate(item)
+          }[item.type];
+        }
+
+
+        /**
+         * 开始时间
+         * @param item
+         */
+        function startDate(item){
+          item.start.config = angular.extend({
+            startingDay: 1,
+            placeholder: "起始时间",
+            minDate: new Date("2010/01/01 00:00:00"),
+            maxDate: new Date()
+          }, (item.start.config || {}));
+          item.start.opened = false;
+          if(angular.isDefined(item.end)){
+            item.start.open = function(){
+              item.end.opened = false;
+            };
           }
-        });
-        $scope.dateOptions = {
-          formatYear: 'yy',
-          startingDay: 1
-        };
+          item.start.handler = function (startDate, endDate) {
+            if(!endDate || compare(endDate, startDate) > 0){
+              item.start.isDisabled = false;
+            }
+            if(angular.isDefined(item.end)){
+              item.end.isDisabled = true;
+            }
+            $scope.isDisabled();
+          }
+        }
+
+        /**
+         * 结束时间
+         * @param item
+         */
+        function endDate(item){
+          item.end.config = angular.extend({
+            startingDay: 1,
+            placeholder: "结束时间",
+            minDate: new Date("2010/01/01 00:00:00"),
+            maxDate: new Date()
+          }, (item.start.config || {}));
+          item.end.opened = false;
+          item.end.open = function(){
+            if(!$scope.searchParams[item.start.name]){
+              cbAlert.alert("请先选择起始时间");
+              item.start.isDisabled = true;
+              item.end.model = undefined;
+              $scope.searchParams[item.end.name] = item.end.model;
+              item.end.opened = false;
+            }
+            item.start.opened = false;
+          };
+          item.end.handler = function (endDate, startDate) {
+            if(!endDate || !startDate){
+              return ;
+            }
+            if(compare(endDate, startDate) <= 0){
+              cbAlert.alert("结束时间不能小于起始时间");
+              item.end.isDisabled = true;
+            }else{
+              item.end.isDisabled = false;
+            }
+            $scope.isDisabled();
+          }
+        }
+
+
+        function compare(endDate, startDate) {
+          endDate = endDate.replace(/\-/, '/');
+          startDate = startDate.replace(/\-/, '/');
+          return (new Date(endDate) - new Date(startDate));
+        }
 
         $scope.setSearch = function () {
           console.log($scope.searchParams);
@@ -158,7 +246,6 @@
         };
 
         function getCustom(value, params){
-          console.log(value, params);
           var temp = [];
           angular.forEach(params, function (key, value) {
             if(/^\$\$/.test(value) && key === -1){
@@ -184,19 +271,10 @@
           });
           return searchParams;
         }
-
-        /*$scope.cancel = function () {
-         var page = angular.copy($scope.searchParams);
-         angular.forEach(page, function (value, key) {
-         if(key !== 'page'){
-         delete page[key];
-         }
-         });
-         $scope.searchParams = page;
-         $scope.searchPreHandler({data: $scope.searchParams});
-         $scope.searchHandler({data: $scope.searchParams});
-         };*/
       }]
     }
   }
 })();
+
+
+

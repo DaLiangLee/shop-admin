@@ -40,7 +40,7 @@
     vm.reviewHandler = function (data) {
       if (data.status == '0') {
         shopHome.saveDescription({
-          description: encodeURI(data.content)
+          description: data.content
         }).then(function (results) {
           if (results.data.status == '0') {
             cbAlert.tips("修改商户介绍成功");
@@ -168,7 +168,7 @@
   }
 
   /** @ngInject */
-  function StoreShopHomeContactController($scope, shopHome, cbAlert) {
+  function StoreShopHomeContactController($filter, shopHome, cbAlert) {
     var vm = this;
     vm.dataLists = [];
     var temporaryData = null;
@@ -183,13 +183,17 @@
       });
     });
 
-    shopHome.getStoreContact().then(function (results) {
-      if (results.data.status == '0') {
-        setDataLists(results.data.data);
-      } else {
-        cbAlert.error(results.data.data);
-      }
-    });
+    function list() {
+      shopHome.getStoreContact().then(function (results) {
+        if (results.data.status == '0') {
+          setDataLists(results.data.data);
+        } else {
+          cbAlert.error(results.data.data);
+        }
+      });
+    }
+    list();
+
 
     /**
      * 适配获取的数据
@@ -200,6 +204,8 @@
         var index = _.findIndex(vm.dataLists, function(key){
           return key.type == item.type;
         });
+        console.log(index, item);
+
         vm.dataLists[index] = item;
       });
       temporaryData = angular.copy(vm.dataLists);
@@ -213,27 +219,10 @@
     function getDataLists(list){
       var results = [];
       angular.forEach(list, function (item) {
-        results.push({
-          "type": item.type,
-          "contactname": item.contactname,
-          "telephone": item.telephone,
-          "email": item.email,
-          "guid": item.guid
-        });
+        item = angular.extend({}, item);
+        results.push(item);
       });
       return results;
-    }
-
-    function isChange(){
-      var result = 0;
-      angular.forEach(temporaryData, function (key) {
-        angular.forEach(vm.dataLists, function (item) {
-          if(key.contactname === item.contactname && key.telephone === item.telephone && key.email === item.email && key.guid === item.guid){
-            result++;
-          }
-        });
-      });
-      return result > 0;
     }
 
     function isAllowed() {
@@ -241,35 +230,92 @@
         validate: false,
         message: ""
       };
-      var list = $scope.contact.list;
-      console.log(list);
-      if(list.telephone.$dirty && list.telephone.$valid){
-        console.log(1);
-      }
-      if(list.email.$dirty && list.email.$valid){
-        console.log(2);
-      }
+      angular.forEach(vm.dataLists, function (item) {
+        console.log(item);
+        var contactname = $filter("formatStatusFilter")(item.type, "storeContactPeople");
+        if(item.email && !item.telephone && !item.contactname){
+          result = {
+            validate: true,
+            message:  contactname + "姓名和电话未填写"
+          }
+        }
+        if(item.telephone && !item.contactname){
+          result = {
+            validate: true,
+            message: contactname + "姓名未填写"
+          }
+        }
+      });
       return result;
     }
 
-
-    vm.submitBtn = function(){
-      if(isChange()){
-        cbAlert.alert("没有修改联系人姓名，电话，邮箱");
-        return ;
+    /**
+     * 验证电话  手机或者座机
+     * @param data
+     * @param validate
+     */
+    vm.isTelephone = function(data, validate){
+      if(!!data.telephone && validate.$dirty){
+        data.$$isTelephone = validate.$error.telephoneAll || validate.$error.telephoneFixed || validate.$error.telephonePhone;
       }
+      vm.isDisabled();
+    };
+
+    /**
+     * 验证邮箱
+     * @param data
+     * @param validate
+     */
+    vm.isEmail = function(data, validate){
+      console.log(data, validate);
+      if(!!data.email && validate.$dirty){
+        data.$$isEmail = validate.$error.pattern;
+      }else{
+        data.$$isEmail = validate.$error.pattern;
+      }
+      vm.isDisabled();
+    };
+
+    /**
+     * 检查是否没有通过验证的
+     * @returns {boolean}
+     */
+    vm.isDisabled = function(){
+      var isDisabled = 0;
+      angular.forEach(vm.dataLists, function (item) {
+        if(item.$$isTelephone || item.$$isEmail){
+          isDisabled++;
+        }
+      });
+      return isDisabled > 0;
+    };
+
+    /**
+     * 提交数据
+     */
+    vm.submitBtn = function(){
       if(isAllowed().validate){
         cbAlert.alert(isAllowed().message);
         return ;
       }
+      if(angular.equals(temporaryData, vm.dataLists)) {
+        cbAlert.confirm("您没有修改内容是否继续保存？", function(isConfirm){
+          if(isConfirm){
+            cbAlert.tips("修改成功！");
+          }else{
+            cbAlert.close();
+          }
+        }, "", "warning");
+        return;
+      }
       shopHome.saveStoreContact(getDataLists(vm.dataLists)).then(function (results) {
         if (results.data.status == '0') {
-          setDataLists(results.data.data);
           cbAlert.tips("修改成功！");
+          list();
         } else {
           cbAlert.error(results.data.data);
         }
       });
-    };
+    }
   }
 })();

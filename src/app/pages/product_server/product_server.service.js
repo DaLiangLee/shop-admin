@@ -52,13 +52,13 @@
                       "id": 2,
                       "name": "服务编码/图片",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<div><p class="text-center" bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></div>'
+                      "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></div>'
                     },
                     {
                       "id": 3,
                       "name": "服务名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename2"></span>'
                     },
                     {
                       "id": 4,

@@ -175,13 +175,13 @@
         <div class="form-group">
           <label class="col-md-1 control-label">购车日期：</label>
           <div class="col-md-7">
-            <div cb-datepicker="" datepicker-options="vm.dateOptions2" datepicker-model="vm.item.buydate"></div>
+            <div cb-datepicker="" is-open="vm.date1.opened" datepicker-options="vm.date1.options" datepicker-open="vm.date1.open()" datepicker-model="vm.item.buydate"></div>
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-1 control-label">上次年检日期：</label>
           <div class="col-md-7">
-            <div cb-datepicker="" datepicker-options="vm.dateOptions2" datepicker-model="vm.item.lastcheckdate"></div>
+            <div cb-datepicker="" is-open="vm.date2.opened" datepicker-options="vm.date2.options" datepicker-open="vm.date2.open()" datepicker-model="vm.item.lastcheckdate"></div>
           </div>
         </div>
         <div class="form-group">
@@ -193,7 +193,7 @@
         <div class="form-group">
           <label class="col-md-1 control-label">保险购买日期：</label>
           <div class="col-md-7">
-            <div cb-datepicker="" datepicker-options="vm.dateOptions2" datepicker-model="vm.item.lastinsurancedate"></div>
+            <div cb-datepicker="" is-open="vm.date3.opened" datepicker-options="vm.date3.options" datepicker-open="vm.date3.open()" datepicker-model="vm.item.lastinsurancedate"></div>
           </div>
         </div>
       </div>

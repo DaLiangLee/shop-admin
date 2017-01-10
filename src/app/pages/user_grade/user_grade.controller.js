@@ -12,16 +12,21 @@
   function UserGradeListController(cbAlert, userCustomer) {
     var vm = this;
     vm.items = [];
-    userCustomer.grades().then(function (results) {
-      if (results.data.status == 0) {
-        return setGradesData(results.data.data);
-      } else {
-        cbAlert.error(results.data.rtnInfo);
-      }
-    }).then(function (results) {
-      console.log(results);
-      vm.items = results;
-    });
+
+    function list(){
+      userCustomer.grades().then(function (results) {
+        if (results.data.status == 0) {
+          return setGradesData(results.data.data);
+        } else {
+          cbAlert.error(results.data.rtnInfo);
+        }
+      }).then(function (results) {
+        console.log(results);
+        vm.items = results;
+      });
+    }
+
+    list();
 
     function setGradesData(list) {
       list = list.concat([]);
@@ -100,6 +105,7 @@
       userCustomer.saveGrades(vm.items).then(function (results) {
         if (results.data.status == 0) {
           cbAlert.tips("修改成功");
+          list();
         } else {
           cbAlert.error(results.data.data);
         }

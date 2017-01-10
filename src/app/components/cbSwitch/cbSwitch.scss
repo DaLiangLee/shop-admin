@@ -1,14 +1,13 @@
 .cb-switch{
   display: inline-block;
   vertical-align: top;
-  width: 40px;
+  width: 50px;
   label{
     position:relative;
     display: block;
-    padding: 1px;
-    border-radius: 24px;
-    height: 22px;
-    margin-bottom: 15px;
+    border-radius: 28px;
+    height: 28px;
+    margin-bottom: 0;
     background-color: #eee;
     cursor: pointer;
     vertical-align: top;
@@ -17,8 +16,8 @@
   label:before{
     content: '';
     display: block;
-    border-radius: 24px;
-    height: 22px;
+    border-radius: 28px;
+    height: 28px;
     background-color: #ccc;
   }
 
@@ -27,10 +26,10 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -11px;
-    margin-left: -20px;
-    width: 22px;
-    height: 22px;
+    margin-top: -12px;
+    margin-left: -23px;
+    width: 24px;
+    height: 24px;
     border-radius: 22px;
     background-color: white;
     box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.08);
@@ -41,7 +40,7 @@
   }
   &.checked{
     label:after{
-      margin-left: -2px;
+      margin-left: -1px;
     }
     label:before{
       background-color:green;

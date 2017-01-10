@@ -73,7 +73,7 @@
             if (results.data.status == '0') {
               cbAlert.tips("删除成功");
             } else {
-              cbAlert.error("错误提示", results.data.rtnInfo);
+              cbAlert.error("错误提示", results.data.data);
             }
             getList(currentParams);
           }, function (results) {
@@ -89,7 +89,7 @@
             if (results.data.status == '0') {
               cbAlert.tips(message);
             } else {
-              cbAlert.error("错误提示", results.data.rtnInfo);
+              cbAlert.error("错误提示", results.data.data);
             }
             getList(currentParams);
           }, function (results) {
@@ -374,7 +374,7 @@
             skuvalues: data.data,
             attrvalues: vm.dataBase.$$attrvalues,
             status: "1",
-            $$skuname: $filter('skuvaluesFilter')(data.data, 8)
+            $$skuname: $filter('skuvaluesFilter')(data.data, 7)
           });
         }
       }
@@ -395,6 +395,7 @@
      * @param value    比较的字段 默认id
      */
     var getData = function (arr, id, value) {
+      arr = angular.copy(arr);
       value = value || 'id';
       return _.find(arr, function (item) {
         return item[value] == id;
