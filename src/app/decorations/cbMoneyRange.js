@@ -14,10 +14,10 @@
   function cbMoneyRange(webSiteVerification) {
     return {
       require: "ngModel",
-      link: function (scope, iElement, iAttrs, iController) {
+      link: function (scope, iElement, iAttrs, ngModel) {
         var REGULAR = webSiteVerification.REGULAR.money;
         var newValue = "";
-        iController.$parsers.push(function (value) {
+        ngModel.$parsers.push(function (value) {
           if (angular.isUndefined(value)){
             return "";
           }
@@ -37,13 +37,18 @@
             }
           }
           newValue = filtration;
-          iController.$setValidity('cbMoneyRange', REGULAR.test(filtration));
+          ngModel.$setValidity('cbMoneyRange', REGULAR.test(filtration));
           return REGULAR.test(filtration) ? filtration : undefined;
         });
+        console.log(scope);
+
+
+
+
         iElement.on('blur', function () {
           if(newValue){
             newValue = setViewValue(newValue);
-            iController.$setValidity('cbMoneyRange', REGULAR.test(newValue));
+            ngModel.$setValidity('cbMoneyRange', REGULAR.test(newValue));
             scope.$apply();
           }
         });
@@ -68,10 +73,10 @@
             }
           }else{
             console.log(value);
-            value = parseFloat(value, 10).toFixed(2);
+            value = parseFloat(value, 10);
           }
-          iController.$setViewValue(value);
-          iController.$render();
+          ngModel.$setViewValue(value);
+          ngModel.$render();
           return value;
         }
       }

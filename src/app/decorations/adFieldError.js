@@ -47,10 +47,13 @@
         // 获取错误信息提示文字
         subScope.customMessage = scope.$eval(iAttrs.adFieldError);
         var dom = [
-          '<ul class="k-form-error" ng-if="hasError()">',
+          '<ul class="k-form-error" ng-if="hasError()" tooltip="清空即为库存数量无限" tooltip-append-to-body="true" tooltip-placement="top" tooltip-animation="true">',
           '<li ng-repeat="(name, wrong) in errors()" ng-if="wrong">{{name | cbFormErrorFilter : customMessage}}</li>',
           '</ul>'
         ].join("");
+
+
+
         var hint = $compile(dom)(subScope);
         iElement.on('blur', function () {
           console.log(subScope.errors(), subScope.customMessage);

@@ -98,10 +98,24 @@
           _this[key] = configAttr[key];
         });
 
-        $scope.datepicker = {
-          model: $scope.datepickerModel
-        };
-        var datepickerModel = $scope.datepicker.model;
+        $scope.datepicker = {};
+        var datepickerModel = $scope.datepickerModel;
+
+        if ( $scope.datepickerModel ) {
+          var datepicker = $scope.datepickerModel;
+          if(!/(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}:\d{2}:\d{2})/.test(datepicker)){
+            $scope.datepicker.model = "";
+          }else{
+            var date = new Date( datepicker.replace(/\-/, '/') );
+            var isValid = !isNaN(date);
+            if ( isValid ) {
+              $scope.datepicker.model = dateFilter(date, _this.format);
+            } else {
+              $scope.datepicker.model = "";
+            }
+          }
+        }
+
 
         $scope.setOpen = function(){
           if(!$scope.isOpen){

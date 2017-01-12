@@ -103,9 +103,9 @@
                 <td>
                   <div class="text-border"><span ng-bind="item.$$skuname"></span></div>
                 </td>
-                <td><input class="form-control" type="text" name="" ad-field-error="{cbNumberRange:'输入不是整数'}"
-                           ng-model="item.$$stock" cb-number-range="" placeholder="不填无限"></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.saleprice"></td>
+                <td><input class="form-control" type="text" name=""
+                           ng-model="item.$$stock" cb-number-range="" data-value-min="-1" data-value-max="99999999" placeholder="不填无限"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.saleprice" cb-money-range=""></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skucode"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.partscode"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>

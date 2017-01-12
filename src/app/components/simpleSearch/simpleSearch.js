@@ -61,6 +61,30 @@
       controller: ["$scope", function ($scope) {
         $scope.items = [];
         $scope.searchParams = {};
+
+        /**
+         * 根据name获取当前项，根据id获取子项
+         * @param id
+         * @param name
+         * @returns {{}}
+         */
+        function getRegionData(id, name){
+          var items = _.filter($scope.config.searchDirective, function(item){
+            return item.name === name;
+          });
+          if(items.length === 1 && !items[0].region){
+            return {};
+          }
+          var list = items.length === 1 ? items[0].list : [];
+          if(!list.length){
+            return {};
+          }
+          var items2 = _.filter(list, function(item){
+            return item.id == id;
+          });
+          return items2.length === 1 ? items[0] : {};
+        }
+
         $scope.isDisabled = function(){
           var disabled = 0;
           angular.forEach($scope.items, function (item) {
@@ -101,14 +125,17 @@
                 model++;
               }
               angular.isUndefined(item.model) && (item.model = -1);
-              if(item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
+              if(!item.region && item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
                 item.model = -2;
                 model++;
               }
+              console.log(item.name, item.model);
+
               /**
                * 生成绑定的默认数据
                */
               $scope.searchParams[item.name] = item.model;
+
               if(angular.isDefined(item.start)){
                 start(item);
                 $scope.searchParams[item.start.name] = item.start.model;
@@ -261,9 +288,21 @@
           });
           return result;
         }
+
+        $scope.setRegion = function (item, list) {
+          $scope.searchParams[item.start.name] = list.start;
+          $scope.searchParams[item.end.name] = list.end;
+        };
+
         function getParams(params){
           var searchParams = {};
           angular.forEach(params, function (key, value) {
+            value.indexOf('$$') > -1 && getRegionData(key, value);
+          });
+          angular.forEach(params, function (key, value) {
+            value.indexOf('$$') > -1 && getRegionData(key, value);
+            console.log(!angular.isUndefined(key) , value.indexOf('$$') != 0);
+
             if(!angular.isUndefined(key) && value.indexOf('$$') != 0){
               (key != -1) && (searchParams[value] = key);
               ((key == -1) || getCustom(value, params)) && (searchParams[value] = undefined);

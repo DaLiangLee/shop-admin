@@ -6,7 +6,7 @@
     <i></i>您的银行账户信息有更改，请联系平台 <span class="text-danger">400-1234-111</span> 修改进行。
   </p>
 </div>
-<form name="passwordForm" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate>
+<form name="passwordForm" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate ng-if="vm.loadStatus && vm.onceSubmit">
   <div class="form-group">
     <label for="inputPassword1" class="col-md-2 control-label">银行名称：</label>
     <div class="col-md-7">
@@ -51,22 +51,7 @@
   </div>
   <div class="row form-group">
     <div class="row col-md-7 col-md-offset-2">
-      <div class="col-md-4" ng-repeat="item in vm.dataBase.store.photos track by $index" ng-if="vm.dataBase.store.photos.length">
-        <div style="width: 110%;">
-          <img ng-src="{{item}}?x-oss-process=image/resize,m_fill,w_300,h_180" style="width: 100%;" class="img-thumbnail" alt="">
-        </div>
-        <br>
-        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
-          <button class="btn btn-danger" ng-click="vm.removePhotos($index)">删除</button>
-          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data, $index)">重新上传</button>
-          <button class="btn btn-default" cb-download="item">下载</button>
-        </div>
-      </div>
-      <div class="col-md-3" ng-if="!vm.dataBase.store.photos.length">
-        <div cb-access-control="store" data-parentid="30000" data-sectionid="30004">
-          <button class="btn btn-primary" cb-upload-file="images" title="店招图片上传" data-upload-type="storeCase"  upload-item="vm.uploadHandler(data)">上传店招图片</button>
-        </div>
-      </div>
+      <div simple-image config="vm.uploadModel.config" image="vm.dataBase.license" upload-handler="vm.uploadModel.handler(data)"></div>
     </div>
   </div>
   <div class="form-group">
@@ -75,3 +60,29 @@
     </div>
   </div>
 </form>
+<div class="form-horizontal" ng-if="vm.loadStatus && !vm.onceSubmit">
+  <div class="form-group">
+    <label for="inputPassword1" class="col-md-2 control-label">银行名称：</label>
+    <div class="col-md-7">
+      <div class="text-border" ng-bind="vm.dataBase.bankname"></div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword2" class="col-md-2 control-label">开户支行：</label>
+    <div class="col-md-7">
+      <div class="text-border" ng-bind="vm.dataBase.bankfullname"></div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-md-2 control-label">开户名：</label>
+    <div class="col-md-7">
+      <div class="text-border" ng-bind="vm.dataBase.accountname"></div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword1" class="col-md-2 control-label">账号：</label>
+    <div class="col-md-7">
+      <div class="text-border" ng-bind="vm.dataBase.accountkey"></div>
+    </div>
+  </div>
+</div>

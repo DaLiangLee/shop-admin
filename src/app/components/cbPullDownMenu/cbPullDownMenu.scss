@@ -1,0 +1,26 @@
+.k-pullDownMenu{
+  position: absolute;
+  z-index: 100;
+  background-color: #fff;
+  border: 1px solid #66afe9;
+  ul{
+    padding: 0;
+    margin: 10px 0 0 0;
+    max-height: 360px;
+    overflow-y: auto;
+    list-style-type: none;
+  }
+  li{
+    padding-left: 20px;
+    line-height: 30px;
+    cursor: pointer;
+    &.active,&.active:hover{
+      color: #fff;
+      background-color: #0470E9;
+    }
+    &:hover{
+      color: #fff;
+      background-color: #5da6e9;
+    }
+  }
+}

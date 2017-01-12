@@ -23,7 +23,7 @@
           valueMax = iAttrs.valueMax * 1 || Number.MAX_VALUE,
           rangeEnabled = iAttrs.rangeEnabled || 'true';
         iAttrs.$observe("valueMin", function (value) {
-          valueMin = value * 1 || 0
+          valueMin = value * 1 || 0;
         });
         iAttrs.$observe("valueMax", function (value) {
           valueMax = value * 1 || Number.MAX_VALUE;
@@ -40,10 +40,12 @@
             /^-\d*/g.test(value) && (temp = "-");
             // 过滤非数字
             filtration = temp + value.replace(/[^0-9]/g, "");
-            (filtration != value) && (iController.$setViewValue(filtration), iController.$render())
+            console.log(filtration*1);
+            if(filtration != value){
+              iController.$setViewValue(filtration);
+              iController.$render();
+            }
           }
-
-          console.log(filtration);
 
           var u = true;
           if(filtration !== "-"){

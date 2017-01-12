@@ -92,7 +92,7 @@
         <label class="col-md-1 control-label">岗位：</label>
         <div class="col-md-7">
           <input type="text" class="form-control" name="username" ng-model="vm.dataBase.position.posname"
-                 ng-maxlength="40"
+                 ng-maxlength="40" cb-pull-down-menu="vm.position"
                  placeholder="请输入岗位" cb-placeholder="">
         </div>
       </div>
@@ -127,6 +127,7 @@
                data-multiple></div>
         </div>
       </div>
+
       <div class="form-group">
         <div class="col-md-7 col-md-offset-1 text-center">
           <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="employee.$invalid">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>

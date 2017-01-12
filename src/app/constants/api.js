@@ -467,6 +467,11 @@
                     "field": "_BIZ",
                     "version": true
                   },
+                  "storeBap": {
+                    "url": "/store/shop/uploadLicence",
+                    "field": "_BAP",
+                    "version": true
+                  },
                   "storeLogo": {
                     "url": "/store/shop/uploadLicence",
                     "field": "_LOGO",

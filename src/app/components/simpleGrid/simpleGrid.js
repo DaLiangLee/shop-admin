@@ -108,7 +108,7 @@
 
     // 导出数据
     function exportDataConfig() {
-      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span class="glyphicon glyphicon-import">导出数据</span></a>'
+      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span>导出数据</span></a>'
     }
 
     // 自定义列表项
@@ -160,10 +160,16 @@
           node += '<td ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + item.fieldDirective + '</td>';
         }
       });
+      console.log(scope.config.statusShow);
 
       var statusShow = "{";
       angular.forEach(scope.config.statusShow, function (value) {
-        statusShow += value.sClass + ": " + rowItemName + "." + value.key + "==" + value.value + ",";
+        if(!!value.status){
+          statusShow += value.sClass + ": " + rowItemName + "." + value.status + ",";
+        }else{
+          statusShow += value.sClass + ": " + rowItemName + "." + value.key + "==" + value.value + ",";
+        }
+
       });
       statusShow = statusShow.substring(0, statusShow.length - 1) + "}";
       var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";

@@ -275,22 +275,24 @@
 
 
   /** @ngInject */
-  function MemberEmployeeChangeController($state, $scope, dateFilter, cbAlert, configuration, memberEmployee, memberRole) {
+  function MemberEmployeeChangeController($q, $state, dateFilter, cbAlert, configuration, memberEmployee) {
     var vm = this;
     //  是否是编辑
     var currentParams = $state.params;
     vm.isChange = !_.isEmpty(currentParams);
     vm.title = $state.current.title;
-    console.log(configuration.getConfig());
 
+    /**
+     * 绑定数据
+     * @type {{}}
+     */
+    vm.dataBase = {}
+
+    /**
+     * 获取店铺id
+     * @type {*}
+     */
     vm.storecode = configuration.getConfig().storecode;
-    var positions = [];
-    memberEmployee.positions().then(function(results){
-      console.log('positions', results);
-      if(results.data.status == 0){
-        positions = results.data.data.concat([]);
-      }
-    });
 
 
     /**
@@ -307,14 +309,10 @@
       }
     });
 
-
-
-    vm.dataBase = {
-      position: {
-        posname: "新家的"
-      },
-      status: "1"
-    };
+    /**
+     * 员工生日配置
+     * @type {{options: {startingDay: number, showLunar: boolean, placeholder: string, minDate: Date, maxDate: Date}, opened: boolean, open: MemberEmployeeChangeController.date1.open}}
+     */
     vm.date1 = {
       options: {
         startingDay: 1,
@@ -328,6 +326,10 @@
         vm.date2.opened = false;
       }
     };
+    /**
+     * 员工入职配置
+     * @type {{options: {startingDay: number, showLunar: boolean, placeholder: string, minDate: Date, maxDate: Date}, opened: boolean, open: MemberEmployeeChangeController.date1.open}}
+     */
     vm.date2 = {
       options: {
         startingDay: 1,
@@ -413,6 +415,7 @@
       return code%2+"";
     }
 
+
     vm.setGenderAndBirthday = function(code){
       var info = getIDCardInfo(code);
       if(info.birthday && !vm.dataBase.birthday){
@@ -425,18 +428,43 @@
     };
 
 
-
+    /**
+     * 加载数据
+     * @type {boolean}
+     */
     vm.isLoadData = false;
+    /**
+     * 判断当前是否编辑
+     */
     if (vm.isChange) {
-      memberEmployee.get({memberId:currentParams.id}).then(function(results){
-        if (results.data.status == 0) {
-          setDataBase(results.data.data);
+      $q.all([memberEmployee.get({memberId:currentParams.id}), memberEmployee.positions()]).then(function(results){
+        var member = results[0].data;
+        var positions = results[1].data;
+        console.log(member,positions);
+        if (member.status == 0 && positions.status == 0) {
+          setDataBase(member.data, positions.data);
+          vm.position = positions.data;
           vm.isLoadData = true;
         } else {
-          cbAlert.error("错误提示", results.data.error);
+          if (member.status != 0) {
+            cbAlert.error("错误提示", member.data);
+          }
+          if (positions.status != 0) {
+            cbAlert.error("错误提示", positions.data);
+          }
         }
       });
     } else {
+      memberEmployee.positions().then(function(results){
+        if(results.data.status == 0){
+          vm.position = results.data.data.concat([]);
+        }else{
+          cbAlert.error("错误提示", results.data.data);
+        }
+      });
+      vm.dataBase.status = "1";
+      vm.dataBase.position = {};
+      vm.dataBase.position.posname = "";
       vm.isLoadData = true;
     }
 
@@ -456,9 +484,36 @@
       }, message, 'warning');
     };
 
-    function setDataBase(data) {
+
+    /**
+     * 编辑状态 设置当前数据
+     * @param data
+     */
+    function setDataBase(data, positions) {
       console.log('setDataBase',data);
       vm.dataBase = angular.copy(data);
+      vm.dataBase.position = {};
+      vm.dataBase.position.posname = getPosname(vm.dataBase.positionid, positions);
+    }
+
+    /**
+     * 获取岗位名称 显示到页面
+     * @param id
+     * @param list
+     * @returns {*}
+     */
+    function getPosname(id, list) {
+      var items = _.filter(list, function (item) {
+        return item.guid == id;
+      });
+      return items.length === 1 ? items[0].posname : "";
+    }
+
+    function getPositionid(posname, list) {
+      var items = _.filter(list, function (item) {
+        return item.posname == posname;
+      });
+      return items.length === 1 ? items[0].guid : undefined;
     }
 
     /**
@@ -472,6 +527,7 @@
       _.map(base.roleStore, function(item){
         return {"id": item};
       });
+      base.positionid = getPositionid(base.position.posname, vm.position);
       var roleStore = [];
       angular.forEach(base.roleStore, function(item){
         if(angular.isString(item)){
@@ -483,6 +539,12 @@
       base.roleStore = roleStore;
       return base;
     }
+
+    /**
+     * 获取提交的的时间格式
+     * @param time
+     * @returns {*}
+     */
     function getSubmitTime(time){
       if(angular.isUndefined(time) || !time){
         return "";
@@ -494,6 +556,9 @@
       return dateFilter(new Date(time+" 00:00:00"), 'yyyy-MM-dd HH:mm:ss');
     }
 
+    /**
+     * 提交数据
+     */
     vm.submit = function () {
       console.log(getDataBase(vm.dataBase));
       if(vm.isChange){
@@ -514,8 +579,11 @@
         });
       }
     };
+
+    /**
+     * 跳转页面
+     */
     function goto() {
-      //preferencenav.removePreference($state.current);
       $state.go('member.employee.list', {'page': 1});
     }
 

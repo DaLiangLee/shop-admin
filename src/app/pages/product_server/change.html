@@ -83,7 +83,7 @@
                            ng-model="item.servertime"
                            cb-number-range="" data-value-min="1" data-value-max="9999"
                            placeholder="请输入1～999范围工时"></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价" cb-money-range=""></td>
                 <td><p class="text-border" ng-bind="vm.servertimeprice(item.servertime, item.serverprice)"></p></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>

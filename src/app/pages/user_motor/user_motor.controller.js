@@ -118,12 +118,123 @@
           pageSize: params.pageSize,
           total: result.totalCount
         };
-        getUser(result.items[0].guid);
+        if(result.items[0]){
+          getUser(result.items[0].guid)
+        }else{
+          vm.gridModel2.itemList = [];
+          vm.gridModel2.loadingState = false;
+        }
         vm.gridModel.loadingState = false;
       });
     }
 
     getList(currentParams);
+
+
+
+
+    /**
+     * 搜索操作
+     *
+     */
+    vm.searchModel = {
+      'config': {
+        keyword: currentParams.keyword,
+        placeholder: "请输入会员姓名、手机号、车牌号、品牌",
+        searchDirective: [
+          {
+            label: "剩余保养里程",
+            all: true,
+            custom: true,
+            region: true,
+            type: "int",
+            name: "TotalMile",
+            model: currentParams.endTotalMile,
+            list: [
+              {
+                "label": "0-100km",
+                id: 100,
+                start: 0,
+                end: 100
+              },
+              {
+                "label": "0-300km",
+                id: 300,
+                start: 0,
+                end: 300
+              },
+              {
+                "label": "0-500km",
+                id: 500,
+                start: 0,
+                end: 500
+              }
+            ],
+            start: {
+              name: "startTotalMile",
+              model: currentParams.startTotalMile,
+              config: {
+
+              }
+            },
+            end: {
+              name: "endTotalMile",
+              model: currentParams.endTotalMile,
+              config: {
+
+              }
+            }
+          },
+          {
+            label: "当前里程",
+            name: "CountdownMile",
+            all: true,
+            custom: true,
+            type: "int",
+            start: {
+              name: "startCountdownMile",
+              model: currentParams.startCountdownMile,
+              config: {
+
+              }
+            },
+            end: {
+              name: "endCountdownMile",
+              model: currentParams.endCountdownMile,
+              config: {
+
+              }
+            }
+          },
+          {
+            label: "购车时间",
+            name: "BuyDate",
+            all: true,
+            custom: true,
+            type: "date",
+            start: {
+              name: "startBuyDate",
+              model: currentParams.startBuyDate,
+              config: {
+                minDate: new Date("2010/01/01 00:00:00")
+              }
+            },
+            end: {
+              name: "endBuyDate",
+              model: currentParams.endBuyDate,
+              config: {
+                minDate: new Date("2010/01/01 00:00:00")
+              }
+            }
+          }
+        ]
+      },
+      'handler': function (data) {
+        var search = angular.extend({}, currentParams, data);
+        vm.gridModel.requestParams.params = search;
+        $state.go(currentStateName, search);
+      }
+    };
   }
 })();
 

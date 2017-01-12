@@ -430,11 +430,11 @@
         permission: "chebian:store:user:customer:view"
       })
       .state('user.motor.list', {      // 会员等级 按车辆列表
-        url: '/list/:page',
+        url: '/list/:page?keyword&startTotalMile&endTotalMile&startCountdownMile&endCountdownMile&startBuyDate&endBuyDate',
         templateUrl: 'app/pages/user_motor/list.html',
         controller: 'UserMotorListController',
         controllerAs: 'vm',
-        title: '会员等级',
+        title: '车辆列表',
         permission: "chebian:store:user:customer:view"
       })
       .state('user.grades', {      // 会员等级

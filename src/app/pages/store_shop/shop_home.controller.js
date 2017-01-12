@@ -145,25 +145,105 @@
   }
 
   /** @ngInject */
-  function StoreShopHomeBankController(shopHome, cbAlert) {
+  function StoreShopHomeBankController($q, shopHome, cbAlert) {
     var vm = this;
+    /**
+     * 数据绑定
+     * @type {{}}
+     */
     vm.dataBase = {};
-    shopHome.getBanks().then(function (results) {
-      if (results.data.status == '0') {
-        vm.binkStore = results.data.data;
-      } else {
-        cbAlert.error(results.data.data);
-      }
-    });
+    /**
+     * 是否第一次提交
+     * @type {boolean}
+     */
+    vm.onceSubmit = false;
+    /**
+     * 加载数据
+     * @type {boolean}
+     */
+    vm.loadStatus = false;
 
-    vm.submitBtn = function () {
-      shopHome.saveStoreAccount(vm.dataBase).then(function (results) {
-        if (results.data.status == '0') {
-          cbAlert.tips("修改成功！");
+    /**
+     * 获取银行卡显示
+     * @param id
+     * @param data
+     * @returns {string}
+     */
+    function getBanks(id, data){
+      var items = _.filter(data, function(item){
+        return item.id == id;
+      });
+      return items.length === 1 ? items[0].bankname : "";
+    }
+
+    /**
+     * 获取数据
+     */
+    function list(){
+      $q.all([shopHome.getBanks(), shopHome.getStoreAccount()]).then(function (results) {
+        console.log(results);
+        var bank = results[0].data;
+        var account = results[1].data;
+        if (bank.status == 0 && account.status == 0) {
+          if (!account.data.length) {
+            vm.onceSubmit = true;
+            vm.dataBase.storeid = account.storeid;
+            vm.dataBase.$$storetype = account.storetype;
+            vm.binkStore = bank.data;
+          } else {
+            vm.onceSubmit = false;
+            vm.dataBase = account.data[0];
+            vm.dataBase.bankname = getBanks(vm.dataBase.bankid, bank.data);
+          }
+          vm.loadStatus = true;
         } else {
-          cbAlert.error(results.data.data);
+          if (bank.status != 0) {
+            cbAlert.error("错误提示", bank.data);
+          }
+          if (account.status != 0) {
+            cbAlert.error("错误提示", account.data);
+          }
         }
       });
+    }
+    list();
+
+
+    /**
+     * 银行开户可证复印证 上传配置
+     * @type {{config: {uploadtype: string, title: string}, handler: StoreShopHomeBankController.uploadModel.handler}}
+     */
+    vm.uploadModel = {
+      config: {
+        uploadtype: "storeBap",
+        title: "上传银行开户可证复印证"
+      },
+      handler: function (data) {
+        if(data.status == 0 && data.data.length === 1){
+          vm.dataBase.license = data.data[0].url;
+        }
+      }
+    };
+
+    /**
+     * 提交数据
+     */
+    vm.submitBtn = function () {
+      cbAlert.ajax('您是否确认提交银行账号？', function (isConfirm) {
+        if (isConfirm) {
+          shopHome.saveStoreAccount(vm.dataBase).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips("修改成功！");
+              vm.loadStatus = true;
+              list();
+            } else {
+              cbAlert.error(results.data.data);
+            }
+          });
+        } else {
+          cbAlert.close();
+        }
+      }, "确认提交银行账号不能修改", 'warning');
     }
   }
 

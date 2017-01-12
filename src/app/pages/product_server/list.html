@@ -30,7 +30,7 @@
         <tbody>
         <tr ng-repeat="item in vm.items.serverSkus">
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span ng-bind="vm.items.scatename1"></span></td>
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><p class="text-center" ng-bind="vm.items.code"></p>
+          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><p ng-bind="vm.items.code"></p>
             <span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></td>
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.scatename2}}" text-length="10"></span></td>
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>

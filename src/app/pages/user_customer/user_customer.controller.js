@@ -17,11 +17,6 @@
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     /**
-     * 记录当前子项
-     * @type {string}
-     */
-    var recordChild = "";
-    /**
      * 表格配置
      *
      */
@@ -41,7 +36,15 @@
       },
       selectHandler: function (item) {
         // 拦截用户恶意点击
-        recordChild != item.mobile && getMotor(item.mobile);
+        if(!item.$$active){
+          item.mobile && getMotor(item.mobile)
+        }
+
+        _.forEach(vm.gridModel.itemList, function (key) {
+          key.$$active = false;
+        });
+
+        item.$$active = true;
       }
     };
 
@@ -67,10 +70,9 @@
         if (result.status == 0) {
           return result.data;
         } else {
-          cbAlert.error("错误提示", result.rtnInfo);
+          cbAlert.error("错误提示", result.data);
         }
       }).then(function (result) {
-        recordChild = mobile;
         vm.gridModel2.itemList = [];
         angular.forEach(result, function (item) {
           item.$$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
@@ -107,7 +109,7 @@
             totalCount: result.totalCount
           }
         } else {
-          cbAlert.error("错误提示", result.rtnInfo);
+          cbAlert.error("错误提示", result.data);
         }
       }).then(function (result) {
         vm.gridModel.itemList = result.items;
@@ -118,6 +120,7 @@
         };
         !vm.gridModel.itemList.length && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
         vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
+        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
         vm.gridModel.loadingState = false;
       });
     }
@@ -137,7 +140,6 @@
       }
     };
     userCustomer.grades().then(function (results) {
-      console.log(results);
       var result = results.data;
       if (result.status == 0) {
         vm.searchModel.config = {
