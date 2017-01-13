@@ -14,20 +14,26 @@
       restrict: "A",
       replace: true,
       scope: {
-        checked: "="
+        checkstatus: "="
       },
       templateUrl: "app/components/cbSwitch/cbSwitch.html",
-      controller: ["$scope", function($scope) {
-        var vm = this;
-        var checked = $scope.$watch('checked', function (value) {
-          value && (vm.checked = value);
+      link: function(scope){
+        scope.cbswitch = {
+          checkstatus: true,
+          setStatus: function(value){
+            this.checkstatus = value == 1;
+          }
+        };
+        var status = scope.$watch('checkstatus', function (value) {
+
+          angular.isDefined(value) && scope.cbswitch.setStatus(value);
         });
+
         // 确保工具提示被销毁和删除。
-        $scope.$on('$destroy', function() {
-          checked();
+        scope.$on('$destroy', function() {
+          status();
         });
-      }],
-      controllerAs: "switch"
+      }
     }
   }
 

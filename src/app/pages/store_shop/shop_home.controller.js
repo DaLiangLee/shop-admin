@@ -125,6 +125,16 @@
         });
       }
     }
+
+    /**
+     * 修改员工风采
+     * @param data
+     */
+    vm.memberHandler = function (data) {
+      if (data.status == '0') {
+        vm.dataBase.store.countIsshow = data.data;
+      }
+    }
   }
 
   /** @ngInject */
@@ -188,7 +198,7 @@
           if (!account.data.length) {
             vm.onceSubmit = true;
             vm.dataBase.storeid = account.storeid;
-            vm.dataBase.$$storetype = account.storetype;
+            vm.dataBase.$$isRegtype = account.storetype == 1;
             vm.binkStore = bank.data;
           } else {
             vm.onceSubmit = false;

@@ -58,7 +58,7 @@
                       "id": 3,
                       "name": "服务名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename2"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>'
                     },
                     {
                       "id": 4,
@@ -70,7 +70,7 @@
                       "id": 5,
                       "name": "销量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span>件</span>'
+                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>件</span>'
                     },
                     {
                       "id": 6,

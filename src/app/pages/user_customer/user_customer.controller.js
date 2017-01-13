@@ -206,11 +206,15 @@
     var vm = this;
     //获取验证码
     vm.countdown = "获取验证码";
-
+    vm.isCountdown = true;
     /**
      * 点击获取验证码
      */
     vm.setCountdown = function () {
+      if(!vm.isCountdown){
+        return ;
+      }
+      vm.isCountdown = false;
       userCustomer.verifyCode(vm.form.mobile).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
@@ -232,9 +236,11 @@
         if (count < 1) {
           vm.countdown = "获取验证码";
           $interval.cancel(timer);
+          vm.isCountdown = true;
+        }else{
+          count--;
+          vm.countdown = count + "秒";
         }
-        count--;
-        vm.countdown = count + "秒";
       }, 1000);
     }
 
@@ -298,9 +304,9 @@
     vm.insuranceModel = {};
 
     $q.all([userCustomer.grades(), userCustomer.getUser(currentParams), userCustomer.getMotors(currentParams)]).then(function (results) {
-      var grades = results[0].data,
-        getUser = results[1].data,
-        getMotors = results[2].data;
+      var grades = results[0].data || [],
+        getUser = results[1].data || {},
+        getMotors = results[2].data || [];
       console.log(grades, getUser);
 
       if (getUser.status == 0 && grades.status == 0) {
@@ -308,10 +314,14 @@
           vm.dataBase.username = currentParams.mobile;
           vm.dataBase.mobile = currentParams.mobile;
         } else {
-          vm.dataBase = angular.copy(getUser.data);
-          vm.dataBase.$$gradename = _.find(grades.data, function (item) {
-            return item.guid === vm.dataBase.storegrade;
-          }).gradename;
+          vm.dataBase = getUser.data;
+          if(!grades.data.length){
+            vm.dataBase.$$gradename = "";
+          }else{
+            vm.dataBase.$$gradename = _.find(grades.data, function (item) {
+              return item.guid === vm.dataBase.storegrade;
+            }).gradename;
+          }
         }
         vm.isLoadData = true;
       } else {

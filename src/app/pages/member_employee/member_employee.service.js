@@ -67,14 +67,14 @@
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checked="item.status" ng-click="propsParams.statusItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checked="item.status"></div>',
+            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.status" ng-click="propsParams.statusItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.status"></div>',
             "name": '是否允许登录店铺后台',
             "width": 160
           },
           {
             "id": 8,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checked="item.inservice" ng-click="propsParams.inserviceItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checked="item.status"></div>',
+            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.inservice" ng-click="propsParams.inserviceItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.status"></div>',
             "name": '在职状态',
             "width": 80
           },

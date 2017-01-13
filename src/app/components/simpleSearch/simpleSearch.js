@@ -267,7 +267,7 @@
         }
 
         $scope.setSearch = function () {
-          console.log($scope.searchParams);
+          console.log(getParams($scope.searchParams));
 
            $scope.searchHandler({data: getParams($scope.searchParams)});
         };

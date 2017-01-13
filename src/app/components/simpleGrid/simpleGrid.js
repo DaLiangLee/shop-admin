@@ -160,7 +160,6 @@
           node += '<td ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + item.fieldDirective + '</td>';
         }
       });
-      console.log(scope.config.statusShow);
 
       var statusShow = "{";
       angular.forEach(scope.config.statusShow, function (value) {

@@ -22,7 +22,7 @@
           <th>单价（元）</th>
           <th>工时费（元）</th>
           <th>销量</th>
-          <th>使用车型</th>
+          <th>适用车型</th>
           <th>启用状态</th>
           <th>描述</th>
         </tr>
@@ -39,9 +39,9 @@
           <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime')"></span></td>
           <td><span class="state-unread" ng-bind="item.serverprice"></span></span></td>
           <td><span class="state-unread" ng-bind="item.$$servertimeprice"></span></span></td>
-          <td><span class="state-unread" ng-bind="item.$$servertimeprice"></span></span></td>
+          <td><span class="state-unread" ng-bind="item.countorder"></span></span></td>
           <td>使用车型</td>
-          <td><div cb-switch checked="item.status"
+          <td><div cb-switch checkstatus="item.status"
                    ng-click="vm.gridModel2.statusItem(item)"></div></td>
           <td><span ng-bind="item.skudescription"></span></td>
         </tr>

@@ -29,7 +29,7 @@
 
         iElement.on('focus', function () {
           dataList = scope.$eval(iAttrs.cbPullDownMenu);
-          render(position, dataList);
+          dataList.length && render(position, dataList);
         });
         console.log(ngModel);
         iElement.on('blur', function () {

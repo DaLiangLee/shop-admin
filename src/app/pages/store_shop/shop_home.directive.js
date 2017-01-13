@@ -310,10 +310,9 @@
               scope.settingItem({data: {"status": "1", "data": ""}});
               childScope.close();
             }else{
-
               memberEmployee.changeshow(getSubmitData(childScope.gridModel.itemList)).then(function (results) {
-                if(results.status == "0"){
-                  scope.settingItem({data: {"status": "0", "data": childScope.telephone}});
+                if(results.data.status == "0"){
+                  scope.settingItem({data: {"status": "0", "data": results.data.data}});
                 }
                 childScope.close();
               });

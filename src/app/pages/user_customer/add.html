@@ -37,7 +37,7 @@
                      ng-pattern="/^\d{6}$/">
             </div>
             <div class="col-sm-4">
-              <button type="button" class="btn btn-default btn-block" ng-disabled="(vm.myUsers == -1 || vm.myUsers == 1) && add.mobile.$invalid" ng-click="vm.setCountdown()" ng-bind="vm.countdown">获取验证码</button>
+              <button type="button" class="btn btn-default btn-block" ng-disabled="((vm.myUsers == -1 || vm.myUsers == 1) && add.mobile.$invalid) || !vm.isCountdown" ng-click="vm.setCountdown()" ng-bind="vm.countdown">获取验证码</button>
             </div>
           </div>
           <br>

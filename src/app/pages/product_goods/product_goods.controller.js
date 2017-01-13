@@ -274,7 +274,7 @@
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
-      if (!params.page) {
+      if (!params.remove) {
         return;
       }
       productGoods.list(params).then(function (data) {
@@ -489,7 +489,9 @@
         title: "商品图片上传"
       },
       handler: function (data) {
-
+        if(data.status == 0 && data.data.length == 1){
+          vm.dataBase.mainphoto = data.data[0].url;
+        }
       }
     };
 

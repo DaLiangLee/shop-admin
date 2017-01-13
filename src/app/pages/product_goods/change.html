@@ -30,8 +30,8 @@
       <div class="form-group">
         <label class="col-lg-1 control-label">编码：</label>
         <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="productname" ng-model="vm.dataBase.code" ng-required="true"
-                 ng-maxlength="40" placeholder="请输入长度40字符以内的编码" cb-placeholder ad-field-error="{maxlength:'编码长度大于40'}" >
+          <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
+                  placeholder="请输入长度40字符以内的编码" cb-placeholder>
         </div>
       </div>
       <div class="form-group">
@@ -111,7 +111,7 @@
                 <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription"></td>
                 <td>
-                  <div cb-switch checked="item.status" ng-click="vm.statusItem(item)"></div>
+                  <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>
                 </td>
               </tr>
               </tbody>

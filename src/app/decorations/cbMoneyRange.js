@@ -40,17 +40,14 @@
           ngModel.$setValidity('cbMoneyRange', REGULAR.test(filtration));
           return REGULAR.test(filtration) ? filtration : undefined;
         });
-        console.log(scope);
-
-
-
 
         iElement.on('blur', function () {
-          if(newValue){
-            newValue = setViewValue(newValue);
-            ngModel.$setValidity('cbMoneyRange', REGULAR.test(newValue));
-            scope.$apply();
-          }
+            scope.$apply(function(){
+              if(newValue){
+                //setViewValue(newValue);
+                ngModel.$setValidity('cbMoneyRange', REGULAR.test(newValue));
+              }
+            });
         });
 
         function setViewValue(value){
@@ -75,6 +72,8 @@
             console.log(value);
             value = parseFloat(value, 10);
           }
+          console.log(value);
+
           ngModel.$setViewValue(value);
           ngModel.$render();
           return value;

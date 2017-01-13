@@ -106,12 +106,9 @@
         } else {
           cbAlert.error("错误提示", result.rtnInfo);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       }).then(function(result){
-        angular.forEach(result.items, function (item) {
+        _.map(result.items, function (item) {
           item.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + item.guid;
-          vm.gridModel.itemList.push(item);
         });
         vm.gridModel.paginationinfo = {
           page: params.page * 1,
@@ -124,6 +121,8 @@
           vm.gridModel2.itemList = [];
           vm.gridModel2.loadingState = false;
         }
+        console.log(vm.gridModel.itemList);
+        vm.gridModel.itemList = result.items;
         vm.gridModel.loadingState = false;
       });
     }
@@ -131,8 +130,45 @@
     getList(currentParams);
 
 
+    var totalMileList = [
+      {
+        "label": "0-100km",
+        id: 100,
+        start: 0,
+        end: 100
+      },
+      {
+        "label": "0-300km",
+        id: 300,
+        start: 0,
+        end: 300
+      },
+      {
+        "label": "0-500km",
+        id: 500,
+        start: 0,
+        end: 500
+      }
+    ];
 
-
+    /**
+     * 获取剩余保养里程的model
+     * @param list
+     * @param current
+     * @returns {number}
+     */
+    function getTotalMile(list, current){
+      var start = current.startTotalMile,
+          end = current.endTotalMile,
+          items;
+      if(angular.isUndefined(start) || angular.isUndefined(end)){
+        return -1;
+      }
+      items = _.filter(list, function (item) {
+        return item.start == start && item.end == end;
+      });
+      return items.length === 1 ? items[0].id : -2;
+    }
     /**
      * 搜索操作
      *
@@ -149,27 +185,8 @@
             region: true,
             type: "int",
             name: "TotalMile",
-            model: currentParams.endTotalMile,
-            list: [
-              {
-                "label": "0-100km",
-                id: 100,
-                start: 0,
-                end: 100
-              },
-              {
-                "label": "0-300km",
-                id: 300,
-                start: 0,
-                end: 300
-              },
-              {
-                "label": "0-500km",
-                id: 500,
-                start: 0,
-                end: 500
-              }
-            ],
+            model: getTotalMile(totalMileList, currentParams),
+            list: totalMileList,
             start: {
               name: "startTotalMile",
               model: currentParams.startTotalMile,
@@ -230,9 +247,17 @@
         ]
       },
       'handler': function (data) {
-        var search = angular.extend({}, currentParams, data);
-        vm.gridModel.requestParams.params = search;
-        $state.go(currentStateName, search);
+        if(_.isEmpty(data)){
+          _.map(currentParams, function (item, key) {
+            if(key !== 'page'){
+              currentParams[key] = undefined;
+            }
+          });
+          $state.go(currentStateName, currentParams);
+        }else{
+          var search = angular.extend({}, currentParams, data);
+          $state.go(currentStateName, search);
+        }
       }
     };
   }

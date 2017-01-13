@@ -261,7 +261,7 @@
         /**
          * 路由分页跳转重定向有几次跳转，先把空的选项过滤
          */
-        if (!params.page) {
+        if (!params.status) {
           return;
         }
         productServer.list(params).then(function (data) {
@@ -503,7 +503,6 @@
        * @param item
        */
       vm.statusItem = function (item) {
-        console.log(item);
         var title = item.status === "1" ? "是否禁用该属性" : "是否开启该属性";
         var message = item.status === "1" ? "禁用该属性不能再页面显示" : "开启该属性后在页面显示";
         cbAlert.confirm(title, function(isConfirm){
@@ -558,7 +557,9 @@
           title: "服务图片上传"
         },
         handler: function(data){
-
+          if(data.status == 0 && data.data.length == 1){
+            vm.dataBase.mainphoto = data.data[0].url;
+          }
         }
       };
 
@@ -569,36 +570,23 @@
        * @param price  单价
        * @returns {*}  工时费
        */
-      vm.servertimeprice = function(time, price){
+      vm.servertimeprice = function(item){
+        console.log(item);
+
+        var time = item.servertime,
+            price = item.serverprice;
+        console.log((!time && time != 0) || (!price && price != 0) || isNaN(parseFloat(time)) || isNaN(parseFloat(price)));
+
         if((!time && time != 0) || (!price && price != 0) || isNaN(parseFloat(time)) || isNaN(parseFloat(price))){
           return "";
         }
+        console.log(time, price);
+
         time = isNaN(parseFloat(time)) ? 0 : time;
         price = isNaN(parseFloat(price)) ? 0 : price;
-        return computeService.multiply(time, price);
+        item.$$servertimeprice = computeService.multiply(time, price);
       };
 
-      /**
-       * 格式化 vm.dataBase数据供提交使用
-       * @param data
-       * @returns {{}}
-       */
-      function getDataBase(data) {
-        var result = angular.extend({}, data);
-        angular.forEach(result.serverskus, function (item) {
-          item.attrvalues = JSON.stringify(attrvalues);
-        });
-
-        /**
-         * 防止后台数据出bug
-         */
-        if(vm.isChange){
-          delete result.parentid;
-          delete result.brandname;
-          delete result.productcategory;
-        }
-        return result;
-      }
 
       /**
        * 服务类目选择配置
@@ -673,6 +661,36 @@
         });
       }
 
+
+      /**
+       * 格式化 vm.dataBase数据供提交使用
+       * @param data
+       * @returns {{}}
+       */
+      function getDataBase(data) {
+        var result = angular.copy(data);
+        /**
+         * 把没有填价格的清除属性清除掉
+         */
+        _.remove(result.serverskus, function (item) {
+          return angular.isUndefined(item.serverprice);
+        });
+        angular.forEach(result.serverskus, function (item) {
+          item.attrvalues = JSON.stringify(attrvalues);
+        });
+        console.log(result);
+        /**
+         * 防止后台数据出bug
+         */
+        if(vm.isChange){
+          delete result.parentid;
+          delete result.brandname;
+          delete result.productcategory;
+        }
+        return result;
+      }
+
+
       /**
        * 获取编辑数据，生成vm.dataBase数据格式
        * @param data
@@ -706,19 +724,12 @@
         var servertime = _.filter(vm.dataBase.serverskus, function (item) {
           return !item.servertime && item.servertime !== 0;
         });
-        var serverprice = _.filter(vm.dataBase.serverskus, function (item) {
-          return !item.serverprice && item.serverprice !== 0;
-        });
 
         var manualskuvalues = _.filter(vm.dataBase.serverskus, function (item) {
-          return !item.manualskuvalues && item.manualskuvalues !== 0;
+          return !item.$$skuname && !item.manualskuvalues && item.manualskuvalues !== 0;
         });
         if (servertime.length) {
           cbAlert.alert("车辆属性的工时没有填写");
-          return true;
-        }
-        if (serverprice.length) {
-          cbAlert.alert("车辆属性的单价没有填写");
           return true;
         }
         if (manualskuvalues.length) {
@@ -727,20 +738,13 @@
         }
         return result;
       }
-
       /**
        * 保存并返回
        */
       vm.submitBack = function(){
-        if (interception()) {
-          return;
-        }
-        productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
-          if (results.data.status == 0) {
-            goto();
-          }else{
-            cbAlert.error("错误提示", results.data.data);
-          }
+        saveServer(function(){
+          cbAlert.close();
+          goto();
         });
       };
 
@@ -748,17 +752,50 @@
        * 保存并复制新建
        */
       vm.submitNewCopy = function(){
+        saveServer(function(){
+          cbAlert.tips("保存成功，请继续添加");
+        });
+      };
+
+      /**
+       * 保存服务处理函数  回调做不同的操作
+       * @param callback
+       */
+      function saveServer(callback) {
         if (interception()) {
           return;
         }
-        productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
-          if (results.data.status == 0) {
-            cbAlert.tips("保存成功，请继续添加");
-          } else {
-            cbAlert.error("错误提示", results.data.data);
-          }
+        var serverprice = _.filter(vm.dataBase.serverskus, function (item) {
+          return !item.serverprice && item.serverprice !== 0;
         });
-      };
+        if(serverprice.length && vm.dataBase.serverskus.length === 1){
+          cbAlert.alert("车辆属性的单价没有填写");
+          return ;
+        }
+        if (serverprice.length && vm.dataBase.serverskus.length > 1) {
+          cbAlert.confirm("车辆属性的单价没有全部填写，是否继续？", function (isConfirm) {
+            if(isConfirm){
+              productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
+                if (results.data.status == 0) {
+                  callback && callback();
+                }else{
+                  cbAlert.error("错误提示", results.data.data);
+                }
+              });
+            }else{
+              cbAlert.close();
+            }
+          }, "如果没有填写价格的属性将被删除", "warning");
+        }else{
+          productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {
+            if (results.data.status == 0) {
+              callback && callback();
+            }else{
+              cbAlert.error("错误提示", results.data.data);
+            }
+          });
+        }
+      }
 
       /**
        * 跳转页面

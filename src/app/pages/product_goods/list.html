@@ -26,7 +26,7 @@
             <th>库存</th>
             <th>零件码</th>
             <th>条形码</th>
-            <th>使用车型</th>
+            <th>适用车型</th>
             <th>启用状态</th>
             <th>描述</th>
           </tr>
@@ -47,8 +47,8 @@
             <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
             <td>使用车型</td>
-            <td><div cb-switch checked="item.status" cb-access-control="chebian:store:product:goods:edit"
-                     ng-click="vm.statusItem(item)"></div><div cb-switch checked="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
+            <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
+                     ng-click="vm.statusItem(item)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
             <td><span ng-bind="item.skudescription"></span></td>
           </tr>
         </tbody>

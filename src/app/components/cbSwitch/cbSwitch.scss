@@ -38,7 +38,7 @@
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
   }
-  &.checked{
+  &.checkstatus{
     label:after{
       margin-left: -1px;
     }

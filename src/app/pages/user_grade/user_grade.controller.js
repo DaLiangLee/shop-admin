@@ -28,6 +28,17 @@
 
     list();
 
+    vm.isDisabled = function(){
+      var isDisabled = 0;
+      angular.forEach(vm.items, function (item) {
+        if(item.$$samegradename || item.$$sametradeamount ||　item.$$samegradediscount){
+          isDisabled++;
+        }
+      });
+      return isDisabled > 0;
+    };
+
+
     function setGradesData(list) {
       list = list.concat([]);
       angular.forEach(list, function (item) {
@@ -61,6 +72,7 @@
       }else{
         vm.items[index].$$samegradename = false;
       }
+      vm.isDisabled();
     };
 
     /**
@@ -83,7 +95,29 @@
       }else{
         vm.items[index].$$sametradeamount = false;
       }
+      vm.isDisabled();
     };
+
+    /**
+     * 修改修改折扣只能0-100
+     * @param name    当前的值
+     * @param index   当前的索引
+     */
+    // 失去焦点时候先去检查有没有重复的，如果就提示用户，把值还原回去
+    vm.blurDiscount = function (name, index) {
+      if(angular.isUndefined(name)){
+        return ;
+      }
+      console.log(name);
+      if(0 > name || name > 100){
+        vm.items[index].$$samegradediscount = true;
+        cbAlert.alert("无折扣只能填0-100");
+      }else{
+        vm.items[index].$$samegradediscount = false;
+      }
+      vm.isDisabled();
+    };
+
 
     /**
      * 添加新等级
@@ -102,6 +136,10 @@
      * 保存所有等级给服务器
      */
     vm.saveGrade = function () {
+      if(vm.isDisabled()){
+
+        return ;
+      }
       userCustomer.saveGrades(vm.items).then(function (results) {
         if (results.data.status == 0) {
           cbAlert.tips("修改成功");

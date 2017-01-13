@@ -17,7 +17,7 @@
       $httpProvider.interceptors.push(HttpInterceptor);
     }]);
   /** @ngInject */
-  function HttpInterceptor($q, cbAlert) {
+  function HttpInterceptor($q, $log, cbAlert) {
     return {
       request: function (config) {
         return config;
@@ -36,10 +36,10 @@
             cbAlert.error("系统提醒", "远程服务器无响应");
             break;
           case 401:
-            cbAlert.error("系统提醒", "未登陆");
+            cbAlert.error("系统提醒", "没有访问权限");
             break;
           case 403:
-            cbAlert.error("系统提醒", "没有访问权限");
+            cbAlert.error("系统提醒", "未登陆");
             break;
           case 404:
             cbAlert.error("系统提醒", "找不到资源");
@@ -50,6 +50,7 @@
           default:
             cbAlert.error("系统提醒", "发生错误，代码：" + err.status);
         }
+        $log.error(err.data);
         return $q.reject(err);
       }
     };

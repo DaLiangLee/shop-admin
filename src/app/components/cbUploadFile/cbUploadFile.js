@@ -58,7 +58,7 @@
             start = angular.element('#startUpload');
             add = angular.element('#addFiles');
             upload = new plupload.Uploader({
-              runtimes : 'flash,silverlight,html4',
+              runtimes : 'html5,flash,silverlight,html4',
               browse_button : 'addFiles',
               multiple_queues: true,
               filters: {

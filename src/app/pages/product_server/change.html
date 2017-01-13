@@ -15,7 +15,7 @@
         <label class="col-lg-1 control-label"><span class="text-danger">*</span> 类目：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
-            <input type="hidden" name="hao" ng-required="true" ng-model="vm.dataBase.scateid1">
+            <input type="hidden" name="scateid" ng-required="true" ng-model="vm.dataBase.scateid1">
             <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.scateid1"
                  select-handler="vm.selectModel.handler(data)"></div>
           </div>
@@ -26,7 +26,7 @@
         <label class="col-lg-1 control-label">编码：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
-                 ng-maxlength="40" placeholder="请输入长度40字符以内的服务编码" cb-placeholder>
+                 placeholder="请输入长度40字符以内的服务编码" cb-placeholder>
         </div>
       </div>
       <div class="form-group">
@@ -37,7 +37,7 @@
               <p class="text-border text-border-warning">请先选择服务类目</p>
             </div>
             <div ng-if="vm.dataBase.scateid1">
-              <input type="hidden" name="brand" ng-required="true" ng-model="vm.dataBase.scateid2">
+              <input type="hidden" name="scateid" ng-required="true" ng-model="vm.dataBase.scateid2">
               <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.scateid2"
                    select-handler="vm.selectModel2.handler(data)"></div>
               <p class="text-warning" ng-if="!vm.dataBase.scateid2">服务名称是必选的</p>
@@ -80,15 +80,15 @@
                   <input ng-if="item.$$add" class="form-control" type="text" name="" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
                 </td>
                 <td><input class="form-control" type="text" name=""
-                           ng-model="item.servertime"
-                           cb-number-range="" data-value-min="1" data-value-max="9999"
-                           placeholder="请输入1～999范围工时"></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价" cb-money-range=""></td>
-                <td><p class="text-border" ng-bind="vm.servertimeprice(item.servertime, item.serverprice)"></p></td>
+                           ng-model="item.servertime" cb-number-range=""
+                           data-value-min="1" data-value-max="9999"
+                           placeholder="请输入1～999范围工时" ng-blur="vm.servertimeprice(item)"></td>
+                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价" cb-money-range="" ng-blur="vm.servertimeprice(item)"></td>
+                <td><p class="text-border" ng-bind="item.$$servertimeprice"></p></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
                 <td>
-                  <div cb-switch checked="item.status" ng-click="vm.statusItem(item)"></div>
+                  <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>
                 </td>
               </tr>
               </tbody>

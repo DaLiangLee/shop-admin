@@ -20,14 +20,16 @@
             textarea = $document[0].createElement('textarea'),
             isSupportPlaceholder = 'placeholder' in input || 'placeholder' in textarea;
         if (!isSupportPlaceholder) {
-          var fakePlaceholder = angular.iElementment(
+          var fakePlaceholder = angular.element(
             '<span class="placeholder">' + iAttrs['placeholder'] + '</span>');
           fakePlaceholder.on('click', function (e) {
             e.stopPropagation();
             iElement.focus();
           });
+          fakePlaceholder.css({'position': 'absolute', 'color': '#ccc'});
           iElement.before(fakePlaceholder);
           $compile(fakePlaceholder)(scope);
+          iElement.parent().css('position', 'relative');
           iElement.on('focus', function () {
             fakePlaceholder.hide();
           }).on('blur', function () {
