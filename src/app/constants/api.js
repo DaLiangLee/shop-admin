@@ -140,6 +140,10 @@
                       "url": "/product/server/list",
                       "type": "GET"
                     },
+                    "checkServer": {  // 检查服务名称有没有重名
+                      "url": "/product/server/checkServer",
+                      "type": "POST"
+                    },
                     "removeServerAll": {   //删除服务
                       "url": "/product/server/removeServerAll",
                       "type": "POST"

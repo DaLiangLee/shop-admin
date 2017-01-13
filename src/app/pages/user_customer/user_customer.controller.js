@@ -100,28 +100,23 @@
           if (!result.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
-          var items = [];
-          _.forEach(result.data, function (item) {
-            items.push(item);
-          });
-          return {
-            items: items,
-            totalCount: result.totalCount
-          }
+          vm.gridModel.itemList = result.data;
+          vm.gridModel.paginationinfo = {
+            page: params.page * 1,
+            pageSize: params.pageSize,
+            total: result.totalCount
+          };
+          !vm.gridModel.itemList.length && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
+          vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
+          vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
+          vm.gridModel.loadingState = false;
         } else {
           cbAlert.error("错误提示", result.data);
         }
       }).then(function (result) {
-        vm.gridModel.itemList = result.items;
-        vm.gridModel.paginationinfo = {
-          page: params.page * 1,
-          pageSize: params.pageSize,
-          total: result.totalCount
-        };
-        !vm.gridModel.itemList.length && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
-        vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
-        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
-        vm.gridModel.loadingState = false;
+        console.log(result);
+        
+
       });
     }
 

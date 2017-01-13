@@ -15,7 +15,7 @@
         <label class="col-lg-1 control-label"><span class="text-danger">*</span> 类目：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
-            <input type="hidden" name="scateid" ng-required="true" ng-model="vm.dataBase.scateid1">
+            <input type="hidden" name="scateid1" ng-required="true" ng-model="vm.dataBase.scateid1">
             <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.scateid1"
                  select-handler="vm.selectModel.handler(data)"></div>
           </div>
@@ -37,7 +37,7 @@
               <p class="text-border text-border-warning">请先选择服务类目</p>
             </div>
             <div ng-if="vm.dataBase.scateid1">
-              <input type="hidden" name="scateid" ng-required="true" ng-model="vm.dataBase.scateid2">
+              <input type="hidden" name="scateid2" ng-required="true" ng-model="vm.dataBase.scateid2">
               <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.scateid2"
                    select-handler="vm.selectModel2.handler(data)"></div>
               <p class="text-warning" ng-if="!vm.dataBase.scateid2">服务名称是必选的</p>
@@ -107,8 +107,8 @@
         <label class="col-lg-1 control-label">保质期（天）：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="shelflife"
-                 ng-model="vm.dataBase.shelflife"
-                 ng-maxlength="40" placeholder="请输入服务保质期" cb-placeholder>
+                 cb-number-range="" data-value-min="-1" data-value-max="1000" placeholder="请输入服务保质期范围0～999天" cb-placeholder
+                 ng-model="vm.dataBase.shelflife">
         </div>
       </div>
       <div class="form-group">

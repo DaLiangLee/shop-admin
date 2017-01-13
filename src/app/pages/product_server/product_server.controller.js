@@ -547,10 +547,6 @@
         return result;
       }
 
-
-
-
-
       vm.uploadModel = {
         config: {
           uploadtype: "serverMain",
@@ -620,13 +616,19 @@
       vm.selectModel2 = {
         store: [],
         handler: function (data) {
-          vm.dataBase.servername = getData(vm.selectModel2.store, data).catename;
-          getAttrsku(data);
-          _.remove(attrvalues.items, function(item){
-            return item.id != data;
+          productServer.checkServer({scateid1: vm.dataBase.scateid1, scateid2: data}).then(function(results){
+            if (results.data.status == 0) {
+              vm.dataBase.servername = getData(vm.selectModel2.store, data).catename;
+              getAttrsku(data);
+              _.remove(attrvalues.items, function(item){
+                return item.id != data;
+              });
+              console.log(attrvalues);
+              vm.dataBase.serverskus = [];
+            }else{
+              cbAlert.error("错误提示", results.data.data);
+            }
           });
-          console.log(attrvalues);
-          vm.dataBase.serverskus = [];
         }
       };
 
