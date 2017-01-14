@@ -62,7 +62,10 @@
           uploadtype: "",
           title: ""
         }, scope.config);
-
+        scope.addStyle = {
+          width: scope.config.width + "px",
+          height: scope.config.height + "px"
+        }
         scope.imageArr = [];
         getImage(scope.image).length && angular.forEach(getImage(scope.image), function (item, index) {
           scope.imageArr.push({

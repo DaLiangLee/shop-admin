@@ -13,15 +13,16 @@
                             <input type="password"
                                    class="form-control"
                                    name="oldPassword"
-                                   ng-blur="vm.$change1 = !vm.$change1"
-                                   ng-focus="vm.$change1 = !vm.$change1"
+                                   ng-blur="vm.$change1 = true"
                                    id="inputPassword1"
                                    ng-required="true"
                                    ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/"
-                                   cb-field-change="vm.$change1"
                                    ng-model="vm.form.oldPassword"
-                                   cb-field-error="{pattern:'密码为6-30位长度'}"
                                    placeholder="当前密码">
+                            <div class="alert alert-danger" ng-if="vm.$change1 && passwordForm.oldPassword.$dirty && passwordForm.oldPassword.$invalid">
+                              <p ng-if="passwordForm.oldPassword.$error.required">不能为空</p>
+                              <p ng-if="!passwordForm.oldPassword.$error.required && passwordForm.oldPassword.$error.pattern">密码不是6-30位</p>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -34,11 +35,12 @@
                                    placeholder="新密码"
                                    name="password"
                                    ng-required="true"
-                                   ng-blur="vm.$change2 = !vm.$change2"
-                                   ng-focus="vm.$change2 = !vm.$change2"
-                                   cb-field-change="vm.$change2"
-                                   ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/"
-                                   cb-field-error="{pattern:'密码为6-30位长度'}">
+                                   ng-blur="vm.$change2 = true"
+                                   ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/">
+                            <div class="alert alert-danger" ng-if="vm.$change2 && passwordForm.password.$dirty && passwordForm.password.$invalid">
+                              <p ng-if="passwordForm.password.$error.required">不能为空</p>
+                              <p ng-if="!passwordForm.password.$error.required && passwordForm.password.$error.pattern">密码不是6-30位</p>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -48,15 +50,16 @@
                                    class="form-control"
                                    name="password2"
                                    id="inputPassword3"
-                                   ng-blur="vm.$change3 = !vm.$change3"
-                                   ng-focus="vm.$change3 = !vm.$change3"
+                                   ng-blur="vm.$change3 = true"
                                    ng-model="vm.$$confirm_password"
-                                   cb-field-change="vm.$change3"
                                    ng-required="true"
                                    ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/"
-                                   cb-field-error="{pattern:'密码为6-30位长度',same:'确认密码必须和新密码相同'}"
                                    cb-assert-same-as="vm.form.newPassword"
                                    placeholder="确认密码">
+                            <div class="alert alert-danger" ng-if="vm.$change3 && passwordForm.password2.$dirty && passwordForm.password2.$invalid">
+                              <p ng-if="passwordForm.password2.$error.required">不能为空</p>
+                              <p ng-if="!passwordForm.password2.$error.required && passwordForm.password2.$error.same">确认密码和新密码不一致</p>
+                            </div>
                         </div>
                     </div>
 

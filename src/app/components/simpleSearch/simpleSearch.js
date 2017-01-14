@@ -179,7 +179,8 @@
          */
         function start(item){
           return {
-            date: startDate(item)
+            date: startDate(item),
+            int: startInt(item)
           }[item.type];
         }
 
@@ -190,7 +191,8 @@
          */
         function end(item){
           return {
-            date: endDate(item)
+            date: endDate(item),
+            int: endInt(item)
           }[item.type];
         }
 
@@ -223,6 +225,23 @@
           }
         }
 
+        function startInt(item) {
+          item.start.config = angular.extend({
+            placeholder: "起始" + item.label,
+            min: 0,
+            max: 999999999
+          }, (item.start.config || {}));
+          item.start.handler = function (startDate, endDate) {
+            if(!endDate || compare(endDate, startDate) > 0){
+              item.start.isDisabled = false;
+            }
+            if(angular.isDefined(item.end)){
+              item.end.isDisabled = true;
+            }
+            $scope.isDisabled();
+          }
+        }
+
         /**
          * 结束时间
          * @param item
@@ -233,7 +252,7 @@
             placeholder: "结束时间",
             minDate: new Date("2010/01/01 00:00:00"),
             maxDate: new Date()
-          }, (item.start.config || {}));
+          }, (item.end.config || {}));
           item.end.opened = false;
           item.end.open = function(){
             if(!$scope.searchParams[item.start.name]){
@@ -245,6 +264,26 @@
             }
             item.start.opened = false;
           };
+          item.end.handler = function (endDate, startDate) {
+            if(!endDate || !startDate){
+              return ;
+            }
+            if(compare(endDate, startDate) <= 0){
+              cbAlert.alert("结束时间不能小于起始时间");
+              item.end.isDisabled = true;
+            }else{
+              item.end.isDisabled = false;
+            }
+            $scope.isDisabled();
+          }
+        }
+
+        function endInt(item){
+          item.end.config = angular.extend({
+            placeholder: "结束" + item.label,
+            min: 0,
+            max: 999999999
+          }, (item.end.config || {}));
           item.end.handler = function (endDate, startDate) {
             if(!endDate || !startDate){
               return ;

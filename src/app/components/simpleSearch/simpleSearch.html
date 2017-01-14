@@ -33,11 +33,11 @@
             </div>
             <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
               <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
               </div>
               <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
               <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
               </div>
             </div>
             <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'money'">
@@ -69,11 +69,11 @@
             </div>
             <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
               <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
               </div>
               <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
               <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
               </div>
             </div>
           </div>

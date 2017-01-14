@@ -3,7 +3,7 @@
     <img ng-src="{{item.src}}" alt="">
     <span class="close"><span>&times;</span></span>
   </div>
-  <div class="add pull-left" style="width: {{config.width}}px; height: {{config.height}}px;" ng-if="config.limit > imageArr.length" cb-upload-file="images" title="{{config.title}}" data-upload-type="{{config.uploadtype}}" data-value-max="1" upload-item="upload.handler(data)">
+  <div class="add pull-left" ng-style="addStyle" ng-if="config.limit > imageArr.length" cb-upload-file="images" title="{{config.title}}" data-upload-type="{{config.uploadtype}}" data-value-max="1" upload-item="upload.handler(data)">
     <span class="add-icon"></span>
     <p class="message" ng-bind="config.message"></p>
   </div>

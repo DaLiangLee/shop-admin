@@ -25,7 +25,7 @@
     var DEFAULT_DATA = {
       uid: 0,
       fileNumLimit: 1,
-      fileSizeLimit: 3 + "MB"
+      fileSizeLimit: 3 + "mb"
     };
     return {
       restrict: "A",
@@ -61,11 +61,18 @@
               runtimes : 'html5,flash,silverlight,html4',
               browse_button : 'addFiles',
               multiple_queues: true,
+              chunk_size: '1mb',
               filters: {
-                max_file_size: config.fileSizeLimit,
+                max_file_size : config.fileSizeLimit,
+                // Specify what files to browse for
                 mime_types: [
                   fileType
                 ]
+              },
+              views: {
+                list: true,
+                thumbs: true, // Show thumbs
+                active: 'thumbs'
               },
               container: document.getElementById('j-upload-container'),
               flash_swf_url : configuration.getStatic() + '/assets/upload/Moxie.swf',
@@ -144,7 +151,7 @@
             });
             upload.bind('Error', function (up, err) {
               console.log('Error', err);
-              console.log('Error', err.status);
+              console.log('Error', err.message);
               if(err.code == -600){
                 childScope.danger = "文件超过"+config.fileSizeLimit+"，请重新选择上传";
               }
