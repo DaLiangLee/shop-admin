@@ -1,79 +1,87 @@
 <div>
   <div class="searchSection">
     <form class="form-horizontal f-cb" autocomplete="off" ng-submit="setSearch()">
-      <div class="form-group">
-        <div class="pull-left" style="width: 400px;">
-          <input type="text" name="keyword" class="form-control" ng-model="searchParams.keyword" placeholder="{{config.placeholder}}">
-          <span><i></i></span>
-        </div>
-        <div class="pull-left" style="width: 200px; margin-left: 10px;" ng-if="items.length">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="config.showMore = !config.showMore">
-            更多 <span class="caret"></span>
-          </button>
-        </div>
-      </div>
-      <div class="form-group" ng-repeat="item in items" ng-if="config.showMore">
-        <label class="col-sm-1 control-label">{{item.label}}：</label>
-        <div class="col-sm-9">
-          <div class="list" ng-if="!item.custom && !item.region">
-            <div class="radio-inline" ng-repeat="list in item.list">
-              <label>
-                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id">
-                {{list.label}}
-              </label>
+      <div simple-search-keyword="" ></div>
+      <div ng-if="isShowmore">
+        <div class="form-group" ng-repeat="item in items">
+          <label class="col-sm-1 control-label">{{item.label}}：</label>
+          <div class="col-sm-9" ng-switch="item.type">
+            <div class="list" ng-switch-when="int">
+              int
             </div>
-          </div>
-          <div class="list" ng-if="item.custom && !item.region">
-            <div class="radio-inline" ng-repeat="list in item.list">
-              <label>
-                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
-                       class="ng-pristine ng-valid">
-                {{list.label}}
-              </label>
+            <div class="list" ng-switch-when="date">
+              date
             </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
+            <div class="list" ng-switch-when="list">
+              <div simple-search-list="" item="item"></div>
+            </div>
+            <div class="list" ng-switch-when="custom">
+              custom
+            </div>
+            <div class="list" ng-if="!item.custom && !item.region">
+
+            </div>
+            <div class="list" ng-if="item.custom && !item.region">
+              <div class="radio-inline" ng-repeat="list in item.list">
+                <label>
+                  <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
+                         class="ng-pristine ng-valid">
+                  {{list.label}}
+                </label>
               </div>
-              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
+              <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
+                </div>
+                <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
+                </div>
+              </div>
+              <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'money'">
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+                </div>
+                <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+                </div>
+              </div>
+              <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'date'">
+                <div class="pull-left" style="width: 200px;">
+                  <div cb-datepicker="" is-open="item.start.opened" datepicker-options="item.start.config" datepicker-open="item.start.open()" datepicker-model="searchParams[item.start.name]" datepicker-handler="item.start.handler(data, searchParams[item.end.name])"></div>
+                </div>
+                <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+                <div class="pull-left" style="width: 200px;">
+                  <div cb-datepicker="" is-open="item.end.opened" datepicker-options="item.end.config" datepicker-open="item.end.open()" datepicker-model="searchParams[item.end.name]" datepicker-handler="item.end.handler(data, searchParams[item.start.name])"></div>
+                </div>
               </div>
             </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'money'">
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]">
+            <div class="list" ng-if="item.region">
+              <div class="radio-inline" ng-repeat="list in item.list">
+                <label>
+                  <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
+                         class="ng-pristine ng-valid" ng-change="setRegion(item, list)">
+                  {{list.label}}
+                </label>
               </div>
-              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]">
+              <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
+                </div>
+                <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+                <div class="pull-left" style="width: 200px;">
+                  <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
+                </div>
               </div>
-            </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'date'">
-              <div class="pull-left" style="width: 200px;">
-                <div cb-datepicker="" is-open="item.start.opened" datepicker-options="item.start.config" datepicker-open="item.start.open()" datepicker-model="searchParams[item.start.name]" datepicker-handler="item.start.handler(data, searchParams[item.end.name])"></div>
-              </div>
-              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
-              <div class="pull-left" style="width: 200px;">
-                <div cb-datepicker="" is-open="item.end.opened" datepicker-options="item.end.config" datepicker-open="item.end.open()" datepicker-model="searchParams[item.end.name]" datepicker-handler="item.end.handler(data, searchParams[item.start.name])"></div>
-              </div>
-            </div>
-          </div>
-          <div class="list" ng-if="item.region">
-            <div class="radio-inline" ng-repeat="list in item.list">
-              <label>
-                <input type="radio" name="{{item.name}}" ng-model="searchParams[item.name]" ng-value="list.id"
-                       class="ng-pristine ng-valid" ng-change="setRegion(item, list)">
-                {{list.label}}
-              </label>
-            </div>
-            <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'int'">
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.start.name}}" ng-model="searchParams[item.start.name]" cb-number-range="" data-value-min="{{item.start.config.min}}" data-value-max="{{item.start.config.max}}" placeholder="{{item.start.config.placeholder}}">
-              </div>
-              <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
-              <div class="pull-left" style="width: 200px;">
-                <input type="text" class="form-control" name="{{item.end.name}}" ng-model="searchParams[item.end.name]" cb-number-range="" data-value-min="{{item.end.config.min}}" data-value-max="{{item.end.config.max}}" placeholder="{{item.end.config.placeholder}}">
+              <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[item.name] == -2 && item.type == 'date'">
+                <div class="pull-left" style="width: 200px;">
+                  <div cb-datepicker="" is-open="item.start.opened" datepicker-options="item.start.config" datepicker-open="item.start.open()" datepicker-model="searchParams[item.start.name]" datepicker-handler="item.start.handler(data, searchParams[item.end.name])"></div>
+                </div>
+                <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+                <div class="pull-left" style="width: 200px;">
+                  <div cb-datepicker="" is-open="item.end.opened" datepicker-options="item.end.config" datepicker-open="item.end.open()" datepicker-model="searchParams[item.end.name]" datepicker-handler="item.end.handler(data, searchParams[item.start.name])"></div>
+                </div>
               </div>
             </div>
           </div>

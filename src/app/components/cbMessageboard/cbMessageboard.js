@@ -30,31 +30,26 @@
     return {
       restrict: "A",
       scope: {
-        message: "=",
         content: "=",
         config: "=",
         reviewItem: '&'
       },
       link: function(scope, iElement, iAttrs){
         /**
-         * 留言功能有用
-         */
-        scope.config = scope.config || {};
-        /**
          * config 配置默认参数
          * @type {any}
          */
-        scope.config = angular.extend({}, DEFAULT_DATA, scope.config);
+        scope.config = angular.extend({}, DEFAULT_DATA, scope.config || {});
 
         function handler(childScope) {
           childScope.type = iAttrs.cbMessageBoard || 'editor';
           childScope.title = iAttrs.title;
-          childScope.content = scope.content;
-          childScope.message = scope.message;
           childScope.interceptor = angular.copy(scope.config.interceptor);
-          childScope.maxLength = angular.copy(scope.config.maxLength);
-          childScope.placeholder = angular.copy(scope.config.placeholder);
-
+          childScope.editor = {
+            content: scope.content,
+            maxLength: angular.copy(scope.config.maxLength),
+            placeholder: angular.copy(scope.config.placeholder)
+          };
           childScope.confirm = function () {
             childScope.interceptor.show = true;
           };
@@ -63,7 +58,7 @@
            * 拦截器
            */
           childScope.interceptorConfirm = function () {
-            scope.reviewItem({data: {"status":"0", "type": childScope.type, 'transmit': iAttrs.transmit, 'content': childScope.content}});
+            scope.reviewItem({data: {"status":"0", "type": childScope.type, 'content': childScope.editor.content}});
             childScope.close();
           }
         }

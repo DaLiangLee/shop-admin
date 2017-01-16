@@ -1,0 +1,13 @@
+<div class="g-view">
+  <div class="container-fluid">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="javascript:;" class="text-muted">评价管理</a></li>
+    </ul>
+    <br>
+    <div cb-access-control="chebian:store:trade:comment:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
+         pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
+         config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
+         page-changed="vm.gridModel.pageChanged(page)"></div>
+  </div>
+</div>

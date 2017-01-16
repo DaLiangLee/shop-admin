@@ -92,8 +92,6 @@
               cbAlert.error("错误提示", results.data.data);
             }
             getList(currentParams);
-          }, function (results) {
-            $log.debug('statusItemError', results);
           });
         }
       }

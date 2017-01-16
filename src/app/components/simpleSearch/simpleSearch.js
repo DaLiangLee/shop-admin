@@ -3,7 +3,18 @@
  */
 /**
  * simpleSearch是一个通用的表格组件搜索筛选
- * 包括表格
+ * 搜索功能
+ * 1，列表选中其中一项
+ * 2，自定义区间搜索，start end
+ * 3，列表+自定义区间
+ * 4，每个搜索项都有一个全部
+ * 5，搜索框输入
+ * 6，搜索框有一个按钮显示筛选条件
+ * 7，搜索框和更多按钮有是否显示功能
+ * 8，自定义区间搜索返回开始和结束
+ * 9，列表+自定义区间返回列表中的start end相对应 根据
+ *
+ * 包括
  * config  全局配置参数     必填
  * searchHandler  事件回调 返回搜索信息 必填
  *
@@ -41,12 +52,13 @@
   'use strict';
   angular
     .module('shopApp')
-    .directive('simpleSearch', simpleSearch);
+    .directive('simpleSearch', simpleSearch)
+    .directive('simpleSearchKeyword', simpleSearchKeyword)
+    .directive('simpleSearchList', simpleSearchList);
 
 
   /** @ngInject */
   function simpleSearch(cbAlert) {
-
     /**
      * 默认配置
      * @type {{searchParams: string, searchPrefer: boolean, searchDirective: Array}}
@@ -59,9 +71,15 @@
       },
       templateUrl: "app/components/simpleSearch/simpleSearch.html",
       controller: ["$scope", function ($scope) {
+        this.searchParams = {};
+
+        this.searchParams.keyword = "";
+        $scope.isShowmore = false;
+        this.showMore = function(){
+          $scope.isShowmore = !$scope.isShowmore;
+        };
         $scope.items = [];
         $scope.searchParams = {};
-
         /**
          * 根据name获取当前项，根据id获取子项
          * @param id
@@ -350,6 +368,41 @@
           return searchParams;
         }
       }]
+    }
+  }
+
+  /** @ngInject */
+  function simpleSearchKeyword() {
+    return {
+      restrict: "A",
+      replace: true,
+      require: '^simpleSearch',
+      templateUrl: "app/components/simpleSearch/keyword.html",
+      link: function (scope, iElement, iAttrs, iCtrl) {
+        scope.keyword = iCtrl.searchParams.keyword;
+        scope.handler = function(){
+          iCtrl.searchParams.keyword = scope.keyword;
+        };
+        scope.toggle = function () {
+          iCtrl.showMore();
+        };
+      }
+    }
+  }
+
+  /** @ngInject */
+  function simpleSearchList() {
+    return {
+      restrict: "A",
+      replace: true,
+      require: '^simpleSearch',
+      scope: {
+        item: "="
+      },
+      templateUrl: "app/components/simpleSearch/list.html",
+      link: function (scope, iElement, iAttrs, iCtrl) {
+        console.log(scope.item, iCtrl);
+      }
     }
   }
 })();
