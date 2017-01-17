@@ -1,0 +1,18 @@
+<div>
+  <div class="radio-inline" ng-repeat="list in items.list">
+    <label>
+      <input type="radio" name="{{items.name}}" ng-change="handler()" ng-model="searchParams[items.name]" ng-value="list.id"
+             class="ng-pristine ng-valid">
+      {{list.label}}
+    </label>
+  </div>
+  <div class="radio-inline" ng-form="" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[items.name] == -2">
+    <div class="pull-left" style="width: 200px;">
+      <input type="text" class="form-control" name="{{items.start.name}}" ng-model="searchParams[items.start.name]" cb-number-range="" data-value-min="{{items.start.config.min}}" data-value-max="{{items.start.config.max}}" placeholder="{{items.start.config.placeholder}}" ng-blur="items.start.handler(searchParams[items.start.name], searchParams[items.end.name])">
+    </div>
+    <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+    <div class="pull-left" style="width: 200px;">
+      <input type="text" class="form-control" name="{{items.end.name}}" ng-model="searchParams[items.end.name]" cb-number-range="" data-value-min="{{items.end.config.min}}" data-value-max="{{items.end.config.max}}" placeholder="{{items.end.config.placeholder}}" ng-blur="items.end.handler(searchParams[items.start.name], searchParams[items.end.name])">
+    </div>
+  </div>
+</div>

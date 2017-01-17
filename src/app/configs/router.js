@@ -260,37 +260,39 @@
       .state('trade.order', {      // 订单管理（服务和商品一起）
         url: '/porder',
         template: '<div ui-view></div>',
-        title: '商品订单管理',
+        title: '订单管理',
         permission: "chebian:store:trade:porder:view"
       })
       .state('trade.order.list', {      // 订单管理列表
-        url: '/porder',
-        template: '<div ui-view></div>',
-        title: '商品订单管理',
+        url: '/list/:page?keyword&status&paystatus&createtime0&createtime1',
+        templateUrl: 'app/pages/trade_order/list.html',
+        controller: 'TradeOrderListController',
+        controllerAs: 'vm',
+        title: '订单管理',
         permission: "chebian:store:trade:porder:view"
       })
       .state('trade.order.add', {     // 新增订单
         url: '/add',
         templateUrl: 'app/pages/trade_order/change.html',
-        controller: 'TradeSorderChangeController',
+        controller: 'TradeOrderChangeController',
         controllerAs: 'vm',
-        title: '新增服务订单',
+        title: '新增订单',
         permission: "chebian:store:trade:porder:add"
       })
-      .state('trade.order.edit', {     // 编辑服务订单
+      .state('trade.order.edit', {     // 编辑订单
         url: '/edit/:id',
         templateUrl: 'app/pages/trade_order/change.html',
-        controller: 'TradeSorderChangeController',
+        controller: 'TradeOrderChangeController',
         controllerAs: 'vm',
-        title: '编辑服务订单',
+        title: '编辑订单',
         permission: "chebian:store:trade:porder:add"
       })
       .state('trade.order.detail', {     // 订单详情
         url: '/detail/:orderid',
         templateUrl: 'app/pages/trade_order/detail.html',
-        controller: 'TradePorderDetailController',
+        controller: 'TradeOrderDetailController',
         controllerAs: 'vm',
-        title: '服务订单详情',
+        title: '订单详情',
         permission: "chebian:store:trade:porder:detail"
       })
       .state('trade.comment', {      // 评价管理

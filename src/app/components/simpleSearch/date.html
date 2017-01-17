@@ -1,0 +1,18 @@
+<div>
+  <div class="radio-inline" ng-repeat="list in items.list">
+    <label>
+      <input type="radio" name="{{items.name}}" ng-change="handler()" ng-model="searchParams[items.name]" ng-value="list.id"
+             class="ng-pristine ng-valid">
+      {{list.label}}
+    </label>
+  </div>
+  <div class="radio-inline" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[items.name] == -2">
+    <div class="pull-left" style="width: 200px;">
+      <div cb-datepicker="" is-open="items.start.opened" datepicker-options="items.start.config" datepicker-open="items.start.open()" datepicker-model="searchParams[items.start.name]" datepicker-handler="items.start.handler(data, searchParams[items.end.name])"></div>
+    </div>
+    <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
+    <div class="pull-left" style="width: 200px;">
+      <div cb-datepicker="" is-open="items.end.opened" datepicker-options="items.end.config" datepicker-open="items.end.open()" datepicker-model="searchParams[items.end.name]" datepicker-handler="items.end.handler(data, searchParams[items.start.name])"></div>
+    </div>
+  </div>
+</div>

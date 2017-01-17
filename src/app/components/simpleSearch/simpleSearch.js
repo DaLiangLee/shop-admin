@@ -19,7 +19,14 @@
  * searchHandler  事件回调 返回搜索信息 必填
  *
  * config    全局配置参数
- *    searchParams    绑定的搜索对象
+ *    keyword
+ *      isShow           是否显示
+ *      value            值
+ *      placeholder      输入框显示的占位符
+ *
+ *
+ *
+ *
  *    searchDirective    必填
  *       label           当前项名称          必填
  *       cssProperty     当前列表项的class
@@ -54,15 +61,13 @@
     .module('shopApp')
     .directive('simpleSearch', simpleSearch)
     .directive('simpleSearchKeyword', simpleSearchKeyword)
+    .directive('simpleSearchDate', simpleSearchDate)
+    .directive('simpleSearchInteger', simpleSearchInteger)
     .directive('simpleSearchList', simpleSearchList);
 
 
   /** @ngInject */
-  function simpleSearch(cbAlert) {
-    /**
-     * 默认配置
-     * @type {{searchParams: string, searchPrefer: boolean, searchDirective: Array}}
-     */
+  function simpleSearch() {
     return {
       restrict: "A",
       scope: {
@@ -71,262 +76,119 @@
       },
       templateUrl: "app/components/simpleSearch/simpleSearch.html",
       controller: ["$scope", function ($scope) {
+        var _this = this;
+        var disabledMap = {};
+        $scope.config = angular.extend({}, $scope.config);
         this.searchParams = {};
+        // 显示更多筛选条件 如果没有搜索框就直接显示出来，如果有就隐藏起来
+        $scope.isShowmore = true;
+        $scope.isKeywordShow = false;
+        $scope.search = {};
+        $scope.search.directive = [];
+        // 如果有搜索
+        if(angular.isDefined($scope.config.keyword)){
+          setKeyword();
+          $scope.isShowmore = false;
+          $scope.isKeywordShow = _this.keyword.isShow;
+          _this.keyword.isMore = $scope.search.directive.length > 0;
+        }
 
-        this.searchParams.keyword = "";
-        $scope.isShowmore = false;
+        /**
+         * 设置searchDirective
+         */
+        function setItems(){
+          var isModel = 0;
+          angular.forEach($scope.config.searchDirective, function(item){
+            if(!angular.isArray(item.list) && !item.all){
+              throw Error(item.label + '：的配置项不全');
+            }
+            if(angular.isArray(item.list) && !item.list.length && !item.all){
+              throw Error(item.label + '：的配置项list为0');
+            }
+            // 如果是自定义需要吧当前想绑定的name+$$在后期处理
+            item.custom && (item.name = "$$" + item.name);
+            // 设置所有项数据
+            disabledMap[item.name] = false;
+            if(angular.isUndefined(item.model)){
+              _this.searchParams[item.name] = -1;
+            }else{
+              _this.searchParams[item.name] = item.model;
+              isModel++;
+            }
+            // 设置起始数据
+            if(angular.isDefined(item.start)){
+              angular.isDefined(item.start.model) && (isModel++);
+              _this.searchParams[item.start.name] = item.start.model;
+              disabledMap[item.start.name] = false;
+            }
+            // 设置结束数据
+            if(angular.isDefined(item.end)){
+              angular.isDefined(item.end.model) && (isModel++);
+              _this.searchParams[item.end.name] = item.end.model;
+              disabledMap[item.end.name] = false;
+            }
+            // 检查list是不是数组 如果不是就创建一个数组，给全部和自定义使用
+            if (!angular.isArray(item.list)) {
+              item.list = [];
+            }
+            // 全部 添加在数组第一项
+            if (item.all) {
+              item.list.unshift({
+                id: -1,
+                label: "全部"
+              });
+            }
+            // 自定义 添加在数组第最后一项项
+            if (item.custom) {
+              item.list.push({
+                id: -2,
+                label: "自定义"
+              });
+            }
+            // 添加到筛选列表
+            $scope.search.directive.push(item);
+          });
+          $scope.isShowmore = isModel > 0;
+        }
+        setItems();
+
+
         this.showMore = function(){
           $scope.isShowmore = !$scope.isShowmore;
         };
-        $scope.items = [];
-        $scope.searchParams = {};
         /**
-         * 根据name获取当前项，根据id获取子项
-         * @param id
-         * @param name
-         * @returns {{}}
+         * 设置keyword
          */
-        function getRegionData(id, name){
-          var items = _.filter($scope.config.searchDirective, function(item){
-            return item.name === name;
-          });
-          if(items.length === 1 && !items[0].region){
-            return {};
-          }
-          var list = items.length === 1 ? items[0].list : [];
-          if(!list.length){
-            return {};
-          }
-          var items2 = _.filter(list, function(item){
+        function setKeyword(){
+          _this.keyword = $scope.config.keyword;
+          _this.searchParams[_this.keyword.name] = _this.keyword.model;
+        }
+
+        /**
+         * 是否禁用，有些输入验证失败
+         * @param disabled
+         */
+        this.isDisabled = function(name, disabled){
+          disabledMap[name] = disabled;
+          $scope.isDisabled = _.some(disabledMap);
+        };
+
+        /**
+         * 根据id在列表获取匹配的项
+         * @param id
+         * @param list
+         */
+        this.findListItem = function(id, list){
+          return _.find(list, function(item){
             return item.id == id;
           });
-          return items2.length === 1 ? items[0] : {};
-        }
-
-        $scope.isDisabled = function(){
-          var disabled = 0;
-          angular.forEach($scope.items, function (item) {
-            if(angular.isDefined(item.start) && item.start.isDisabled){
-              disabled++;
-            }
-            if(angular.isDefined(item.end) && item.end.isDisabled){
-              disabled++;
-            }
-          });
-          return disabled > 0;
         };
-        var config = $scope.$watch('config', function(value){
-          if(value){
-            $scope.items = [];
-            $scope.searchParams = {};
-            if(angular.isDefined(value.keyword)){
-              $scope.searchParams = {
-                "keyword": value.keyword
-              };
-            }
-            var model = 0;
-            angular.forEach($scope.config.searchDirective, function (item) {
-              if(!angular.isArray(item.list) && !item.all){
-                throw Error(item.label + '：的配置项不全');
-              }
-              if(angular.isArray(item.list) && !item.list.length && !item.all){
-                throw Error(item.label + '：的配置项list为0');
-              }
-              /**
-               * 如果是自定义需要吧当前想绑定的name+$$在后期处理
-               */
-              item.custom && (item.name = "$$" + item.name);
-              /**
-               * 如果model没有填就默认是全部
-               */
-              if(angular.isDefined(item.model)){
-                model++;
-              }
-              angular.isUndefined(item.model) && (item.model = -1);
-              if(!item.region && item.custom && (angular.isDefined(item.start.model) || angular.isDefined(item.end.model))){
-                item.model = -2;
-                model++;
-              }
-              console.log(item.name, item.model);
-
-              /**
-               * 生成绑定的默认数据
-               */
-              $scope.searchParams[item.name] = item.model;
-
-              if(angular.isDefined(item.start)){
-                start(item);
-                $scope.searchParams[item.start.name] = item.start.model;
-              }
-              if(angular.isDefined(item.end)){
-                end(item);
-                $scope.searchParams[item.end.name] = item.end.model;
-              }
-              /**
-               * 检查list是不是数组
-               */
-              if (!angular.isArray(item.list)) {
-                item.list = [];
-              }
-              // 全部 添加在数组第一项
-              if (item.all) {
-                item.list.unshift({
-                  id: -1,
-                  label: "全部"
-                });
-              }
-              // 自定义 添加在数组第最后一项项
-              if (item.custom) {
-                item.list.push({
-                  id: -2,
-                  label: "自定义"
-                });
-              }
-              (!item.custom && !item.type) && (item.type = 'list');
-              (item.custom && !item.type) && (item.type = 'number');
-              $scope.items.push(item);
-            });
-            $scope.config.showMore = model > 0;
-          }
-        });
 
         /**
-         * 开始处理函数
-         * @param item
-         * @returns {*}
+         * 点击查询
          */
-        function start(item){
-          return {
-            date: startDate(item),
-            int: startInt(item)
-          }[item.type];
-        }
-
-        /**
-         * 结束处理函数
-         * @param item
-         * @returns {*}
-         */
-        function end(item){
-          return {
-            date: endDate(item),
-            int: endInt(item)
-          }[item.type];
-        }
-
-
-        /**
-         * 开始时间
-         * @param item
-         */
-        function startDate(item){
-          item.start.config = angular.extend({
-            startingDay: 1,
-            placeholder: "起始时间",
-            minDate: new Date("2010/01/01 00:00:00"),
-            maxDate: new Date()
-          }, (item.start.config || {}));
-          item.start.opened = false;
-          if(angular.isDefined(item.end)){
-            item.start.open = function(){
-              item.end.opened = false;
-            };
-          }
-          item.start.handler = function (startDate, endDate) {
-            if(!endDate || compare(endDate, startDate) > 0){
-              item.start.isDisabled = false;
-            }
-            if(angular.isDefined(item.end)){
-              item.end.isDisabled = true;
-            }
-            $scope.isDisabled();
-          }
-        }
-
-        function startInt(item) {
-          item.start.config = angular.extend({
-            placeholder: "起始" + item.label,
-            min: 0,
-            max: 999999999
-          }, (item.start.config || {}));
-          item.start.handler = function (startDate, endDate) {
-            if(!endDate || compare(endDate, startDate) > 0){
-              item.start.isDisabled = false;
-            }
-            if(angular.isDefined(item.end)){
-              item.end.isDisabled = true;
-            }
-            $scope.isDisabled();
-          }
-        }
-
-        /**
-         * 结束时间
-         * @param item
-         */
-        function endDate(item){
-          item.end.config = angular.extend({
-            startingDay: 1,
-            placeholder: "结束时间",
-            minDate: new Date("2010/01/01 00:00:00"),
-            maxDate: new Date()
-          }, (item.end.config || {}));
-          item.end.opened = false;
-          item.end.open = function(){
-            if(!$scope.searchParams[item.start.name]){
-              cbAlert.alert("请先选择起始时间");
-              item.start.isDisabled = true;
-              item.end.model = undefined;
-              $scope.searchParams[item.end.name] = item.end.model;
-              item.end.opened = false;
-            }
-            item.start.opened = false;
-          };
-          item.end.handler = function (endDate, startDate) {
-            if(!endDate || !startDate){
-              return ;
-            }
-            if(compare(endDate, startDate) <= 0){
-              cbAlert.alert("结束时间不能小于起始时间");
-              item.end.isDisabled = true;
-            }else{
-              item.end.isDisabled = false;
-            }
-            $scope.isDisabled();
-          }
-        }
-
-        function endInt(item){
-          item.end.config = angular.extend({
-            placeholder: "结束" + item.label,
-            min: 0,
-            max: 999999999
-          }, (item.end.config || {}));
-          item.end.handler = function (endDate, startDate) {
-            if(!endDate || !startDate){
-              return ;
-            }
-            if(compare(endDate, startDate) <= 0){
-              cbAlert.alert("结束时间不能小于起始时间");
-              item.end.isDisabled = true;
-            }else{
-              item.end.isDisabled = false;
-            }
-            $scope.isDisabled();
-          }
-        }
-
-
-        function compare(endDate, startDate) {
-          endDate = endDate.replace(/\-/, '/');
-          startDate = startDate.replace(/\-/, '/');
-          return (new Date(endDate) - new Date(startDate));
-        }
-
         $scope.setSearch = function () {
-          console.log(getParams($scope.searchParams));
-
-           $scope.searchHandler({data: getParams($scope.searchParams)});
+           $scope.searchHandler({data: getParams(_this.searchParams)});
         };
 
         function getCustom(value, params){
@@ -346,20 +208,10 @@
           return result;
         }
 
-        $scope.setRegion = function (item, list) {
-          $scope.searchParams[item.start.name] = list.start;
-          $scope.searchParams[item.end.name] = list.end;
-        };
-
         function getParams(params){
           var searchParams = {};
           angular.forEach(params, function (key, value) {
-            value.indexOf('$$') > -1 && getRegionData(key, value);
-          });
-          angular.forEach(params, function (key, value) {
-            value.indexOf('$$') > -1 && getRegionData(key, value);
             console.log(!angular.isUndefined(key) , value.indexOf('$$') != 0);
-
             if(!angular.isUndefined(key) && value.indexOf('$$') != 0){
               (key != -1) && (searchParams[value] = key);
               ((key == -1) || getCustom(value, params)) && (searchParams[value] = undefined);
@@ -379,9 +231,11 @@
       require: '^simpleSearch',
       templateUrl: "app/components/simpleSearch/keyword.html",
       link: function (scope, iElement, iAttrs, iCtrl) {
-        scope.keyword = iCtrl.searchParams.keyword;
+        scope.keyword = iCtrl.keyword.model;
+        scope.isMore = iCtrl.keyword.isMore;
+        scope.placeholder = iCtrl.keyword.placeholder;
         scope.handler = function(){
-          iCtrl.searchParams.keyword = scope.keyword;
+          iCtrl.searchParams[iCtrl.keyword.name] = scope.keyword;
         };
         scope.toggle = function () {
           iCtrl.showMore();
@@ -397,14 +251,224 @@
       replace: true,
       require: '^simpleSearch',
       scope: {
-        item: "="
+        items: "="
       },
       templateUrl: "app/components/simpleSearch/list.html",
       link: function (scope, iElement, iAttrs, iCtrl) {
-        console.log(scope.item, iCtrl);
+        scope.searchParams = iCtrl.searchParams;
+        scope.handler = function () {
+          iCtrl.searchParams[scope.items.name] = scope.searchParams[scope.items.name];
+        }
       }
     }
   }
+
+  /** @ngInject */
+  function simpleSearchDate() {
+    return {
+      restrict: "A",
+      replace: true,
+      require: '^simpleSearch',
+      scope: {
+        items: "="
+      },
+      templateUrl: "app/components/simpleSearch/date.html",
+      link: function (scope, iElement, iAttrs, iCtrl) {
+        scope.searchParams = iCtrl.searchParams;
+        scope.handler = function () {
+          iCtrl.searchParams[scope.items.name] = scope.searchParams[scope.items.name];
+          if(scope.searchParams[scope.items.name] == -1 || scope.searchParams[scope.items.name] == -2){
+            iCtrl.searchParams[scope.items.start.name] = undefined;
+            iCtrl.searchParams[scope.items.end.name] = undefined;
+          }else{
+            var current = iCtrl.findListItem(scope.searchParams[scope.items.name], scope.items.list) || {};
+            iCtrl.searchParams[scope.items.start.name] = current.start;
+            iCtrl.searchParams[scope.items.end.name] = current.end;
+          }
+        };
+        // 起始时间配置
+        scope.items.start.config = angular.extend({
+          startingDay: 1,
+          placeholder: "起始时间",
+          minDate: new Date("2010/01/01 00:00:00"),
+          maxDate: new Date()
+        }, (scope.items.start.config || {}));
+        // 终止时间配置
+        scope.items.end.config = angular.extend({
+          startingDay: 1,
+          placeholder: "终止时间",
+          minDate: new Date("2010/01/01 00:00:00"),
+          maxDate: new Date()
+        }, (scope.items.end.config || {}));
+        //是否起始时间开启选择框
+        scope.items.start.opened = false;
+        //是否终止时间开启选择框
+        scope.items.end.opened = false;
+
+        // 是否有终止时间，如果没有就不走下面的
+        if(angular.isDefined(scope.items.end)){
+          scope.items.start.open = function(){
+            scope.items.end.opened = false;
+          };
+        }
+        scope.items.start.handler = function (startDate, endDate) {
+          console.log('start',startDate, endDate);
+          /**
+           * 如果没有选择结束时间
+           */
+          if(startDate){
+            var start = startDate.replace(/\-/, '/') + " 00:00:00";
+            scope.items.end.config.minDate = new Date(start);
+          }
+          console.log(scope.items.end);
+
+        };
+
+        scope.items.end.open = function(){
+          scope.items.start.opened = false;
+        };
+        scope.items.end.handler = function (endDate, startDate) {
+          console.log('end',startDate, endDate);
+          if(angular.isDefined(endDate)){
+            var end = endDate.replace(/\-/, '/') + " 00:00:00";
+            scope.items.start.config.maxDate = new Date(end);
+          }
+
+        };
+
+        function compare(endDate, startDate) {
+          endDate = endDate.replace(/\-/, '/');
+          startDate = startDate.replace(/\-/, '/');
+          return (new Date(endDate) - new Date(startDate));
+        }
+
+      }
+    }
+  }
+
+  /** @ngInject */
+  function simpleSearchInteger(cbAlert) {
+    return {
+      restrict: "A",
+      replace: true,
+      require: '^simpleSearch',
+      scope: {
+        items: "="
+      },
+      templateUrl: "app/components/simpleSearch/integer.html",
+      link: function (scope, iElement, iAttrs, iCtrl) {
+        scope.searchParams = iCtrl.searchParams;
+        scope.handler = function () {
+          iCtrl.searchParams[scope.items.name] = scope.searchParams[scope.items.name];
+          if(scope.searchParams[scope.items.name] == -1 || scope.searchParams[scope.items.name] == -2){
+            iCtrl.searchParams[scope.items.start.name] = undefined;
+            iCtrl.searchParams[scope.items.end.name] = undefined;
+          }else{
+            var current = iCtrl.findListItem(scope.searchParams[scope.items.name], scope.items.list) || {};
+            iCtrl.searchParams[scope.items.start.name] = current.start;
+            iCtrl.searchParams[scope.items.end.name] = current.end;
+          }
+          iCtrl.isDisabled(scope.items.start.name,false);
+          iCtrl.isDisabled(scope.items.end.name,false);
+        };
+        // 起始配置
+        scope.items.start.config = angular.extend({
+          placeholder: "",
+          min: -1,
+          max: 1000000
+        }, (scope.items.start.config || {}));
+
+        // 终止配置
+        scope.items.end.config = angular.extend({
+          placeholder: "",
+          min: -1,
+          max: 1000000
+        }, (scope.items.end.config || {}));
+
+        setPlaceholder('start');
+        setPlaceholder('end');
+        function setPlaceholder(dir){
+          var config = scope.item[dir].config;
+          scope.item[dir].config.placeholder = "请输入 " + (config.min + 1) +" ~ "+ (config.max - 1);
+        }
+
+        function getPlaceholder(dir){
+          var config = scope.item[dir].config;
+          return "不在合法 " + config.min +" ~ "+ config.max + "范围内";
+        }
+        // 起始处理函数
+        scope.items.start.handler = function (start, end) {
+          console.log('start',compare(start, end), rangeEnabled(start, scope.items.start.config));
+          // 如果结束没有输入，只输入开始，就需要判断
+          if(angular.isDefined(start) && angular.isUndefined(end)){
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.end.name, false);
+          }
+          // 比较是否在合法范围内
+          if(!rangeEnabled(start, scope.items.start.config)){
+            cbAlert.error(getPlaceholder('start'));
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.start.name, false);
+          }
+          // 比较大小
+          if(angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)){
+            cbAlert.error("结束输入不能比起始输入小");
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.start.name, false);
+          }
+
+        };
+
+        // 终止处理函数
+        scope.items.end.handler = function (start, end) {
+          // 如果开始没有输入，只输入结束，就需要判断
+          if(angular.isUndefined(start) && angular.isDefined(end)){
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.start.name, false);
+          }
+          // 比较是否在合法范围内
+          if(!rangeEnabled(start, scope.items.start.config)){
+            cbAlert.error(getPlaceholder('end'));
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.end.name, false);
+          }
+          // 比较大小
+          if(angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)){
+            cbAlert.error("结束输入不能比起始输入小");
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return ;
+          }else{
+            iCtrl.isDisabled(scope.items.end.name, false);
+          }
+        };
+
+
+        // 是否在限制范围内
+        function rangeEnabled(data, config){
+          console.log(data, config);
+          data = data || 0;
+          return config.min < data && data < config.max;
+        }
+
+        // 比较 结束是否比开始大 如果大于0就是正确，如果小于0就是错误
+        function compare(start, end) {
+          return end - start > 0;
+        }
+
+      }
+    }
+  }
+
 })();
 
 

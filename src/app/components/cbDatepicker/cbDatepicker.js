@@ -93,14 +93,10 @@
         var modes = ['day', 'month', 'year'];
         var configAttr = angular.extend(angular.copy(cbDatepickerDefault), ($scope.datepickerOptions || {}));
         $scope.placeholder = configAttr.placeholder;
-        angular.forEach(['formatDay', 'formatMonth', 'formatYear', 'formatDayHeader', 'formatDayTitle', 'formatMonthTitle',
-          'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'format', 'showLunar', 'showHour', 'shwoMinute', 'minDate', 'maxDate'], function (key) {
-          _this[key] = configAttr[key];
-        });
-
+        
         $scope.datepicker = {};
         var datepickerModel = $scope.datepickerModel;
-
+        setConfig();
         if ( $scope.datepickerModel ) {
           var datepicker = $scope.datepickerModel;
           if(!/(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}:\d{2}:\d{2})/.test(datepicker)){
@@ -116,10 +112,21 @@
           }
         }
 
+        function setConfig(){
+          configAttr = angular.extend(angular.copy(cbDatepickerDefault), ($scope.datepickerOptions || {}));
+          angular.forEach(['formatDay', 'formatMonth', 'formatYear', 'formatDayHeader', 'formatDayTitle', 'formatMonthTitle',
+            'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'format', 'showLunar', 'showHour', 'shwoMinute', 'minDate', 'maxDate'], function (key) {
+            _this[key] = configAttr[key];
+          });
+          datepickerModel = $scope.datepicker.model;
+        }
+
 
         $scope.setOpen = function(){
+          console.log('datepickerOptions', $scope.datepickerOptions);
+
           if(!$scope.isOpen){
-            datepickerModel = $scope.datepicker.model;
+            setConfig();
             $scope.datepickerOpen();
           }else{
             $scope.datepickerModel = $scope.datepicker.model;

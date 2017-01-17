@@ -239,10 +239,22 @@
                   }
                 },
                 "trade": {
-                  "porder": {
+                  "order": {
                     "list": {
-                      "url": "/trade/porder",
+                      "url": "/trade/order/search",
                       "type": "GET"
+                    },
+                    "update": {
+                      "url": "/trade/order/update",
+                      "type": "POST"
+                    },
+                    "getOrdersDetails": {
+                      "url": "/trade/order/getOrdersDetails",
+                      "type": "POST"
+                    },
+                    "checkErrorCode": {
+                      "url": "/trade/order/checkErrorCode",
+                      "type": "POST"
                     }
                   },
                   "comment": {

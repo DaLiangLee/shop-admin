@@ -1,6 +1,8 @@
-<div class="radio-inline" ng-repeat="list in item.list">
-  <label>
-    <input type="radio" name="{{item.name}}" ng-model="item.name" ng-value="list.id">
-    {{list.label}}
-  </label>
+<div>
+  <div class="radio-inline" ng-repeat="list in items.list">
+    <label>
+      <input type="radio" name="{{items.name}}" ng-change="handler()" ng-model="searchParams[items.name]" ng-value="list.id">
+      {{list.label}}
+    </label>
+  </div>
 </div>

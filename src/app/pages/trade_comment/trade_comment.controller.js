@@ -99,9 +99,9 @@
         },
         {
           "label": "本年度",
-          id: 2,
-          start: 2,
-          end: 2
+          id: 3,
+          start: 3,
+          end: 3
         }
       ];
 
@@ -134,7 +134,7 @@
        * @param current
        * @returns {number}
        */
-      function getTotalMile(list, current){
+      function getCommenttime(list, current){
         var start = current.commenttime0,
           end = current.commenttime1,
           items;
@@ -149,6 +149,7 @@
         });
         return items.length === 1 ? items[0].id : -2;
       }
+
       /**
        * 搜索操作
        *
@@ -162,8 +163,8 @@
               custom: true,
               region: true,
               type: "date",
-              name: "TotalMile",
-              model: getTotalMile(commenttime, currentParams),
+              name: "commenttime",
+              model: getCommenttime(commenttime, currentParams),
               list: commenttime,
               start: {
                 name: "commenttime0",
@@ -176,7 +177,7 @@
                 name: "commenttime1",
                 model: currentParams.commenttime1,
                 config: {
-                  minDate: new Date("2017/01/01 00:00:00")
+                  minDate: new Date("2017/01/05 00:00:00")
                 }
               }
             },
@@ -230,12 +231,17 @@
                 currentParams[key] = undefined;
               }
             });
+            console.log(currentParams);
             $state.go(currentStateName, currentParams);
           }else{
-            if(data.commenttime0 == data.commenttime1){
+            var items = _.find(commenttime, function(item){
+              return item.id == data.commenttime0;
+            });
+            if(angular.isDefined(items)){
               data.commenttime1 = undefined;
             }
             var search = angular.extend({}, currentParams, data);
+            console.log(search);
             $state.go(currentStateName, search);
           }
         }
