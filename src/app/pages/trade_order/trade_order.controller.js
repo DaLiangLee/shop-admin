@@ -255,5 +255,33 @@
     /** @ngInject */
     function TradeOrderChangeController($state, $log, tadeOrder) {
       var vm = this;
+
+      function completedMaxDate(date){
+        // 一天的毫秒数
+        var DAY_TIME = 24 * 60 * 60 * 1000;
+        return new Date(date.getTime() + DAY_TIME * 30)
+      }
+
+      // 预计完工时间
+      vm.completedDate = {
+        opened: false,
+        config: {
+          startingDay: 1,
+          placeholder: "请选择预计完工时间",
+          isHour: true,
+          isMinute: true,
+          formatTimeTitle: "HH:mm",
+          format: "yyyy-MM-dd HH:mm",
+          minDate: new Date(),
+          maxDate: completedMaxDate(new Date())
+        },
+        open: function(){
+
+        },
+        model: "",
+        handler: function (data) {
+          console.log('completedDate', data);
+        }
+      };
     }
 })();

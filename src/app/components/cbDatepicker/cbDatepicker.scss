@@ -76,5 +76,11 @@
     .month{
       min-width: 280px;
     }
+    .time{
+      margin: 10px 30px;
+      tr{
+        line-height: 30px;
+      }
+    }
   }
 }

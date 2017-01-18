@@ -1,0 +1,19 @@
+<div class="time">
+  <table class="grid">
+    <thead>
+    <tr>
+      <th colspan="2"><button class="btn btn-default" ng-click="toggleMode(0, $event)"><strong ng-bind="title"></strong></button></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in rows">
+      <td><span ng-bind="item.label"></span>：</td>
+      <td><div style="width: 250px;" cb-time-slider data-min="{{item.min}}" data-max="{{item.max}}" value="item.value" up="item.up(data)" move="item.move(data)" down="item.down(data)"></div></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="showButtonBar clearfix">
+    <button type="button" class="btn btn-sm btn-success pull-right uib-close ng-binding" ng-click="select('time', $event)">确定
+    </button>
+  </div>
+</div>

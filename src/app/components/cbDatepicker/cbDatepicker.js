@@ -28,9 +28,13 @@
       formatDayHeader: 'EEE',
       formatDayTitle: 'yyyy-MM',
       formatMonthTitle: 'yyyy',
+      formatTimeTitle: 'HH:mm:ss',
       datepickerMode: 'day',
       minMode: 'day',
       maxMode: 'year',
+      isHour: false,
+      isMinute: false,
+      isSecond: false,
       showWeeks: true,
       placeholder: "请点击选择时间",
       startingDay: 0,
@@ -45,6 +49,7 @@
     .directive('cbDatepickerYear', cbDatepickerYear)
     .directive('cbDatepickerMonth', cbDatepickerMonth)
     .directive('cbDatepickerDay', cbDatepickerDay)
+    .directive('cbDatepickerTime', cbDatepickerTime)
     .directive('cbDatepickerPopup', cbDatepickerPopup);
   function zeroFill(num) {
     return num < 10 ? '0' + num : '' + num;
@@ -93,7 +98,7 @@
         var modes = ['day', 'month', 'year'];
         var configAttr = angular.extend(angular.copy(cbDatepickerDefault), ($scope.datepickerOptions || {}));
         $scope.placeholder = configAttr.placeholder;
-        
+
         $scope.datepicker = {};
         var datepickerModel = $scope.datepickerModel;
         setConfig();
@@ -115,7 +120,7 @@
         function setConfig(){
           configAttr = angular.extend(angular.copy(cbDatepickerDefault), ($scope.datepickerOptions || {}));
           angular.forEach(['formatDay', 'formatMonth', 'formatYear', 'formatDayHeader', 'formatDayTitle', 'formatMonthTitle',
-            'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'format', 'showLunar', 'showHour', 'shwoMinute', 'minDate', 'maxDate'], function (key) {
+            'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'format', 'showLunar', 'showHour', 'shwoMinute', 'minDate', 'maxDate', 'isHour', 'isMinute', 'isSecond', 'formatTimeTitle', 'datepickerMode'], function (key) {
             _this[key] = configAttr[key];
           });
           datepickerModel = $scope.datepicker.model;
@@ -123,8 +128,7 @@
 
 
         $scope.setOpen = function(){
-          console.log('datepickerOptions', $scope.datepickerOptions);
-
+          console.log('setOpen', $scope.datepickerOptions);
           if(!$scope.isOpen){
             setConfig();
             $scope.datepickerOpen();
@@ -136,7 +140,11 @@
 
 
         $scope.datepickerMode = 'day';
+        // 当前的时间
         this.activeDate = new Date();
+        // 时分秒时间
+        this.datepickerTime = null;
+
         this.createDateObject = function (date, format) {
           var model = datepickerModel ? new Date(datepickerModel) : null;
           return {
@@ -159,23 +167,31 @@
         };
 
         this.render = function() {
+          setActiveDate('render');
+          this.refreshView();
+        };
+
+        function setActiveDate(type){
+          console.log('setActiveDate', type, $scope.datepicker.model);
           if ( $scope.datepicker.model ) {
             var datepicker = $scope.datepicker.model;
             if(!PatternsDict.test(datepicker)){
-              this.activeDate = new Date();
+              _this.activeDate = new Date();
             }else{
               var date = new Date( datepicker.replace(/\-/, '/') );
               var isValid = !isNaN(date);
 
               if ( isValid ) {
-                this.activeDate = date;
+                _this.activeDate = date;
+                _this.datepickerTime = date;
               } else {
-                this.activeDate = new Date();
+                _this.activeDate = new Date();
+                _this.datepickerTime = null;
               }
             }
           }
-          this.refreshView();
-        };
+        }
+
         this.refreshView = function() {
           this._refreshView && this._refreshView();
         };
@@ -198,8 +214,12 @@
         $scope.close = function (event) {
           $scope.isOpen = false;
           $scope.datepickerModel = $scope.datepicker.model;
+          if(_this.datepickerMode === "day"){
+            $scope.datepickerMode = 'day';
+          }
           $scope.datepickerHandler({data:$scope.datepickerModel});
         };
+
         $scope.select = function (day, event) {
           event.stopPropagation();
           if (day == null) {
@@ -207,11 +227,25 @@
           } else if (day == 'today') {
             $scope.datepicker.model = dateFilter(new Date(), _this.format);
             event && $scope.close(event);
+          } else if (day == 'time') {
+            $scope.datepicker.model = dateFilter(new Date(_this.datepickerTime), _this.format);
+            event && $scope.close(event);
           } else {
             if (day.next === -1) {
-              $scope.datepicker.model = dateFilter(day.date, _this.format);
-              $scope.datepickerMode = 'day';
-              event && $scope.close(event);
+              if(_this.isHour){
+                console.log(day);
+
+                $scope.datepickerMode = 'time';
+                if(day.current){
+                  _this.datepickerTime = _this.activeDate;
+                }else{
+                  _this.datepickerTime = day.date;
+                }
+              }else{
+                $scope.datepicker.model = dateFilter(day.date, _this.format);
+                $scope.datepickerMode = 'day';
+                event && $scope.close(event);
+              }
             } else {
               _this.activeDate = day.date;
               $scope.datepickerMode = modes[day.next];
@@ -530,5 +564,103 @@
       }
     }
   }
+
+  /** @ngInject */
+  function cbDatepickerTime(dateFilter) {
+    return {
+      restrict: "A",
+      replace: true,
+      require: '^cbDatepicker',
+      templateUrl: "app/components/cbDatepicker/cbDatepickerTime.html",
+      link: function (scope, iElement, iAttrs, iCtrl) {
+        iCtrl._refreshView = function () {
+          var TimeList = [];
+          console.log(iCtrl);
+          var minute = iCtrl.activeDate.getMinutes();
+          var second = iCtrl.activeDate.getSeconds();
+
+          TimeList.push({
+            "label": "时",
+            "value": getHour(iCtrl.datepickerTime, iCtrl.minDate),
+            "min": getMinHour(iCtrl.datepickerTime, iCtrl.minDate),
+            "max": 23,
+            "up": function(data){
+
+            },
+            "move": function(data){
+              scope.title = setTitle(iCtrl.datepickerTime, 'setHours', data.value);
+            },
+            "down": function(data){
+
+            }
+          });
+
+          iCtrl.isMinute && (TimeList.push({
+            "label": "分",
+            "value": minute,
+            "min": 0,
+            "max": 59,
+            "up": function(data){
+
+            },
+            "move": function(data){
+              scope.title = setTitle(iCtrl.datepickerTime, 'setMinutes', data.value);
+            },
+            "down": function(data){
+
+            }
+          }));
+          iCtrl.isSecond && (TimeList.push({
+            "label": "秒",
+            "value": second,
+            "min": 0,
+            "max": 59,
+            "up": function(data){
+
+            },
+            "move": function(data){
+              scope.title = setTitle(iCtrl.datepickerTime, 'setSeconds', data.value);
+            },
+            "down": function(data){
+
+            }
+          }));
+
+          scope.title = dateFilter(iCtrl.datepickerTime, iCtrl.formatTimeTitle);
+          scope.rows = TimeList;
+        };
+        iCtrl.refreshView();
+
+        function getHour(picker, active){
+          return picker - active < 0 ? active.getHours() : picker.getHours();
+        }
+
+        /**
+         * 获取最小时间
+         * 如果选择时间大于当前时间，返回0
+         * 如果选择时间小于当前
+         * @param picker
+         * @param active
+         * @returns {number}
+         */
+        function getMinHour(picker, min){
+          var nextDay = new Date(min.getTime() + 86400000);
+          nextDay.setHours(0, 0, 0);
+          console.log(picker - nextDay);
+
+          return picker - nextDay > 1000 ? 0 : min.getHours();
+        }
+
+        function setTitle(date, type, value){
+          date[type](value);
+          iCtrl.datepickerTime = date;
+          return dateFilter(date, iCtrl.formatTimeTitle);
+        }
+
+      }
+    }
+  }
+
+
 
 })();
