@@ -77,28 +77,43 @@
       templateUrl: "app/components/simpleSearch/simpleSearch.html",
       controller: ["$scope", function ($scope) {
         var _this = this;
+        // 禁用对象
         var disabledMap = {};
-        $scope.config = angular.extend({}, $scope.config);
+        // 搜索配置
+        var searchConfig = null;
+        // 绑定参数
         this.searchParams = {};
+
         // 显示更多筛选条件 如果没有搜索框就直接显示出来，如果有就隐藏起来
         $scope.isShowmore = true;
         $scope.isKeywordShow = false;
         $scope.search = {};
         $scope.search.directive = [];
-        // 如果有搜索
-        if(angular.isDefined($scope.config.keyword)){
-          setKeyword();
-          $scope.isShowmore = false;
-          $scope.isKeywordShow = _this.keyword.isShow;
-          _this.keyword.isMore = $scope.search.directive.length > 0;
-        }
+
+
+
+
+        // 监听配置
+        var watchConfig = $scope.$watch('config', function (value) {
+          if(value){
+            searchConfig = angular.extend({}, value);
+            setItems(searchConfig);
+            // 如果有搜索
+            if(angular.isDefined(searchConfig.keyword)){
+              setKeyword(searchConfig);
+              $scope.isShowmore = false;
+              $scope.isKeywordShow = _this.keyword.isShow;
+              _this.keyword.isMore = $scope.search.directive.length > 0;
+            }
+          }
+        });
 
         /**
          * 设置searchDirective
          */
-        function setItems(){
+        function setItems(config){
           var isModel = 0;
-          angular.forEach($scope.config.searchDirective, function(item){
+          angular.forEach(config.searchDirective, function(item){
             if(!angular.isArray(item.list) && !item.all){
               throw Error(item.label + '：的配置项不全');
             }
@@ -150,17 +165,17 @@
           });
           $scope.isShowmore = isModel > 0;
         }
-        setItems();
 
 
+        // 给子指令用 显示隐藏更多筛选条件
         this.showMore = function(){
           $scope.isShowmore = !$scope.isShowmore;
         };
         /**
          * 设置keyword
          */
-        function setKeyword(){
-          _this.keyword = $scope.config.keyword;
+        function setKeyword(config){
+          _this.keyword = config.keyword;
           _this.searchParams[_this.keyword.name] = _this.keyword.model;
         }
 
@@ -219,6 +234,13 @@
           });
           return searchParams;
         }
+
+
+        // 确保监听被销毁。
+        $scope.$on('$destroy', function() {
+          watchConfig();
+        });
+
       }]
     }
   }

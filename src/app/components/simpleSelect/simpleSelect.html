@@ -1,5 +1,5 @@
-<div class="k-simple-select" ng-click="choose.toggle($event)">
-  <div class="value" ng-class="{'disable': choose.once, 'focus': choose.focus}">
+<div class="k-simple-select">
+  <div class="value" ng-class="{'disable': choose.once}">
     <div class="text" ng-if="!config.multiple">
       <p><img class="img" ng-src="{{choose.image}}" alt="{{choose.text}}" ng-if="choose.image"><span ng-bind="choose.text"></span></p>
       <span class="caret"></span>
@@ -10,7 +10,7 @@
       <span class="caret"></span>
     </div>
   </div>
-  <div class="select" ng-if="choose.focus" ng-click="$event.stopPropagation()">
+  <div class="select" ng-click="$event.stopPropagation()">
     <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" ng-if="search.prefer" placeholder="请输入搜索内容" cb-placeholder>
     <ul class="list-unstyled" ng-if="items.length" dg-click="options($event, item)" selector="li">
       <li ng-repeat="item in items" ng-class="{'active': setClass(item)}">

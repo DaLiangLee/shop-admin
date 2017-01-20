@@ -1,1 +1,201 @@
-<div cb-datepicker="" is-open="vm.completedDate.opened" datepicker-options="vm.completedDate.config" datepicker-open="vm.completedDate.open()" datepicker-model="vm.completedDate.model" datepicker-handler="vm.completedDate.handler(data)"></div>
+<div class="g-view">
+  <div class="container-fluid">
+    <h2>开单</h2>
+    <hr>
+    <form class="form-horizontal" autocomplete="off" name="order" role="form" novalidate ng-if="vm.isLoadData">
+      <div class="form-group">
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label class="col-lg-3 control-label">送车人：</label>
+            <div class="col-lg-6">
+              <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.username"
+                     placeholder="请输入送车人姓名" cb-placeholder>
+            </div>
+            <div class="col-lg-3 checkbox">
+              <label><input type="checkbox" ng-model="vm.dataBase.waitinstore">店内等待</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">手机号：</label>
+            <div class="col-lg-6">
+              <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.usermobile"
+                     placeholder="请输入送车人手机号" cb-placeholder>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">客户留言：</label>
+            <div class="col-lg-9">
+              <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.remark"
+                     placeholder="请输入客户留言20字以内" cb-placeholder>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">车身状况：</label>
+            <div class="col-lg-9">
+              <div text-editor placeholder="请输入长度100字符以内的车身状况" data-max-length="100" editor="vm.dataBase.carstatus"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">问题描述：</label>
+            <div class="col-lg-9">
+              <div text-editor placeholder="请输入长度100字符以内的问题描述" data-max-length="100" editor="vm.dataBase.problem"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">预计完工时间：</label>
+            <div class="col-lg-9">
+              <div cb-datepicker="" is-open="vm.completedDate.opened" datepicker-options="vm.completedDate.config" datepicker-open="vm.completedDate.open()" datepicker-model="vm.dataBase.completetime" datepicker-handler="vm.completedDate.handler(data)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label class="col-lg-3 control-label">会员姓名：</label>
+            <div class="col-lg-9" style="position: relative">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.realname">111</p>
+              <button style="position: absolute; right:15px; top: 0;" order-user-dialog handler="vm.userHandler(data)" class="btn btn-primary">搜索</button>
+            </div>
+            <!--<div class="col-lg-3">
+              <a ui-sref="" class="btn bg-success">新建会员</a>
+            </div>-->
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">手机号：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.mobile"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">性别：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.gender | formatStatusFilter : 'sex'"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">关注状态：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.followed | formatStatusFilter : 'followed'"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">公司名称：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.companyname"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">备注：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.userinfo.remark"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <div class="col-lg-3">
+              <div class="logo">
+                <img ng-src="{{vm.dataBase.carinfo.logo}}" alt="">
+                <span class="imeienabled" ng-class="{'imeienabled1': vm.dataBase.carinfo.imeienabled == 1, 'imeienabled0': vm.dataBase.carinfo.imeienabled == 0, 'imeienabledno': !vm.dataBase.carinfo.imei && !vm.dataBase.carinfo.imeienabled}"></span>
+              </div>
+            </div>
+            <div class="col-lg-9">
+              <div simple-select="guid,licence" store="vm.selectModel.store" select="vm.dataBase.carinfo.guid"
+                   select-handler="vm.selectModel.handler(data)"></div>
+            </div>
+            <!--<div class="col-lg-3">
+              <a ui-sref="" class="btn bg-success">新建车辆</a>
+            </div>-->
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">车型：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.model"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">车身颜色：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.model"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">VIN码：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.vin"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">发动机号：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.enginenumber"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">前轮胎：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.frontwheel"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">后轮胎：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.rearwheel"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">购车时间：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.buydate"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">当前里程：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.totalmile"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">距保养里程：</label>
+            <div class="col-lg-9">
+              <p class="text-border" ng-bind="vm.dataBase.carinfo.countdownmiles"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">故障码：</label>
+            <div class="col-lg-9">
+              <span ng-if="!vm.dataBase.carinfo.errorcode" class="text-success">正常</span>
+              <a ng-href="vm.dataBase.carinfo.$$errorcode" ng-if="vm.dataBase.carinfo.errorcode" ng-bind="vm.dataBase.carinfo.errorcode" class="text-danger"></a>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-lg-3 control-label">保养手册：</label>
+            <div class="col-lg-9">
+              <a target="_blank" ng-href="{{vm.dataBase.carinfo.$$baoyang}}">手册</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="form-group">
+        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.dataBase.details" loading-state="vm.gridModel.loadingState"
+             config="vm.gridModel.config"></div>
+        <div class="form-group text-center">
+          <button class="btn btn-success" style="width: 300px;" ng-click="vm.addProducts()">+ 添加</button>
+        </div>
+        <p>
+          数据汇总：服务&nbsp;<span ng-bind="vm.statistics.serviceCount"></span>&nbsp;项，共&nbsp;<span ng-bind="vm.statistics.ssalepriceAll"></span>&nbsp;元&nbsp;|&nbsp;商品&nbsp;/&nbsp;配件&nbsp;<span ng-bind="vm.statistics.productCount"></span>&nbsp;项，共&nbsp;<span ng-bind="vm.statistics.psalepriceAll"></span>&nbsp;元&nbsp;|&nbsp;合计&nbsp;<span ng-bind="vm.statistics.totalprice"></span>&nbsp;元
+        </p>
+      </div>
+      <div class="form-group text-center">
+        <button class="btn btn-primary" style="width: 300px;" ng-click="vm.submitBtn()">确定</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+

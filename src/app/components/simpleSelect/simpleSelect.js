@@ -30,6 +30,7 @@
   function simpleSelect($document, $filter, $timeout) {
     return {
       restrict: "A",
+      replace: true,
       scope: {
         store: "=",
         select: "=",
@@ -93,28 +94,6 @@
           image: "",
           text: "-- "+placeholder+" --",
           list: [],
-          toggle: function ($event) {
-            $event.stopPropagation();
-            $document.find('.k-simple-select .select').hide();
-
-            if(this.once){   // 如果是只能点击一次关闭了，就不能再点击了
-              return ;
-            }
-            if(!this.focus){   // 打开下拉选项
-              if(scope.config.multiple){
-                scope.choose.text = "-- 连续点击可以选择多项 --";
-                $timeout(function(){
-                  $list = iElement.find('.value');
-                  $select = iElement.find('.select');
-                  // 更新高度
-                  $select.css({'top': $list.height()});
-                },1);
-              }
-            }else{    // 关闭下拉选项
-
-            }
-            this.focus = !this.focus;
-          },
           hide: function () {
             this.focus = false;
             scope.search.params = "";
@@ -123,6 +102,32 @@
             }
           }
         };
+
+        iElement.on('click', '.value', function (event) {
+          event.stopPropagation();
+          if(scope.choose.once){
+            return ;
+          }
+          close();
+          scope.$apply(function () {
+            if(scope.config.multiple){
+              scope.choose.text = "-- 连续点击可以选择多项 --";
+              $timeout(function(){
+                $list = iElement.find('.value');
+                $select = iElement.find('.select');
+                // 更新高度
+                $select.css({'top': $list.height()});
+              },1);
+            }
+          });
+          iElement.toggleClass('isOpen');
+        });
+
+        // 关闭所有
+        function close(){
+          $document.find('.k-simple-select').removeClass('isOpen');
+        }
+
         /**
          * 筛选操作
          * @type {{}}
@@ -262,11 +267,11 @@
           });
         };
 
-
         $document.on('click', function () {
           scope.$apply(function(){
             scope.choose.hide();
           });
+          close();
         });
         /**
          * 销毁操作

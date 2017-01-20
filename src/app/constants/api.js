@@ -255,6 +255,22 @@
                     "checkErrorCode": {
                       "url": "/trade/order/checkErrorCode",
                       "type": "POST"
+                    },
+                    "saveOrder": {
+                      "url": "/trade/order/saveOrder",
+                      "type": "POST"
+                    },
+                    "getOrderServer": {
+                      "url": "/product/server/getOrderServer",
+                      "type": "GET"
+                    },
+                    "getOrderProduct": {
+                      "url": "/product/goods/getOrderProduct",
+                      "type": "GET"
+                    },
+                    "checkstoreuseraccount": {
+                      "url": "/trade/order/checkstoreuseraccount",
+                      "type": "POST"
                     }
                   },
                   "comment": {

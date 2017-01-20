@@ -117,7 +117,7 @@
     }
 
     function checkboxConfig(checked) {
-      var cell = checked ? "th" : "td",
+      var cell = checked ? "th" : "th",
         text = checked ? "序号" : "全选",
         checkbox = checked ? "" : '<input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="tableState.selectAll" ng-change="changeSelectionAll()" />',
         label = checkbox ? "<label style='font-size:12px; font-family:Tahoma;cursor: pointer;'>" + checkbox + text + "</label>" : text;
@@ -127,7 +127,7 @@
     function tHeadConfig(scope) {
       var node = "";
       if (scope.config.checkboxSupport) {
-        node = checkboxConfig(true);
+        node += checkboxConfig(false);
       }
       angular.forEach(scope.columns, function (item) {
         var name = item.units ? item.name + item.units : item.name;
@@ -178,9 +178,9 @@
 
     function tFootConfig(scope) {
       var node = "", btn = "", page = "", config = scope.config;
-      if (config.checkboxSupport) {
+      /*if (config.checkboxSupport) {
         node += checkboxConfig(false);
-      }
+      }*/
 
       if (config.batchOperationBarDirective.length > 0) {    // 添加批量操作按钮
         btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
@@ -192,11 +192,11 @@
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
         page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
       }
-      if (config.checkboxSupport) {
-        node += '<td colspan="' + (scope.columns.length - 1) + '">' + btn + page + '</td>';
-      } else {
-        node += '<td colspan="' + scope.columns.length + '">' + btn + page + '</td>';
-      }
+      var pageSpan = Math.ceil(scope.columns.length/2),
+          addSpan = scope.columns.length - pageSpan;
+
+      node += '<td colspan="' + addSpan + '">' + btn + '</td>';
+      node += '<td colspan="' + pageSpan + '">' + page + '</td>';
       return '<tFoot ng-if="!showNoneDataInfoTip && !loadingState"><tr>' + node + '</tr></tFoot>';
     }
 

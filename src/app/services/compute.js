@@ -4,7 +4,7 @@
 /**
  * Created by Administrator on 2016/10/18.
  */
-(function() {
+(function () {
   'use strict';
 
   angular
@@ -12,52 +12,78 @@
     .service('computeService', computeService);
 
   /** @ngInject */
-  function computeService(){
-    var plus = function(augend, addend){
-      var length;
-      try
-      {
-        augend = augend.toString().split(".")[1].length;
+  function computeService() {
+    var add = function (augend, addend) {
+      var r1,r2, length;
+      try {
+        r1 = augend.toString().split(".")[1].length;
       }
-      catch (e)
-      {
-        augend = 0;
+      catch (e) {
+        r1 = 0;
       }
-      try
-      {
-        addend = addend.toString().split(".")[1].length;
+      try {
+        r2 = addend.toString().split(".")[1].length;
       }
-      catch (e)
-      {
-        addend = 0;
+      catch (e) {
+        r2 = 0;
       }
-      length = Math.pow(10, Math.max(augend, addend));
-
-      return (augend * length + addend * length) / length;
+      length = Math.pow(10, Math.max(r1, r2));
+      return (parseInt(augend * length, 10) + parseInt(addend * length, 10)) / length;
     };
 
-    var multiply = function(multiplier, multiplicand){
+    var multiply = function (multiplier, multiplicand) {
       var m = 0;
       var s1 = multiplier.toString();
       var s2 = multiplicand.toString();
-      try
-      {
+      try {
         m += s1.split(".")[1].length;
       }
-      catch (e)
-      {
+      catch (e) {
       }
-      try
-      {
+      try {
         m += s2.split(".")[1].length;
       }
-      catch (e)
-      {
+      catch (e) {
       }
 
       return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     };
 
+    var divide = function (dividend, divisor) {
+      var t1 = 0, t2 = 0, r1, r2;
+      try {
+        t1 = dividend.toString().split(".")[1].length
+      } catch (e) {
+        t1 = 0;
+      }
+      try {
+        t2 = divisor.toString().split(".")[1].length
+      } catch (e) {
+        t1 = 0;
+      }
+      r1 = Number(dividend.toString().replace(".", ""));
+      r2 = Number(divisor.toString().replace(".", ""));
+      return (r1 / r2) * Math.pow(10, t2 - t1);
+    };
+
+    var subtract = function (minuend, subtrahend) {
+      var r1, r2, m, n;
+      try {
+        r1 = minuend.toString().split(".")[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = subtrahend.toString().split(".")[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2));
+      //last modify by deeka
+      //动态控制精度长度
+      n = (r1 >= r2) ? r1 : r2;
+      return ((parseInt(minuend * m, 10) - parseInt(subtrahend * m, 10)) / m).toFixed(n);
+    };
 
 
     /**
@@ -65,8 +91,17 @@
      * @param augend
      * @param addend
      */
-    this.plus = function(augend, addend){
-      return plus(augend, addend);
+    this.add = function (augend, addend) {
+      return add(augend, addend);
+    };
+
+    /**
+     * 减法
+     * @param minuend
+     * @param subtrahend
+     */
+    this.subtract = function (minuend, subtrahend) {
+      return subtract(minuend, subtrahend);
     };
 
     /**
@@ -74,10 +109,18 @@
      * @param multiplier
      * @param multiplicand
      */
-    this.multiply = function(multiplier, multiplicand){
+    this.multiply = function (multiplier, multiplicand) {
       return multiply(multiplier, multiplicand);
     };
 
+    /**
+     * 除法
+     * @param dividend
+     * @param divisor
+     */
+    this.divide = function (dividend, divisor) {
+      return divide(dividend, divisor);
+    }
   }
 
 })();

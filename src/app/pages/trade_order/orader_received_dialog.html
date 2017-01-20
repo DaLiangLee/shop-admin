@@ -1,0 +1,52 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+            aria-hidden="true">&times;</button>
+    <h5 class="modal-title">订单收款</h5>
+  </div>
+  <div class="modal-body form-horizontal">
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label">商品/材料 合计：</label>
+      <div class="col-sm-8">
+        <span ng-bind="item.psaleprice"></span> 元
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label">工时费 合计：</label>
+      <div class="col-sm-8">
+        <span ng-bind="item.ssaleprice"></span> 元
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label">优惠：</label>
+      <div class="col-sm-8">
+        <span class="text-danger">-<span ng-bind="item.preferentialprice"></span></span> 元
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label">实付金额：</label>
+      <div class="col-sm-8">
+        <span ng-bind="item.actualprice"></span> 元
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label">支付方式：</label>
+      <div class="col-sm-8">
+        <button class="btn active" ng-class="{'btn-primary':type.isBalance, 'btn-default': !type.isBalance, 'btn-success': type.current}" ng-disabled="!type.isBalance" style="margin-right: 10px;" ng-repeat="type in paytype" ng-click="setPaytype(type)"><span ng-bind="type.label"></span> <small ng-if="!type.isBalance" class="text-danger">余额不足</small></button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="alert alert-danger" ng-if="interceptor">
+      <p>您确认收款吗？</p>
+    </div>
+    <div class="inline-block margin-right" ng-if="interceptor">
+      <button class="btn btn-warning" ng-click="interceptorConfirm()">客户已付款</button>
+      <button class="btn btn-default" ng-click="close(false)">客户尚未付款</button>
+    </div>
+    <div class="inline-block margin-right" ng-if="!interceptor">
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="price.$invalid">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
+  </div>
+</div>

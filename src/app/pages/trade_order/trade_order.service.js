@@ -28,7 +28,7 @@
                       "id": 1,
                       "name": "操作",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" bo-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" bo-if="item.paystatus == 1" ng-click="propsParams.received(item)">收款</a> <a href="javascript:;" class="state-unread" bo-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" bo-if="item.status == 2" ng-click="propsParams.checkout(item)">离店</a>'
+                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" bo-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" bo-if="item.paystatus == 1" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a> <a href="javascript:;" class="state-unread" bo-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" bo-if="item.status == 2 && item.paystatus == 0" ng-click="propsParams.checkout(item)">离店</a>'
                     },
                     {
                       "id": 2,
@@ -52,7 +52,7 @@
                       "id": 5,
                       "name": "付款状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><i bo-title="item.status | formatStatusFilter : \'server_order_paystatus\'">付款状态</i></span>'
+                      "fieldDirective": '<span class="state-unread"><i bo-title="item.paystatus | formatStatusFilter : \'server_order_paystatus\'">付款状态</i></span>'
                     },
                     {
                       "id": 6,
@@ -82,7 +82,7 @@
                       "id": 10,
                       "name": "总费用(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice + item.psaleprice"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.totalprice | moneyFilter"></span>'
                     },
                     {
                       "id": 11,
@@ -111,7 +111,7 @@
                     {
                       "id": 15,
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.createtime | date : \'yyyy-MM-dd HH:mm:ss\'"></span>',
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.createtime"></span>',
                       "name": '开单时间'
                     },
                     {
@@ -135,6 +135,9 @@
                     },
                     'addColumnsBarDirective': [
                       '<a class="btn btn-primary" cb-access-control="chebian:store:trade:porder:add" ui-sref="trade.order.add()">开单</a> '
+                    ],
+                    'batchOperationBarDirective': [
+                      '<p bindonce=""><strong>数据汇总:</strong> 服务 <span bo-text="propsParams.statistics.servercount"></span> 项，共 <span bo-text="propsParams.statistics.ssalepriceAll"></span> 元 | 商品 / 配件 <span bo-text="propsParams.statistics.productcount"></span> 项，共 <span bo-text="propsParams.statistics.psalepriceAll"></span> 元 | 合计 <span bo-text="propsParams.statistics.totalprice"></span> 元</p>'
                     ]
                 }
             },

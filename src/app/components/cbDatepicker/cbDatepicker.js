@@ -217,7 +217,7 @@
           if(_this.datepickerMode === "day"){
             $scope.datepickerMode = 'day';
           }
-          $scope.datepickerHandler({data:$scope.datepickerModel});
+          event && $scope.datepickerHandler({data:$scope.datepickerModel});
         };
 
         $scope.select = function (day, event) {

@@ -10,7 +10,7 @@
         .controller('TradeOrderChangeController', TradeOrderChangeController);
 
     /** @ngInject */
-    function TradeOrderListController($state, $log, cbAlert, tadeOrder, tadeOrderConfig) {
+    function TradeOrderListController($state, $log, cbAlert, tadeOrder, tadeOrderConfig, computeService) {
       var vm = this;
       var currentState = $state.current;
       var currentStateName = currentState.name;
@@ -35,23 +35,88 @@
         }
       };
 
+
+      console.log(computeService.add(10461667.4249, 67256.8));
+      console.log(computeService.subtract(10461667.4249, 67256.8));
+
+
       /**
        * 组件数据交互
        *
        */
       vm.gridModel.config.propsParams = {
         currentStatus: currentParams.status,
+        statistics: {},
         closed: function (item) {   // 关闭
-
+          console.log(item);
+          cbAlert.ajax('您是否确认关闭该订单？', function (isConfirm) {
+            if (isConfirm) {
+              tadeOrder.update({
+                status: "4",
+                guid: item.guid
+              }).then(function (results) {
+                if (results.data.status == '0') {
+                  cbAlert.tips('关闭订单成功');
+                  getList(currentParams);
+                }else{
+                  cbAlert.error(results.data.data);
+                }
+              });
+            } else {
+              cbAlert.close();
+            }
+          }, "关闭该订单将无法恢复，确定关闭？", 'warning');
         },
-        received: function (item) {  // 收款
-
+        received: function (data) {  // 收款
+          console.log(data);
+          if(data.status == 0){
+            tadeOrder.update(data.data).then(function (results) {
+              if (results.data.status == '0') {
+                cbAlert.tips('订单收款成功');
+                getList(currentParams);
+              }else{
+                cbAlert.error(results.data.data);
+              }
+            });
+          }
         },
         completed: function (item) { // 完工
-
+          cbAlert.ajax('您是否确认关闭该完工？', function (isConfirm) {
+            if (isConfirm) {
+              tadeOrder.update({
+                status: "2",
+                guid: item.guid
+              }).then(function (results) {
+                if (results.data.status == '0') {
+                  cbAlert.tips('关闭订单成功');
+                  getList(currentParams);
+                }else{
+                  cbAlert.error(results.data.data);
+                }
+              });
+            } else {
+              cbAlert.close();
+            }
+          }, "确认该车完工，将等待客户提车，是否确定完工？", 'warning');
         },
         checkout: function (item) {  // 离店
-
+          cbAlert.ajax('确认该车已离店？', function (isConfirm) {
+            if (isConfirm) {
+              tadeOrder.update({
+                status: "3",
+                guid: item.guid
+              }).then(function (results) {
+                if (results.data.status == '0') {
+                  cbAlert.tips('确认离店成功');
+                  getList(currentParams);
+                }else{
+                  cbAlert.error(results.data.data);
+                }
+              });
+            } else {
+              cbAlert.close();
+            }
+          }, "确认该车离店，该订单将完成，是否确定离店？", 'warning');
         }
       };
 
@@ -223,9 +288,13 @@
             }
             total = data.data.count;
             vm.gridModel.itemList = data.data.data;
-            _.map(vm.gridModel.itemList, function (item) {
-              item.status = 1;
-              item.paystatus = 1;
+            setStatistics(_.pick(data.data, ['psalepriceAll', 'productcount', 'servercount', 'ssalepriceAll']));
+             _.map(vm.gridModel.itemList, function (item) {
+               item.totalprice = computeService.divide(computeService.add(item.ssaleprice || 0, item.psaleprice || 0), 100);
+               item.ssaleprice = computeService.divide(item.ssaleprice || 0, 100);
+               item.psaleprice = computeService.divide(item.psaleprice || 0, 100);
+               item.preferentialprice = computeService.divide(item.preferentialprice || 0, 100);
+               item.actualprice = computeService.divide(item.actualprice || 0, 100);
             });
             /*angular.forEach(data.data.data, function (item) {
               /!**
@@ -249,12 +318,26 @@
         });
       }
       getList(currentParams);
-
+      /**
+       * 设置数据汇总
+       * @param data
+       */
+      function setStatistics(data) {
+        data.totalprice = computeService.divide(computeService.add(data.psalepriceAll, data.ssalepriceAll), 100);
+        data.psalepriceAll = computeService.divide(data.psalepriceAll, 100);
+        data.ssalepriceAll = computeService.divide(data.ssalepriceAll, 100);
+        vm.gridModel.config.propsParams.statistics = data;
+      }
     }
 
     /** @ngInject */
-    function TradeOrderChangeController($state, $log, tadeOrder) {
+    function TradeOrderChangeController($state, $log, tadeOrder, userCustomer, cbAlert, configuration) {
       var vm = this;
+
+
+      vm.isLoadData = true;
+      vm.dataBase = {};
+      vm.dataBase.details = [];
 
       function completedMaxDate(date){
         // 一天的毫秒数
@@ -283,5 +366,172 @@
           console.log('completedDate', data);
         }
       };
+
+      /**
+       * 服务和商品配置
+       */
+      vm.gridModel = {
+        columns: [
+          {
+            "id": 0,
+            "name": "序号",
+            "none": true
+          },
+          {
+            "id": 1,
+            "name": "服务/项目",
+            "cssProperty": "state-column",
+            "fieldDirective": '<div ng-if="!item.itemname" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-service-dialog handler="propsParams.serviceHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemname">1</div>'
+          },
+          {
+            "id": 2,
+            "name": "商品/材料",
+            "cssProperty": "state-column",
+            "fieldDirective": '<div ng-if="!item.itemsku" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemsku">2</div>'
+          },
+          {
+            "id": 3,
+            "name": "工时费",
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" ng-bind="item.num"></span>',
+          },
+          {
+            "id": 4,
+            "name": "商品/材料费",
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" ng-bind="item.price"></span>',
+          },
+          {
+            "id": 5,
+            "name": "合计",
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" ng-bind="item.num + item.price"></span>',
+          },
+          {
+            "id": 6,
+            "name": "施工人员",
+            "cssProperty": "state-column",
+            "fieldDirective": '<div simple-select="guid,realname" store="propsParams.employee.store" select="item.servicer" select-handler="propsParams.employee.handler(data, item)"></div>',
+          },
+          {
+            "id": 7,
+            "cssProperty": "state-column",
+            "fieldDirective": '<input type="text" class="form-control" name="remark" ng-model="item.remark" placeholder="请输入备注" cb-placeholder>',
+            "name": '备注',
+            "width": 200
+          }
+        ],
+        loadingState: false,
+        config: {
+          'settingColumnsSupport': false,   // 设置表格列表项
+          'checkboxSupport': true,  // 是否有复选框
+          'selectedProperty': "selected",  // 数据列表项复选框
+          'selectedScopeProperty': "selectedItems",
+          'useBindOnce': true,  // 是否单向绑定
+          'addColumnsBarDirective': [
+            '<button class="btn btn-danger" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
+          ]
+        }
+      };
+
+      /**
+       * 组件数据交互
+       *
+       */
+      vm.gridModel.config.propsParams = {
+        removeItem: function (data) {     // 批量删除
+          console.log(data);
+        }
+      };
+
+      vm.userHandler = function(data){
+        console.log(data);
+        if(data.status == 0){
+          vm.dataBase.userinfo = data.data;
+          vm.dataBase.usermobile = data.data.mobile;
+          vm.dataBase.username = data.data.realname;
+          getUserMotors(data.data.mobile);
+        }
+      };
+
+      vm.selectModel = {
+        handler: function (data) {
+          console.log(data);
+          setUserMotors(_.find(this.store, {"guid": data}) || {});
+        }
+      };
+
+
+      function setUserMotors(data){
+        data.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + data.guid;
+        vm.dataBase.carinfo = data;
+      }
+
+      function getUserMotors(mobile){
+        userCustomer.getMotors({mobile: mobile}).then(function(results){
+          console.log('getUserMotors', results);
+          var result = results.data;
+          if(result.status == 0){
+            vm.selectModel.store = result.data;
+            setUserMotors(vm.selectModel.store[0] || {});
+          }else{
+            cbAlert.error("错误提示", result.data);
+          }
+        });
+      }
+
+      vm.statistics = {
+        serviceCount: 0,
+        ssalepriceAll: 0,
+        productCount: 0,
+        psalepriceAll: 0,
+        totalprice: 0
+      };
+
+
+      /**
+       * 添加一项服务和商品配置
+       */
+      vm.addProducts = function () {
+        vm.dataBase.details.push({});
+      };
+      /**
+       * 一上来需要添加一个；
+       */
+      vm.addProducts();
+
+
+      function getDataBase(data){
+        var result = angular.extend({}, data);
+        result.carinfo = JSON.stringify(result.carinfo);
+        result.userinfo = JSON.stringify(result.userinfo);
+        result.waitinstore = result.waitinstore ? 1 : 0;
+        return result;
+      }
+
+      /**
+       * 提交数据到后台
+       */
+      vm.submitBtn = function(){
+        console.log(vm.dataBase);
+        tadeOrder.saveOrder(getDataBase(vm.dataBase)).then(function(results){
+          var result = results.data;
+          if(result.status == 0){
+            vm.selectModel.store = result.data;
+            setUserMotors(vm.selectModel.store[0] || {});
+          }else{
+            cbAlert.error("错误提示", result.data);
+          }
+        });
+      }
+
+
+
+
+
+
+
+
+
     }
 })();
