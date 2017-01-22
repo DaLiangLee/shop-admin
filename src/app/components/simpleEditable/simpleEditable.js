@@ -83,7 +83,6 @@
             'top': parent.position().top
           });
         });
-        console.log(isEmpty);
 
         iElement.on('click', '.confirm', function(){
           if(isEmpty && !$input.val()){

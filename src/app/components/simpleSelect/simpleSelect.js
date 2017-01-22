@@ -241,6 +241,7 @@
             scope.choose.image = item[image];
             scope.choose.once = scope.config.once;
             scope.choose.hide();
+            close();
           }
           scope.selectHandler({
             data: scope.select

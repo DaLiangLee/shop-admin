@@ -173,7 +173,7 @@
       statusShow = statusShow.substring(0, statusShow.length - 1) + "}";
       var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";
       var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
-      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
+      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + ' track by $index">' + node + "</tr></tbody>"
     }
 
     function tFootConfig(scope) {
@@ -332,7 +332,6 @@
         $scope.selectItem = function (item) {
           $scope.selectHandler({item: item});
         }
-
       }],
       link: function (scope, iElement) {
         var iEle = angular.element(iElement);
@@ -342,7 +341,7 @@
         scope.tableState = {
           selectAll: false
         };
-        // 监听columns, paginationInfo
+        // 监听columns
         scope.$watch('columns', function () {
           // 初始化表格无数据显示
           iEle.find('.simple-grid-none-data-wrap').html(noData(scope));
@@ -353,12 +352,15 @@
           $compile(iEle.contents())(scope);
         });
         // 监听store数据变化
-        scope.$watch("store", function (newValue) {
+        scope.$watch("store", function (newValue, oldVlaue, scope) {
+          console.log("store", newValue,oldVlaue,scope);
           if (newValue) {
+            console.log("store", newValue.length);
             scope.showNoneDataInfoTip = newValue.length === 0;
             scope.tableState.selectAll = false;
           }
-        });
+        }, true);
+
       }
     }
   }

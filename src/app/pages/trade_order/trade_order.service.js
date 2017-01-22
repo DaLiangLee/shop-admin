@@ -28,7 +28,7 @@
                       "id": 1,
                       "name": "操作",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" bo-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" bo-if="item.paystatus == 1" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a> <a href="javascript:;" class="state-unread" bo-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" bo-if="item.status == 2 && item.paystatus == 0" ng-click="propsParams.checkout(item)">离店</a>'
+                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" bo-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" bo-if="item.paystatus == 1 && item.status != 4" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a> <a href="javascript:;" class="state-unread" bo-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" bo-if="item.status == 2 && item.paystatus == 0" ng-click="propsParams.checkout(item)">离店</a>'
                     },
                     {
                       "id": 2,
@@ -58,13 +58,13 @@
                       "id": 6,
                       "name": "服务/项目",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.serviceinfo"></span>'
+                      "fieldDirective": '<span class="state-unread text-danger" cb-truncate-text="{{item.serviceinfo}}" text-length="10"></span>'
                     },
                     {
                       "id": 7,
                       "name": "商品/材料",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.productinfo"></span>'
+                      "fieldDirective": '<span class="state-unread text-danger" cb-truncate-text="{{item.productinfo}}" text-length="10"></span>'
                     },
                     {
                       "id": 8,

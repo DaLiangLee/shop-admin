@@ -35,11 +35,6 @@
         }
       };
 
-
-      console.log(computeService.add(10461667.4249, 67256.8));
-      console.log(computeService.subtract(10461667.4249, 67256.8));
-
-
       /**
        * 组件数据交互
        *
@@ -331,13 +326,16 @@
     }
 
     /** @ngInject */
-    function TradeOrderChangeController($state, $log, tadeOrder, userCustomer, cbAlert, configuration) {
+    function TradeOrderChangeController($scope, computeService, tadeOrder, userCustomer, cbAlert, configuration) {
       var vm = this;
-
+      /**
+       * 服务项目列表id 供删除操作使用
+       * @type {number}
+       */
+      var detailsid = 0;
 
       vm.isLoadData = true;
       vm.dataBase = {};
-      vm.dataBase.details = [];
 
       function completedMaxDate(date){
         // 一天的毫秒数
@@ -381,37 +379,37 @@
             "id": 1,
             "name": "服务/项目",
             "cssProperty": "state-column",
-            "fieldDirective": '<div ng-if="!item.itemname" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-service-dialog handler="propsParams.serviceHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemname">1</div>'
+            "fieldDirective": '<div ng-if="!item.itemname" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-service-dialog handler="propsParams.serviceHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemname"><span bo-text="item.itemname"></span></div>'
           },
           {
             "id": 2,
             "name": "商品/材料",
             "cssProperty": "state-column",
-            "fieldDirective": '<div ng-if="!item.itemsku" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemsku">2</div>'
+            "fieldDirective": '<div ng-if="!item.products.length" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.products.length">2</div>'
           },
           {
             "id": 3,
             "name": "工时费",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" ng-bind="item.num"></span>',
+            "fieldDirective": '<span class="state-unread" ng-bind="item.$$num"></span>'
           },
           {
             "id": 4,
             "name": "商品/材料费",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" ng-bind="item.price"></span>',
+            "fieldDirective": '<span class="state-unread" ng-bind="item.$$price"></span>'
           },
           {
             "id": 5,
             "name": "合计",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" ng-bind="item.num + item.price"></span>',
+            "fieldDirective": '<span class="state-unread" ng-bind="item.$$totalprice"></span>'
           },
           {
             "id": 6,
             "name": "施工人员",
             "cssProperty": "state-column",
-            "fieldDirective": '<div simple-select="guid,realname" store="propsParams.employee.store" select="item.servicer" select-handler="propsParams.employee.handler(data, item)"></div>',
+            "fieldDirective": '<div simple-select="guid,realname" store="propsParams.employee.store" select="item.servicer" select-handler="propsParams.employee.handler(data, item)"></div>'
           },
           {
             "id": 7,
@@ -429,7 +427,7 @@
           'selectedScopeProperty': "selectedItems",
           'useBindOnce': true,  // 是否单向绑定
           'addColumnsBarDirective': [
-            '<button class="btn btn-danger" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
+            '<button class="btn btn-danger" simple-grid-remove-item="$$detailsid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
           ]
         }
       };
@@ -441,6 +439,30 @@
       vm.gridModel.config.propsParams = {
         removeItem: function (data) {     // 批量删除
           console.log(data);
+          if(data.status == 0){
+            _.remove(vm.dataBase.details, function (item) {
+              console.log(data.transmit, item.$$detailsid);
+              return _.findIndex(data.transmit, function(key){
+                  return key == item.$$detailsid;
+                }) > -1;
+            });
+            setStatistics();
+          }
+        },
+        serviceHandler: function (data, item) {
+          console.log(data, item);
+          if(data.status == 0){
+            if(angular.isUndefined(item.products)){
+              item = angular.extend({products: []}, item, data.data);
+            }else{
+              item = angular.extend({}, item, data.data);
+            }
+            var index = _.findIndex(vm.dataBase.details, {$$detailsid: item.$$detailsid});
+            vm.dataBase.details[index] = item;
+            console.log(item);
+            setStatistics();
+            setServiceinfo();
+          }
         }
       };
 
@@ -448,6 +470,7 @@
         console.log(data);
         if(data.status == 0){
           vm.dataBase.userinfo = data.data;
+          vm.dataBase.userid = data.data.guid;
           vm.dataBase.usermobile = data.data.mobile;
           vm.dataBase.username = data.data.realname;
           getUserMotors(data.data.mobile);
@@ -456,7 +479,6 @@
 
       vm.selectModel = {
         handler: function (data) {
-          console.log(data);
           setUserMotors(_.find(this.store, {"guid": data}) || {});
         }
       };
@@ -465,6 +487,8 @@
       function setUserMotors(data){
         data.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + data.guid;
         vm.dataBase.carinfo = data;
+        vm.dataBase.carno = data.licence;
+        vm.dataBase.carmodel = data.model;
       }
 
       function getUserMotors(mobile){
@@ -480,6 +504,7 @@
         });
       }
 
+      // 数据汇总
       vm.statistics = {
         serviceCount: 0,
         ssalepriceAll: 0,
@@ -488,12 +513,63 @@
         totalprice: 0
       };
 
+      /**
+       * 设置数据汇总
+       * @param data
+       */
+      function setStatistics(){
+        var result = {
+          serviceCount: 0,
+          ssalepriceAll: 0,
+          productCount: 0,
+          psalepriceAll: 0,
+          totalprice: 0
+        };
+        _.forEach(vm.dataBase.details, function(item){
+          if(angular.isDefined(item.server)){
+            result.serviceCount++;
+          }
+          if(angular.isDefined(item.products)){
+            result.productCount += item.products.length;
+          }
+          if(angular.isDefined(item.num)){
+            result.ssalepriceAll = computeService.add(result.ssalepriceAll, item.num || 0);
+          }
+          if(angular.isDefined(item.price)){
+            result.psalepriceAll = computeService.add(result.psalepriceAll, item.num || 0);
+          }
+        });
+        result.totalprice = computeService.add(result.psalepriceAll || 0, result.ssalepriceAll || 0);
+        vm.statistics = result;
+      }
 
+      /**
+       *
+       */
+      function setServiceinfo() {
+        var results = [];
+        _.forEach(vm.dataBase.details, function(item){
+          results.push(item.$$itemname);
+        });
+        vm.dataBase.serviceinfo = results.join('、');
+        vm.dataBase.details.length > 1 && (vm.dataBase.serviceinfo = '（多项）' + vm.dataBase.serviceinfo)
+      }
+
+      function setProductinfo() {
+        var results = [];
+        vm.dataBase.productinfo = results.join('、');
+      }
+
+      vm.dataBase.details = [];
       /**
        * 添加一项服务和商品配置
        */
       vm.addProducts = function () {
-        vm.dataBase.details.push({});
+        vm.dataBase.details.push({
+          $$detailsid: detailsid++,
+          remark: ""
+        });
+        console.log(vm.dataBase.details);
       };
       /**
        * 一上来需要添加一个；
@@ -524,14 +600,6 @@
           }
         });
       }
-
-
-
-
-
-
-
-
 
     }
 })();

@@ -14,7 +14,7 @@
   function cbPlaceholder($compile, $document) {
     return {
       restrict: 'A',
-      scope: true,
+      scope: false,
       link: function (scope, iElement, iAttrs) {
         var input = $document[0].createElement('input'),
             textarea = $document[0].createElement('textarea'),

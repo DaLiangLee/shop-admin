@@ -176,8 +176,9 @@
         </div>
       </div>
       <hr>
+      {{vm.dataBase.details}}
       <div class="form-group">
-        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.dataBase.details" loading-state="vm.gridModel.loadingState"
+        <div simple-grid columns="vm.gridModel.columns" store="vm.dataBase.details" loading-state="vm.gridModel.loadingState"
              config="vm.gridModel.config"></div>
         <div class="form-group text-center">
           <button class="btn btn-success" style="width: 300px;" ng-click="vm.addProducts()">+ 添加</button>

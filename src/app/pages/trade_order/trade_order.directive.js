@@ -309,22 +309,7 @@
   }
 
   /** @ngInject */
-  function orderServiceDialog(cbDialog, tadeOrder, cbAlert) {
-    /**
-     * 格式化权限数据
-     * @param arr
-     * @returns {Array}
-     */
-    function getRoleList(arr) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        results.push({
-          id: item.guid,
-          label: item.gradename
-        })
-      });
-      return results;
-    }
+  function orderServiceDialog(cbDialog, tadeOrder, cbAlert, computeService) {
     return {
       restrict: "A",
       scope: {
@@ -344,50 +329,6 @@
             }
           };
 
-          userCustomer.grades().then(function (results) {
-            var result = results.data;
-            if (result.status == 0) {
-              childScope.searchModel.config = {
-                keyword: currentParams.keyword,
-                placeholder: "请输入会员名称、手机号、车牌号、品牌",
-                searchDirective: [
-                  {
-                    label: "会员等级",
-                    all: true,
-                    type: "list",
-                    name: "grade",
-                    model: currentParams.grade,
-                    list: getRoleList(result.data)
-                  },
-                  {
-                    label: "创建时间",
-                    name: "Date",
-                    all: true,
-                    custom: true,
-                    type: "date",
-                    start: {
-                      name: "startDate",
-                      model: currentParams.startDate,
-                      config: {
-                        minDate: new Date("2010/01/01 00:00:00")
-                      }
-                    },
-                    end: {
-                      name: "endDate",
-                      model: currentParams.endDate,
-                      config: {
-                        minDate: new Date("1950/01/01 00:00:00")
-                      }
-                    }
-                  }
-                ]
-              }
-            } else {
-              cbAlert.error("错误提示", result.data);
-            }
-          });*/
-
-
           /**
            * 获取会员列表
            */
@@ -404,7 +345,7 @@
                 if (!result.data.length && params.page != 1) {
                   getList(angular.extend({}, currentParams, {page: 1}));
                 }
-                childScope.gridModel.itemList = result.data;
+                childScope.gridModel.itemList = mergedData(result.data);
                 childScope.gridModel.paginationinfo = {
                   page: params.page * 1,
                   pageSize: params.pageSize,
@@ -414,12 +355,72 @@
               } else {
                 cbAlert.error("错误提示", result.data);
               }
-            }).then(function (result) {
-              console.log(result);
-
-
             });
           }
+
+
+          function mergedData(data){
+            console.log(data);
+            var results = [];
+            _.forEach(data, function (item) {
+              if(item.serverSkus.length === 1){
+                results.push(setItem(item, item.serverSkus[0]));
+              }else{
+                _.forEach(item.serverSkus, function (key) {
+                  results.push(setItem(item, key));
+                });
+              }
+            });
+
+
+            function setItem(parent, item){
+              parent.serverSkus[0].attrvalues = JSON.parse(parent.serverSkus[0].attrvalues);
+              var itemname = "",skuvalues = "";
+              if(angular.isDefined(item.manualskuvalues)){
+                itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
+                skuvalues = _.trunc(item.manualskuvalues, {
+                  'length': 10,
+                  'omission': ' 等'
+                });
+              }
+              if(angular.isDefined(item.skuvalues)){
+                itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
+                skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
+                  'length': 10,
+                  'omission': ' 等'
+                });
+              }
+              return {
+                $$skudescription: item.skudescription,
+                $$skuvalues: skuvalues,
+                itemname: itemname,
+                itemid: parent.guid,
+                num: item.servertime,
+                price: item.serverprice,
+                $$numprice: computeService.multiply(item.servertime || 0, item.serverprice || 0),
+                $$itemname: parent.servername,
+                itemsku: JSON.stringify(parent.serverSkus[0])
+              }
+            }
+
+            /*if(angular.isDefined(data.data.serverSkus[0].manualskuvalues)){
+              item.itemname = data.data.servername + " 服务属性 " + data.data.serverSkus[0].manualskuvalues;
+            }
+            item.$$itemname = data.data.servername;
+            item.itemid = data.data.guid;
+            item.itemtype = "0";
+            item.num = data.data.serverSkus[0].servertime;
+            item.price = data.data.serverSkus[0].serverprice;
+            item.$$num = computeService.multiply(item.num || 0, item.price || 0);
+            item.$$totalprice = computeService.add(item.$$num || 0, item.$$price || 0);
+            data.data.serverSkus[0].attrvalues = JSON.parse(data.data.serverSkus[0].attrvalues);
+            item.itemsku = JSON.stringify(data.data.serverSkus[0]);*/
+
+            console.log(results);
+            return results;
+          }
+
+
 
           /**
            * 表格配置
@@ -442,56 +443,50 @@
               {
                 "id": 2,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
+                "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
                 "name": '服务编码/图片',
                 "width": 150
               },
               {
                 "id": 3,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.$$itemname"></span>',
                 "name": '服务名称'
               },
               {
                 "id": 4,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.$$skuvalues"></span>',
                 "name": '属性'
               },
               {
                 "id": 5,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
-                "name": '手机号'
+                "fieldDirective": '<span class="state-unread" bo-text="item.num"></span>',
+                "name": '工时'
               },
               {
                 "id": 6,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
-                "name": '性别'
+                "fieldDirective": '<span class="state-unread" bo-bind="item.price"></span>',
+                "name": '单价（元）'
               },
               {
                 "id": 7,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-                "name": '等级'
+                "fieldDirective": '<span class="state-unread" bo-text="item.$$numprice"></span>',
+                "name": '工时费'
               },
               {
                 "id": 8,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
-                "name": '储值金额'
-              },
-              {
-                "id": 9,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
-                "name": '公司名称'
+                "fieldDirective": '<span class="state-unread" bo-text="item.$$skudescription"></span>',
+                "name": '备注'
               }
             ],
             itemList: [],
             config: {
-
+              'useBindOnce': true  // 是否单向绑定
             },
             loadingState: true,      // 加载数据
             pageChanged: function (data) {    // 监听分页
@@ -564,50 +559,6 @@
               getList(currentParams);
             }
           };
-
-          userCustomer.grades().then(function (results) {
-            var result = results.data;
-            if (result.status == 0) {
-              childScope.searchModel.config = {
-                keyword: currentParams.keyword,
-                placeholder: "请输入会员名称、手机号、车牌号、品牌",
-                searchDirective: [
-                  {
-                    label: "会员等级",
-                    all: true,
-                    type: "list",
-                    name: "grade",
-                    model: currentParams.grade,
-                    list: getRoleList(result.data)
-                  },
-                  {
-                    label: "创建时间",
-                    name: "Date",
-                    all: true,
-                    custom: true,
-                    type: "date",
-                    start: {
-                      name: "startDate",
-                      model: currentParams.startDate,
-                      config: {
-                        minDate: new Date("2010/01/01 00:00:00")
-                      }
-                    },
-                    end: {
-                      name: "endDate",
-                      model: currentParams.endDate,
-                      config: {
-                        minDate: new Date("1950/01/01 00:00:00")
-                      }
-                    }
-                  }
-                ]
-              }
-            } else {
-              cbAlert.error("错误提示", result.data);
-            }
-          });
-
 
           /**
            * 获取会员列表
@@ -712,7 +663,7 @@
             ],
             itemList: [],
             config: {
-
+              'useBindOnce': true  // 是否单向绑定
             },
             loadingState: true,      // 加载数据
             pageChanged: function (data) {    // 监听分页
