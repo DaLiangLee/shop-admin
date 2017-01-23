@@ -391,13 +391,13 @@
             "id": 3,
             "name": "工时费",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" ng-bind="item.$$num"></span>'
+            "fieldDirective": '<span class="state-unread" ng-bind="item.$$numprice"></span>'
           },
           {
             "id": 4,
             "name": "商品/材料费",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" ng-bind="item.$$price"></span>'
+            "fieldDirective": '<span class="state-unread" ng-bind="item.$$productprice"></span>'
           },
           {
             "id": 5,
@@ -457,11 +457,22 @@
             }else{
               item = angular.extend({}, item, data.data);
             }
+            item.$$totalprice = computeService.add(data.productprice || 0, item.$$numprice || 0);
             var index = _.findIndex(vm.dataBase.details, {$$detailsid: item.$$detailsid});
             vm.dataBase.details[index] = item;
             console.log(item);
             setStatistics();
             setServiceinfo();
+          }
+        },
+        productHandler: function (data, item) {
+          if(data.status == 0){
+            item.products = data.data;
+            item.$$productprice = data.productprice;
+            item.$$totalprice = computeService.add(data.productprice, item.$$numprice || 0);
+            console.log(data);
+            setStatistics();
+            setProductinfo();
           }
         }
       };
@@ -483,7 +494,10 @@
         }
       };
 
-
+      /**
+       * 设置提交数据和组装显示车辆数据
+       * @param data
+       */
       function setUserMotors(data){
         data.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + data.guid;
         vm.dataBase.carinfo = data;
@@ -491,6 +505,10 @@
         vm.dataBase.carmodel = data.model;
       }
 
+      /**
+       * 根据会员手机获取该会员的车辆列表
+       * @param mobile
+       */
       function getUserMotors(mobile){
         userCustomer.getMotors({mobile: mobile}).then(function(results){
           console.log('getUserMotors', results);
@@ -526,18 +544,14 @@
           totalprice: 0
         };
         _.forEach(vm.dataBase.details, function(item){
-          if(angular.isDefined(item.server)){
+          if(angular.isDefined(item.itemname)){
             result.serviceCount++;
           }
           if(angular.isDefined(item.products)){
             result.productCount += item.products.length;
           }
-          if(angular.isDefined(item.num)){
-            result.ssalepriceAll = computeService.add(result.ssalepriceAll, item.num || 0);
-          }
-          if(angular.isDefined(item.price)){
-            result.psalepriceAll = computeService.add(result.psalepriceAll, item.num || 0);
-          }
+          result.ssalepriceAll = computeService.add(result.ssalepriceAll, item.$$numprice || 0);
+          result.psalepriceAll = computeService.add(result.psalepriceAll, item.$$productprice || 0);
         });
         result.totalprice = computeService.add(result.psalepriceAll || 0, result.ssalepriceAll || 0);
         vm.statistics = result;
@@ -552,12 +566,16 @@
           results.push(item.$$itemname);
         });
         vm.dataBase.serviceinfo = results.join('、');
-        vm.dataBase.details.length > 1 && (vm.dataBase.serviceinfo = '（多项）' + vm.dataBase.serviceinfo)
+        vm.dataBase.details.length > 1 && (vm.dataBase.serviceinfo = '（多项）' + vm.dataBase.serviceinfo);
       }
 
       function setProductinfo() {
         var results = [];
+        _.forEach(vm.dataBase.details, function(item){
+          results.push(item.itemname);
+        });
         vm.dataBase.productinfo = results.join('、');
+        vm.dataBase.details.length > 1 && (vm.dataBase.productinfo = '（多项）' + vm.dataBase.productinfo);
       }
 
       vm.dataBase.details = [];

@@ -10,9 +10,13 @@
     <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList"
          pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config"
          sort-changed="gridModel.sortChanged(dtat)" page-changed="gridModel.pageChanged(page)"></div>
+    <h6>已选（最多可选5项）</h6>
+    <br>
+    <div ng-if="gridModel2.columns.length" simple-grid columns="gridModel2.columns" store="gridModel2.itemList" loading-state="gridModel2.loadingState" config="gridModel2.config"></div>
   </div>
   <div class="modal-footer">
     <div class="inline-block margin-right">
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="gridModel2.itemList.length < 1 && gridModel2.itemList.length > 6">确定</button>
       <button class="btn btn-default" ng-click="close(false)">取消</button>
     </div>
   </div>

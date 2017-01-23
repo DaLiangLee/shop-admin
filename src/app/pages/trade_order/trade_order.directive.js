@@ -358,7 +358,11 @@
             });
           }
 
-
+          /**
+           * 拼合数据
+           * @param data
+           * @returns {Array}
+           */
           function mergedData(data){
             console.log(data);
             var results = [];
@@ -373,53 +377,47 @@
             });
 
 
-            function setItem(parent, item){
-              parent.serverSkus[0].attrvalues = JSON.parse(parent.serverSkus[0].attrvalues);
-              var itemname = "",skuvalues = "";
-              if(angular.isDefined(item.manualskuvalues)){
-                itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
-                skuvalues = _.trunc(item.manualskuvalues, {
-                  'length': 10,
-                  'omission': ' 等'
-                });
-              }
-              if(angular.isDefined(item.skuvalues)){
-                itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
-                skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
-                  'length': 10,
-                  'omission': ' 等'
-                });
-              }
-              return {
-                $$skudescription: item.skudescription,
-                $$skuvalues: skuvalues,
-                itemname: itemname,
-                itemid: parent.guid,
-                num: item.servertime,
-                price: item.serverprice,
-                $$numprice: computeService.multiply(item.servertime || 0, item.serverprice || 0),
-                $$itemname: parent.servername,
-                itemsku: JSON.stringify(parent.serverSkus[0])
-              }
-            }
-
-            /*if(angular.isDefined(data.data.serverSkus[0].manualskuvalues)){
-              item.itemname = data.data.servername + " 服务属性 " + data.data.serverSkus[0].manualskuvalues;
-            }
-            item.$$itemname = data.data.servername;
-            item.itemid = data.data.guid;
-            item.itemtype = "0";
-            item.num = data.data.serverSkus[0].servertime;
-            item.price = data.data.serverSkus[0].serverprice;
-            item.$$num = computeService.multiply(item.num || 0, item.price || 0);
-            item.$$totalprice = computeService.add(item.$$num || 0, item.$$price || 0);
-            data.data.serverSkus[0].attrvalues = JSON.parse(data.data.serverSkus[0].attrvalues);
-            item.itemsku = JSON.stringify(data.data.serverSkus[0]);*/
 
             console.log(results);
             return results;
           }
 
+          /**
+           * 重组单个数据 方便提交数据
+           * @param parent
+           * @param item
+           * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
+           */
+          function setItem(parent, item){
+            parent.serverSkus = [item];
+            parent.serverSkus[0].attrvalues = JSON.parse(parent.serverSkus[0].attrvalues);
+            var itemname = "",skuvalues = "";
+            if(angular.isDefined(item.manualskuvalues)){
+              itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
+              skuvalues = _.trunc(item.manualskuvalues, {
+                'length': 10,
+                'omission': ' 等'
+              });
+            }
+            if(angular.isDefined(item.skuvalues)){
+              itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
+              skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
+                'length': 10,
+                'omission': ' 等'
+              });
+            }
+            return {
+              $$skudescription: item.skudescription,
+              $$skuvalues: skuvalues,
+              itemname: itemname,
+              itemid: parent.guid,
+              num: item.servertime,
+              price: item.serverprice,
+              $$numprice: computeService.multiply(item.servertime || 0, item.serverprice || 0),
+              $$itemname: parent.servername,
+              itemsku: JSON.stringify(parent)
+            }
+          }
 
 
           /**
@@ -525,22 +523,7 @@
   }
 
   /** @ngInject */
-  function orderProductDialog(cbDialog, tadeOrder, cbAlert) {
-    /**
-     * 格式化权限数据
-     * @param arr
-     * @returns {Array}
-     */
-    function getRoleList(arr) {
-      var results = [];
-      angular.forEach(arr, function (item) {
-        results.push({
-          id: item.guid,
-          label: item.gradename
-        })
-      });
-      return results;
-    }
+  function orderProductDialog(cbDialog, tadeOrder, cbAlert, computeService) {
     return {
       restrict: "A",
       scope: {
@@ -576,7 +559,7 @@
                 if (!result.data.length && params.page != 1) {
                   getList(angular.extend({}, currentParams, {page: 1}));
                 }
-                childScope.gridModel.itemList = result.data;
+                childScope.gridModel.itemList = adapteeData(result.data);
                 childScope.gridModel.paginationinfo = {
                   page: params.page * 1,
                   pageSize: params.pageSize,
@@ -586,12 +569,69 @@
               } else {
                 cbAlert.error("错误提示", result.data);
               }
-            }).then(function (result) {
-              console.log(result);
-
-
             });
           }
+
+          /**
+           * 拼合数据
+           * @param data
+           * @returns {Array}
+           */
+          function adapteeData(data){
+            console.log(data);
+            var results = [];
+            _.forEach(data, function (item) {
+              if(item.items.length === 1){
+                results.push(setItem(item, item.items[0]));
+              }else{
+                _.forEach(item.items, function (key) {
+                  results.push(setItem(item, key));
+                });
+              }
+            });
+            console.log(results);
+            return results;
+          }
+
+          /**
+           * 重组单个数据 方便提交数据
+           * @param parent
+           * @param item
+           * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
+           */
+          function setItem(parent, item){
+            parent.items = [item];
+            parent.items[0].skuvalues = JSON.parse(parent.items[0].skuvalues);
+            var itemname = "",skuvalues = "";
+            if(angular.isDefined(item.manualskuvalues)){
+              itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
+              skuvalues = _.trunc(item.manualskuvalues, {
+                'length': 10,
+                'omission': ' 等'
+              });
+            }
+/*
+            if(angular.isDefined(item.skuvalues)){
+              itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
+              skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
+                'length': 10,
+                'omission': ' 等'
+              });
+            }
+*/
+            return {
+              $$skudescription: item.skudescription,
+              $$skuvalues: skuvalues,
+              itemname: parent.productname,
+              itemid: parent.guid,
+              num: 1,
+              price: item.saleprice,
+              $$itemname: parent.servername,
+              itemsku: JSON.stringify(parent)
+            }
+          }
+
+
 
           /**
            * 表格配置
@@ -614,51 +654,57 @@
               {
                 "id": 2,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
-                "name": '头像',
+                "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+                "name": '服务编码/图片',
                 "width": 150
               },
               {
                 "id": 3,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
-                "name": '昵称'
+                "name": '商品名称'
               },
               {
                 "id": 4,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
-                "name": '姓名'
+                "name": '品牌'
               },
               {
                 "id": 5,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
-                "name": '手机号'
+                "name": '属性'
               },
               {
                 "id": 6,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
-                "name": '性别'
+                "name": '零售单价（元）'
               },
               {
                 "id": 7,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-                "name": '等级'
+                "name": '库存数量'
               },
               {
                 "id": 8,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
-                "name": '储值金额'
+                "name": '条形码'
               },
               {
                 "id": 9,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
-                "name": '公司名称'
+                "name": '零件码'
+              },
+              {
+                "id": 10,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
+                "name": '备注'
               }
             ],
             itemList: [],
@@ -678,12 +724,133 @@
            */
           childScope.gridModel.config.propsParams = {
             selectItem: function (data) {
-              scope.handler({data: {"status":"0", "data": data}});
-              childScope.close();
+              console.log(data);
+              childScope.gridModel2.itemList.push(data);
             }
           };
 
           getList(currentParams);
+
+
+
+          /**
+           * 已选的表格配置
+           *
+           */
+          childScope.gridModel2 = {
+            columns: [
+              {
+                "id": 0,
+                "name": "序号",
+                "none": true
+              },
+              {
+                "id": 1,
+                "cssProperty": "state-column",
+                "fieldDirective": '<button class="btn btn-primary" ng-click="propsParams.removeItem(item)">选择</button>',
+                "name": '操作',
+                "width": 100
+              },
+              {
+                "id": 2,
+                "cssProperty": "state-column",
+                "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+                "name": '服务编码/图片',
+                "width": 150
+              },
+              {
+                "id": 3,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
+                "name": '商品名称'
+              },
+              {
+                "id": 4,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
+                "name": '品牌'
+              },
+              {
+                "id": 5,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
+                "name": '属性'
+              },
+              {
+                "id": 6,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
+                "name": '零售单价（元）'
+              },
+              {
+                "id": 7,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
+                "name": '库存数量'
+              },
+              {
+                "id": 8,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
+                "name": '条形码'
+              },
+              {
+                "id": 9,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
+                "name": '零件码'
+              },
+              {
+                "id": 10,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
+                "name": '备注'
+              }
+            ],
+            itemList: [],
+            config: {
+              'useBindOnce': true  // 是否单向绑定
+            },
+            loadingState: false
+          };
+
+          /**
+           * 组件数据交互
+           *
+           */
+          childScope.gridModel2.config.propsParams = {
+            removeItem: function (data) {
+              _.remove(childScope.gridModel2.itemList, function (item) {
+                return item.guid == data.guid;
+              });
+            }
+          };
+
+          /**
+           * 获取提交数据
+           * @param data
+           */
+          function getData(data){
+            var results = {
+              productprice: 0,
+              itemList: data
+            };
+            _.forEach(data, function (item) {
+              results.productprice = computeService.add(results.productprice, computeService.multiply(item.num || 0, item.price || 0))
+            });
+            return results;
+          };
+
+          /**
+           * 确定
+           */
+          childScope.confirm = function () {
+            var data = getData(childScope.gridModel2.itemList);
+            scope.handler({data: {"status":"0", "data": data.itemList, "productprice": data.productprice}});
+            childScope.close();
+          };
+
+
 
         }
         /**
