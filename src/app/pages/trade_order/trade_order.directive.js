@@ -309,7 +309,7 @@
   }
 
   /** @ngInject */
-  function orderServiceDialog(cbDialog, tadeOrder, cbAlert, computeService) {
+  function orderServiceDialog(cbDialog, tadeOrder, cbAlert, computeService, $timeout) {
     return {
       restrict: "A",
       scope: {
@@ -317,7 +317,7 @@
       },
       link: function(scope, iElement, iAttrs){
         function handler(childScope){
-          var currentParams = angular.extend({}, {page: 1, pageSize: 5});
+          var currentParams = angular.extend({}, {page: 1, pageSize: 3});
           /**
            * 搜索操作
            *
@@ -345,12 +345,11 @@
                 if (!result.data.length && params.page != 1) {
                   getList(angular.extend({}, currentParams, {page: 1}));
                 }
-                childScope.gridModel.itemList = mergedData(result.data);
-                childScope.gridModel.paginationinfo = {
-                  page: params.page * 1,
-                  pageSize: params.pageSize,
-                  total: result.totalCount
-                };
+                // 处理数据
+                childScope.gridModel.itemList = _.map(result.data, setItem);
+                console.log(childScope.gridModel.itemList);
+
+                childScope.gridModel.page++;
                 childScope.gridModel.loadingState = false;
               } else {
                 cbAlert.error("错误提示", result.data);
@@ -359,64 +358,37 @@
           }
 
           /**
-           * 拼合数据
-           * @param data
-           * @returns {Array}
-           */
-          function mergedData(data){
-            console.log(data);
-            var results = [];
-            _.forEach(data, function (item) {
-              if(item.serverSkus.length === 1){
-                results.push(setItem(item, item.serverSkus[0]));
-              }else{
-                _.forEach(item.serverSkus, function (key) {
-                  results.push(setItem(item, key));
-                });
-              }
-            });
-
-
-
-            console.log(results);
-            return results;
-          }
-
-          /**
            * 重组单个数据 方便提交数据
            * @param parent
            * @param item
            * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
            */
-          function setItem(parent, item){
-            parent.serverSkus = [item];
-            parent.serverSkus[0].attrvalues = JSON.parse(parent.serverSkus[0].attrvalues);
+          function setItem(){
+            var item = arguments[0];
+            item = angular.extend({}, item);
             var itemname = "",skuvalues = "";
             if(angular.isDefined(item.manualskuvalues)){
-              itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
+              itemname = item.servername + " 服务属性 " + item.manualskuvalues;
               skuvalues = _.trunc(item.manualskuvalues, {
                 'length': 10,
                 'omission': ' 等'
               });
             }
             if(angular.isDefined(item.skuvalues)){
-              itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
+              item.skuvalues = JSON.parse(item.skuvalues);
+              itemname = item.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
               skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
                 'length': 10,
                 'omission': ' 等'
               });
             }
-            return {
-              $$skudescription: item.skudescription,
-              $$skuvalues: skuvalues,
-              itemname: itemname,
-              itemid: parent.guid,
-              num: item.servertime,
-              price: item.serverprice,
-              $$numprice: computeService.multiply(item.servertime || 0, item.serverprice || 0),
-              $$itemname: parent.servername,
-              itemsku: JSON.stringify(parent)
-            }
+            item['itemname'] = itemname;
+            item['$$skuvalues'] = skuvalues;
+            item['num'] = item.servertime;
+            item['price'] = item.serverprice;
+            item['$$numprice'] = computeService.multiply(item.servertime || 0, item.serverprice || 0);
+            item['$$itemname'] = item.servername;
+            return item;
           }
 
 
@@ -448,7 +420,7 @@
               {
                 "id": 3,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.$$itemname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>',
                 "name": '服务名称'
               },
               {
@@ -460,13 +432,13 @@
               {
                 "id": 5,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.num"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.servertime"></span>',
                 "name": '工时'
               },
               {
                 "id": 6,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-bind="item.price"></span>',
+                "fieldDirective": '<span class="state-unread" bo-bind="item.serverprice"></span>',
                 "name": '单价（元）'
               },
               {
@@ -483,29 +455,19 @@
               }
             ],
             itemList: [],
-            config: {
-              'useBindOnce': true  // 是否单向绑定
-            },
-            loadingState: true,      // 加载数据
-            pageChanged: function (data) {    // 监听分页
-              currentParams = angular.extend({}, currentParams, {page: data});
+            page: 1,
+            nextPage: function () {
+              if (this.busy) return;
+              this.busy = true;
+              currentParams = angular.extend({}, currentParams, {page: this.page});
               getList(currentParams);
-            }
-          };
-
-          /**
-           * 组件数据交互
-           *
-           */
-          childScope.gridModel.config.propsParams = {
+            },
+            loadingState: false,      // 加载数据
             selectItem: function (data) {
               scope.handler({data: {"status":"0", "data": data}});
               childScope.close();
             }
           };
-
-          getList(currentParams);
-
         }
         /**
          * 点击按钮
@@ -868,3 +830,4 @@
     }
   }
 })();
+

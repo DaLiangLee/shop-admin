@@ -8,6 +8,68 @@
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
-         page-changed="vm.gridModel.pageChanged(page)"></div>
+         page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
+    <div ng-if="vm.ordersDetails">
+      <table>
+        <tr>
+          <td>
+            <ul>
+              <li >会员信息</li>
+              <li >车辆信息</li>
+            </ul>
+            <div >
+              <ul>
+                <li>昵称：<span></span></li>
+                <li>姓名：<span></span></li>
+                <li>手机号：<span></span></li>
+                <li>性别：<span></span></li>
+                <li>关注状态：<span></span></li>
+                <li>公司名称：<span></span></li>
+                <li>备注：<span></span></li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li>昵称：<span></span></li>
+                <li>车型：<span></span></li>
+                <li>车身颜色：<span></span></li>
+                <li>VIN码：<span></span></li>
+                <li>发动机号：<span></span></li>
+                <li>前轮胎：<span></span></li>
+                <li>后轮胎：<span></span></li>
+                <li>购车日期：<span></span></li>
+                <li>保养里程：<span></span></li>
+                <li>故障码：<span></span></li>
+                <li>问题描述：<span></span></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <th>序号</th>
+                <th>服务/项目</th>
+                <th>商品/材料</th>
+                <th>工时费</th>
+                <th>商品/材料费</th>
+                <th>合计</th>
+                <th>施工人员</th>
+                <th>备注</th>
+              </tr>
+              <tr ng-repeat="item in vm.ordersDetails.details">
+                <td>{{$index + 1}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>
