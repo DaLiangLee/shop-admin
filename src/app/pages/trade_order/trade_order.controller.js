@@ -284,7 +284,12 @@
           if (!data.data.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
-          total = data.data.count;
+          total = data.data.totalCount;
+          // 如果没有数据就阻止执行，提高性能，防止下面报错
+          if(total === 0){
+            vm.gridModel.loadingState = false;
+            return ;
+          }
           vm.gridModel.itemList = data.data.data;
           setStatistics(_.pick(data.data, ['psalepriceAll', 'productcount', 'servercount', 'ssalepriceAll']));
           _.map(vm.gridModel.itemList, function (item) {
@@ -312,8 +317,6 @@
           };
           vm.gridModel.loadingState = false;
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       });
     }
 

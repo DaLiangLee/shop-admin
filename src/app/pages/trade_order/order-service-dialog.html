@@ -7,12 +7,25 @@
   <div class="modal-body">
     <div cb-access-control="chebian:store:user:customer:search" simple-search config="searchModel.config"
          search-handler="searchModel.handler(data)"></div>
-    <div style="height: 100px; overflow-y: auto;" cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.busy" infinite-scroll-distance="3">
-      <ul>
-        <li ng-repeat="item in gridModel.itemList">
-          <img ng-src="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt="">
-        </li>
-      </ul>
+    <div style="height: 200px; overflow-y: auto; position: relative;">
+      <div cb-thead-fixed></div>
+      <table cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.loadingState">
+        <thead>
+          <tr>
+            <th>
+              q1111
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in gridModel.itemList">
+            <td>
+              {{$index}}
+              <img width="150px" height="100px"  ng-src="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt="">
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="modal-footer">

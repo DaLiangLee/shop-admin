@@ -342,13 +342,19 @@
             tadeOrder.getOrderServer(params).then(function (results) {
               var result = results.data;
               if (result.status == 0) {
-                if (!result.data.length && params.page != 1) {
-                  getList(angular.extend({}, currentParams, {page: 1}));
+                if (!result.data.length) {
+                  childScope.gridModel.loadingState = true;
+                  return ;
                 }
                 // 处理数据
-                childScope.gridModel.itemList = _.map(result.data, setItem);
+                _.forEach(result.data, function(item){
+                  childScope.gridModel.itemList.push(setItem(item));
+                });
                 console.log(childScope.gridModel.itemList);
-
+                if (result.data.length < params.pageSize) {
+                  childScope.gridModel.loadingState = true;
+                  return ;
+                }
                 childScope.gridModel.page++;
                 childScope.gridModel.loadingState = false;
               } else {
@@ -457,8 +463,8 @@
             itemList: [],
             page: 1,
             nextPage: function () {
-              if (this.busy) return;
-              this.busy = true;
+              if (this.loadingState) return;
+              this.loadingState = true;
               currentParams = angular.extend({}, currentParams, {page: this.page});
               getList(currentParams);
             },
