@@ -7,9 +7,44 @@
   <div class="modal-body">
     <div cb-access-control="chebian:store:user:customer:search" simple-search config="searchModel.config"
          search-handler="searchModel.handler(data)"></div>
-    <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList"
-         pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config"
-         sort-changed="gridModel.sortChanged(dtat)" page-changed="gridModel.pageChanged(page)"></div>
+    <div style="height: 200px; overflow-y: auto; position: relative;">
+      <div cb-thead-fixed></div>
+      <table class="table" cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.loadingState">
+        <thead>
+        <tr>
+          <th>序号</th>
+          <th>操作</th>
+          <th>商品编码/图片</th>
+          <th>商品名称</th>
+          <th>品牌</th>
+          <th>属性</th>
+          <th>零售单价（元）</th>
+          <th>库存数量</th>
+          <th>条形码</th>
+          <th>零件码</th>
+          <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in gridModel.itemList" bindonce="">
+          <td>{{$index+1}}</td>
+          <td><button class="btn btn-primary" ng-click="gridModel.selectItem(item)">选择</button></td>
+          <td>
+            <div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>
+          </td>
+          <td><span class="state-unread" bo-text="item.productname"></span></td>
+          <td><span class="state-unread" bo-text="item.cnname"></span></td>
+          <td><span class="state-unread" bo-text="item.servertime"></span></td>
+          <td><span class="state-unread" bo-text="item.serverprice"></span></td>
+          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
+          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
+          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
+          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
+          <td><span class="state-unread" bo-text="item.seodescription"></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
     <h6>已选（最多可选5项）</h6>
     <br>
     <div ng-if="gridModel2.columns.length" simple-grid columns="gridModel2.columns" store="gridModel2.itemList" loading-state="gridModel2.loadingState" config="gridModel2.config"></div>

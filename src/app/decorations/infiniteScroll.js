@@ -47,7 +47,7 @@
           var containerTopOffset = doc.offset().top;
           var elementBottom = (win_top - containerTopOffset) + win_height;
           var remaining = elementBottom - containerBottom;
-          console.log(remaining, elementBottom , containerBottom , win_top, win_height, containerTopOffset);
+          console.log(remaining, elementBottom , containerBottom, containerTopOffset, win_top, win_height);
 
           var shouldScroll = remaining <= (win_height * scrollDistance) + 1;
           if(shouldScroll){

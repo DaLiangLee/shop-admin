@@ -9,20 +9,33 @@
          search-handler="searchModel.handler(data)"></div>
     <div style="height: 200px; overflow-y: auto; position: relative;">
       <div cb-thead-fixed></div>
-      <table cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.loadingState">
+      <table class="table" cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.loadingState">
         <thead>
           <tr>
-            <th>
-              q1111
-            </th>
+            <th>序号</th>
+            <th>操作</th>
+            <th>服务编码/图片</th>
+            <th>服务名称</th>
+            <th>属性</th>
+            <th>工时</th>
+            <th>单价（元）</th>
+            <th>工时费（元）</th>
+            <th>备注</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in gridModel.itemList">
+          <tr ng-repeat="item in gridModel.itemList" bindonce="">
+            <td>{{$index+1}}</td>
+            <td><button class="btn btn-primary" ng-click="gridModel.selectItem(item)">选择</button></td>
             <td>
-              {{$index}}
-              <img width="150px" height="100px"  ng-src="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt="">
+              <div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>
             </td>
+            <td><span class="state-unread" bo-text="item.servername"></span></td>
+            <td><span class="state-unread" bo-text="item.$$skuvalues"></span></td>
+            <td><span class="state-unread" bo-text="item.servertime"></span></td>
+            <td><span class="state-unread" bo-text="item.serverprice"></span></td>
+            <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
+            <td><span class="state-unread" bo-text="item.seodescription"></span></td>
           </tr>
         </tbody>
       </table>

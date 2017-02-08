@@ -353,7 +353,6 @@
         });
         // 监听store数据变化
         scope.$watch("store", function (newValue, oldVlaue, scope) {
-          console.log("store", newValue,oldVlaue,scope);
           if (newValue) {
             console.log("store", newValue.length);
             scope.showNoneDataInfoTip = newValue.length === 0;

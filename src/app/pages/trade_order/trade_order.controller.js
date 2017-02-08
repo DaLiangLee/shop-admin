@@ -341,6 +341,8 @@
         if (results.data.status == 0) {
           console.log(results.data.data);
           vm.ordersDetails = results.data.data;
+          vm.ordersDetails.userinfo = JSON.parse(vm.ordersDetails.userinfo);
+          vm.ordersDetails.carinfo = JSON.parse(vm.ordersDetails.carinfo);
         }
       });
     }
@@ -584,7 +586,7 @@
     function setServiceinfo() {
       var results = [];
       _.forEach(vm.dataBase.details, function (item) {
-        results.push(item.$$itemname);
+        results.push(item.itemname);
       });
       vm.dataBase.serviceinfo = results.join('、');
       vm.dataBase.details.length > 1 && (vm.dataBase.serviceinfo = '（多项）' + vm.dataBase.serviceinfo);
@@ -592,11 +594,16 @@
 
     function setProductinfo() {
       var results = [];
+      var products = [];
       _.forEach(vm.dataBase.details, function (item) {
+        products = products.concat(item.products);
+      });
+      console.log(products);
+      _.forEach(products, function (item) {
         results.push(item.itemname);
       });
       vm.dataBase.productinfo = results.join('、');
-      vm.dataBase.details.length > 1 && (vm.dataBase.productinfo = '（多项）' + vm.dataBase.productinfo);
+      products.length > 1 && (vm.dataBase.productinfo = '（多项）' + vm.dataBase.productinfo);
     }
 
     vm.dataBase.details = [];

@@ -369,8 +369,7 @@
            * @param item
            * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
            */
-          function setItem(){
-            var item = arguments[0];
+          function setItem(item){
             item = angular.extend({}, item);
             var itemname = "",skuvalues = "";
             if(angular.isDefined(item.manualskuvalues)){
@@ -388,12 +387,13 @@
                 'omission': ' 等'
               });
             }
+            item['itemid'] = item.serverid;
+            item['itemskuid'] = item.guid;
             item['itemname'] = itemname;
             item['$$skuvalues'] = skuvalues;
             item['num'] = item.servertime;
             item['price'] = item.serverprice;
             item['$$numprice'] = computeService.multiply(item.servertime || 0, item.serverprice || 0);
-            item['$$itemname'] = item.servername;
             return item;
           }
 
@@ -403,63 +403,6 @@
            *
            */
           childScope.gridModel = {
-            columns: [
-              {
-                "id": 0,
-                "name": "序号",
-                "none": true
-              },
-              {
-                "id": 1,
-                "cssProperty": "state-column",
-                "fieldDirective": '<button class="btn btn-primary" ng-click="propsParams.selectItem(item)">选择</button>',
-                "name": '操作',
-                "width": 100
-              },
-              {
-                "id": 2,
-                "cssProperty": "state-column",
-                "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
-                "name": '服务编码/图片',
-                "width": 150
-              },
-              {
-                "id": 3,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>',
-                "name": '服务名称'
-              },
-              {
-                "id": 4,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.$$skuvalues"></span>',
-                "name": '属性'
-              },
-              {
-                "id": 5,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.servertime"></span>',
-                "name": '工时'
-              },
-              {
-                "id": 6,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-bind="item.serverprice"></span>',
-                "name": '单价（元）'
-              },
-              {
-                "id": 7,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.$$numprice"></span>',
-                "name": '工时费'
-              },
-              {
-                "id": 8,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.$$skudescription"></span>',
-                "name": '备注'
-              }
-            ],
             itemList: [],
             page: 1,
             nextPage: function () {
@@ -470,6 +413,9 @@
             },
             loadingState: false,      // 加载数据
             selectItem: function (data) {
+              data = _.omit(data, ['guid', 'serverid', '$$hashKey', '$$skuvalues', 'servertime', 'serverprice']);
+              console.log('selectItem', data);
+
               scope.handler({data: {"status":"0", "data": data}});
               childScope.close();
             }
@@ -524,15 +470,20 @@
             tadeOrder.getOrderProduct(params).then(function (results) {
               var result = results.data;
               if (result.status == 0) {
-                if (!result.data.length && params.page != 1) {
-                  getList(angular.extend({}, currentParams, {page: 1}));
+                if (!result.data.length) {
+                  childScope.gridModel.loadingState = true;
+                  return ;
                 }
-                childScope.gridModel.itemList = adapteeData(result.data);
-                childScope.gridModel.paginationinfo = {
-                  page: params.page * 1,
-                  pageSize: params.pageSize,
-                  total: result.totalCount
-                };
+                // 处理数据
+                _.forEach(result.data, function(item){
+                  childScope.gridModel.itemList.push(setItem(item));
+                });
+                console.log(childScope.gridModel.itemList);
+                if (result.data.length < params.pageSize) {
+                  childScope.gridModel.loadingState = true;
+                  return ;
+                }
+                childScope.gridModel.page++;
                 childScope.gridModel.loadingState = false;
               } else {
                 cbAlert.error("错误提示", result.data);
@@ -541,156 +492,35 @@
           }
 
           /**
-           * 拼合数据
-           * @param data
-           * @returns {Array}
-           */
-          function adapteeData(data){
-            console.log(data);
-            var results = [];
-            _.forEach(data, function (item) {
-              if(item.items.length === 1){
-                results.push(setItem(item, item.items[0]));
-              }else{
-                _.forEach(item.items, function (key) {
-                  results.push(setItem(item, key));
-                });
-              }
-            });
-            console.log(results);
-            return results;
-          }
-
-          /**
            * 重组单个数据 方便提交数据
            * @param parent
            * @param item
            * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
            */
-          function setItem(parent, item){
-            parent.items = [item];
-            parent.items[0].skuvalues = JSON.parse(parent.items[0].skuvalues);
-            var itemname = "",skuvalues = "";
-            if(angular.isDefined(item.manualskuvalues)){
-              itemname = parent.servername + " 服务属性 " + item.manualskuvalues;
-              skuvalues = _.trunc(item.manualskuvalues, {
-                'length': 10,
-                'omission': ' 等'
-              });
-            }
-/*
-            if(angular.isDefined(item.skuvalues)){
-              itemname = parent.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
-              skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
-                'length': 10,
-                'omission': ' 等'
-              });
-            }
-*/
-            return {
-              $$skudescription: item.skudescription,
-              $$skuvalues: skuvalues,
-              itemname: parent.productname,
-              itemid: parent.guid,
-              num: 1,
-              price: item.saleprice,
-              $$itemname: parent.servername,
-              itemsku: JSON.stringify(parent)
-            }
+          function setItem(item){
+            item = angular.extend({}, item);
+            item['itemid'] = item.productid;
+            item['itemskuid'] = item.guid;
+            item['itemname'] = item.productname;
+            item['num'] = 1;
+            item['price'] = item.saleprice;
+            return item;
           }
-
-
 
           /**
            * 表格配置
            *
            */
           childScope.gridModel = {
-            columns: [
-              {
-                "id": 0,
-                "name": "序号",
-                "none": true
-              },
-              {
-                "id": 1,
-                "cssProperty": "state-column",
-                "fieldDirective": '<button class="btn btn-primary" ng-click="propsParams.selectItem(item)">选择</button>',
-                "name": '操作',
-                "width": 100
-              },
-              {
-                "id": 2,
-                "cssProperty": "state-column",
-                "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
-                "name": '服务编码/图片',
-                "width": 150
-              },
-              {
-                "id": 3,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
-                "name": '商品名称'
-              },
-              {
-                "id": 4,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
-                "name": '品牌'
-              },
-              {
-                "id": 5,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
-                "name": '属性'
-              },
-              {
-                "id": 6,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
-                "name": '零售单价（元）'
-              },
-              {
-                "id": 7,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-                "name": '库存数量'
-              },
-              {
-                "id": 8,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
-                "name": '条形码'
-              },
-              {
-                "id": 9,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
-                "name": '零件码'
-              },
-              {
-                "id": 10,
-                "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
-                "name": '备注'
-              }
-            ],
             itemList: [],
-            config: {
-              'useBindOnce': true  // 是否单向绑定
-            },
-            loadingState: true,      // 加载数据
-            pageChanged: function (data) {    // 监听分页
-              currentParams = angular.extend({}, currentParams, {page: data});
+            page: 1,
+            nextPage: function () {
+              if (this.loadingState) return;
+              this.loadingState = true;
+              currentParams = angular.extend({}, currentParams, {page: this.page});
               getList(currentParams);
-            }
-          };
-
-          /**
-           * 组件数据交互
-           *
-           */
-          childScope.gridModel.config.propsParams = {
+            },
+            loadingState: false,      // 加载数据
             selectItem: function (data) {
               console.log(data);
               childScope.gridModel2.itemList.push(data);
@@ -715,7 +545,7 @@
               {
                 "id": 1,
                 "cssProperty": "state-column",
-                "fieldDirective": '<button class="btn btn-primary" ng-click="propsParams.removeItem(item)">选择</button>',
+                "fieldDirective": '<button class="btn btn-danger" ng-click="propsParams.removeItem(item)">删除</button>',
                 "name": '操作',
                 "width": 100
               },
@@ -729,13 +559,13 @@
               {
                 "id": 3,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.productname"></span>',
                 "name": '商品名称'
               },
               {
                 "id": 4,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.cnname"></span>',
                 "name": '品牌'
               },
               {
@@ -753,8 +583,8 @@
               {
                 "id": 7,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-                "name": '库存数量'
+                "fieldDirective": '<span class="state-unread"><input type="text" ng-model="item.num" class="form-control">件</span>',
+                "name": '数量'
               },
               {
                 "id": 8,
@@ -771,7 +601,7 @@
               {
                 "id": 10,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.skudescription"></span>',
                 "name": '备注'
               }
             ],
@@ -807,7 +637,7 @@
               results.productprice = computeService.add(results.productprice, computeService.multiply(item.num || 0, item.price || 0))
             });
             return results;
-          };
+          }
 
           /**
            * 确定

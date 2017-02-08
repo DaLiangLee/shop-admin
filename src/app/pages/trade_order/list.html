@@ -9,38 +9,49 @@
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
          page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
+    <pre>
+      {{vm.ordersDetails | json}}
+    </pre>
     <div ng-if="vm.ordersDetails">
       <table>
         <tr>
-          <td>
+          <td bindonce="">
             <ul>
               <li >会员信息</li>
               <li >车辆信息</li>
             </ul>
             <div >
               <ul>
-                <li>昵称：<span></span></li>
-                <li>姓名：<span></span></li>
-                <li>手机号：<span></span></li>
-                <li>性别：<span></span></li>
-                <li>关注状态：<span></span></li>
-                <li>公司名称：<span></span></li>
-                <li>备注：<span></span></li>
+                <li>昵称：<span bo-text="vm.ordersDetails.userinfo.nickname"></span></li>
+                <li>姓名：<span bo-text="vm.ordersDetails.userinfo.realname"></span></li>
+                <li>手机号：<span bo-text="vm.ordersDetails.userinfo.mobile"></span></li>
+                <li>性别：<span bo-bind="vm.ordersDetails.userinfo.gender | formatStatusFilter : 'sex'"></span></li>
+                <li>关注状态：<span bo-text="vm.ordersDetails.userinfo.followed | formatStatusFilter : 'followed'"></span></li>
+                <li>公司名称：<span bo-text="vm.ordersDetails.userinfo.companyname"></span></li>
+                <li>备注：<span bo-text="vm.ordersDetails.userinfo.remark"></span></li>
               </ul>
             </div>
             <div>
               <ul>
-                <li>昵称：<span></span></li>
-                <li>车型：<span></span></li>
-                <li>车身颜色：<span></span></li>
-                <li>VIN码：<span></span></li>
-                <li>发动机号：<span></span></li>
-                <li>前轮胎：<span></span></li>
-                <li>后轮胎：<span></span></li>
-                <li>购车日期：<span></span></li>
-                <li>保养里程：<span></span></li>
-                <li>故障码：<span></span></li>
-                <li>问题描述：<span></span></li>
+                <li>
+                  <div class="list">
+                    <div class="logo">
+                      <img bo-src-i="{{vm.ordersDetails.carinfo.logo}}" alt="">
+                      <span class="imeienabled" ng-class="{'imeienabled1': vm.ordersDetails.carinfo.imeienabled == 1, 'imeienabled0': vm.ordersDetails.carinfo.imeienabled == 0, 'imeienabledno': !vm.ordersDetails.carinfo.imei && !vm.ordersDetails.carinfo.imeienabled}"></span>
+                    </div>
+                    <p class="licence" style="height: 30px; line-height: 30px;" ng-bind="vm.ordersDetails.carinfo.licence"></p>
+                  </div>
+                </li>
+                <li>车型：<span bo-text="vm.ordersDetails.carinfo.model"></span></li>
+                <li>VIN码：<span bo-text="vm.ordersDetails.carinfo.vin"></span></li>
+                <li>发动机号：<span bo-text="vm.ordersDetails.carinfo.enginenumber"></span></li>
+                <li>前轮胎：<span bo-text="vm.ordersDetails.carinfo.frontwheel"></span></li>
+                <li>后轮胎：<span bo-text="vm.ordersDetails.carinfo.rearwheel"></span></li>
+                <li>购车日期：<span bo-text="vm.ordersDetails.carinfo.buydate"></span></li>
+                <li>距保养里程：<span bo-text="vm.ordersDetails.carinfo.countdownmiles"></span></li>
+                <li>故障码：<span><span bo-if="!vm.ordersDetails.carinfo.errorcode" class="text-success">正常</span>
+              <a ng-href="vm.dataBase.carinfo.$$errorcode" bo-if="vm.ordersDetails.carinfo.errorcode" bo-text="vm.ordersDetails.carinfo.errorcode" class="text-danger"></a></span></li>
+                <li>问题描述：<span bo-text="vm.ordersDetails.problem"></span></li>
               </ul>
             </div>
           </td>
