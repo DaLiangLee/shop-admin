@@ -28,19 +28,18 @@
         <tbody>
         <tr ng-repeat="item in gridModel.itemList" bindonce="">
           <td>{{$index+1}}</td>
-          <td><button class="btn btn-primary" ng-click="gridModel.selectItem(item)">选择</button></td>
+          <td><button class="btn btn-primary" ng-click="gridModel.selectItem(item)" ng-disabled="gridModel2.itemList.length >= 5">选择</button></td>
           <td>
             <div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>
           </td>
           <td><span class="state-unread" bo-text="item.productname"></span></td>
           <td><span class="state-unread" bo-text="item.cnname"></span></td>
           <td><span class="state-unread" bo-text="item.servertime"></span></td>
-          <td><span class="state-unread" bo-text="item.serverprice"></span></td>
-          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
-          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
-          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
-          <td><span class="state-unread" bo-text="item.$$numprice"></span></td>
-          <td><span class="state-unread" bo-text="item.seodescription"></span></td>
+          <td><span class="state-unread" bo-text="item.price"></span></td>
+          <td><span class="state-unread" bo-text="item.$$stock"></span></td>
+          <td><span class="state-unread" bo-text="item.skucode"></span></td>
+          <td><span class="state-unread" bo-text="item.partscode"></span></td>
+          <td><span class="state-unread" bo-text="item.skudescription"></span></td>
         </tr>
         </tbody>
       </table>

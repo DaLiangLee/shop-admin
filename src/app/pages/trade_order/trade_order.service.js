@@ -137,7 +137,7 @@
                       '<a class="btn btn-primary" cb-access-control="chebian:store:trade:porder:add" ui-sref="trade.order.add()">开单</a> '
                     ],
                     'batchOperationBarDirective': [
-                      '<p bindonce=""><strong>数据汇总:</strong> 服务 <span bo-text="propsParams.statistics.servercount"></span> 项，共 <span bo-text="propsParams.statistics.ssalepriceAll"></span> 元 | 商品 / 配件 <span bo-text="propsParams.statistics.productcount"></span> 项，共 <span bo-text="propsParams.statistics.psalepriceAll"></span> 元 | 合计 <span bo-text="propsParams.statistics.totalprice"></span> 元</p>'
+                      '<p bindonce=""><strong>数据汇总:</strong> 服务 <span bo-text="propsParams.statistics.servercount"></span> 项，共 <span bo-text="propsParams.statistics.ssalepriceAll"></span> 元 | 商品 / 材料 <span bo-text="propsParams.statistics.productcount"></span> 项，共 <span bo-text="propsParams.statistics.psalepriceAll"></span> 元 | 合计 <span bo-text="propsParams.statistics.totalprice"></span> 元</p>'
                     ]
                 }
             },

@@ -186,6 +186,7 @@
           if (results.data.status == 0) {
             recordChild = id;
             results.data.data.serverSkus && angular.forEach(results.data.data.serverSkus, function (item) {
+              item.serverprice = item.serverprice/100;
               if((!item.serverprice && item.serverprice != 0) || (!item.servertime && item.servertime != 0)){
                 item.$$servertimeprice = "";
               }else{
@@ -1059,6 +1060,7 @@
             pskuid: item.pskuid,
             numbers: item.numbers
           });
+          item.serverprice = item.serverprice*100;
         });
         result.clear = vm.items.length === 0 ? 1 : 0;
         result.psku.push({});

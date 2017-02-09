@@ -286,9 +286,9 @@
           }
           total = data.data.totalCount;
           // 如果没有数据就阻止执行，提高性能，防止下面报错
-          if(total === 0){
+          if (total === 0) {
             vm.gridModel.loadingState = false;
-            return ;
+            return;
           }
           vm.gridModel.itemList = data.data.data;
           setStatistics(_.pick(data.data, ['psalepriceAll', 'productcount', 'servercount', 'ssalepriceAll']));
@@ -338,18 +338,50 @@
      */
     function getOrdersDetails(id) {
       tadeOrder.getOrdersDetails({id: id}).then(function (results) {
-        if (results.data.status == 0) {
-          console.log(results.data.data);
-          vm.ordersDetails = results.data.data;
-          vm.ordersDetails.userinfo = JSON.parse(vm.ordersDetails.userinfo);
-          vm.ordersDetails.carinfo = JSON.parse(vm.ordersDetails.carinfo);
+        var result = results.data;
+        if (result.status == 0) {
+          var temp = result.data;
+          temp.userinfo = JSON.parse(temp.userinfo);
+          temp.carinfo = JSON.parse(temp.carinfo);
+          temp.ssaleprice = temp.ssaleprice/100;
+          temp.psaleprice = temp.psaleprice/100;
+          _.forEach(temp.details, function(item1){
+            item1.itemsku = JSON.parse(item1.itemsku);
+            var serverSkus = item1.itemsku.serverSkus[0];
+            if(angular.isDefined(serverSkus.manualskuvalues)){
+              item1.$$itemname = item1.itemsku.servername + " 服务属性 " + serverSkus.manualskuvalues;
+            }
+            if(angular.isDefined(serverSkus.skuvalues)){
+              serverSkus.skuvalues = JSON.parse(serverSkus.skuvalues);
+              item1.$$itemname = item1.servername + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
+            }
+            console.log(item1.itemsku, serverSkus);
+            item1.price = item1.price/100;
+            item1.allprice = item1.allprice/100;
+            var productsPrice = 0;
+            item1.products && _.forEach(item1.products, function(item2){
+              item2.itemsku = JSON.parse(item2.itemsku);
+              item2.price = item2.price/100;
+              item2.allprice = item2.allprice/100;
+              productsPrice = computeService.add(productsPrice || 0, item2.allprice || 0);
+            });
+            item1.$$totalPrice = computeService.add(item1.allprice || 0, productsPrice || 0);
+          });
+          vm.ordersDetailsTab = 0;
+          temp.$$totalPrice = computeService.add(temp.ssaleprice || 0, temp.psaleprice || 0);
+          vm.ordersDetails = temp;
+          temp = null;
+        } else {
+          cbAlert.error("错误提示", result.data);
         }
       });
     }
+
+
   }
 
   /** @ngInject */
-  function TradeOrderChangeController($scope, computeService, tadeOrder, userCustomer, cbAlert, configuration) {
+  function TradeOrderChangeController(memberEmployee, computeService, tadeOrder, userCustomer, cbAlert, configuration) {
     var vm = this;
     /**
      * 服务项目列表id 供删除操作使用
@@ -414,13 +446,13 @@
           "id": 3,
           "name": "工时费",
           "cssProperty": "state-column",
-          "fieldDirective": '<span class="state-unread" ng-bind="item.$$numprice"></span>'
+          "fieldDirective": '<span class="state-unread" ng-if="item.$$allprice != undefined">￥<span ng-bind="item.price"></span> X <span ng-bind="item.num"></span> = <span ng-bind="item.$$allprice"></span></span>'
         },
         {
           "id": 4,
           "name": "商品/材料费",
           "cssProperty": "state-column",
-          "fieldDirective": '<span class="state-unread" ng-bind="item.$$productprice"></span>'
+          "fieldDirective": '<ul ng-if="item.products.length"><li ng-repeat="key in item.products"><span class="state-unread">￥<span ng-bind="key.price"></span> X <span ng-bind="key.num"></span> = <span ng-bind="key.$$allprice"></span></span></li></ul>'
         },
         {
           "id": 5,
@@ -455,11 +487,21 @@
       }
     };
 
+
+
+
+
     /**
      * 组件数据交互
      *
      */
     vm.gridModel.config.propsParams = {
+      employee: {
+        handler: function(data, item){
+          console.log(this,data, item);
+          item.servicername = _.find(this.store, {"guid": data}).realname;
+        }
+      },
       removeItem: function (data) {     // 批量删除
         console.log(data);
         if (data.status == 0) {
@@ -474,13 +516,14 @@
       },
       serviceHandler: function (data, item) {
         console.log(data, item);
+
         if (data.status == 0) {
           if (angular.isUndefined(item.products)) {
             item = angular.extend({products: []}, item, data.data);
           } else {
             item = angular.extend({}, item, data.data);
           }
-          item.$$totalprice = computeService.add(data.productprice || 0, item.$$numprice || 0);
+          item.$$totalprice = computeService.add(data.productprice || 0, item.$$allprice || 0);
           var index = _.findIndex(vm.dataBase.details, {$$detailsid: item.$$detailsid});
           vm.dataBase.details[index] = item;
           console.log(item);
@@ -499,6 +542,14 @@
         }
       }
     };
+
+    memberEmployee.list().then(function(results){
+      if(results.data.status == 0){
+        vm.gridModel.config.propsParams.employee.store = results.data.data;
+      }else{
+        cbAlert.error("错误提示", results.data.data);
+      }
+    });
 
     vm.userHandler = function (data) {
       console.log(data);
@@ -534,7 +585,6 @@
      */
     function getUserMotors(mobile) {
       userCustomer.getMotors({mobile: mobile}).then(function (results) {
-        console.log('getUserMotors', results);
         var result = results.data;
         if (result.status == 0) {
           vm.selectModel.store = result.data;
@@ -625,12 +675,16 @@
 
     function getDataBase(data) {
       var result = angular.extend({}, data);
-      _.omit(result.carinfo, ["$$hashKey", "$$baoyang"]);
+      result.carinfo = _.omit(result.carinfo, ["$$hashKey", "$$baoyang"]);
       console.log(result.carinfo);
-
+      result.carinfo.licence = _.isUndefined(result.carinfo.licence) ? "" : result.carinfo.licence;
       result.carinfo = JSON.stringify(result.carinfo);
       result.userinfo = JSON.stringify(result.userinfo);
       result.waitinstore = result.waitinstore ? 1 : 0;
+      _.remove(result.details, function(item){
+        return _.isUndefined(item.itemid) || _.isUndefined(item.itemskuid);
+      });
+      result.coveross = vm.dataBase.details[0].mainphoto;
       return result;
     }
 

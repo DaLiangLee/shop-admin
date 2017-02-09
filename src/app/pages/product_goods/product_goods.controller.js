@@ -258,6 +258,7 @@
           results.data.data.items && angular.forEach(results.data.data.items, function (item) {
             item.$$stockShow = item.stock === -9999 ? "无限" : item.stock;
             item.$$stock = item.stock === -9999 ? "" : item.stock;
+            item.saleprice = item.saleprice/100;
           });
           vm.items = results.data.data;
         } else {
@@ -536,6 +537,7 @@
       angular.forEach(result.items, function (item) {
         item.skuvalues = JSON.stringify(item.skuvalues);
         item.stock = !item.$$stock && item.$$stock != 0 ? -9999 : item.$$stock;
+        item.saleprice = item.saleprice*100;
       });
       /**
        * 防止后台数据出bug end

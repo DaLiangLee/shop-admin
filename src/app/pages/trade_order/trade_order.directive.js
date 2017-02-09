@@ -392,8 +392,8 @@
             item['itemname'] = itemname;
             item['$$skuvalues'] = skuvalues;
             item['num'] = item.servertime;
-            item['price'] = item.serverprice;
-            item['$$numprice'] = computeService.multiply(item.servertime || 0, item.serverprice || 0);
+            item['price'] = item.serverprice/100;
+            item['$$allprice'] = computeService.multiply(item.num || 0, item.price || 0);
             return item;
           }
 
@@ -503,7 +503,8 @@
             item['itemskuid'] = item.guid;
             item['itemname'] = item.productname;
             item['num'] = 1;
-            item['price'] = item.saleprice;
+            item['$$stock'] = item.stock <= -9999 ? "无限" : item.stock;
+            item['price'] = item.salepriceText/100;
             return item;
           }
 
@@ -634,7 +635,8 @@
               itemList: data
             };
             _.forEach(data, function (item) {
-              results.productprice = computeService.add(results.productprice, computeService.multiply(item.num || 0, item.price || 0))
+              item.$$allprice = computeService.multiply(item.num || 0, item.price || 0);
+              results.productprice = computeService.add(results.productprice || 0, item.$$allprice || 0)
             });
             return results;
           }
