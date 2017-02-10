@@ -122,7 +122,7 @@
               </thead>
               <tbody>
               <tr ng-repeat="item in vm.ordersDetails.details">
-                <td>{{$index + 1}}</td>
+                <td><span ng-bind="$index + 1"></span></td>
                 <td>{{item.$$itemname}}</td>
                 <td>
                   <ul class="list-unstyled">
@@ -151,7 +151,7 @@
               <tfoot>
                 <tr>
                   <td colspan="8">
-                    <strong>数据汇总：</strong> 服务/项目 <span>{{vm.ordersDetails.servercount}}</span> 项，共 <span>{{vm.ordersDetails.ssaleprice}}</span> 元 | 商品/材料 <span>{{vm.ordersDetails.productcount}}</span> 项，共 <span>{{vm.ordersDetails.psaleprice}}</span> 元 | <strong>合计 <span>{{vm.ordersDetails.$$totalPrice}}</span> 元</strong>
+                    <strong>数据汇总：</strong> 服务/项目 <span>{{vm.ordersDetails.servercount}}</span> 项，共 <span>{{vm.ordersDetails.ssaleprice}}</span> 元 | 商品/材料 <span>{{vm.ordersDetails.productcount}}</span> 项，共 <span>{{vm.ordersDetails.psaleprice}}</span> 元 | <strong>合计 <span>{{vm.ordersDetails.payprice}}</span> 元</strong>
                   </td>
                 </tr>
               </tfoot>

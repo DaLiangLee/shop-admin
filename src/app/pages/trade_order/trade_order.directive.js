@@ -9,7 +9,8 @@
     .directive('oraderReceivedDialog', oraderReceivedDialog)
     .directive('orderUserDialog', orderUserDialog)
     .directive('orderServiceDialog', orderServiceDialog)
-    .directive('orderProductDialog', orderProductDialog);
+    .directive('orderProductDialog', orderProductDialog)
+    .directive('oraderOffersDialog', oraderOffersDialog);
 
   /** @ngInject */
   function oraderReceivedDialog(cbDialog, tadeOrder, cbAlert) {
@@ -664,6 +665,58 @@
             windowClass: "viewFramework-order-product-dialog"
           });
         })
+      }
+    }
+  }
+
+
+  /** @ngInject */
+  function oraderOffersDialog(cbDialog, tadeOrder, cbAlert, computeService) {
+    return {
+      restrict: "A",
+      scope: {
+        isOpen: "=",
+        offers: "=",
+        offersHandler: "&"
+      },
+      link: function(scope, iElement, iAttrs){
+        function handler(childScope){
+          console.log(scope.offers);
+
+          childScope.item = {
+            total: scope.offers,
+            preferential: 0,
+            paid: function () {
+              return computeService.subtract(this.total || 0, this.preferential || 0);
+            }
+          };
+
+          /**
+           * 拦截
+           */
+
+          /**
+           * 确定
+           */
+          childScope.confirm = function () {
+            scope.offersHandler({data: {"status":"0", "price": childScope.item.preferential || 0, "next": true}});
+            childScope.close();
+          };
+          childScope.closed = function () {
+            scope.offersHandler({data: {"status":"0", "price": 0, "next": false}});
+            childScope.close();
+          }
+        }
+
+        scope.$watch('isOpen', function (value) {
+          if(value){
+            scope.offersHandler({data: {"status":"-1", "data":"打开成功"}});
+            cbDialog.showDialogByUrl("app/pages/trade_order/orader-offers-dialog.html", handler, {
+              windowClass: "viewFramework-orader-offers-dialog"
+            });
+          }
+        });
+
       }
     }
   }

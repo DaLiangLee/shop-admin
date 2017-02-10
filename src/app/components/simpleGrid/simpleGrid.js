@@ -241,6 +241,24 @@
       addColumnsBarDirective: [],         //新增按钮指令       每项都是一个操作指令
       batchOperationBarDirective: []      //批量操作栏指令        每项都是一个操作指令
     };
+
+    /**
+     * 检测是否全选
+     * @param scope
+     * @returns {{selectAll: boolean, results: Array}}
+     */
+    function getTableStateAll(scope) {
+      var selected = scope.config.selectedProperty,
+        store = scope.store,
+        results = _.filter(store, function(item){
+          return item[selected];
+        });
+      return {
+        selectAll: results.length === store.length,
+        results: results
+      }
+    }
+
     return {
       restrict: "A",
       scope: {
@@ -308,13 +326,10 @@
 
         // 单个选中
         $scope.changeSelection = function () {
-          var selected = $scope.config.selectedProperty,
-            results = [];
-          angular.forEach($scope.store, function (value) {
-            value[selected] && results.push(value);
-          });
-          $scope.tableState.selectAll = results.length === $scope.store.length;
-          $scope.selectionChangeHandler(results);
+          var tableState = getTableStateAll($scope);
+          $scope.tableState.selectAll = tableState.selectAll;
+          console.log($scope.tableState.selectAll);
+          $scope.selectionChangeHandler(tableState.results);
         };
 
         // 单选和全选触发事件
@@ -354,9 +369,9 @@
         // 监听store数据变化
         scope.$watch("store", function (newValue, oldVlaue, scope) {
           if (newValue) {
-            console.log("store", newValue.length);
             scope.showNoneDataInfoTip = newValue.length === 0;
-            scope.tableState.selectAll = false;
+            var tableState = getTableStateAll(scope);
+            scope.tableState.selectAll = tableState.selectAll;
           }
         }, true);
 

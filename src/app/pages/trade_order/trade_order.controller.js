@@ -343,8 +343,9 @@
           var temp = result.data;
           temp.userinfo = JSON.parse(temp.userinfo);
           temp.carinfo = JSON.parse(temp.carinfo);
-          temp.ssaleprice = temp.ssaleprice/100;
-          temp.psaleprice = temp.psaleprice/100;
+          temp.ssaleprice = computeService.divide(temp.ssaleprice || 0, 100);
+          temp.psaleprice = computeService.divide(temp.psaleprice || 0, 100);
+          temp.payprice = computeService.divide(temp.payprice || 0, 100);
           _.forEach(temp.details, function(item1){
             item1.itemsku = JSON.parse(item1.itemsku);
             var serverSkus = item1.itemsku.serverSkus[0];
@@ -356,19 +357,18 @@
               item1.$$itemname = item1.servername + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
             }
             console.log(item1.itemsku, serverSkus);
-            item1.price = item1.price/100;
-            item1.allprice = item1.allprice/100;
+            item1.price = computeService.divide(item1.price || 0, 100);
+            item1.allprice = computeService.divide(item1.allprice || 0, 100);
             var productsPrice = 0;
             item1.products && _.forEach(item1.products, function(item2){
               item2.itemsku = JSON.parse(item2.itemsku);
-              item2.price = item2.price/100;
-              item2.allprice = item2.allprice/100;
+              item2.price = computeService.divide(item2.price || 0, 100);
+              item2.allprice = computeService.divide(item2.allprice || 0, 100);
               productsPrice = computeService.add(productsPrice || 0, item2.allprice || 0);
             });
             item1.$$totalPrice = computeService.add(item1.allprice || 0, productsPrice || 0);
           });
           vm.ordersDetailsTab = 0;
-          temp.$$totalPrice = computeService.add(temp.ssaleprice || 0, temp.psaleprice || 0);
           vm.ordersDetails = temp;
           temp = null;
         } else {
@@ -381,7 +381,7 @@
   }
 
   /** @ngInject */
-  function TradeOrderChangeController(memberEmployee, computeService, tadeOrder, userCustomer, cbAlert, configuration) {
+  function TradeOrderChangeController($state, memberEmployee, computeService, tadeOrder, userCustomer, cbAlert, configuration) {
     var vm = this;
     /**
      * 服务项目列表id 供删除操作使用
@@ -535,7 +535,7 @@
         if (data.status == 0) {
           item.products = data.data;
           item.$$productprice = data.productprice;
-          item.$$totalprice = computeService.add(data.productprice, item.$$numprice || 0);
+          item.$$totalprice = computeService.add(data.productprice, item.$$allprice || 0);
           console.log(data);
           setStatistics();
           setProductinfo();
@@ -623,9 +623,11 @@
         if (angular.isDefined(item.products)) {
           result.productCount += item.products.length;
         }
-        result.ssalepriceAll = computeService.add(result.ssalepriceAll, item.$$numprice || 0);
+        result.ssalepriceAll = computeService.add(result.ssalepriceAll, item.$$allprice || 0);
         result.psalepriceAll = computeService.add(result.psalepriceAll, item.$$productprice || 0);
       });
+      console.log(result.psalepriceAll);
+
       result.totalprice = computeService.add(result.psalepriceAll || 0, result.ssalepriceAll || 0);
       vm.statistics = result;
     }
@@ -676,7 +678,6 @@
     function getDataBase(data) {
       var result = angular.extend({}, data);
       result.carinfo = _.omit(result.carinfo, ["$$hashKey", "$$baoyang"]);
-      console.log(result.carinfo);
       result.carinfo.licence = _.isUndefined(result.carinfo.licence) ? "" : result.carinfo.licence;
       result.carinfo = JSON.stringify(result.carinfo);
       result.userinfo = JSON.stringify(result.userinfo);
@@ -688,21 +689,75 @@
       return result;
     }
 
+
+    /**
+     * 拦截提交
+     * 提交的需要参数全部符合才能为false
+     */
+    function interception() {
+      var result = false;
+      if (!vm.dataBase.carinfo) {
+        cbAlert.alert("至少需要选一个服务用户");
+        return true;
+      }
+      if (!vm.dataBase.userinfo) {
+        cbAlert.alert("至少需要选一个服务车辆信息");
+        return true;
+      }
+      if (!vm.dataBase.details.length) {
+        cbAlert.alert("至少需要添加一个服务/项目");
+        return true;
+      }
+      var isNotDetails = _.filter(vm.dataBase.details, function (item) {
+        return _.isUndefined(item.itemid) || _.isUndefined(item.itemskuid);
+      });
+      if (isNotDetails.length) {
+        cbAlert.alert("至少需要选一个服务/项目");
+        return true;
+      }
+      return result;
+    }
+
+    /**
+     * 检查是否可以设置优惠金额
+     */
+    vm.getOffers = function () {
+      if(interception()){
+        return ;
+      }
+      vm.submitDisabled = true;
+    };
+
+
     /**
      * 提交数据到后台
      */
-    vm.submitBtn = function () {
-      console.log(vm.dataBase);
-      console.log(JSON.stringify(getDataBase(vm.dataBase)));
-      tadeOrder.saveOrder(getDataBase(vm.dataBase)).then(function (results) {
-        var result = results.data;
-        if (result.status == 0) {
-          vm.selectModel.store = result.data;
-          setUserMotors(vm.selectModel.store[0] || {});
-        } else {
-          cbAlert.error("错误提示", result.data);
+    vm.submitBtn = function (data) {
+      console.log('submitBtn', data);
+      if(data.status == 0){
+
+        if(!data.next){
+          vm.submitDisabled = false;
+          return ;
         }
-      });
+        vm.dataBase.preferentialprice = data.price*100;
+
+        tadeOrder.saveOrder(getDataBase(vm.dataBase)).then(function (results) {
+          var result = results.data;
+          if (result.status == 0) {
+            goto();
+          } else {
+            cbAlert.error("错误提示", result.data);
+          }
+        });
+      }
+    };
+
+    /**
+     * 提交成功到跳转到订单页面
+     */
+    function goto() {
+      $state.go('trade.order.list', {'page': 1});
     }
 
   }

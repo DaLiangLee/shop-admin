@@ -68,8 +68,8 @@
          */
         function handler(childScope){
           childScope.config = {
-            title: "删除操作提示",
-            message: iAttrs.message || "删除此项后，会影响其他账号权限，您确定要删除吗？",
+            title: "操作提示",
+            message: iAttrs.message || "您确定要删除吗？",
             messageClass: "text-danger",
             confirmText: "确定",
             closeText: "取消"
