@@ -31,7 +31,7 @@
     vm.isDisabled = function(){
       var isDisabled = 0;
       angular.forEach(vm.items, function (item) {
-        if(item.$$samegradename || item.$$sametradeamount ||　item.$$samegradediscount){
+        if(item.$$samegradename || item.$$sametradeamount || item.$$samegradediscount){
           isDisabled++;
         }
       });

@@ -381,7 +381,7 @@
               });
             }
             if(angular.isDefined(item.skuvalues)){
-              item.skuvalues = JSON.parse(item.skuvalues);
+              item.skuvalues = angular.fromJson(item.skuvalues);
               itemname = item.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
               skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
                 'length': 10,
@@ -500,6 +500,8 @@
            */
           function setItem(item){
             item = angular.extend({}, item);
+            item.skuvalues = angular.fromJson(item.skuvalues);
+            item['skuname'] = item.skuvalues[0].skuname + item.skuvalues[0].items[0].skuvalue;
             item['itemid'] = item.productid;
             item['itemskuid'] = item.guid;
             item['itemname'] = item.productname;
@@ -552,6 +554,13 @@
                 "width": 100
               },
               {
+                "id": 1,
+                "cssProperty": "state-column",
+                "fieldDirective": '<span class="state-unread" bo-text="item.pcatename1"></span>',
+                "name": '商品类目',
+                "width": 100
+              },
+              {
                 "id": 2,
                 "cssProperty": "state-column",
                 "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
@@ -573,13 +582,13 @@
               {
                 "id": 5,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.skuname"></span>',
                 "name": '属性'
               },
               {
                 "id": 6,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
+                "fieldDirective": '<span class="state-unread" bo-bind="item.price"></span>',
                 "name": '零售单价（元）'
               },
               {
@@ -721,4 +730,3 @@
     }
   }
 })();
-

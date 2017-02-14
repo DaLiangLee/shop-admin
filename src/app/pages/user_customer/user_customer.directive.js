@@ -25,7 +25,6 @@
            * 确定
            */
           childScope.confirm = function () {
-            console.log(childScope.select);
             scope.itemHandler({data: {"status":"0", "type": type, "data": childScope.select}});
             childScope.close();
           };

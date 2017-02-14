@@ -29,7 +29,7 @@
       }
       var result = "";
       if(angular.isString(name)){
-        name = JSON.parse(name);
+        name = angular.fromJson(name);
       }
       if(angular.isArray(name)){
         angular.forEach(name, function (item) {

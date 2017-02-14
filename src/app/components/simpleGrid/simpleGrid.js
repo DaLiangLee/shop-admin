@@ -244,7 +244,8 @@
 
     /**
      * 检测是否全选
-     * @param scope
+
+    * @param scope
      * @returns {{selectAll: boolean, results: Array}}
      */
     function getTableStateAll(scope) {

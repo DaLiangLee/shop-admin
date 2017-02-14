@@ -271,6 +271,10 @@
                     "checkstoreuseraccount": {
                       "url": "/trade/order/checkstoreuseraccount",
                       "type": "POST"
+                    },
+                    "excelorders": {
+                      "url": "/trade/order/excelorders",
+                      "type": "GET"
                     }
                   },
                   "comment": {

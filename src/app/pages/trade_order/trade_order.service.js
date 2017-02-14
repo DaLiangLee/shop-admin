@@ -28,7 +28,7 @@
                       "id": 1,
                       "name": "操作",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" bo-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" bo-if="item.paystatus == 1 && item.status != 4" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a> <a href="javascript:;" class="state-unread" bo-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" bo-if="item.status == 2 && item.paystatus == 0" ng-click="propsParams.checkout(item)">离店</a>'
+                      "fieldDirective": '<a href="javascript:;" class="state-unread text-danger" ng-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a> <a href="javascript:;" class="state-unread" ng-if="item.paystatus == 1 && item.status != 4" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a> <a href="javascript:;" class="state-unread" ng-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a>  <a href="javascript:;" class="state-unread" ng-if="item.status == 2 && item.paystatus == 0" ng-click="propsParams.checkout(item)">离店</a>'
                     },
                     {
                       "id": 2,
@@ -46,13 +46,13 @@
                       "id": 4,
                       "name": "订单状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.status | formatStatusFilter : \'server_order_status\'"></span>'
+                      "fieldDirective": '<span class="state-unread" ng-bind="item.status | formatStatusFilter : \'server_order_status\'"></span>'
                     },
                     {
                       "id": 5,
                       "name": "付款状态",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><i bo-title="item.paystatus | formatStatusFilter : \'server_order_paystatus\'">付款状态</i></span>'
+                      "fieldDirective": '<span class="state-unread"><span ng-bind="item.paystatus | formatStatusFilter : \'server_order_paystatus\'"></span></span>'
                     },
                     {
                       "id": 6,
@@ -94,13 +94,13 @@
                       "id": 12,
                       "name": "实收金额(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.actualprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" ng-bind="item.actualprice | moneyFilter"></span>'
                     },
                     {
                       "id": 13,
                       "name": "支付方式",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.paytype | formatStatusFilter : \'server_order_paytype\'"></span>'
+                      "fieldDirective": '<span class="state-unread" ng-bind="item.paytype | formatStatusFilter : \'server_order_paytype\'"></span>'
                     },
                     {
                       "id": 14,
@@ -129,6 +129,7 @@
                     'selectedProperty': "selected",  // 数据列表项复选框
                     'selectedScopeProperty': "selectedItems",
                     'useBindOnce': true,  // 是否单向绑定
+                    'exportDataSupport': true, // 导出
                     "paginationInfo": {   // 分页配置信息
                         maxSize: 5,
                         showPageGoto: true

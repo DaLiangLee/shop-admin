@@ -23,7 +23,7 @@
       columns: angular.copy(tadeOrderConfig.DEFAULT_GRID.columns),
       requestParams: {
         params: currentParams,
-        request: "trade,porder,excelProduct",
+        request: "trade,order,excelorders",
         permission: "chebian:store:trade:porder:export"
       },
       itemList: [],
@@ -146,21 +146,18 @@
     ];
 
     /**
-     * 获取评价时间的model
-     * @param list
-     * @param current
-     * @returns {number}
+     * 根据start和end获取列表的model
+     * @param list        列表
+     * @param start       起始
+     * @param end         结束
+     * @returns {number}  如果找不到返回-1,找到返回正确的索引
      */
-    function getCreatetime(list, current) {
-      var start = current.createtime0,
-        end = current.createtime1,
-        items;
-      if (angular.isUndefined(end)) {
-        end = start;
-      }
-      if (angular.isUndefined(start) || angular.isUndefined(end)) {
+    function getListIndex(list, start, end) {
+      if (angular.isUndefined(start) && angular.isUndefined(end)) {
         return -1;
       }
+      var items;
+      end = end || start;
       items = _.filter(list, function (item) {
         return item.start == start && item.end == end;
       });
@@ -229,7 +226,7 @@
             region: true,
             type: "date",
             name: "createtime",
-            model: getCreatetime(createtime, currentParams),
+            model: getListIndex(createtime, currentParams.createtime0, currentParams.createtime1),
             list: createtime,
             start: {
               name: "createtime0",
@@ -288,8 +285,11 @@
           // 如果没有数据就阻止执行，提高性能，防止下面报错
           if (total === 0) {
             vm.gridModel.loadingState = false;
+            vm.gridModel.itemList = [];
+            vm.ordersDetails = undefined;
             return;
           }
+
           vm.gridModel.itemList = data.data.data;
           setStatistics(_.pick(data.data, ['psalepriceAll', 'productcount', 'servercount', 'ssalepriceAll']));
           _.map(vm.gridModel.itemList, function (item) {
@@ -297,19 +297,11 @@
             item.ssaleprice = computeService.divide(item.ssaleprice || 0, 100);
             item.psaleprice = computeService.divide(item.psaleprice || 0, 100);
             item.preferentialprice = computeService.divide(item.preferentialprice || 0, 100);
+            console.log(item.actualprice);
             item.actualprice = computeService.divide(item.actualprice || 0, 100);
+            console.log(item.actualprice);
           });
           vm.gridModel.itemList[0] && getOrdersDetails(vm.gridModel.itemList[0].guid);
-          /*angular.forEach(data.data.data, function (item) {
-           /!**
-           * 这段代码处理skuvalues值的问题，请勿修改 start
-           *!/
-           item.skuvalues = $window.eval(item.skuvalues);
-           /!**
-           * 这段代码处理skuvalues值的问题，请勿修改 end
-           *!/
-           vm.gridModel.itemList.push(item);
-           });*/
           vm.gridModel.paginationinfo = {
             page: params.page * 1,
             pageSize: params.pageSize,
@@ -440,7 +432,7 @@
           "id": 2,
           "name": "商品/材料",
           "cssProperty": "state-column",
-          "fieldDirective": '<div ng-if="!item.products.length" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.products.length">2</div>'
+          "fieldDirective": '<div ng-if="!item.products.length" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.products.length"><ul class="list-unstyled"><li ng-repeat="key in item.products"><span>{{key.pcatename1}}</span> <span>{{key.productname}}</span> <span>{{key.cnname}}</span></li></ul></div>'
         },
         {
           "id": 3,

@@ -90,9 +90,6 @@
         $scope.search = {};
         $scope.search.directive = [];
 
-
-
-
         // 监听配置
         var watchConfig = $scope.$watch('config', function (value) {
           if(value){
@@ -101,7 +98,6 @@
             // 如果有搜索
             if(angular.isDefined(searchConfig.keyword)){
               setKeyword(searchConfig);
-              $scope.isShowmore = false;
               $scope.isKeywordShow = _this.keyword.isShow;
               _this.keyword.isMore = $scope.search.directive.length > 0;
             }
@@ -124,7 +120,7 @@
             item.custom && (item.name = "$$" + item.name);
             // 设置所有项数据
             disabledMap[item.name] = false;
-            if(angular.isUndefined(item.model)){
+            if(angular.isUndefined(item.model) || item.model == -1){
               _this.searchParams[item.name] = -1;
             }else{
               _this.searchParams[item.name] = item.model;
@@ -163,6 +159,8 @@
             // 添加到筛选列表
             $scope.search.directive.push(item);
           });
+          console.log(isModel);
+
           $scope.isShowmore = isModel > 0;
         }
 

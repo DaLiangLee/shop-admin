@@ -23,7 +23,6 @@
      * 表格配置
      *
      */
-    var usergrades = [];
     vm.gridModel = {
       requestParams: {
         params: currentParams,
@@ -68,8 +67,6 @@
         } else {
           cbAlert.error("错误提示", result.rtnInfo);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       }).then(function(result){
         recordChild = guid;
         vm.gridModel2.itemList = result;
@@ -87,7 +84,6 @@
       if (!params.page) {
         return;
       }
-      console.log(params);
       userCustomer.motorList(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
@@ -98,7 +94,6 @@
           _.forEach(result.data, function(item){
             items.push(item);
           });
-          usergrades = result.usergrades;
           return {
             items: items,
             totalCount: result.totalCount
@@ -108,7 +103,7 @@
         }
       }).then(function(result){
         _.map(result.items, function (item) {
-          item.$$baoyang = configuration.getAPIConfig() +　'/users/motors/baoyang/' + item.guid;
+          item.$$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
         });
         vm.gridModel.paginationinfo = {
           page: params.page * 1,
@@ -121,7 +116,6 @@
           vm.gridModel2.itemList = [];
           vm.gridModel2.loadingState = false;
         }
-        console.log(vm.gridModel.itemList);
         vm.gridModel.itemList = result.items;
         vm.gridModel.loadingState = false;
       });
