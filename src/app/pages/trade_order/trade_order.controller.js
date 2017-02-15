@@ -297,9 +297,8 @@
             item.ssaleprice = computeService.divide(item.ssaleprice || 0, 100);
             item.psaleprice = computeService.divide(item.psaleprice || 0, 100);
             item.preferentialprice = computeService.divide(item.preferentialprice || 0, 100);
-            console.log(item.actualprice);
             item.actualprice = computeService.divide(item.actualprice || 0, 100);
-            console.log(item.actualprice);
+            item.arrearsprice = computeService.divide(item.arrearsprice || 0, 100);
           });
           vm.gridModel.itemList[0] && getOrdersDetails(vm.gridModel.itemList[0].guid);
           vm.gridModel.paginationinfo = {

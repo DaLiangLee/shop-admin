@@ -249,6 +249,12 @@
      * @returns {{selectAll: boolean, results: Array}}
      */
     function getTableStateAll(scope) {
+      if(!scope.store.length){
+        return {
+          selectAll: false,
+          results: []
+        }
+      }
       var selected = scope.config.selectedProperty,
         store = scope.store,
         results = _.filter(store, function(item){

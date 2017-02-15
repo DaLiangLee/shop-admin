@@ -80,6 +80,10 @@ gulp.task('otherTest', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
 });
 
+gulp.task('cleanTmp', function () {
+  return $.del([path.join(conf.paths.tmp, '/')]);
+});
+
 gulp.task('cleanTest', function () {
   return $.del([path.join(conf.paths.dist, '/')]);
 });
