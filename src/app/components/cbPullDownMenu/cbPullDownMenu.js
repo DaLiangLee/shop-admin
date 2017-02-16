@@ -31,7 +31,6 @@
           dataList = scope.$eval(iAttrs.cbPullDownMenu);
           dataList.length && render(position, dataList);
         });
-        console.log(ngModel);
         iElement.on('blur', function () {
           !clickSatatus && hide();
         });

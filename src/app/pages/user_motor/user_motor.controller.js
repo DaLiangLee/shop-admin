@@ -103,7 +103,7 @@
         }
       }).then(function(result){
         _.map(result.items, function (item) {
-          item.$$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
+          item.baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
         });
         vm.gridModel.paginationinfo = {
           page: params.page * 1,

@@ -173,7 +173,7 @@
       statusShow = statusShow.substring(0, statusShow.length - 1) + "}";
       var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";
       var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
-      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + ' track by $index">' + node + "</tr></tbody>"
+      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
     }
 
     function tFootConfig(scope) {

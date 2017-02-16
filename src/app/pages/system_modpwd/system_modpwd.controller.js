@@ -25,7 +25,6 @@
             if (results.data.status == 0) {
               cbAlert.tips("修改密码成功");
               vm.form = {};
-              vm.$$confirm_password = "";
               vm.$change1 = false;
               vm.$change2 = false;
               vm.$change3 = false;

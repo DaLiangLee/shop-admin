@@ -10,7 +10,7 @@
     .controller('TradeOrderChangeController', TradeOrderChangeController);
 
   /** @ngInject */
-  function TradeOrderListController($state, $log, cbAlert, tadeOrder, tadeOrderConfig, computeService) {
+  function TradeOrderListController($state, cbAlert, tadeOrder, tadeOrderConfig, computeService) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -489,7 +489,6 @@
     vm.gridModel.config.propsParams = {
       employee: {
         handler: function(data, item){
-          console.log(this,data, item);
           item.servicername = _.find(this.store, {"guid": data}).realname;
         }
       },
@@ -497,7 +496,6 @@
         console.log(data);
         if (data.status == 0) {
           _.remove(vm.dataBase.details, function (item) {
-            console.log(data.transmit, item.$$detailsid);
             return _.findIndex(data.transmit, function (key) {
                 return key == item.$$detailsid;
               }) > -1;

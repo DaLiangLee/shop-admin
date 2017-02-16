@@ -12,7 +12,7 @@
   function UserGradeListController(cbAlert, userCustomer) {
     var vm = this;
     vm.items = [];
-
+    var beforeData = null;
     function list(){
       userCustomer.grades().then(function (results) {
         if (results.data.status == 0) {
@@ -21,7 +21,7 @@
           cbAlert.error(results.data.rtnInfo);
         }
       }).then(function (results) {
-        console.log(results);
+        beforeData = angular.copy(results);
         vm.items = results;
       });
     }
@@ -108,10 +108,9 @@
       if(angular.isUndefined(name)){
         return ;
       }
-      console.log(name);
       if(0 > name || name > 100){
         vm.items[index].$$samegradediscount = true;
-        cbAlert.alert("无折扣只能填0-100");
+        cbAlert.alert("折扣只能填0-100");
       }else{
         vm.items[index].$$samegradediscount = false;
       }
@@ -135,11 +134,22 @@
     /**
      * 保存所有等级给服务器
      */
+    var anti_shake = false;
     vm.saveGrade = function () {
       if(vm.isDisabled()){
-
         return ;
       }
+      // 如果发现对比没有修改，就不提交给后台，减少服务器请求压力
+      if(angular.equals(beforeData, vm.items)){
+        cbAlert.tips("修改成功");
+        return;
+      }
+      // 仿抖 防止用户快速点击多次提交
+      if(anti_shake){
+        return;
+      }
+      anti_shake = true;
+      // 提交数据给后台
       userCustomer.saveGrades(vm.items).then(function (results) {
         if (results.data.status == 0) {
           cbAlert.tips("修改成功");
@@ -147,6 +157,7 @@
         } else {
           cbAlert.error(results.data.data);
         }
+        anti_shake = false;
       });
     };
   }

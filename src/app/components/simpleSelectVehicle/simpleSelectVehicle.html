@@ -18,13 +18,13 @@
       <input type="text" placeholder="搜索大写首字母或品牌名称" ng-model="searchText" ng-change="firsthandle(searchText)">
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in brandList track by $index" ng-class="{'open': item.$$open}">
+          <li ng-repeat="item in brandList | filter: {brand: searchText}" ng-class="{'open': item.$$open}">
             <div ng-if="item.group">
               <span ng-bind="item.group"></span>
             </div>
             <div ng-if="!item.group">
               <span ng-bind="item.brand"></span>
-              <span ng-click="selecthandle(2, item, 'series', 'seriesList')">{{item.$$open ? '收起': '展开'}}</span>
+              <span ng-click="selecthandle(2, item, 'series', 'seriesList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
             </div>
           </li>
         </ul>
@@ -38,7 +38,7 @@
           <li ng-repeat="item in seriesList | filter: {series: seriesText}"  ng-class="{'open': item.$$open}">
             <span ng-bind="item.series"></span>
 
-            <span ng-click="selecthandle(3, item, 'year', 'yearList')">展开</span>
+            <span ng-click="selecthandle(3, item, 'year', 'yearList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
           </li>
         </ul>
       </div>
@@ -51,7 +51,7 @@
 
             <span ng-bind="item.year"></span>
 
-            <span ng-click="selecthandle(4, item, 'output', 'outputList')">展开</span>
+            <span ng-click="selecthandle(4, item, 'output', 'outputList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
         </ul>
       </div>
     </div>
@@ -63,7 +63,7 @@
 
             <span ng-bind="item.output"></span>
 
-            <span ng-click="selecthandle(5, item, 'model', 'modelList')">展开</span></li>
+            <span ng-click="selecthandle(5, item, 'model', 'modelList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span></li>
         </ul>
       </div>
     </div>
@@ -72,7 +72,7 @@
       <div class="items">
         <ul class="list-unstyled">
           <li ng-repeat="item in modelList | filter: {model: modelText}"  ng-class="{'open': item.$$open}">
-            <span ng-bind="item.model"  ng-click="selecthandle(6, item, 'model')"></span>
+            <span ng-bind="item.model"  ng-click="selecthandle(6, item, 'model')" style="cursor: pointer;"></span>
           </li>
         </ul>
       </div>

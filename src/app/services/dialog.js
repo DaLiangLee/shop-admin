@@ -101,10 +101,10 @@
       },
       showMessageDialog = function (config, callback, passedObject) {
         var template = "app/components/dialog/message.html",
-          defaultButtonConfig = cbDialogConfig.defaultButtonConfig,
-          callback = callback || config.callback,
-          passedObject = passedObject || config.passedObject,
-          handler = function (child) {
+          defaultButtonConfig = cbDialogConfig.defaultButtonConfig;
+          callback = callback || config.callback;
+          passedObject = passedObject || config.passedObject;
+        var handler = function (child) {
             child.title = config.title;
             child.message = config.message;
             child.buttons = config.buttons || defaultButtonConfig;

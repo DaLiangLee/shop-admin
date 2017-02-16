@@ -40,7 +40,7 @@
               "direction": item
             });
           });
-          var order = angular.extend({}, currentParams, {orders: JSON.stringify(orders)});
+          var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
           vm.gridModel.requestParams.params = order;
           getList(order);
         }
@@ -231,7 +231,6 @@
                 currentParams[key] = undefined;
               }
             });
-            console.log(currentParams);
             $state.go(currentStateName, currentParams);
           }else{
             var items = _.find(commenttime, function(item){
@@ -241,7 +240,6 @@
               data.commenttime1 = undefined;
             }
             var search = angular.extend({}, currentParams, data);
-            console.log(search);
             $state.go(currentStateName, search);
           }
         }

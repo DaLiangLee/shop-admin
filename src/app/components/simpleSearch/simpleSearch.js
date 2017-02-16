@@ -159,7 +159,6 @@
             // 添加到筛选列表
             $scope.search.directive.push(item);
           });
-          console.log(isModel);
 
           $scope.isShowmore = isModel > 0;
         }

@@ -67,7 +67,7 @@
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.balance"></span>',
             "name": '储值余额'
           },
           {

@@ -48,7 +48,7 @@
             "direction": item
           });
         });
-        var order = angular.extend({}, currentParams, {orders: JSON.stringify(orders)});
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
         vm.gridModel.requestParams.params = order;
         getList(order);
       },
@@ -67,7 +67,6 @@
     vm.gridModel.config.propsParams = {
       currentStatus: currentParams.remove,
       removeItem: function (data) {
-        console.log(data);
         if (data.status == 0) {
           productGoods.deleteProduct(data.transmit).then(function (results) {
             if (results.data.status == '0') {
@@ -82,7 +81,6 @@
         }
       },
       statusItem: function (data) {
-        console.log(data);
         if (data.status == 0) {
           var message = data.type === 'removeProduct' ? "商品下架修改成功" : "商品上架修改成功";
           productGoods[data.type](data.transmit).then(function (results) {
@@ -215,7 +213,6 @@
         }
         item[type] = data;
         productGoods.updateProductSku(angular.copy(item)).then(function (results) {
-          console.log(results);
           if (results.data.status == '0') {
             cbAlert.tips('修改成功');
             getList(currentParams);
@@ -296,8 +293,6 @@
           !vm.gridModel.itemList.length && (vm.items = undefined);
           vm.gridModel.itemList[0] && getProductSkus(vm.gridModel.itemList[0].guid);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       });
     }
 
@@ -406,7 +401,6 @@
       store: [],
       handler: function (data) {
         vm.dataBase.brandid = data;
-        console.log('brandModel', data);
       }
     };
 
@@ -418,7 +412,6 @@
         if (!!getData(vm.selectModel2.store, data)) {
           vm.dataBase.$unit = getData(vm.selectModel2.store, data).unit;
         }
-        console.log(getData(vm.selectModel2.store, data));
         vm.dataBase.cateid = data;
         getAttrsku(data);
         vm.dataBase.items = [];
@@ -427,7 +420,6 @@
 
     function getAttrsku(id, callback) {
       productGoods.attrsku({id: id}).then(function (data) {
-        console.log(data);
         vm.brandModel.store = data.data.data.brand;
         vm.skuData = angular.copy(data.data.data.sku);
         vm.skuvalues.store = angular.copy(data.data.data.sku);
@@ -447,10 +439,8 @@
       select: undefined,
       store: [],
       handler: function (data) {
-        console.log('selectModel', data);
         setTwoCategorie(data, undefined, '请先选择商品类目');
         vm.isAttributesetLoad = false;
-        console.log(vm.selectModel2.store);
         vm.dataBase.items = [];
       }
     };
@@ -535,7 +525,7 @@
     function getDataBase(data) {
       var result = angular.extend({}, data);
       angular.forEach(result.items, function (item) {
-        item.skuvalues = JSON.stringify(item.skuvalues);
+        item.skuvalues = angular.toJson(item.skuvalues);
         item.stock = !item.$$stock && item.$$stock != 0 ? -9999 : item.$$stock;
         item.saleprice = item.saleprice*100;
       });

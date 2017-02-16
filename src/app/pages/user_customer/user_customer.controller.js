@@ -75,7 +75,7 @@
       }).then(function (result) {
         vm.gridModel2.itemList = [];
         angular.forEach(result, function (item) {
-          item.$$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
+          item.baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
           vm.gridModel2.itemList.push(item);
         });
         vm.gridModel2.itemList = result;
@@ -106,7 +106,8 @@
             pageSize: params.pageSize,
             total: result.totalCount
           };
-          !vm.gridModel.itemList.length && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
+
+          !result.totalCount && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
           vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
           vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
           vm.gridModel.loadingState = false;
@@ -115,7 +116,7 @@
         }
       }).then(function (result) {
         console.log(result);
-        
+
 
       });
     }
@@ -347,13 +348,27 @@
     });
 
     vm.currentSelect = function ($event, item) {
-      if (item.guid === vm.item.guid) {
+      // 如果
+      if(item.current){
         return;
       }
+      setDataListsStatus();
+      item.current = true;
       console.log(item);
       vm.item = undefined;
       showMotor(item);
     };
+
+    /**
+     * 设置dataLists选中状态
+     */
+    function setDataListsStatus(){
+      _.map(vm.dataLists, function(key){
+        key.current = false;
+      });
+    }
+
+
 
     vm.addMotor = function () {
       showMotor({});
@@ -420,7 +435,12 @@
       console.log(data);
       if (data.type === 'add') {
         vm.dataLists.push(data.data);
-        showMotor(vm.dataLists[vm.dataLists.length - 1]);
+        setDataListsStatus();
+        var length = vm.dataLists.length - 1;
+        vm.dataLists[length].current = true;
+        console.log(vm.dataLists[length]);
+
+        showMotor(vm.dataLists[length]);
       }
     };
 

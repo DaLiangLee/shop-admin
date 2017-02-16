@@ -113,7 +113,7 @@
     <hr>
     <div ng-if="vm.isLoadData">
       <ul class="list-inline" dg-click="vm.currentSelect($event, item)" selector="li .list">
-        <li ng-repeat="item in vm.dataLists" class="">
+        <li ng-repeat="item in vm.dataLists" ng-class="{'active': item.current}">
           <div class="list">
             <div class="logo">
               <img ng-src="{{item.logo}}" alt="">

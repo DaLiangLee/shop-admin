@@ -10,8 +10,7 @@
    * @method getAPIConfig          获取api地址供其他地方调用
    * @method getUserConfig         获取用户信息相关
    */
-  angular
-    .module('shopApp')
+  angular.module('shopApp')
     .factory('HttpInterceptor', HttpInterceptor)
     .config(['$httpProvider', function($httpProvider){
       $httpProvider.interceptors.push(HttpInterceptor);
@@ -23,7 +22,6 @@
         return config;
       },
       requestError: function (err) {
-        console.log(err);
         cbAlert.error("系统提醒", "请检查您的网络连接情况");
         return $q.reject(err);
       },

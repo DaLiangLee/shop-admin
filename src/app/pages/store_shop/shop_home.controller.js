@@ -191,7 +191,6 @@
      */
     function list(){
       $q.all([shopHome.getBanks(), shopHome.getStoreAccount()]).then(function (results) {
-        console.log(results);
         var bank = results[0].data;
         var account = results[1].data;
         if (bank.status == 0 && account.status == 0) {
@@ -294,7 +293,6 @@
         var index = _.findIndex(vm.dataLists, function(key){
           return key.type == item.type;
         });
-        console.log(index, item);
 
         vm.dataLists[index] = item;
       });
@@ -357,7 +355,6 @@
      * @param validate
      */
     vm.isEmail = function(data, validate){
-      console.log(data, validate);
       if(!!data.email && validate.$dirty){
         data.$$isEmail = validate.$error.pattern;
       }else{

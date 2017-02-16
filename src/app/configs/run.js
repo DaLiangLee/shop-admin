@@ -103,7 +103,7 @@
     $.post('http://localhost:3000/shopservice/login', {
       storecode: 'A1',
       username: '15267009225',
-      password: '222222'
+      password: '111111'
     }, function () {
 
     });

@@ -13,7 +13,6 @@
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 10});
-    var total = 0;
 
     /**
      * 表格配置

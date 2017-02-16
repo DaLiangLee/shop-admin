@@ -526,12 +526,13 @@
             },
             loadingState: false,      // 加载数据
             selectItem: function (data) {
-              console.log(data);
               childScope.gridModel2.itemList.push(data);
+              _.remove(this.itemList, function(item){
+                return item.guid == data.guid;
+              });
             }
           };
 
-          getList(currentParams);
 
 
 
@@ -629,9 +630,12 @@
            */
           childScope.gridModel2.config.propsParams = {
             removeItem: function (data) {
-              _.remove(childScope.gridModel2.itemList, function (item) {
+              var items = _.remove(childScope.gridModel2.itemList, function (item) {
                 return item.guid == data.guid;
               });
+              console.log(items[0]);
+
+              childScope.gridModel.itemList.push(items[0]);
             }
           };
 

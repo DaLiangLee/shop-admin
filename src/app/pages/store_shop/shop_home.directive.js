@@ -40,8 +40,6 @@
             childScope.interceptor = true;
           };
           childScope.interceptorConfirm = function () {
-            console.log(childScope.hours.start);
-
             var opentime = $filter('date')(childScope.hours.start, 'HH:mm'),
               closetime = $filter('date')(childScope.hours.end, 'HH:mm');
             if (scope.startTime == opentime && closetime == scope.endTime) {
@@ -228,13 +226,10 @@
                   pageSize: 5,
                   total: result.totalCount
                 };
-
                 childScope.gridModel.loadingState = false;
               } else {
                 cbAlert.error("错误提示", result.rtnInfo);
               }
-            }, function (data) {
-              $log.debug('getListError', data);
             });
           }
 

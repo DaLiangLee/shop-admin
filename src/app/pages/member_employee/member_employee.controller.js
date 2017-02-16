@@ -44,7 +44,6 @@
      */
     vm.gridModel.config.propsParams = {
       removeItem: function (data) {
-        console.log('removeItem', data);
         if (data.status == 0) {
           memberEmployee.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
@@ -53,8 +52,6 @@
             } else {
               cbAlert.error("错误提示", results.data.rtnInfo);
             }
-          }, function (data) {
-            $log.debug('removeItemError', data);
           });
         }
       },
@@ -62,7 +59,6 @@
         $log.debug('statusItem', data);
         if (data.status === '1') {
           cbAlert.confirm("是否关闭允许登录店铺后台", function (isConfirm) {
-            console.log(isConfirm);
             if (isConfirm) {
               setStatus('enable', {'memberId': data.guid, 'status': '0'});
             }
@@ -70,7 +66,6 @@
           }, '关闭以后不允许登录店铺后台', 'warning');
         } else {
           cbAlert.confirm("是否允许该员工登录店铺后台", function (isConfirm) {
-            console.log(isConfirm);
             if (isConfirm) {
               setStatus('enable', {'memberId': data.guid, 'status': '1'});
             }
@@ -82,7 +77,6 @@
         $log.debug('inserviceItem', data);
         if (data.inservice === '1') {
           cbAlert.confirm("是否关闭在职状态", function (isConfirm) {
-            console.log(isConfirm);
             if (isConfirm) {
               setStatus('inservice', {'memberId': data.guid, 'inservice': '0'});
             }
@@ -90,7 +84,6 @@
           }, '关闭以后不允许登录店铺后台', 'warning');
         } else {
           cbAlert.confirm("是否开启在职状态", function (isConfirm) {
-            console.log(isConfirm);
             if (isConfirm) {
               setStatus('inservice', {'memberId': data.guid, 'inservice': '1'});
             }
@@ -115,15 +108,12 @@
             username: item.username
           });
         });
-        console.log(items);
         memberEmployee.pwdReset(items).then(function (results) {
           if (results.data.status == 0) {
             getList(currentParams);
           } else {
             cbAlert.error("错误提示", results.data.rtnInfo);
           }
-        }, function (data) {
-          $log.debug('removeItemError', data);
         });
       }
     };
@@ -136,8 +126,6 @@
         } else {
           cbAlert.error("错误提示", results.data.rtnInfo);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       });
     }
 
@@ -195,7 +183,6 @@
     memberEmployee.all().then(function (results) {
       var result = results.data;
       if (result.status == 0) {
-        console.log(result.data);
         vm.searchModel.config = {
           keyword: currentParams.keyword,
           placeholder: "请输入员工姓名、账号、手机、岗位",
@@ -369,8 +356,6 @@
     function getIDCardInfo(code) {
       var region, birthday, gender;
       // 15位
-      console.log(/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/.test(code));
-
       if (/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/.test(code)) {
         region = getIDCardRegion(code);
         birthday = getIDCardBirthday("19"+code.substring(6,12));
@@ -437,7 +422,7 @@
      * 判断当前是否编辑
      */
     if (vm.isChange) {
-      $q.all([memberEmployee.get({memberId:currentParams.id}), memberEmployee.positions()]).then(function(results){
+      $q.all([memberEmployee.get({memberId: currentParams.id}), memberEmployee.positions()]).then(function(results){
         var member = results[0].data;
         var positions = results[1].data;
         console.log(member,positions);
@@ -473,7 +458,7 @@
      * 1，需要验证手机号有没有填，如果没有就报错提示
      * 2，关闭时候需要提示，如果是修改时候，就需要提交api来
      */
-    vm.statusItem = function(status){
+    vm.statusItem = function(){
       var title = vm.dataBase.status === "1" ? "是否关闭允许登录店铺后台" : "是否开启允许登录店铺后台";
       var message = vm.dataBase.status === "1" ? "关闭以后不允许登录店铺后台，您确定？" : "开启以后就允许登录店铺后台，您确定？";
       cbAlert.confirm(title, function (isConfirm) {
@@ -490,7 +475,6 @@
      * @param data
      */
     function setDataBase(data, positions) {
-      console.log('setDataBase',data);
       vm.dataBase = angular.copy(data);
       vm.dataBase.position = {};
       vm.dataBase.position.posname = getPosname(vm.dataBase.positionid, positions);
@@ -560,7 +544,6 @@
      * 提交数据
      */
     vm.submit = function () {
-      console.log(getDataBase(vm.dataBase));
       if(vm.isChange){
         memberEmployee.update(getDataBase(vm.dataBase)).then(function (results) {
           if (results.data.status == 0) {

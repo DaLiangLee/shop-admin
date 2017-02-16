@@ -378,7 +378,7 @@
           }
           temporary = new AlertDialog({
             title: title,       //标题
-            text: message ||　"",        //提示文字
+            text: message || "",        //提示文字
             type: type || 'none',
             showConfirmButton: true,    //显示确认按钮
             showCancelButton: true,    //显示取消按钮
