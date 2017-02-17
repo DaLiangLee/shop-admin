@@ -62,7 +62,19 @@
         title: "上传店招图片"
       },
       handler: function(data){
-
+        if(data.status == 0){
+          console.log(data.data);
+          /*shopHome.savePhotos({
+            photos: data.content
+          }).then(function (results) {
+            if (results.data.status == '0') {
+              cbAlert.tips("修改商户介绍成功");
+              vm.dataBase.store.description = data.content;
+            } else {
+              cbAlert.error(results.data.data);
+            }
+          });*/
+        }
       }
     };
 

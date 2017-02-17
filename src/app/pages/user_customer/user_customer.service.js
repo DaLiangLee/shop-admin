@@ -49,7 +49,8 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
             "name": '手机号',
-            "width": 100
+            "width": 100,
+            "field": "mobile"
           },
           {
             "id": 5,
@@ -62,13 +63,15 @@
             "id": 6,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-            "name": '等级'
+            "name": '等级',
+            "field": "storegrade"
           },
           {
             "id": 7,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.balance"></span>',
-            "name": '储值余额'
+            "name": '储值余额',
+            "field": "balance"
           },
           {
             "id": 8,
@@ -92,7 +95,8 @@
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
           'checkboxSupport': true,  // 是否有复选框
-          'sortSupport': true,
+          'sortSupport': true,     // 排序
+          'sortPrefer': true,     //  服务端排序
           'paginationSupport': true,  // 是否有分页
           'selectedProperty': "selected",  // 数据列表项复选框
           'selectedScopeProperty': "selectedItems",

@@ -7,7 +7,6 @@
     angular
         .module('shopApp')
         .controller('ProductServerListController', ProductServerListController)
-        .controller('ProductServerAddGoodsController', ProductServerAddGoodsController)
         .controller('ProductServerChangeController', ProductServerChangeController);
 
     /** @ngInject */
@@ -47,7 +46,7 @@
               "direction": item
             });
           });
-          var order = angular.extend({}, currentParams, {orders: JSON.stringify(orders)});
+          var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
           vm.gridModel.requestParams.params = order;
           getList(order);
         },
@@ -96,8 +95,12 @@
        */
       vm.searchModel = {
         'config': {
-          placeholder: "请输入服务编码、服务名称、服务属性",
-          keyword: currentParams.keyword,
+          keyword: {
+            placeholder: "请输入服务编码、服务名称、服务属性",
+            model: currentParams.keyword,
+            name: "keyword",
+            isShow: true
+          },
           searchDirective: [
             {
               label: "服务类目",
@@ -133,7 +136,8 @@
               name: "sumserverorder",
               all: true,
               custom: true,
-              type: "int",
+              region: true,
+              type: "integer",
               start: {
                 name: "sumserverorder0",
                 model: currentParams.sumserverorder0
@@ -147,7 +151,8 @@
               label: "工时费",
               all: true,
               custom: true,
-              type: "int",
+              region: true,
+              type: "integer",
               name: "serverprice",
               start: {
                 name: "serverprice0",
@@ -162,7 +167,8 @@
               label: "保质期",
               all: true,
               custom: true,
-              type: "int",
+              region: true,
+              type: "integer",
               name: "shelflife",
               start: {
                 name: "shelflife0",
@@ -568,8 +574,6 @@
        * @returns {*}  工时费
        */
       vm.servertimeprice = function(item){
-        console.log(item);
-
         var time = item.servertime,
             price = item.serverprice;
         console.log((!time && time != 0) || (!price && price != 0) || isNaN(parseFloat(time)) || isNaN(parseFloat(price)));
@@ -680,6 +684,7 @@
         });
         angular.forEach(result.serverskus, function (item) {
           item.attrvalues = JSON.stringify(attrvalues);
+          item.serverprice = computeService.multiply(item.serverprice || 0, 100);　　　　
         });
         console.log(result);
         /**
@@ -809,285 +814,4 @@
 
     }
 
-    /** @ngInject */
-    function ProductServerAddGoodsController($state, $filter, $log, utils, productServer, categoryGoods, productServerAddGoods, productServerChangeConfig,preferencenav, cbAlert) {
-      var vm = this;
-      var currentParams = $state.params;
-      //verificationURL();
-      vm.attributeset = [];
-      vm.isLoadData = false;
-      vm.isAttributesetLoad = false;
-      vm.items = [];
-      //  是否是编辑
-      vm.isChange = !_.isEmpty(currentParams);
-      $log.debug('isChange', vm.isChange);
-      console.log('productServerAddGoods', productServerAddGoods.get());
-      var dataLists = [];
-      var searchData = undefined;
-      var currentPage = 1;
-      /**
-       * 效验URL是不是对的，
-       * 如果是错的，就直接返回到列表
-       */
-      function verificationURL(){
-        var regular = /^\d{18}$/;
-        /**
-         * 如果刷新页面，只能靠当前url来检查了，
-         */
-        if(_.isEmpty(productServerAddGoods.get())){
-          if(!(currentParams.serverid && regular.test(currentParams.serverid))){
-            goto();
-          }
-          if(!(currentParams.offerid && regular.test(currentParams.offerid))){
-            goto();
-          }
-          if(!(currentParams.edit && (currentParams.edit == 0 || currentParams.edit == 1))){
-            goto();
-          }
-        }else{
-          if(!angular.equals(currentParams, productServerAddGoods.get())){
-            goto();
-          }
-        }
-      }
-
-      categoryGoods.goods().then(function (data) {
-        vm.selectModel.search1.store = data.data.data;
-      });
-
-      /**
-      * 搜索配置
-      */
-      vm.selectModel = {
-        search1: {
-          handler: function (data) {
-            if(angular.isObject(utils.getData(this.store, data))){
-              vm.selectModel.search2.store = utils.getData(this.store, data).items;
-            }else{
-              vm.selectModel.search2.store = [];
-            }
-          }
-        },
-        search2: {},
-        searchText: "",
-        searchHandler: function () {
-          searchData = {
-            "pcateid1": this.search1.select,
-            "pcateid2": this.search2.select,
-            "productname": this.searchText
-          };
-          getList(currentPage, searchData);
-        },
-        resetHandler: function(){
-          searchData = undefined;
-          this.search1.select = undefined;
-          this.search2.select = undefined;
-          this.searchText = undefined;
-          this.search2.store = [];
-          getList(currentPage, searchData);
-        }
-      };
-
-      /**
-      * 表格配置
-      */
-      vm.gridModel = {
-        columns: angular.copy(productServerChangeConfig.DEFAULT_GRID_GOODS.columns),
-        itemList: [],
-        config: angular.copy(productServerChangeConfig.DEFAULT_GRID_GOODS.config),
-        loadingState: true,      // 加载数据
-        pageChanged: function (page) {    // 监听分页
-          currentPage = page;
-          getList(currentPage, searchData);
-        }
-      };
-
-      /**
-      * 组件数据交互
-      */
-      vm.gridModel.config.propsParams = {
-        addItem: function (data) {
-          if(!data){
-            return ;
-          }
-          if(!!_.find(vm.items, {pskuid: data.pskuid})){
-            return ;
-          }
-          var item = _.remove(dataLists, {pskuid: data.pskuid});
-          if(item.length){
-            item[0].numbers = 1;
-            item[0].subtotal = item[0].saleprice;
-            console.log(item);
-            vm.items.push(item[0]);
-            getTotalprice();
-            getList(currentPage, searchData);
-          }
-        }
-      };
-
-      /**
-       * 第一次添加
-       */
-      if(currentParams.edit === "0") {
-        productServer.allpskulist().then(function (data) {
-          dataLists = data.data.data;
-          getList(1);
-          vm.gridModel.loadingState = false;
-        });
-      }
-      /**
-       * 编辑效果
-       */
-      if(currentParams.edit === "1"){
-        productServer.pskulist({offerid: currentParams.offerid}).then(function(data){
-          vm.items = angular.copy(data.data.data.pskulist);
-          angular.forEach(vm.items, function (item) {
-            vm.compute(item);
-          });
-          dataLists = filterData(data.data.data.allpskulist, data.data.data.pskulist, "pskuid");
-          getList(1);
-          vm.gridModel.loadingState = false;
-        })
-      }
-
-      /**
-       * 格式化显示数据
-       * 依赖_.remove方法
-       * @param all     全部数据
-       * @param list    已经选中的数据
-       * @return {[]}   返回数组 格式化数据
-       */
-      function filterData(all, list, id){
-        /**
-         * 强制让all和list变成数组形式，如果不是数组直接返回空数组
-         */
-        if(!angular.isArray(all) || !angular.isArray(list)){
-          return [];
-        }
-        /**
-         * 如果all和list长度一样，表示list已经把all全部选择，返回空数组
-         */
-        if(all.length === list.length){
-          return [];
-        }
-        /**
-         * 如果没有填id，就动态赋值一个id
-         * @type {*}
-         */
-        id = id || "id";
-        /**
-         * 拷贝数组，防止对原数组进行操作
-         */
-        all = all.concat([]);
-        /**
-         * 循环list，用list的item去删除all里面对应的item
-         */
-        angular.forEach(list, function (key) {
-          _.remove(all, function(value){
-            return value[id] === key[id];
-          });
-        });
-        return all;
-      }
-
-      /**
-       * 获取所有列表，本地分页，和过滤
-       */
-      function getList(page, search){
-        if(angular.isUndefined(search)){
-          vm.gridModel.itemList = _.chunk(dataLists, 10)[page - 1] || [];
-          console.log(vm.gridModel.itemList);
-          vm.gridModel.paginationinfo = {
-            page: page,
-            pageSize: 10,
-            total: dataLists.length
-          };
-        }else{
-          //console.log(search, $filter('filter')(dataLists, search), dataLists);
-          var results = $filter('filter')(dataLists, search);
-          vm.gridModel.itemList = _.chunk(results, 10)[page - 1] || [];
-          vm.gridModel.paginationinfo = {
-            page: page,
-            pageSize: 10,
-            total: results.length
-          };
-        }
-      }
-
-      vm.remove = function (data) {
-        dataLists.push(_.remove(vm.items, {pskuid: data.pskuid})[0]);
-        getList(currentPage, searchData);
-        getTotalprice();
-      };
-      /**
-      * 失去焦点，计算小计
-      * @param index
-      * @param item
-      */
-      vm.compute = function (item) {
-        item.subtotal = item.saleprice * 100 * item.numbers / 100;
-        getTotalprice();
-      };
-
-      /**
-      * 计算商品总计
-      */
-      function getTotalprice(){
-        var price = 0;
-        angular.forEach(vm.items, function (item) {
-          price += item.subtotal;
-        });
-        vm.totalprice = price;
-      }
-      /**
-      * 初始化获取商品总计
-      */
-      getTotalprice();
-
-      /**
-       * 格式化数据
-       */
-      function getDataBase(){
-        var result = {
-          serverid: currentParams.serverid,
-          offerid: currentParams.offerid,
-          productcost: vm.totalprice,
-          psku: [],
-          clear: 0
-        };
-        angular.forEach(vm.items, function(item){
-          result.psku.push({
-            pskuid: item.pskuid,
-            numbers: item.numbers
-          });
-          item.serverprice = item.serverprice*100;
-        });
-        result.clear = vm.items.length === 0 ? 1 : 0;
-        result.psku.push({});
-        return result;
-      }
-      /**
-       * 表单提交
-       */
-      vm.goBack = function (save) {
-        if(save){
-          productServer.saveProduct(getDataBase()).then(function (data) {
-            console.log('save', data);
-            if(data.data.status == 0){
-              preferencenav.removePreference($state.current);
-              $state.go('product.server.edit', {'serverid': currentParams.serverid});
-            }
-          });
-        }else{
-          preferencenav.removePreference($state.current);
-          $state.go('product.server.edit', {'serverid': currentParams.serverid});
-        }
-      };
-
-      function goto() {
-        preferencenav.removePreference($state.current);
-        $state.go('product.server.list', {'page': 1});
-      }
-
-    }
 })();

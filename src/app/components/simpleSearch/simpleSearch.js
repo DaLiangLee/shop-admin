@@ -100,6 +100,8 @@
               setKeyword(searchConfig);
               $scope.isKeywordShow = _this.keyword.isShow;
               _this.keyword.isMore = $scope.search.directive.length > 0;
+            }else{
+              $scope.isShowmore = true;
             }
           }
         });
@@ -159,7 +161,6 @@
             // 添加到筛选列表
             $scope.search.directive.push(item);
           });
-
           $scope.isShowmore = isModel > 0;
         }
 
@@ -406,13 +407,15 @@
 
         setPlaceholder('start');
         setPlaceholder('end');
+
+
         function setPlaceholder(dir){
-          var config = scope.item[dir].config;
-          scope.item[dir].config.placeholder = "请输入 " + (config.min + 1) +" ~ "+ (config.max - 1);
+          var config = scope.items[dir].config;
+          scope.items[dir].config.placeholder = "请输入 " + (config.min + 1) +" ~ "+ (config.max - 1);
         }
 
         function getPlaceholder(dir){
-          var config = scope.item[dir].config;
+          var config = scope.items[dir].config;
           return "不在合法 " + config.min +" ~ "+ config.max + "范围内";
         }
         // 起始处理函数

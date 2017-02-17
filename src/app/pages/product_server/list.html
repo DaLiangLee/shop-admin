@@ -30,8 +30,7 @@
         <tbody>
         <tr ng-repeat="item in vm.items.serverSkus">
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span ng-bind="vm.items.scatename1"></span></td>
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><p ng-bind="vm.items.code"></p>
-            <span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></td>
+          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><div><p ng-bind="vm.items.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{vm.items.mainphoto}}" ng-if="vm.items.mainphoto"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" ng-if="!vm.items.mainphoto"></span></div></td>
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.scatename2}}" text-length="10"></span></td>
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
           <td><span ng-bind="$index+1"></span></td>
@@ -39,7 +38,7 @@
           <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime')"></span></td>
           <td><span class="state-unread" ng-bind="item.serverprice"></span></span></td>
           <td><span class="state-unread" ng-bind="item.$$servertimeprice"></span></span></td>
-          <td><span class="state-unread" ng-bind="item.countorder"></span></span></td>
+          <td><span><span class="state-unread" ng-bind="item.countorder"></span> 笔</span></td>
           <td>使用车型</td>
           <td><div cb-switch checkstatus="item.status"
                    ng-click="vm.gridModel2.statusItem(item)"></div></td>

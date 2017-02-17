@@ -101,8 +101,12 @@
      */
     vm.searchModel = {
       'config': {
-        placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
-        keyword: currentParams.keyword,
+        keyword: {
+          placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
+          model: currentParams.keyword,
+          name: "keyword",
+          isShow: true
+        },
         searchDirective: [
           {
             label: "类目",
@@ -138,7 +142,8 @@
             name: "salenums",
             all: true,
             custom: true,
-            type: "int",
+            region: true,
+            type: "integer",
             start: {
               name: "salenums0",
               model: currentParams.salenums0
@@ -152,7 +157,8 @@
             label: "库存",
             all: true,
             custom: true,
-            type: "int",
+            region: true,
+            type: "integer",
             name: "stock",
             start: {
               name: "stock0",
@@ -167,7 +173,8 @@
             label: "价格",
             all: true,
             custom: true,
-            type: "money",
+            region: true,
+            type: "integer",
             name: "saleprice",
             start: {
               name: "saleprice0",
@@ -182,7 +189,8 @@
             label: "保质期",
             all: true,
             custom: true,
-            type: "int",
+            region: true,
+            type: "integer",
             name: "shelflife",
             start: {
               name: "shelflife0",
@@ -301,7 +309,7 @@
   }
 
   /** @ngInject */
-  function ProductGoodsChangeController($state, $window, $filter, categoryGoods, productGoods, cbAlert) {
+  function ProductGoodsChangeController($state, $window, $filter, categoryGoods, productGoods, cbAlert, computeService) {
     var vm = this;
     var currentParams = $state.params;
     vm.attributeset = [];
@@ -331,7 +339,7 @@
       vm.isLoadData = true;
       vm.dataBase.status = 1;
       vm.dataBase.$unit = '请先选择商品类目';
-      vm.dataBase.mainphoto = "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1483955898668_CASE2";
+      vm.dataBase.mainphoto = "";
       vm.dataBase.items = [];
     }
 
@@ -523,22 +531,22 @@
      * @returns {{}}
      */
     function getDataBase(data) {
-      var result = angular.extend({}, data);
+      var result = angular.copy(data);
+
       angular.forEach(result.items, function (item) {
         item.skuvalues = angular.toJson(item.skuvalues);
         item.stock = !item.$$stock && item.$$stock != 0 ? -9999 : item.$$stock;
-        item.saleprice = item.saleprice*100;
+        item.saleprice = computeService.multiply(item.saleprice || 0, 100);
       });
       /**
        * 防止后台数据出bug end
        */
       if (vm.isChange) {
-        delete result.parentid;
-        delete result.brandname;
-        delete result.productcategory;
+        _.pick(result, ['parentid', 'brandname', 'productcategory']);
       }
-      delete result.$unit;
-      delete result.$size;
+      _.pick(result, ['$unit', '$size']);
+      console.log(result);
+
       return result;
     }
 

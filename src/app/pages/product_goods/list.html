@@ -34,8 +34,7 @@
         <tbody>
           <tr ng-repeat="item in vm.items.items">
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><p ng-bind="vm.items.code"></p>
-              <span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><div><p ng-bind="vm.items.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{vm.items.mainphoto}}" ng-if="vm.items.mainphoto"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" ng-if="!vm.items.mainphoto"></span></div></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="10"></span></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.cnname"></span></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>

@@ -305,7 +305,7 @@
           data[name] = !data[name];
           var result = {};
 
-          result[name] = data[name] ? "DESC" : "ASC";
+          result[name] = data[name] ? "ASC" : "DESC";
           $scope.sortChanged({
             data: {
               name: name,

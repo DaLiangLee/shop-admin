@@ -46,19 +46,22 @@
                       "id": 1,
                       "name": "服务类目",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>',
+                      "field": "scatename1"
                     },
                     {
                       "id": 2,
                       "name": "服务编码/图片",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>'
+                      "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+                      "field": "code"
                     },
                     {
                       "id": 3,
                       "name": "服务名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>',
+                      "field": "servername"
                     },
                     {
                       "id": 4,
@@ -70,7 +73,7 @@
                       "id": 5,
                       "name": "销量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>件</span>'
+                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>笔</span>'
                     },
                     {
                       "id": 6,

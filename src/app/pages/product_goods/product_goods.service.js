@@ -36,6 +36,7 @@
             "name": "编码/图片",
             "cssProperty": "state-column",
             "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-product-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+            "field": "code",
             "width": 120
           },
           {
@@ -43,6 +44,7 @@
             "name": "商品名称",
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="10"></span>',
+            "field": "productname",
             "width": 170
           },
           {

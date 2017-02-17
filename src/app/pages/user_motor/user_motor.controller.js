@@ -177,7 +177,7 @@
             all: true,
             custom: true,
             region: true,
-            type: "int",
+            type: "integer",
             name: "TotalMile",
             model: getTotalMile(totalMileList, currentParams),
             list: totalMileList,
@@ -201,7 +201,7 @@
             name: "CountdownMile",
             all: true,
             custom: true,
-            type: "int",
+            type: "integer",
             start: {
               name: "startCountdownMile",
               model: currentParams.startCountdownMile,

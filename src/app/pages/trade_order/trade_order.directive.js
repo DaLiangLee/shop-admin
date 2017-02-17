@@ -326,6 +326,7 @@
           /*childScope.searchModel = {
             'handler': function (data) {
               currentParams = angular.extend({}, currentParams, data);
+              childScope.gridModel.itemList = [];
               getList(currentParams);
             }
           };
@@ -454,6 +455,7 @@
           childScope.searchModel = {
             'handler': function (data) {
               currentParams = angular.extend({}, currentParams, data);
+              childScope.gridModel.itemList = [];
               getList(currentParams);
             }
           };

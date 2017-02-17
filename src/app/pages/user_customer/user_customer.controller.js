@@ -34,6 +34,21 @@
         var page = angular.extend({}, currentParams, {page: data});
         $state.go(currentStateName, page);
       },
+      sortChanged: function (data) {
+        var orders = [];
+        console.log(data);
+        angular.forEach(data.data, function (item, key) {
+          orders.push({
+            "field": key,
+            "direction": item
+          });
+        });
+
+
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        vm.gridModel.requestParams.params = order;
+        getList(order);
+      },
       selectHandler: function (item) {
         // 拦截用户恶意点击
         if(!item.$$active){
@@ -114,10 +129,6 @@
         } else {
           cbAlert.error("错误提示", result.data);
         }
-      }).then(function (result) {
-        console.log(result);
-
-
       });
     }
 
