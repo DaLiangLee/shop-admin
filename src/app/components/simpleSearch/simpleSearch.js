@@ -133,6 +133,9 @@
               angular.isDefined(item.start.model) && (isModel++);
               _this.searchParams[item.start.name] = item.start.model;
               disabledMap[item.start.name] = false;
+              if(!_.isUndefined(item.start.model)){
+                _this.searchParams[item.name] = -2;
+              }
             }
             // 设置结束数据
             if(angular.isDefined(item.end)){

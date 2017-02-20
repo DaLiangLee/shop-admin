@@ -188,22 +188,6 @@
             };
           }
         };
-        /**
-         * 加载子数据
-         * @param level    当前等级
-         * @param item     当前项
-         * @param type     当前类型
-         * @param listType 当前列表类型
-         * @param callback 回调函数
-         * @constructor
-         */
-        function loadingSubData(level, item, type,listType, callback){
-          vehicleSelection[type](getSubmitData[type](item)).then(function (data) {
-            item.items = setFormatData(level, data.data.data, item);
-            scope[listType] = setFormatData(level, data.data.data, item);
-            callback && callback();
-          });
-        }
         scope.selectitle = "";
         scope.selecthandle = function (level, item, type, listType) {
           if(level === 6){
@@ -225,6 +209,40 @@
           }
           scope.selectitle = item.$$title;
           item.$$open = !item.$$open;
+        };
+
+        /**
+         * 加载子数据
+         * @param level    当前等级
+         * @param item     当前项
+         * @param type     当前类型
+         * @param listType 当前列表类型
+         * @param callback 回调函数
+         * @constructor
+         */
+        function loadingSubData(level, item, type,listType, callback){
+          vehicleSelection[type](getSubmitData[type](item)).then(function (data) {
+            item.items = setFormatData(level, data.data.data, item);
+            scope[listType] = setFormatData(level, data.data.data, item);
+            callback && callback();
+          });
+        }
+
+        // 车型选择组件中输入车型的首字母或汉字无法查询
+        scope.searchBrand = {
+          searchText: "",
+          firsthandle: function(){
+            if(/^[A-Z]$/.test(this.searchText)){
+              this.searchData = {
+                firstletter: this.searchText
+              }
+            }else{
+              this.searchData = {
+                brand: this.searchText
+              }
+            }
+          },
+          searchData: {}
         };
 
         /**

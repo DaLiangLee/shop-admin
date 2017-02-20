@@ -8,10 +8,7 @@
         .run(permissionsRun)
         .run(configurationRun)
         .run(backRun)
-        .run(routerRun)
-      .config(function($httpProvider){
-        //console.log($httpProvider);
-      });
+        .run(routerRun);
 
         /** @ngInject */
         function permissionsRun(permissions) {

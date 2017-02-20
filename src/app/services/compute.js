@@ -92,7 +92,7 @@
      * @param addend
      */
     this.add = function (augend, addend) {
-      return add(augend, addend);
+      return add(augend || 0, addend || 0);
     };
 
     /**
@@ -101,7 +101,7 @@
      * @param subtrahend
      */
     this.subtract = function (minuend, subtrahend) {
-      return subtract(minuend, subtrahend);
+      return subtract(minuend || 0, subtrahend || 0);
     };
 
     /**
@@ -110,7 +110,7 @@
      * @param multiplicand
      */
     this.multiply = function (multiplier, multiplicand) {
-      return multiply(multiplier, multiplicand);
+      return multiply(multiplier || 0, multiplicand || 0);
     };
 
     /**
@@ -119,7 +119,7 @@
      * @param divisor
      */
     this.divide = function (dividend, divisor) {
-      return divide(dividend, divisor);
+      return divide(dividend || 0, divisor || 0);
     }
   }
 

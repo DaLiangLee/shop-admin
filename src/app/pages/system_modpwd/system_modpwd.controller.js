@@ -29,7 +29,7 @@
               vm.$change2 = false;
               vm.$change3 = false;
             } else {
-              cbAlert.error("错误提示", results.data.rtnInfo);
+              cbAlert.error("错误提示", results.data.data);
             }
           });
         }

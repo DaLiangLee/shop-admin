@@ -53,6 +53,13 @@
             "width": 100
           },
           {
+            "id": 4,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.allusername"></span>',
+            "name": '登录账号',
+            "width": 100
+          },
+          {
             "id": 5,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.posname"></span>',
@@ -61,8 +68,20 @@
           {
             "id": 6,
             "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread"></span>',
+            "name": '评价'
+          },
+          {
+            "id": 6,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.description"></span>',
+            "name": '员工简介'
+          },
+          {
+            "id": 6,
+            "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
-            "name": '角色名称'
+            "name": '权限'
           },
           {
             "id": 7,

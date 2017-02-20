@@ -6,19 +6,8 @@
 
   angular
     .module('shopApp')
-    .filter('moneyFilter', moneyFilter)
     .filter('skuvaluesFilter', skuvaluesFilter);
 
-  /** @ngInject */
-  function moneyFilter() {
-    return function(name) {
-      if(!name){
-        return name;
-      }
-      var num = parseFloat(name);
-      return !isNaN(num) && num.toFixed(2);
-    }
-  }
 
   /** @ngInject */
   function skuvaluesFilter() {

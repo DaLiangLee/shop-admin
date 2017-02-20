@@ -2,7 +2,7 @@
   <h2>基本信息</h2>
   <hr>
 </div>
-<div class="form-horizontal">
+<div class="form-horizontal" ng-if="vm.dataBase.store">
   <div class="row form-group">
     <label class="col-lg-1 control-label">经营状态：</label>
     <div class="col-lg-7">
@@ -41,7 +41,7 @@
   <h2>店铺介绍</h2>
   <hr>
 </div>
-<div class="form-horizontal">
+<div class="form-horizontal" ng-if="vm.dataBase.store">
   <div class="row form-group">
     <label class="col-lg-1 control-label">商户名称：</label>
     <div class="col-lg-7">

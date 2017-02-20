@@ -246,6 +246,8 @@
         ]
       },
       'handler': function (data) {
+        console.log(data);
+
         if (_.isEmpty(data)) {
           _.map(currentParams, function (item, key) {
             if (key !== 'page') {
@@ -262,8 +264,12 @@
             data.createtime1 = undefined;
           }
           var search = angular.extend({}, currentParams, data);
-          console.log(search);
-          $state.go(currentStateName, search);
+          // 如果路由一样需要刷新一下
+          if(angular.equals(currentParams, search)){
+            $state.reload();
+          }else{
+            $state.go(currentStateName, search);
+          }
         }
       }
     };
@@ -273,6 +279,8 @@
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
+      console.log(params);
+
       if (!params.page) {
         return;
       }
@@ -334,9 +342,8 @@
           var temp = result.data;
           temp.userinfo = JSON.parse(temp.userinfo);
           temp.carinfo = JSON.parse(temp.carinfo);
-          temp.ssaleprice = computeService.divide(temp.ssaleprice || 0, 100);
-          temp.psaleprice = computeService.divide(temp.psaleprice || 0, 100);
-          temp.payprice = computeService.divide(temp.payprice || 0, 100);
+          temp.ssaleprice = computeService.divide(temp.ssaleprice, 100);
+          temp.psaleprice = computeService.divide(temp.psaleprice, 100);
           _.forEach(temp.details, function(item1){
             item1.itemsku = JSON.parse(item1.itemsku);
             var serverSkus = item1.itemsku.serverSkus[0];
@@ -348,17 +355,18 @@
               item1.$$itemname = item1.servername + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
             }
             console.log(item1.itemsku, serverSkus);
-            item1.price = computeService.divide(item1.price || 0, 100);
-            item1.allprice = computeService.divide(item1.allprice || 0, 100);
+            item1.price = computeService.divide(item1.price, 100);
+            item1.allprice = computeService.divide(item1.allprice, 100);
             var productsPrice = 0;
             item1.products && _.forEach(item1.products, function(item2){
               item2.itemsku = JSON.parse(item2.itemsku);
-              item2.price = computeService.divide(item2.price || 0, 100);
-              item2.allprice = computeService.divide(item2.allprice || 0, 100);
-              productsPrice = computeService.add(productsPrice || 0, item2.allprice || 0);
+              item2.price = computeService.divide(item2.price, 100);
+              item2.allprice = computeService.divide(item2.allprice, 100);
+              productsPrice = computeService.add(productsPrice, item2.allprice);
             });
-            item1.$$totalPrice = computeService.add(item1.allprice || 0, productsPrice || 0);
+            item1.$$totalPrice = computeService.add(item1.allprice, productsPrice);
           });
+          temp.totalprice = computeService.add(temp.ssaleprice, temp.psaleprice);
           vm.ordersDetailsTab = 0;
           vm.ordersDetails = temp;
           temp = null;

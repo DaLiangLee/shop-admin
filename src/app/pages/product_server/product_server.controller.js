@@ -183,7 +183,12 @@
         },
         'handler': function (data) {
           var search = angular.extend({}, currentParams, data);
-          $state.go(currentStateName, search);
+          // 如果路由一样需要刷新一下
+          if(angular.equals(currentParams, search)){
+            $state.reload();
+          }else{
+            $state.go(currentStateName, search);
+          }
         }
       };
 
@@ -225,10 +230,8 @@
        */
       vm.gridModel2 = {
         editorhandler: function (data, item, type) {
-          console.log(data, item);
           item[type] = data;
-          productServer.updateServerSku(angular.copy(item)).then(function (results) {
-            console.log(results);
+          productServer.updateServerSku(_.pick(item, ['guid', 'servertime'])).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.tips('修改成功');
               getList(currentParams);
@@ -243,7 +246,7 @@
           cbAlert.ajax(tips, function (isConfirm) {
             if (isConfirm) {
               item.status = item.status === "0" ? "1" : "0";
-              productServer.updateServerSku(item).then(function (results) {
+              productServer.updateServerSku(_.pick(item, ['guid', 'status'])).then(function (results) {
                 if (results.data.status == '0') {
                   cbAlert.success('修改成功');
                   var statusTime = $timeout(function(){

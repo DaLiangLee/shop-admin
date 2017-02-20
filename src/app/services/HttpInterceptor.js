@@ -13,6 +13,7 @@
   angular.module('shopApp')
     .factory('HttpInterceptor', HttpInterceptor)
     .config(['$httpProvider', function($httpProvider){
+      $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
       $httpProvider.interceptors.push(HttpInterceptor);
     }]);
   /** @ngInject */

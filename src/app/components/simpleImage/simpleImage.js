@@ -65,8 +65,10 @@
         scope.addStyle = {
           width: scope.config.width + "px",
           height: scope.config.height + "px"
-        }
+        };
         scope.imageArr = [];
+        console.log(scope.image);
+
         getImage(scope.image).length && angular.forEach(getImage(scope.image), function (item, index) {
           scope.imageArr.push({
             width: scope.config.width,
@@ -85,7 +87,7 @@
           _.remove(scope.imageArr, function (key) {
             return key.index === item.index;
           });
-        }
+        };
 
         scope.upload = {
           handler: function(data) {
@@ -99,23 +101,10 @@
                 src: data.data[0].url + scope.config.oss,
                 index: index
               });
-              setImage();
+              scope.uploadHandler({data: {status: 0, data: scope.imageArr}});
             }
-
           }
         };
-
-        function setImage(){
-          var images = [];
-          angular.forEach(scope.imageArr, function (item) {
-            images.push(item.url);
-          });
-          if(images.length > 1){
-            scope.image = images.join(',');
-          }else{
-            scope.image = images[0];
-          }
-        }
       }
     }
   }

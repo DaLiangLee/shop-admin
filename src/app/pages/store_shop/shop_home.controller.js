@@ -22,7 +22,6 @@
     shopHome.manager().then(function (results) {
       if (results.data.status == '0') {
         vm.dataBase = results.data.data;
-        vm.dataBase.store.photos = vm.dataBase.store.photos.split(',');
         vm.dataBase.store.countIsshow = results.data.countIsshow;
       } else {
         cbAlert.error(results.data.data);
@@ -62,18 +61,24 @@
         title: "上传店招图片"
       },
       handler: function(data){
+
         if(data.status == 0){
-          console.log(data.data);
-          /*shopHome.savePhotos({
-            photos: data.content
+          var items = _.map(data.data,function (item) {
+            return _.pick(item, ['url']).url;
+          });
+          console.log("上传店招图片", items);
+
+          shopHome.savePhotos({
+            photos: items.join(',')
           }).then(function (results) {
             if (results.data.status == '0') {
-              cbAlert.tips("修改商户介绍成功");
-              vm.dataBase.store.description = data.content;
+              cbAlert.tips("修改店招图片成功");
+
+              //vm.dataBase.store.photos = data.content;
             } else {
               cbAlert.error(results.data.data);
             }
-          });*/
+          });
         }
       }
     };

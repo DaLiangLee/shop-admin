@@ -143,7 +143,12 @@
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
         vm.gridModel.requestParams.params = search;
-        $state.go(currentStateName, search);
+        // 如果路由一样需要刷新一下
+        if(angular.equals(currentParams, search)){
+          $state.reload();
+        }else{
+          $state.go(currentStateName, search);
+        }
       }
     };
     userCustomer.grades().then(function (results) {

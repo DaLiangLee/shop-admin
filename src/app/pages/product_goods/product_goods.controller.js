@@ -10,7 +10,7 @@
     .controller('ProductGoodsChangeController', ProductGoodsChangeController);
 
   /** @ngInject */
-  function ProductGoodsListController($state, $timeout, $log, productGoods, productGoodsConfig, cbAlert, categoryGoods) {
+  function ProductGoodsListController($state, $timeout, $log, productGoods, productGoodsConfig, cbAlert, categoryGoods, computeService) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -205,7 +205,12 @@
       },
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
-        $state.go(currentStateName, search);
+        // 如果路由一样需要刷新一下
+        if(angular.equals(currentParams, search)){
+          $state.reload();
+        }else{
+          $state.go(currentStateName, search);
+        }
       }
     };
 
@@ -215,12 +220,16 @@
     vm.gridModel2 = {
       editorhandler: function (data, item, type) {
         if(type === "stock" && item.stock != -9999 && data > item.stock){
-          cbAlert.alert('修改的库存不能当前库存大');
+          cbAlert.alert('修改的库存不能比当前库存大');
           item.$$stock = item.stock;
           return ;
         }
-        item[type] = data;
-        productGoods.updateProductSku(angular.copy(item)).then(function (results) {
+        if(type === "saleprice"){
+          item.saleprice = computeService.multiply(data, 100);
+        }else{
+          item[type] = data;
+        }
+        productGoods.updateProductSku(_.pick(item, ['guid', type])).then(function (results) {
           if (results.data.status == '0') {
             cbAlert.tips('修改成功');
             getList(currentParams);
@@ -237,7 +246,7 @@
       cbAlert.ajax(tips, function (isConfirm) {
         if (isConfirm) {
           item.status = item.status === "0" ? "1" : "0";
-          productGoods.updateProductSku(item).then(function (results) {
+          productGoods.updateProductSku(_.pick(item, ['guid', 'status'])).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.success('修改成功');
               var statusTime = $timeout(function () {
@@ -263,7 +272,7 @@
           results.data.data.items && angular.forEach(results.data.data.items, function (item) {
             item.$$stockShow = item.stock === -9999 ? "无限" : item.stock;
             item.$$stock = item.stock === -9999 ? "" : item.stock;
-            item.saleprice = item.saleprice/100;
+            item.saleprice = computeService.divide(item.saleprice, 100);
           });
           vm.items = results.data.data;
         } else {
@@ -289,7 +298,7 @@
           total = data.data.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(data.data.data, function (item) {
-            item.$$stockShow = item.stock <= -9999 ? "无限" : item.stock;
+            item.$$stockShow = item.stock <= -999 ? "无限" : item.stock;
             vm.gridModel.itemList.push(item);
           });
           vm.gridModel.paginationinfo = {
@@ -371,7 +380,7 @@
       store: [],
       handler: function (data) {
         console.log('属性添加', data);
-        if (data.status == 0) {
+        if (data.status == 0 && data.data.length > 0) {
           vm.dataBase.items.push({
             skuvalues: data.data,
             attrvalues: vm.dataBase.$$attrvalues,

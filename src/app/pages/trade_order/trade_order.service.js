@@ -70,31 +70,31 @@
                       "id": 8,
                       "name": "工时费(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.ssaleprice | moneyformatFilter"></span>'
                     },
                     {
                       "id": 9,
                       "name": "商品/材料费(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.psaleprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.psaleprice | moneyformatFilter"></span>'
                     },
                     {
                       "id": 10,
                       "name": "总费用(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.totalprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.totalprice | moneyformatFilter"></span>'
                     },
                     {
                       "id": 11,
                       "name": "优惠金额(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-bind="item.preferentialprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-bind="item.preferentialprice | moneyformatFilter"></span>'
                     },
                     {
                       "id": 12,
                       "name": "实收金额(元)",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" ng-bind="item.actualprice | moneyFilter"></span>'
+                      "fieldDirective": '<span class="state-unread" ng-bind="item.actualprice | moneyformatFilter"></span>'
                     },
                     {
                       "id": 13,
@@ -139,7 +139,7 @@
                       '<a class="btn btn-primary" cb-access-control="chebian:store:trade:porder:add" ui-sref="trade.order.add()">开单</a> '
                     ],
                     'batchOperationBarDirective': [
-                      '<p bindonce=""><strong>数据汇总:</strong> 服务 <span bo-text="propsParams.statistics.servercount"></span> 项，共 <span bo-text="propsParams.statistics.ssalepriceAll"></span> 元 | 商品 / 材料 <span bo-text="propsParams.statistics.productcount"></span> 项，共 <span bo-text="propsParams.statistics.psalepriceAll"></span> 元 | 合计 <span bo-text="propsParams.statistics.totalprice"></span> 元</p>'
+                      '<p bindonce=""><strong>数据汇总:</strong> 服务/项目 <span bo-bind="propsParams.statistics.servercount"></span> 项，共 <span bo-bind="propsParams.statistics.ssalepriceAll | moneyformatFilter"></span> 元 | 商品 / 材料 <span bo-text="propsParams.statistics.productcount"></span> 项，共 <span bo-bind="propsParams.statistics.psalepriceAll | moneyformatFilter"></span> 元 | 合计 <span bo-bind="propsParams.statistics.totalprice | moneyformatFilter"></span> 元</p>'
                     ]
                 }
             },
