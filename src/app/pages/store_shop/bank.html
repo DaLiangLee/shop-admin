@@ -6,10 +6,11 @@
     <i></i>您的银行账户信息有更改，请联系平台 <span class="text-danger">400-1234-111</span> 修改进行。
   </p>
 </div>
-<form name="passwordForm" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate ng-if="vm.loadStatus && vm.onceSubmit">
+<form name="passwordForm" class="form-horizontal" autocomplete="off" ng-submit="vm.submitBtn()" novalidate ng-if="vm.loadStatus && vm.onceSubmit">
   <div class="form-group">
-    <label for="inputPassword1" class="col-md-2 control-label">银行名称：</label>
+    <label for="inputPassword1" class="col-md-2 control-label"><span class="text-danger">*</span> 银行名称：</label>
     <div class="col-md-7">
+      <input type="hidden" name="bank" ng-model="vm.dataBase.bankid" ng-required="true">
       <div simple-select="id,bankname,logo" store="vm.binkStore" select="vm.dataBase.bankid"></div>
     </div>
   </div>
@@ -20,7 +21,7 @@
              class="form-control"
              id="inputPassword2"
              ng-model="vm.dataBase.bankfullname"
-             placeholder="开户支行"
+             placeholder="示例：中国xx银行xx分行xx支行xx分理处"
              name="password"
              ng-required="true">
     </div>
@@ -46,7 +47,7 @@
              id="inputPassword1"
              ng-model="vm.dataBase.accountkey"
              ng-required="true"
-             placeholder="账号">
+             placeholder="账号" ng-pattern="/(^\d{16}$)|(^\d{19}$)/">
     </div>
   </div>
   <div class="row form-group" ng-if="vm.dataBase.$$isRegtype">

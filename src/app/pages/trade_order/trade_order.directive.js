@@ -454,7 +454,7 @@
            */
           childScope.searchModel = {
             'handler': function (data) {
-              currentParams = angular.extend({}, currentParams, data);
+              currentParams = angular.extend({}, currentParams, data, {page: 1, pageSize: 5});
               childScope.gridModel.itemList = [];
               getList(currentParams);
             }
@@ -597,7 +597,7 @@
               {
                 "id": 7,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread"><input type="text" ng-model="item.num" class="form-control">件</span>',
+                "fieldDirective": '<span class="state-unread"><input type="text" ng-model="item.num" class="form-control" cb-number-range="" data-value-min="0" data-value-max="1000" placeholder="请输入1～999范围数量">件</span>',
                 "name": '数量'
               },
               {

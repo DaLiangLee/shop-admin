@@ -10,7 +10,7 @@
     .controller('MemberEmployeeChangeController', MemberEmployeeChangeController);
 
   /** @ngInject */
-  function MemberEmployeeListController($timeout, $state, $log, cbAlert, permissions, memberEmployee, memberEmployeeConfig) {
+  function MemberEmployeeListController($q, $timeout, $state, $log, cbAlert, permissions, memberEmployee, memberEmployeeConfig) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -47,8 +47,7 @@
         if (data.status == 0) {
           memberEmployee.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
-              cbAlert.tips("删除成功");
-              getList(currentParams);
+
             } else {
               cbAlert.error("错误提示", results.data.rtnInfo);
             }
@@ -105,28 +104,36 @@
           items.push({
             guid: item.guid,
             realname: angular.isUndefined(item.realname) ? "" : item.realname,
-            username: item.username
+            allusername: item.allusername
           });
         });
         memberEmployee.pwdReset(items).then(function (results) {
           if (results.data.status == 0) {
             getList(currentParams);
           } else {
-            cbAlert.error("错误提示", results.data.rtnInfo);
+            cbAlert.error("错误提示", results.data.data);
           }
         });
       }
     };
 
     function setStatus(api, data) {
-      memberEmployee[api](data).then(function (results) {
-        if (results.data.status == 0) {
-          cbAlert.tips("修改成功");
-          getList(currentParams);
-        } else {
-          cbAlert.error("错误提示", results.data.rtnInfo);
-        }
+      memberEmployee[api](data).then(a).then(function(results){
+        console.log(results);
+        cbAlert.tips("修改成功");
+        getList(currentParams);
       });
+    }
+
+    function a(){
+      var deferred = $q.defer();
+      var result = arguments[0].data;
+      if (result.status == 0) {
+        console.log(deferred);
+        deferred.resolve(result);
+        return deferred.promise;
+      }
+      cbAlert.error("错误提示", result.data);
     }
 
 
@@ -184,8 +191,12 @@
       var result = results.data;
       if (result.status == 0) {
         vm.searchModel.config = {
-          keyword: currentParams.keyword,
-          placeholder: "请输入员工姓名、账号、手机、岗位",
+          keyword: {
+            placeholder: "请输入员工姓名、账号、手机、岗位",
+            model: currentParams.keyword,
+            name: "keyword",
+            isShow: true
+          },
           searchDirective: [
             {
               label: "状态",

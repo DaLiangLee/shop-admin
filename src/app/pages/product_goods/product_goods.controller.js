@@ -270,9 +270,10 @@
         if (results.data.status == 0) {
           recordChild = id;
           results.data.data.items && angular.forEach(results.data.data.items, function (item) {
-            item.$$stockShow = item.stock === -9999 ? "无限" : item.stock;
-            item.$$stock = item.stock === -9999 ? "" : item.stock;
+            item.$$stockShow = item.stock <= -9999 ? "无限" : item.stock;
+            item.$$stock = item.stock <= -9999 ? "" : item.stock;
             item.saleprice = computeService.divide(item.saleprice, 100);
+            item.salenums = _.isUndefined(item.salenums) ? 0 : item.salenums;
           });
           vm.items = results.data.data;
         } else {

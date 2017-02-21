@@ -4,7 +4,16 @@
 (function() {
   'use strict';
   /**
-   * 权限控制， 传递栏目id，如果id不存在就删除这个dom
+   * 这是一个事件委托的指令 支持Click Dblclick Mousedown Mouseup Mouseover Mouseout Mousemove Mouseenter Mouseleave这些事件
+   * 示例：
+   * <ul dg-click="select($event, item)" selector="li">
+   *     <li ng-repeat="item in list"></li>
+   * </ul>
+   * dg-click接收一个函数
+   * select函数接收2个以上参数（第一个是事件对象，第二个是ng-repeat的当前项）
+   * selector接收一个选择，允许输入当前dom后代元素，尽量保证是子元素，减少查找节点。
+   *
+   *
    */
     var cbDelegateDirectives = {};
     angular.forEach(

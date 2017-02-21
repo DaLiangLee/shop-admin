@@ -207,33 +207,35 @@
            $scope.searchHandler({data: getParams(_this.searchParams)});
         };
 
-        function getCustom(value, params){
-          var temp = [];
-          angular.forEach(params, function (key, value) {
-            if(/^\$\$/.test(value) && key === -1){
-              temp.push(value.replace(/^\$\$/ig, ""));
-            }
-          });
-          var result = false;
-          temp.length && angular.forEach(temp, function (key) {
-            if(value.indexOf(key) > -1){
-              result = true;
-              return false;
-            }
-          });
-          return result;
-        }
-
         function getParams(params){
           var searchParams = {};
+          var temp = [];
+          var collections = [];
           angular.forEach(params, function (key, value) {
-            console.log(!angular.isUndefined(key) , value.indexOf('$$') != 0);
+            if(value.indexOf('$$') > -1){
+              temp.push(value.substring(2));
+            }
+          });
+          angular.forEach(params, function (key, value) {
+            angular.forEach(temp, function (key2, value2) {
+              console.log(key, value, key2, value2);
+              if(value.indexOf(key2) > -1){
+                collections.push({});
+              }else{
+                searchParams[value] = key == -1 ? undefined : key;
+              }
+            });
+          });
+          console.log(collections, searchParams);
+
+          /*angular.forEach(params, function (key, value) {
+            console.log(value, key);
             if(!angular.isUndefined(key) && value.indexOf('$$') != 0){
               (key != -1) && (searchParams[value] = key);
               ((key == -1) || getCustom(value, params)) && (searchParams[value] = undefined);
             }
-          });
-          return searchParams;
+          });*/
+          return params;
         }
 
 
