@@ -33,14 +33,16 @@
  * config    全局配置参数
  *    columnsClass       tr上面加class     {'classname' : true添加，false不添加}
  *    sortSupport        是否开启排序       默认false
- *    sortPrefer      排序形式（客户端false还是服务端true）       默认客户端
+ *    sortPrefer      排序形式（客户端false还是服务端true）       默认false客户端
  *    settingPrefer   自定义列表项配置
  *        necessarySettings       不能修改的列表项
  *        remixCustomSettings     所有列表项
  *        currentCustomSettings   当前列表项
- *    settingColumnsSupport  是否开启自定义列表项   默认false
- *    checkboxSupport        是否开启全选单选       默认false
- *    paginationSupport      是否开启分页          默认false
+ *    settingColumnsSupport  是否开启自定义列表项     默认false
+ *    checkboxSupport        是否开启全选单选        默认false
+ *    paginationSupport      是否开启分页            默认false
+ *    isActiveClass          是否当前显示Class       默认true
+ *    activeClass            当前显示class           默认active
  *    paginationInfo      分页配置参数
  *        分页配置参数
  *        maxSize            最大页数
@@ -130,17 +132,18 @@
         node += checkboxConfig(false);
       }
       angular.forEach(scope.columns, function (item) {
-        var name = item.units ? item.name + item.units : item.name;
-        if (scope.config.sortSupport && scope.clientSort && item.field) {
-          node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + name + '<span class="icon-updown" ng-click="clientSortHandler(\'' + item.field + '\', sortReverse)"><i class="caret"></i></span></th>';
-        } else if (scope.config.sortSupport && scope.serverSortEnabled && item.field) {
-          node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + ' ng-click="serverSortHandler(\'' + item.field + '\', sortReverse)">' + name + '<span class="icon-updown" ng-class="{\'dropup\': sortReverse[\'' + item.field + '\']}"><i class="caret"></i></span></th>';
-        } else {
-          if (!item.none) {
-            node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + name + '</th>';
+          var name = item.units ? item.name + item.units : item.name;
+          if (scope.config.sortSupport && item.field) {
+            var sortHandler = scope.config.sortPrefer ? 'serverSortHandler' : 'clientSortHandler';
+
+            node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + ' ng-click="' + sortHandler + '(\'' + item.field + '\', sortReverse)">' + name + '<span class="icon-updown" ng-class="{\'dropup\': sortReverse[\'' + item.field + '\']}"><i class="caret"></i></span></th>';
+          } else {
+            if (!item.none) {
+              node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + name + '</th>';
+            }
           }
         }
-      });
+      );
       return "<thead><tr>" + node + "</tr></thead>";
     }
 
@@ -161,17 +164,7 @@
         }
       });
 
-      var statusShow = "{";
-      angular.forEach(scope.config.statusShow, function (value) {
-        if(!!value.status){
-          statusShow += value.sClass + ": " + rowItemName + "." + value.status + ",";
-        }else{
-          statusShow += value.sClass + ": " + rowItemName + "." + value.key + "==" + value.value + ",";
-        }
-
-      });
-      statusShow = statusShow.substring(0, statusShow.length - 1) + "}";
-      var statusShowClass = scope.config.statusShow && scope.config.statusShow.length ? ' ng-class="' + statusShow + '" ' : "";
+      var statusShowClass = scope.config.isActiveClass ? ' ng-class="{' + scope.config.activeClass + ': item.$$active}" ' : "";
       var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
       return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
     }
@@ -179,8 +172,8 @@
     function tFootConfig(scope) {
       var node = "", btn = "", page = "", config = scope.config;
       /*if (config.checkboxSupport) {
-        node += checkboxConfig(false);
-      }*/
+       node += checkboxConfig(false);
+       }*/
 
       if (config.batchOperationBarDirective.length > 0) {    // 添加批量操作按钮
         btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
@@ -192,8 +185,8 @@
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
         page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
       }
-      var pageSpan = Math.ceil(scope.columns.length/2),
-          addSpan = scope.columns.length - pageSpan;
+      var pageSpan = Math.ceil(scope.columns.length / 2),
+        addSpan = scope.columns.length - pageSpan;
 
       node += '<td colspan="' + addSpan + '">' + btn + '</td>';
       node += '<td colspan="' + pageSpan + '">' + page + '</td>';
@@ -232,6 +225,8 @@
         maxSize: 5,                 //最大页数
         showPageGoto: false        //是否开启手动输入跳转页
       },
+      isActiveClass: true,          // 是否当前显示Class
+      activeClass: 'active',          //  当前显示class
       propsParams: {},               // 给子组件传递数据  提供子指令和控制器交互数据
       noneDataInfoDirective: 'simple-grid-none-data',    // 没有数据显示状态指令
       noneDataInfoMessage: '没有数据',      // 没有数据显示状态文字
@@ -245,11 +240,11 @@
     /**
      * 检测是否全选
 
-    * @param scope
+     * @param scope
      * @returns {{selectAll: boolean, results: Array}}
      */
     function getTableStateAll(scope) {
-      if(!scope.store.length){
+      if (!scope.store.length) {
         return {
           selectAll: false,
           results: []
@@ -257,7 +252,7 @@
       }
       var selected = scope.config.selectedProperty,
         store = scope.store,
-        results = _.filter(store, function(item){
+        results = _.filter(store, function (item) {
           return item[selected];
         });
       return {
@@ -287,17 +282,14 @@
         // 给子组件传递数据
         $scope.propsParams = $scope.config.propsParams;
 
-        // 排序配置  （客户端false还是服务端true）
+        // 排序配置  （客户端false 服务端true）
         if ($scope.config.sortSupport) {
-          $scope.clientSort = !$scope.config.sortPrefer;
-          $scope.serverSortEnabled = $scope.config.sortPrefer;
-          $scope.reserves = true;
           $scope.sortReverse = {};
         }
         // 客户端排序
-        $scope.clientSortHandler = function (name) {
-          $scope.reserves = !$scope.reserves;
-          $scope.store = $filter("orderBy")($scope.store, name, $scope.reserves);
+        $scope.clientSortHandler = function (name, data) {
+          data[name] = !data[name];
+          $scope.store = $filter("orderBy")($scope.store, name, !data[name]);
         };
 
         // 服务端排序
@@ -353,6 +345,14 @@
         // 点击当前项
         $scope.selectItem = function (item) {
           $scope.selectHandler({item: item});
+          $scope.config.isActiveClass && setItemActive(item);
+        };
+        // 清除全部状态，设置当前状态
+        function setItemActive(item) {
+          _.forEach($scope.store, function (key) {
+            key.$$active = false;
+          });
+          item.$$active = true;
         }
       }],
       link: function (scope, iElement) {
@@ -376,6 +376,7 @@
         // 监听store数据变化
         scope.$watch("store", function (newValue, oldVlaue, scope) {
           if (newValue) {
+            (scope.config.isActiveClass && newValue[0]) && (scope.store[0].$$active = true);
             scope.showNoneDataInfoTip = newValue.length === 0;
             var tableState = getTableStateAll(scope);
             scope.tableState.selectAll = tableState.selectAll;

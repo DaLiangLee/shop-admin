@@ -156,6 +156,7 @@
        */
       vm.searchModel = {
         'config': {
+          other: currentParams,
           searchDirective: [
             {
               label: "评价时间",
@@ -258,13 +259,13 @@
           if (results.data.status == 0) {
             vm.gridModel.itemList = results.data.data;
             vm.gridModel.paginationinfo = {
-              page: params.page * 1,
               pageSize: params.pageSize,
+              page: params.page * 1,
               total: results.data.totalCount
             };
             vm.gridModel.loadingState = false;
           }else{
-            cbAlert.error("错误提示1", results.data.data);
+            cbAlert.error("错误提示", results.data.data);
           }
         });
       }

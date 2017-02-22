@@ -15,11 +15,6 @@
     var currentState = $state.current;
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
-    /**
-     * 记录当前子项
-     * @type {string}
-     */
-    var recordChild = "";
 
     var total = 0;
 
@@ -54,7 +49,7 @@
       },
       selectHandler: function (item) {
         // 拦截用户恶意点击
-        recordChild != item.guid && getProductSkus(item.guid);
+        !item.$$active && item.guid && getProductSkus(item.guid);
       }
     };
     categoryGoods.goods().then(function (data) {
@@ -101,6 +96,7 @@
      */
     vm.searchModel = {
       'config': {
+        other: currentParams,
         keyword: {
           placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
           model: currentParams.keyword,
@@ -204,12 +200,11 @@
         ]
       },
       'handler': function (data) {
-        var search = angular.extend({}, currentParams, data);
         // 如果路由一样需要刷新一下
-        if(angular.equals(currentParams, search)){
+        if(angular.equals(currentParams, data)){
           $state.reload();
         }else{
-          $state.go(currentStateName, search);
+          $state.go(currentStateName, data);
         }
       }
     };
@@ -268,7 +263,6 @@
     function getProductSkus(id) {
       productGoods.getProductSkus({id: id}).then(function (results) {
         if (results.data.status == 0) {
-          recordChild = id;
           results.data.data.items && angular.forEach(results.data.data.items, function (item) {
             item.$$stockShow = item.stock <= -9999 ? "无限" : item.stock;
             item.$$stock = item.stock <= -9999 ? "" : item.stock;

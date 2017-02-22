@@ -43,23 +43,13 @@
             "direction": item
           });
         });
-
-
         var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
         vm.gridModel.requestParams.params = order;
         getList(order);
       },
       selectHandler: function (item) {
         // 拦截用户恶意点击
-        if(!item.$$active){
-          item.mobile && getMotor(item.mobile)
-        }
-
-        _.forEach(vm.gridModel.itemList, function (key) {
-          key.$$active = false;
-        });
-
-        item.$$active = true;
+        !item.$$active && item.mobile && getMotor(item.mobile);
       }
     };
 
@@ -108,7 +98,6 @@
       if (!params.page) {
         return;
       }
-      console.log();
       userCustomer.userList(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
@@ -142,7 +131,6 @@
     vm.searchModel = {
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
-        vm.gridModel.requestParams.params = search;
         // 如果路由一样需要刷新一下
         if(angular.equals(currentParams, search)){
           $state.reload();
@@ -155,8 +143,13 @@
       var result = results.data;
       if (result.status == 0) {
         vm.searchModel.config = {
-          keyword: currentParams.keyword,
-          placeholder: "请输入会员名称、手机号、车牌号、品牌",
+          other: currentParams,
+          keyword: {
+            placeholder: "请输入会员名称、手机号、车牌号、品牌",
+            model: currentParams.keyword,
+            name: "keyword",
+            isShow: true
+          },
           searchDirective: [
             {
               label: "会员等级",

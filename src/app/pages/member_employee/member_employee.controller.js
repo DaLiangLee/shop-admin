@@ -183,14 +183,19 @@
      */
     vm.searchModel = {
       'handler': function (data) {
-        var search = angular.extend({}, currentParams, data);
-        $state.go(currentStateName, search);
+        // 如果路由一样需要刷新一下
+        if(angular.equals(currentParams, data)){
+          $state.reload();
+        }else{
+          $state.go(currentStateName, data);
+        }
       }
     };
     memberEmployee.all().then(function (results) {
       var result = results.data;
       if (result.status == 0) {
         vm.searchModel.config = {
+          other: currentParams,
           keyword: {
             placeholder: "请输入员工姓名、账号、手机、岗位",
             model: currentParams.keyword,

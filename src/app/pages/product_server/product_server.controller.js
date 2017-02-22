@@ -17,11 +17,6 @@
       var currentParams = angular.extend({}, $state.params, {pageSize: 5});
       var total = 0;
       /**
-       * 记录当前子项
-       * @type {string}
-       */
-      var recordChild = "";
-      /**
        * 表格配置
        */
       vm.gridModel = {
@@ -52,7 +47,7 @@
         },
         selectHandler: function (item) {
           // 拦截用户恶意点击
-          recordChild != item.guid && getServerSkus(item.guid);
+          !item.$$active && item.guid && getServerSkus(item.guid);
         }
       };
 
@@ -95,6 +90,7 @@
        */
       vm.searchModel = {
         'config': {
+          other: currentParams,
           keyword: {
             placeholder: "请输入服务编码、服务名称、服务属性",
             model: currentParams.keyword,
@@ -182,12 +178,11 @@
           ]
         },
         'handler': function (data) {
-          var search = angular.extend({}, currentParams, data);
           // 如果路由一样需要刷新一下
-          if(angular.equals(currentParams, search)){
+          if(angular.equals(currentParams, data)){
             $state.reload();
           }else{
-            $state.go(currentStateName, search);
+            $state.go(currentStateName, data);
           }
         }
       };
@@ -195,7 +190,6 @@
       function getServerSkus(id) {
         productServer.getServerSkus({id: id}).then(function (results) {
           if (results.data.status == 0) {
-            recordChild = id;
             results.data.data.serverSkus && angular.forEach(results.data.data.serverSkus, function (item) {
               item.serverprice = item.serverprice/100;
               if((!item.serverprice && item.serverprice != 0) || (!item.servertime && item.servertime != 0)){

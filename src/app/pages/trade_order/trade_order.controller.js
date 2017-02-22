@@ -33,8 +33,20 @@
         var page = angular.extend({}, currentParams, {page: data});
         $state.go(currentStateName, page);
       },
+      sortChanged: function (data) {
+        var orders = [];
+        angular.forEach(data.data, function (item, key) {
+          orders.push({
+            "field": key,
+            "direction": item
+          });
+        });
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        getList(order);
+      },
       selectHandler: function (item) {
-        getOrdersDetails(item.guid);
+        // 拦截用户恶意点击
+        !item.$$active && item.guid && getOrdersDetails(item.guid);
       }
     };
 
@@ -170,6 +182,7 @@
      */
     vm.searchModel = {
       'config': {
+        other: currentParams,
         keyword: {
           placeholder: "请输入订单编号、会员信息、车辆信息等",
           model: currentParams.keyword,

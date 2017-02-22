@@ -83,7 +83,7 @@
           'settingColumnsSupport': false,   // 设置表格列表项
           'checkboxSupport': true,  // 是否有复选框
           'sortSupport': true,     // 排序
-          'sortPrefer': true,     //  服务端排序
+          'sortPrefer': false,     //  服务端排序
           'paginationSupport': true,  // 是否有分页
           'selectedProperty': "selected",  // 数据列表项复选框
           'selectedScopeProperty': "selectedItems",

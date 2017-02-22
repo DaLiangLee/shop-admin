@@ -39,7 +39,7 @@
       },
       selectHandler: function(item){
         // 拦截用户恶意点击
-        recordChild != item.guid && getUser(item.guid);
+        !item.$$active && item.guid && getUser(item.guid);
       }
     };
 
@@ -99,7 +99,7 @@
             totalCount: result.totalCount
           }
         } else {
-          cbAlert.error("错误提示", result.rtnInfo);
+          cbAlert.error("错误提示", result.data);
         }
       }).then(function(result){
         _.map(result.items, function (item) {
@@ -111,12 +111,13 @@
           total: result.totalCount
         };
         if(result.items[0]){
-          getUser(result.items[0].guid)
+          getUser(result.items[0].guid);
         }else{
           vm.gridModel2.itemList = [];
           vm.gridModel2.loadingState = false;
         }
         vm.gridModel.itemList = result.items;
+        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
         vm.gridModel.loadingState = false;
       });
     }
@@ -169,8 +170,13 @@
      */
     vm.searchModel = {
       'config': {
-        keyword: currentParams.keyword,
-        placeholder: "请输入会员姓名、手机号、车牌号、品牌",
+        other: currentParams,
+        keyword: {
+          placeholder: "请输入会员姓名、手机号、车牌号、品牌",
+          model: currentParams.keyword,
+          name: "keyword",
+          isShow: true
+        },
         searchDirective: [
           {
             label: "剩余保养里程",

@@ -9,7 +9,7 @@
   </p>
 </div>
 <form name="contact" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate autocomplete="off">
-  <div ng-form name=list ng-repeat="item in vm.dataLists">
+  <div ng-form name="list" ng-repeat="item in vm.dataLists">
     <div class="form-group">
       <label class="col-sm-2 control-label"><span
         ng-bind="item.type | formatStatusFilter : 'storeContactPeople'"></span>：</label>
