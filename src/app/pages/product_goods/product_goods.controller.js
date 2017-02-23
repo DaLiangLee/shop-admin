@@ -52,9 +52,7 @@
         !item.$$active && item.guid && getProductSkus(item.guid);
       }
     };
-    categoryGoods.goods().then(function (data) {
-      console.log(data.data.data);
-    });
+
     /**
      * 组件数据交互
      *
@@ -89,116 +87,11 @@
         }
       }
     };
-
     /**
      * 搜索操作
      *
      */
     vm.searchModel = {
-      'config': {
-        other: currentParams,
-        keyword: {
-          placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
-          model: currentParams.keyword,
-          name: "keyword",
-          isShow: true
-        },
-        searchDirective: [
-          {
-            label: "类目",
-            all: true,
-            list: [
-              {
-                id: 0,
-                label: "汽车内饰"
-              },
-              {
-                id: 1,
-                label: "电子导航"
-              },
-              {
-                id: 2,
-                label: "轮胎"
-              },
-              {
-                id: 3,
-                label: "保养配件"
-              },
-              {
-                id: 4,
-                label: "工具"
-              }
-            ],
-            type: "list",
-            model: currentParams.pcateid1,
-            name: "pcateid1"
-          },
-          {
-            label: "销量",
-            name: "salenums",
-            all: true,
-            custom: true,
-            region: true,
-            type: "integer",
-            start: {
-              name: "salenums0",
-              model: currentParams.salenums0
-            },
-            end: {
-              name: "salenums1",
-              model: currentParams.salenums1
-            }
-          },
-          {
-            label: "库存",
-            all: true,
-            custom: true,
-            region: true,
-            type: "integer",
-            name: "stock",
-            start: {
-              name: "stock0",
-              model: currentParams.stock0
-            },
-            end: {
-              name: "stock1",
-              model: currentParams.stock1
-            }
-          },
-          {
-            label: "价格",
-            all: true,
-            custom: true,
-            region: true,
-            type: "integer",
-            name: "saleprice",
-            start: {
-              name: "saleprice0",
-              model: currentParams.saleprice0
-            },
-            end: {
-              name: "saleprice1",
-              model: currentParams.saleprice1
-            }
-          },
-          {
-            label: "保质期",
-            all: true,
-            custom: true,
-            region: true,
-            type: "integer",
-            name: "shelflife",
-            start: {
-              name: "shelflife0",
-              model: currentParams.shelflife0
-            },
-            end: {
-              name: "shelflife1",
-              model: currentParams.shelflife1
-            }
-          }
-        ]
-      },
       'handler': function (data) {
         // 如果路由一样需要刷新一下
         if(angular.equals(currentParams, data)){
@@ -209,11 +102,115 @@
       }
     };
 
+
+    /**
+     * 获取筛选类目
+     */
+    categoryGoods.goods().then(function (results) {
+      if (results.data.status == 0) {
+        var items = [];
+        _.forEach(results.data.data, function (item) {
+          items.push({
+            id: item.id,
+            label: item.catename
+          });
+        });
+        vm.searchModel.config = {
+          other: currentParams,
+          keyword: {
+            placeholder: "请输入商品编码、名称、品牌、零件码、条形码、属性",
+            model: currentParams.keyword,
+            name: "keyword",
+            isShow: true
+          },
+          searchDirective: [
+            {
+              label: "类目",
+              all: true,
+              list: items,
+              type: "list",
+              model: currentParams.pcateid1,
+              name: "pcateid1"
+            },
+            {
+              label: "销量",
+              name: "salenums",
+              all: true,
+              custom: true,
+              region: true,
+              type: "integer",
+              start: {
+                name: "salenums0",
+                model: currentParams.salenums0
+              },
+              end: {
+                name: "salenums1",
+                model: currentParams.salenums1
+              }
+            },
+            {
+              label: "库存",
+              all: true,
+              custom: true,
+              region: true,
+              type: "integer",
+              name: "stock",
+              start: {
+                name: "stock0",
+                model: currentParams.stock0
+              },
+              end: {
+                name: "stock1",
+                model: currentParams.stock1
+              }
+            },
+            {
+              label: "价格",
+              all: true,
+              custom: true,
+              region: true,
+              type: "integer",
+              name: "saleprice",
+              start: {
+                name: "saleprice0",
+                model: currentParams.saleprice0
+              },
+              end: {
+                name: "saleprice1",
+                model: currentParams.saleprice1
+              }
+            },
+            {
+              label: "保质期",
+              all: true,
+              custom: true,
+              region: true,
+              type: "integer",
+              name: "shelflife",
+              start: {
+                name: "shelflife0",
+                model: currentParams.shelflife0
+              },
+              end: {
+                name: "shelflife1",
+                model: currentParams.shelflife1
+              }
+            }
+          ]
+        }
+      } else {
+        cbAlert.error(results.data.data);
+      }
+
+    });
+
     /**
      * 表格配置
      */
     vm.gridModel2 = {
-      editorhandler: function (data, item, type) {
+      editorhandler: function (data, item, type, productid) {
+        console.log(item);
+
         if(type === "stock" && item.stock != -9999 && data > item.stock){
           cbAlert.alert('修改的库存不能比当前库存大');
           item.$$stock = item.stock;
@@ -224,7 +221,9 @@
         }else{
           item[type] = data;
         }
-        productGoods.updateProductSku(_.pick(item, ['guid', type])).then(function (results) {
+        var items = _.pick(item, ['guid', type]);
+        items['productid'] = productid;
+        productGoods.updateProductSku(items).then(function (results) {
           if (results.data.status == '0') {
             cbAlert.tips('修改成功');
             getList(currentParams);
@@ -236,12 +235,14 @@
     };
 
 
-    vm.statusItem = function (item) {
+    vm.statusItem = function (item, productid) {
       var tips = item.status === "0" ? '是否确认启用该商品SKU？' : '是否确认禁用该商品SKU？';
       cbAlert.ajax(tips, function (isConfirm) {
         if (isConfirm) {
           item.status = item.status === "0" ? "1" : "0";
-          productGoods.updateProductSku(_.pick(item, ['guid', 'status'])).then(function (results) {
+          var items = _.pick(item, ['guid', 'status']);
+          items['productid'] = productid;
+          productGoods.updateProductSku(items).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.success('修改成功');
               var statusTime = $timeout(function () {
@@ -385,7 +386,7 @@
         }
       }
     };
-
+    vm.dataBase.items.push({});
 
     function getBrandname(data, id) {
       var item = _.remove(data, function (item) {
@@ -496,6 +497,17 @@
       }
     };
 
+    /**
+     * 选择车辆
+     * @param data
+     * @param item
+     */
+    vm.vehicleSelect = function(data, item){
+      console.log(data, item);
+      if(data.status == 0){
+        item.motobrandids = data.data;
+      }
+    };
 
     vm.uploadHandler = function (data, index) {
       if (data.status == 0) {

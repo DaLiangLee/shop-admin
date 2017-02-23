@@ -40,14 +40,14 @@
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
             <td><span ng-bind="$index+1"></span></td>
             <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
-            <td><span class="state-unread" ng-bind="item.saleprice | moneyformatFilter"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice')"></span></td>
+            <td><span class="state-unread" ng-bind="item.saleprice | moneyformatFilter"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice', vm.items.guid)"></span></td>
             <td><span class="state-unread"><span ng-bind="item.salenums"></span>件</span></td>
-            <td><span class="state-unread"><span ng-bind="item.$$stockShow"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock')"></span></td>
+            <td><span class="state-unread"><span ng-bind="item.$$stockShow"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.items.guid)"></span></td>
             <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
             <td>使用车型</td>
             <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
-                     ng-click="vm.statusItem(item)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
+                     ng-click="vm.statusItem(item, vm.items.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
             <td><span ng-bind="item.skudescription"></span></td>
           </tr>
         </tbody>

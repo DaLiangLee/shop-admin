@@ -5,7 +5,8 @@
   'use strict';
   angular
     .module('shopApp')
-    .directive('cbSelectLicense', cbSelectLicense);
+    .directive('cbSelectLicense', cbSelectLicense)
+    .directive('cbInputLicense', cbInputLicense);
   /**
    * data         获取交互数据
    * config       配置信息
@@ -289,7 +290,7 @@
         scope.selectModel2 = {
           store: dataLists[0].items,
           handler: function (data) {
-            if(scope.selectModel3.text){
+            if (scope.selectModel3.text) {
               scope.select = scope.selectModel1.select + data + " " + scope.selectModel3.text;
             }
           }
@@ -299,31 +300,27 @@
           handler: function (data) {
             scope.selectModel2.store = _.find(dataLists, {'name': data}).items;
             scope.selectModel2.select = scope.selectModel2.store[0].name;
-            if(scope.selectModel3.text){
+            if (scope.selectModel3.text) {
               scope.select = data + scope.selectModel2.select + " " + scope.selectModel3.text;
             }
           }
         };
         scope.selectModel3 = {
           handler: function () {
-            if(scope.selectModel3.text){
+            if (scope.selectModel3.text) {
               scope.select = scope.selectModel1.select + scope.selectModel2.select + " " + scope.selectModel3.text;
             }
           }
         };
-
-
-
-
         var select = scope.$watch('select', function (value) {
           console.log();
 
           if (angular.isDefined(value)) {
             scope.selectModel1.select = value.charAt(0);
             scope.selectModel2.select = value.charAt(1);
-            if(/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/.test(value)){
+            if (/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/.test(value)) {
               scope.selectModel3.text = value.substring(3);
-            }else{
+            } else {
               scope.selectModel3.text = value.substring(2);
             }
           } else {
@@ -333,12 +330,62 @@
           }
         });
 
-
         /**
          * 销毁操作
          */
-        scope.$on('$destroy', function() {
+        scope.$on('$destroy', function () {
           select();
+        });
+      }
+    }
+  }
+
+  /** @ngInject */
+  function cbInputLicense() {
+    var LICENSE_REGULAR = /^[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/;
+    return {
+      restrict: 'A', // 作为元素属性
+      require: "?ngModel",  // 获取ngModelController
+      scope: {}, // 这个指令有一个独立的作用域对象，也就是有一个独立的scope对象
+      link: function (scope, iElement, iAttrs, ngModelCtrl) {
+        var parents = iElement.parent();
+        var errorClass = iAttrs.cbInputLicense;
+        // 如果没有ng-model则什么都不做
+        if (!ngModelCtrl) {
+          return;
+        }
+        // 输入错误
+        var isError = false;
+        // $parsers接受一个数组，用于将viewValue转化成modelValue
+        ngModelCtrl.$parsers.push(function (viewValue) {
+          if (angular.isUndefined(viewValue)) {
+            return "";
+          }
+          var value;
+          if (angular.isString(viewValue)) {
+            value = viewValue.substring(0, 5);
+            var valueStart = value.substring(0, 4).replace(/[^A-Za-z0-9]/g, "");
+            var valueEnd = value.substring(4).replace(/[^A-Za-z0-9挂学警港澳]/g, "");
+            value = valueStart.toLocaleUpperCase() + valueEnd.toLocaleUpperCase();
+            if (value != viewValue) {
+              ngModelCtrl.$setViewValue(value);
+              ngModelCtrl.$render();
+            }
+          }
+          if (LICENSE_REGULAR.test(value)) {
+            ngModelCtrl.$setValidity("cbInputLicense", true);
+            parents.removeClass(errorClass);
+            isError = false;
+            return value;
+          } else {
+            ngModelCtrl.$setValidity("cbInputLicense", false);
+            isError = true;
+            return undefined;
+          }
+        });
+
+        iElement.on('blur', function(){
+          isError && parents.addClass(errorClass);
         });
       }
     }

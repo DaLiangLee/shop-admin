@@ -71,8 +71,8 @@
       <input type="text" placeholder="搜索关键词" ng-model="modelText">
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in modelList | filter: {model: modelText}"  ng-class="{'open': item.$$open}">
-            <span ng-bind="item.model"  ng-click="selecthandle(6, item, 'model')" style="cursor: pointer;"></span>
+          <li ng-repeat="item in modelList | filter: {model: modelText}" ng-click="selecthandle(6, item, 'model')"  ng-class="{'open': item.$$open}"   style="cursor: pointer;">
+            <span ng-bind="item.model"></span>
           </li>
         </ul>
       </div>
