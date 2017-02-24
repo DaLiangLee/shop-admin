@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(index,item) in vm.items track by $index" ng-class="{'even': $odd}">
+          <tr ng-repeat="(index,item) in vm.dataLists track by $index" ng-class="{'even': $odd}">
             <td ng-bind="index+1"></td>
             <td>
               <span ng-if="item.isdefault == 1" ng-bind="item.gradename"></span>
@@ -35,7 +35,7 @@
             </td>
           </tr>
         </tbody>
-        <tfoot ng-if="vm.items.length < 10">
+        <tfoot ng-if="vm.dataLists.length < 10">
           <tr class="even">
             <td colspan="4"><button ng-click="vm.addGrade()" class="add">+添加会员等级</button></td>
           </tr>

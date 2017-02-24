@@ -17,16 +17,9 @@
 
         /** @ngInject */
         function configurationRun(configuration) {
-          configuration.setConfig({
-            storeid: userPermissionList.storeid,
-            storecode: userPermissionList.storecode,
-            api: userPermissionList.api,
-            avatar: userPermissionList.avatar,
-            message: userPermissionList.message,
-            role: userPermissionList.role,
-            username: userPermissionList.username,
-            menu: userPermissionList.menu
-          });
+          configuration.setConfig(
+            _.pick(userPermissionList, ['storeid', 'storecode', 'api', 'static', 'avatar', 'message', 'role', 'username', 'menu'])
+          );
         }
 
         /** @ngInject */

@@ -1,29 +1,93 @@
-.viewFramework-cb-vehicle-select-dialog{
-  .modal-dialog{
+.viewFramework-cb-vehicle-select-dialog {
+  .modal-dialog {
     width: 1000px;
   }
-  .list{
+  .list {
     float: left;
     width: 20%;
 
   }
-  .list .items{
+  .list .items {
     height: 300px;
     overflow-y: auto;
-    .open{
+    .open {
       background-color: #ccc;
       color: #fff;
     }
   }
-  .tags{
+  .tags {
     display: inline-block;
     vertical-align: middle;
     background-color: #ccc;
-    margin:0 10px 10px 0;
-    white-space:nowrap;
+    margin: 0 10px 10px 0;
+    white-space: nowrap;
     padding: 5px 10px;
-    .close{
+    .close {
       margin-left: 10px;
+    }
+  }
+}
+
+.k-vehicle-show {
+  width: 200px;
+  height: 40px;
+  .brand-box {
+    position: relative;
+    .list {
+      position: static;
+      padding: 0;
+      margin: 0;
+      li {
+        padding: 0;
+        margin: 5px 0;
+        img {
+          width: 40px;
+        }
+      }
+    }
+    .vehicle-edit{
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      z-index: 101;
+      line-height: 30px;
+      cursor: pointer;
+      display: none;
+    }
+    .vehicle-opend {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      z-index: 101;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      vertical-align: middle;
+      text-align: center;
+      cursor: pointer;
+      display: none;
+    }
+  }
+  .brand-box.show {
+    padding: 10px;
+    .list {
+      position: absolute;
+      left: -1px;
+      top: -1px;
+      z-index: 100;
+      border: 1px solid #ccc;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    .vehicle-edit{
+      display: block;
+    }
+  }
+  .brand-box.more {
+    .vehicle-opend {
+      display: block;
+    }
+    .vehicle-edit{
+      top: 40px;
     }
   }
 }

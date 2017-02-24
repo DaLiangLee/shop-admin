@@ -99,6 +99,11 @@
       "followed": {
         "0": "未关注",
         "1": "已关注"
+      },
+      "discounttype": {
+        "0": "无优惠",
+        "1": "会员折扣",
+        "2": "优惠"
       }
     })
     .filter('formatStatusFilter', formatStatusFilter);

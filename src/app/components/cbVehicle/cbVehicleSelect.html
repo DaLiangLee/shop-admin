@@ -1,6 +1,7 @@
 <div>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+            aria-hidden="true">&times;</button>
     <h5 class="modal-title">选择适用车型</h5>
   </div>
   <div class="modal-body">
@@ -30,7 +31,7 @@
         <input type="text" placeholder="搜索关键词" ng-model="seriesText">
         <div class="items">
           <ul class="list-unstyled">
-            <li ng-repeat="item in seriesList | filter: {series: seriesText}"  ng-class="{'open': item.$open}">
+            <li ng-repeat="item in seriesList | filter: {series: seriesText}" ng-class="{'open': item.$open}">
               <input type="checkbox" name=""
                      bf-check-indeterminate="item.$isIndeterminate()"
                      ng-model="item.$checked"
@@ -46,7 +47,7 @@
         <h2 class="h6">已选择适用车型：</h2>
         <hr>
         <div style="height:280px; overflow-y: auto">
-          <div class="tags" ng-repeat="item in list track by $index">
+          <div class="tags" ng-repeat="item in dataLists">
             <span ng-bind="item.title"></span>
             <span class="close" ng-click="removeHandle(item)">&times;</span>
           </div>
@@ -55,9 +56,10 @@
     </div>
     <div>
       <br>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="confirm()">确定</button>
-    <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="confirm()">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
   </div>
 </div>

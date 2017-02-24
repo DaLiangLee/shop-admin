@@ -85,7 +85,7 @@
           <div ng-if="!vm.isAttributesetLoad">
             <p class="text-border text-border-warning">请先选择商品类目</p>
           </div>
-          <div ng-if="!vm.isAttributesetLoad">
+          <div ng-if="vm.isAttributesetLoad">
             <table class="table">
               <thead>
               <tr>
@@ -103,14 +103,14 @@
               <tbody>
               <tr ng-repeat="item in vm.dataBase.items">
                 <td>
-                  <div class="text-border"><span ng-bind="item.$$skuname"></span></div>
+                  <div class="text-border"><span ng-bind="item.$$skuname"></span><span class="text-primary">详情</span></div>
                 </td>
                 <td><input class="form-control" type="text" name=""
                            ng-model="item.$$stock" cb-number-range="" data-value-min="0" data-value-max="99999999" placeholder="不填无限" cb-placeholder></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.saleprice" cb-money-range="" data-value-min="0" data-value-max="99999999" placeholder="请输入零售单价"  cb-placeholder></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skucode" placeholder="请输入条形码" cb-placeholder></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.partscode" placeholder="请输入零件码" cb-placeholder></td>
-                <td><button ng-if="1" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加车辆</button><!--<div ng-if="1" cb-vehicle-show  item="item.motobrandids"></div>-->{{item.motobrandids}}</td>
+                <td><button class="btn btn-primary" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型</button><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述" cb-placeholder></td>
                 <td>
                   <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>

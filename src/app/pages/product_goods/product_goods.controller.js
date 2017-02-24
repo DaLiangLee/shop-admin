@@ -211,7 +211,7 @@
       editorhandler: function (data, item, type, productid) {
         console.log(item);
 
-        if(type === "stock" && item.stock != -9999 && data > item.stock){
+        if(type === "stock" && (item.stock == null || item.stock == undefined) && data > item.stock){
           cbAlert.alert('修改的库存不能比当前库存大');
           item.$$stock = item.stock;
           return ;
@@ -265,10 +265,11 @@
       productGoods.getProductSkus({id: id}).then(function (results) {
         if (results.data.status == 0) {
           results.data.data.items && angular.forEach(results.data.data.items, function (item) {
-            item.$$stockShow = item.stock <= -9999 ? "无限" : item.stock;
-            item.$$stock = item.stock <= -9999 ? "" : item.stock;
+            item.$$stockShow = (item.stock == null || item.stock == undefined) ? "无限" : item.stock;
+            item.$$stock = (item.stock == null || item.stock == undefined) ? "" : item.stock;
             item.saleprice = computeService.divide(item.saleprice, 100);
             item.salenums = _.isUndefined(item.salenums) ? 0 : item.salenums;
+            item.motobrandids = angular.fromJson(item.motobrandids);
           });
           vm.items = results.data.data;
         } else {
@@ -294,7 +295,7 @@
           total = data.data.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(data.data.data, function (item) {
-            item.$$stockShow = item.stock <= -999 ? "无限" : item.stock;
+            item.$$stockShow = (item.stock == null || item.stock == undefined) ? "无限" : item.stock;
             vm.gridModel.itemList.push(item);
           });
           vm.gridModel.paginationinfo = {
@@ -386,7 +387,7 @@
         }
       }
     };
-    vm.dataBase.items.push({});
+    vm.dataBase.items.push();
 
     function getBrandname(data, id) {
       var item = _.remove(data, function (item) {
@@ -509,6 +510,18 @@
       }
     };
 
+    /**
+     * 编辑车辆
+     * @param data
+     * @param item
+     */
+    vm.vehicleShow = function(data, item){
+      console.log(data, item);
+      if(data.status == 0){
+        item.motobrandids = data.data;
+      }
+    };
+
     vm.uploadHandler = function (data, index) {
       if (data.status == 0) {
         if (angular.isDefined(index)) {
@@ -548,11 +561,11 @@
      */
     function getDataBase(data) {
       var result = angular.copy(data);
-
       angular.forEach(result.items, function (item) {
         item.skuvalues = angular.toJson(item.skuvalues);
-        item.stock = !item.$$stock && item.$$stock != 0 ? -9999 : item.$$stock;
+        item.stock = !item.$$stock && item.$$stock != 0 ? null : item.$$stock;
         item.saleprice = computeService.multiply(item.saleprice || 0, 100);
+        item.motobrandids = angular.toJson(item.motobrandids);
       });
       /**
        * 防止后台数据出bug end

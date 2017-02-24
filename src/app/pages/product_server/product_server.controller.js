@@ -223,9 +223,11 @@
        * 表格配置
        */
       vm.gridModel2 = {
-        editorhandler: function (data, item, type) {
+        editorhandler: function (data, item, type, serverid) {
           item[type] = data;
-          productServer.updateServerSku(_.pick(item, ['guid', 'servertime'])).then(function (results) {
+          var items = _.pick(item, ['guid', 'servertime']);
+          items['serverid'] = serverid;
+          productServer.updateServerSku(items).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.tips('修改成功');
               getList(currentParams);
@@ -234,13 +236,15 @@
             }
           });
         },
-        statusItem: function (item) {
+        statusItem: function (item, serverid) {
           console.log(JSON.stringify(item));
           var tips = item.status === "0" ? '是否确认启用该服务SKU？' : '是否确认禁用该服务SKU？';
           cbAlert.ajax(tips, function (isConfirm) {
             if (isConfirm) {
               item.status = item.status === "0" ? "1" : "0";
-              productServer.updateServerSku(_.pick(item, ['guid', 'status'])).then(function (results) {
+              var items = _.pick(item, ['guid', 'status']);
+              items['serverid'] = serverid;
+              productServer.updateServerSku(items).then(function (results) {
                 if (results.data.status == '0') {
                   cbAlert.success('修改成功');
                   var statusTime = $timeout(function(){
@@ -664,6 +668,30 @@
 
         });
       }
+
+      /**
+       * 选择车辆
+       * @param data
+       * @param item
+       */
+      vm.vehicleSelect = function(data, item){
+        console.log(data, item);
+        if(data.status == 0){
+          item.motobrandids = data.data;
+        }
+      };
+
+      /**
+       * 编辑车辆
+       * @param data
+       * @param item
+       */
+      vm.vehicleShow = function(data, item){
+        console.log(data, item);
+        if(data.status == 0){
+          item.motobrandids = data.data;
+        }
+      };
 
 
       /**

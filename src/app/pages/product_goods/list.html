@@ -10,7 +10,7 @@
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
          page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div>
+    <div style="margin-bottom: 100px;">
       <table class="table">
         <thead>
           <tr>
@@ -45,7 +45,7 @@
             <td><span class="state-unread"><span ng-bind="item.$$stockShow"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.items.guid)"></span></td>
             <td><span ng-bind="item.partscode"></span></td>
             <td><span class="state-unread" ng-bind="item.skucode"></span></td>
-            <td>使用车型</td>
+            <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
             <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
                      ng-click="vm.statusItem(item, vm.items.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
             <td><span ng-bind="item.skudescription"></span></td>

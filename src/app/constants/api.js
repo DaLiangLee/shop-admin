@@ -341,6 +341,10 @@
                       "export": {
                         "url": "/users/export",
                         "type": "GET"
+                      },
+                      "getDiscount": {
+                        "url": "/users/getDiscount",
+                        "type": "POST"
                       }
                     }
                 },

@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/10/15.
  */
-(function() {
+(function () {
   'use strict';
 
   angular
@@ -13,17 +13,23 @@
     .directive('oraderOffersDialog', oraderOffersDialog);
 
   /** @ngInject */
-  function oraderReceivedDialog(cbDialog, tadeOrder, cbAlert) {
+  function oraderReceivedDialog(cbDialog, tadeOrder, cbAlert, computeService) {
     return {
       restrict: "A",
       scope: {
         item: "=",
         itemHandler: "&"
       },
-      link: function(scope, iElement, iAttrs){
+      link: function (scope, iElement, iAttrs) {
         var checkstoreuseraccount = true;
-        function handler(childScope){
+
+        function handler(childScope) {
           childScope.item = angular.copy(scope.item);
+
+          childScope.item.$totalprice = computeService.add(childScope.item.psaleprice, childScope.item.ssaleprice);
+          childScope.item.discounttype = "0";
+
+
           childScope.item.paytype = checkstoreuseraccount ? "0" : "1";
           childScope.interceptor = false;
           childScope.confirm = function () {
@@ -51,24 +57,25 @@
             childScope.item.paytype = item.value;
           };
           childScope.interceptorConfirm = function () {
-            scope.itemHandler({data: {"status":"0", "data": _.pick(childScope.item, ['guid', 'paytype'])}});
+            scope.itemHandler({data: {"status": "0", "data": _.pick(childScope.item, ['guid', 'paytype'])}});
             childScope.close();
           };
         }
+
         /**
          * 点击按钮
          */
         iElement.click(function (t) {
-          scope.itemHandler({data: {"status":"-1", "data":"打开成功"}});
+          scope.itemHandler({data: {"status": "-1", "data": "打开成功"}});
           t.preventDefault();
           t.stopPropagation();
-          tadeOrder.checkstoreuseraccount(scope.item.guid).then(function(results){
+          tadeOrder.checkstoreuseraccount(scope.item.guid).then(function (results) {
             if (results.data.status == '0') {
               checkstoreuseraccount = results.data.data;
               cbDialog.showDialogByUrl("app/pages/trade_order/orader_received_dialog.html", handler, {
                 windowClass: "viewFramework-orader-received-dialog"
               });
-            }else{
+            } else {
               cbAlert.error(results.data.data);
             }
           });
@@ -96,13 +103,14 @@
       });
       return results;
     }
+
     return {
       restrict: "A",
       scope: {
         handler: "&"
       },
-      link: function(scope, iElement, iAttrs){
-        function handler(childScope){
+      link: function (scope, iElement, iAttrs) {
+        function handler(childScope) {
           var currentParams = angular.extend({}, {page: 1, pageSize: 5});
           /**
            * 搜索操作
@@ -286,7 +294,7 @@
            */
           childScope.gridModel.config.propsParams = {
             selectItem: function (data) {
-              scope.handler({data: {"status":"0", "data": data}});
+              scope.handler({data: {"status": "0", "data": data}});
               childScope.close();
             }
           };
@@ -294,11 +302,12 @@
           getList(currentParams);
 
         }
+
         /**
          * 点击按钮
          */
         iElement.click(function (t) {
-          scope.handler({data: {"status":"-1", "data":"打开成功"}});
+          scope.handler({data: {"status": "-1", "data": "打开成功"}});
           t.preventDefault();
           t.stopPropagation();
           cbDialog.showDialogByUrl("app/pages/trade_order/order-user-dialog.html", handler, {
@@ -316,22 +325,22 @@
       scope: {
         handler: "&"
       },
-      link: function(scope, iElement, iAttrs){
-        function handler(childScope){
+      link: function (scope, iElement, iAttrs) {
+        function handler(childScope) {
           var currentParams = angular.extend({}, {page: 1, pageSize: 3});
           /**
            * 搜索操作
            *
            */
           /*childScope.searchModel = {
-            'handler': function (data) {
-              currentParams = angular.extend({}, currentParams, data);
-              childScope.gridModel.itemList = [];
-              getList(currentParams);
-            }
-          };
+           'handler': function (data) {
+           currentParams = angular.extend({}, currentParams, data);
+           childScope.gridModel.itemList = [];
+           getList(currentParams);
+           }
+           };
 
-          /**
+           /**
            * 获取会员列表
            */
           function getList(params) {
@@ -346,16 +355,16 @@
               if (result.status == 0) {
                 if (!result.data.length) {
                   childScope.gridModel.loadingState = true;
-                  return ;
+                  return;
                 }
                 // 处理数据
-                _.forEach(result.data, function(item){
+                _.forEach(result.data, function (item) {
                   childScope.gridModel.itemList.push(setItem(item));
                 });
                 console.log(childScope.gridModel.itemList);
                 if (result.data.length < params.pageSize) {
                   childScope.gridModel.loadingState = true;
-                  return ;
+                  return;
                 }
                 childScope.gridModel.page++;
                 childScope.gridModel.loadingState = false;
@@ -371,17 +380,17 @@
            * @param item
            * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
            */
-          function setItem(item){
+          function setItem(item) {
             item = angular.extend({}, item);
-            var itemname = "",skuvalues = "";
-            if(angular.isDefined(item.manualskuvalues)){
+            var itemname = "", skuvalues = "";
+            if (angular.isDefined(item.manualskuvalues)) {
               itemname = item.servername + " 服务属性 " + item.manualskuvalues;
               skuvalues = _.trunc(item.manualskuvalues, {
                 'length': 10,
                 'omission': ' 等'
               });
             }
-            if(angular.isDefined(item.skuvalues)){
+            if (angular.isDefined(item.skuvalues)) {
               item.skuvalues = angular.fromJson(item.skuvalues);
               itemname = item.servername + " 服务属性 " + item.skuvalues.skuname + item.skuvalues.items[0].skuvalue;
               skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
@@ -394,7 +403,7 @@
             item['itemname'] = itemname;
             item['$$skuvalues'] = skuvalues;
             item['num'] = item.servertime;
-            item['price'] = item.serverprice/100;
+            item['price'] = item.serverprice / 100;
             item['$$allprice'] = computeService.multiply(item.num || 0, item.price || 0);
             return item;
           }
@@ -418,16 +427,17 @@
               data = _.omit(data, ['guid', 'serverid', '$$hashKey', '$$skuvalues', 'servertime', 'serverprice']);
               console.log('selectItem', data);
 
-              scope.handler({data: {"status":"0", "data": data}});
+              scope.handler({data: {"status": "0", "data": data}});
               childScope.close();
             }
           };
         }
+
         /**
          * 点击按钮
          */
         iElement.click(function (t) {
-          scope.handler({data: {"status":"-1", "data":"打开成功"}});
+          scope.handler({data: {"status": "-1", "data": "打开成功"}});
           t.preventDefault();
           t.stopPropagation();
           cbDialog.showDialogByUrl("app/pages/trade_order/order-service-dialog.html", handler, {
@@ -445,8 +455,8 @@
       scope: {
         handler: "&"
       },
-      link: function(scope, iElement, iAttrs){
-        function handler(childScope){
+      link: function (scope, iElement, iAttrs) {
+        function handler(childScope) {
           var currentParams = angular.extend({}, {page: 1, pageSize: 5});
           /**
            * 搜索操作
@@ -475,16 +485,16 @@
               if (result.status == 0) {
                 if (!result.data.length) {
                   childScope.gridModel.loadingState = true;
-                  return ;
+                  return;
                 }
                 // 处理数据
-                _.forEach(result.data, function(item){
+                _.forEach(result.data, function (item) {
                   childScope.gridModel.itemList.push(setItem(item));
                 });
                 console.log(childScope.gridModel.itemList);
                 if (result.data.length < params.pageSize) {
                   childScope.gridModel.loadingState = true;
-                  return ;
+                  return;
                 }
                 childScope.gridModel.page++;
                 childScope.gridModel.loadingState = false;
@@ -500,7 +510,7 @@
            * @param item
            * @returns {{$$skudescription: *, $$skuvalues: string, itemname: string, itemid, num: number, price: *, $$numprice: *, $$itemname: (string|string|string|string|Document.goods.servername|*), itemsku}}
            */
-          function setItem(item){
+          function setItem(item) {
             item = angular.extend({}, item);
             item.skuvalues = angular.fromJson(item.skuvalues);
             item['skuname'] = item.skuvalues[0].skuname + item.skuvalues[0].items[0].skuvalue;
@@ -509,7 +519,7 @@
             item['itemname'] = item.productname;
             item['num'] = 1;
             item['$$stock'] = item.stock <= -9999 ? "无限" : item.stock;
-            item['price'] = item.salepriceText/100;
+            item['price'] = item.salepriceText / 100;
             return item;
           }
 
@@ -529,13 +539,11 @@
             loadingState: false,      // 加载数据
             selectItem: function (data) {
               childScope.gridModel2.itemList.push(data);
-              _.remove(this.itemList, function(item){
+              _.remove(this.itemList, function (item) {
                 return item.guid == data.guid;
               });
             }
           };
-
-
 
 
           /**
@@ -645,7 +653,7 @@
            * 获取提交数据
            * @param data
            */
-          function getData(data){
+          function getData(data) {
             var results = {
               productprice: 0,
               itemList: data
@@ -662,18 +670,18 @@
            */
           childScope.confirm = function () {
             var data = getData(childScope.gridModel2.itemList);
-            scope.handler({data: {"status":"0", "data": data.itemList, "productprice": data.productprice}});
+            scope.handler({data: {"status": "0", "data": data.itemList, "productprice": data.productprice}});
             childScope.close();
           };
 
 
-
         }
+
         /**
          * 点击按钮
          */
         iElement.click(function (t) {
-          scope.handler({data: {"status":"-1", "data":"打开成功"}});
+          scope.handler({data: {"status": "-1", "data": "打开成功"}});
           t.preventDefault();
           t.stopPropagation();
           cbDialog.showDialogByUrl("app/pages/trade_order/order-product-dialog.html", handler, {
@@ -686,25 +694,61 @@
 
 
   /** @ngInject */
-  function oraderOffersDialog(cbDialog, tadeOrder, cbAlert, computeService) {
+  function oraderOffersDialog(cbDialog, userCustomer, cbAlert, computeService, STATUS_COLLECTION) {
     return {
       restrict: "A",
       scope: {
+        userid: "=",
         isOpen: "=",
         offers: "=",
         offersHandler: "&"
       },
-      link: function(scope, iElement, iAttrs){
-        function handler(childScope){
-          console.log(scope.offers);
+      link: function (scope, iElement, iAttrs) {
+        var discount = undefined;
 
-          childScope.item = {
-            total: scope.offers,
-            preferential: 0,
-            paid: function () {
-              return computeService.subtract(this.total || 0, this.preferential || 0);
+        function handler(childScope) {
+          console.log(scope.offers);
+          childScope.item = _.pick(scope.offers, ['psalepriceAll', 'ssalepriceAll', 'totalprice']);
+          childScope.item.preferential = 0;
+          childScope.item.discounttype = "0";
+          childScope.item.discount = 100;
+          childScope.item.paid = function () {
+            return computeService.subtract(computeService.multiply(this.totalprice, computeService.divide(this.discount, 100)), this.preferential);
+          };
+          childScope.item.list = [];
+
+          childScope.item.preloaded = function (id) {
+            if (id == '1' && discount === undefined) {
+              userCustomer.getDiscount({userid: scope.userid}).then(function (results) {
+                if (results.data.status == 0) {
+                  discount = results.data.data;
+                } else {
+                  cbAlert.error("错误提示", results.data.data);
+                }
+              });
             }
           };
+
+
+
+          childScope.item.handler = function () {
+            if (this.discounttype == '1') {
+              childScope.item.discount = discount;
+            } else {
+              this.discount = 100;
+            }
+            if (this.discounttype != '2') {
+              this.preferential = 0;
+            }
+            this.paid();
+          };
+          angular.forEach(STATUS_COLLECTION.discounttype, function (key, value) {
+            childScope.item.list.push({
+              id: value,
+              label: key
+            })
+          });
+
 
           /**
            * 拦截
@@ -714,18 +758,25 @@
            * 确定
            */
           childScope.confirm = function () {
-            scope.offersHandler({data: {"status":"0", "price": childScope.item.preferential || 0, "next": true}});
+            scope.offersHandler({
+              data: {
+                "status": "0",
+                "data": _.pick(childScope.item, ['preferential', 'discounttype', 'discount']) || 0,
+                "next": true
+              }
+            });
             childScope.close();
+            discount = undefined;
           };
           childScope.closed = function () {
-            scope.offersHandler({data: {"status":"0", "price": 0, "next": false}});
+            scope.offersHandler({data: {"status": "0", "price": 0, "next": false}});
             childScope.close();
           }
         }
 
         scope.$watch('isOpen', function (value) {
-          if(value){
-            scope.offersHandler({data: {"status":"-1", "data":"打开成功"}});
+          if (value) {
+            scope.offersHandler({data: {"status": "-1", "data": "打开成功"}});
             cbDialog.showDialogByUrl("app/pages/trade_order/orader-offers-dialog.html", handler, {
               windowClass: "viewFramework-orader-offers-dialog"
             });

@@ -85,7 +85,7 @@
                            placeholder="请输入1～999范围工时" ng-blur="vm.servertimeprice(item)"></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价" cb-money-range="" ng-blur="vm.servertimeprice(item)"></td>
                 <td><p class="text-border" ng-bind="item.$$servertimeprice"></p></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.motobrandids"></td>
+                <td><button class="btn btn-primary" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型</button><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
                 <td>
                   <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>

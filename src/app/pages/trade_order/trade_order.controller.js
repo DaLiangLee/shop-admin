@@ -692,6 +692,7 @@
       result.carinfo = JSON.stringify(result.carinfo);
       result.userinfo = JSON.stringify(result.userinfo);
       result.waitinstore = result.waitinstore ? 1 : 0;
+      result.preferentialprice = result.preferentialprice*100;
       _.remove(result.details, function(item){
         return _.isUndefined(item.itemid) || _.isUndefined(item.itemskuid);
       });
@@ -750,8 +751,7 @@
           vm.submitDisabled = false;
           return ;
         }
-        vm.dataBase.preferentialprice = data.price*100;
-
+        vm.dataBase = angular.extend({}, vm.dataBase, data.data);
         tadeOrder.saveOrder(getDataBase(vm.dataBase)).then(function (results) {
           var result = results.data;
           if (result.status == 0) {

@@ -22,50 +22,51 @@
    */
 
   /** @ngInject */
-  function cbVehicleSelect($filter, $timeout, $window, cbDialog,cbAlert,  vehicleSelection, treeService) {
+  function cbVehicleSelect($filter, $timeout, $window, cbDialog, cbAlert, vehicleSelection, treeService) {
 
-    function getSeriesTitle(collection, target){
-      var regular = new RegExp('^'+target);
+    function getSeriesTitle(collection, target) {
+      var regular = new RegExp('^' + target);
       return regular.test(collection) ? collection : collection + " " + target;
     }
+
     /**
      * 设置格式化数据，供页面好操作
      * @param level
      * @param data
      * @param item
      */
-    var setFormatData = function(level, data, item){
+    var setFormatData = function (level, data, item) {
       console.log('setFormatData', level, data, item);
 
-      _.forEach(data, function(value){
+      _.forEach(data, function (value) {
         value.level = level;
-        if(!value.title && value.level == 1){
+        if (!value.title && value.level == 1) {
           value.title = value.brand;
-        }else if(!value.title && value.level == 2){
+        } else if (!value.title && value.level == 2) {
           value.title = getSeriesTitle(value.series, item.brand);
         }
-        if(angular.isUndefined(value.logo)){
+        if (angular.isUndefined(value.logo)) {
           value.logo = item.logo;
         }
-        if(angular.isUndefined(value.firstletter)){
+        if (angular.isUndefined(value.firstletter)) {
           value.firstletter = item.firstletter;
         }
-        if(angular.isUndefined(value.brand)){
+        if (angular.isUndefined(value.brand)) {
           value.brand = item.brand;
         }
-        if(angular.isUndefined(value.brandid) && value.level == 1){
+        if (angular.isUndefined(value.brandid) && value.level == 1) {
           value.brandid = value.id;
-        }else{
+        } else {
           value.brandid = item.brandid;
         }
-        if(angular.isUndefined(value.seriesid) && value.level > 1){
-          if(item && item.seriesid){
+        if (angular.isUndefined(value.seriesid) && value.level > 1) {
+          if (item && item.seriesid) {
             value.seriesid = item.seriesid
-          }else{
+          } else {
             value.seriesid = value.id;
           }
         }
-        if(angular.isUndefined(value.series) && value.level > 1){
+        if (angular.isUndefined(value.series) && value.level > 1) {
           value.series = item.series;
         }
       });
@@ -78,7 +79,7 @@
      * @param key      列表当前项
      * @param level    当前等级
      */
-    var isRemoveChecked = function(item, key, level){
+    var isRemoveChecked = function (item, key, level) {
       return {
         "1": key.brandid == item.brandid && angular.isUndefined(key.seriesid),
         "2": key.brandid == item.brandid && key.seriesid == item.seriesid && angular.isUndefined(key.year),
@@ -111,7 +112,6 @@
         handler: "&"
       },
       link: function (scope, iElement, iAttrs) {
-
         var getSubmitData = {
           'series': function (item) {
             return {
@@ -119,11 +119,14 @@
             };
           }
         };
-
         var brandList = [];
 
-        function handler(childScope){
-          childScope.list = [];
+        function handler(childScope) {
+          /**
+           * 结果数组
+           * @type {Array}
+           */
+          console.log(angular.toJson(scope.select));
           /**
            * 加载子数据
            * @param level    当前等级
@@ -133,7 +136,7 @@
            * @param callback 回调函数
            * @constructor
            */
-          function loadingSubData(level, item, type,listType, callback){
+          function loadingSubData(level, item, type, listType, callback) {
             vehicleSelection[type](getSubmitData[type](item)).then(function (data) {
               item.items = setFormatData(level, data.data.data, item);
               childScope[listType] = setFormatData(level, data.data.data, item);
@@ -141,6 +144,7 @@
               callback && callback();
             });
           }
+
           var clearSubkeys = {
             'series': function () {
               childScope.seriesList = [];
@@ -149,23 +153,118 @@
           };
 
           /**
+           * 获取对应的列表，来设置状态
+           * @param item
+           */
+          var getState = function (item) {
+            var items = _.find(childScope.brandList, function (key) {
+              return key.brandid == item.brandid;
+            });
+            if (_.isUndefined(items.items)) {
+              return items;
+            }
+            var items2 = _.find(items.items, function (key) {
+              return key.seriesid == item.seriesid;
+            });
+            if (_.isUndefined(items2.items)) {
+              return items2;
+            }
+          };
+
+
+          /**
            * 获取车辆品牌列表
            */
           childScope.brandList = setFormatData(1, treeService.enhance(brandList));
+          if (angular.isDefined(scope.select)) {
+            childScope.dataLists = [];
+            if (angular.isArray(scope.select)) {
+              getSelect(scope.select);
+            } else {
+              getSelect(angular.fromJson(scope.select));
+            }
+            console.log(childScope.dataLists);
+          }else{
+            childScope.dataLists = [];
+          }
+
+
+          childScope.$watch('dataLists', function () {
+            console.log(arguments);
+          });
+
+
+          /**
+           * 获取对应的列表，来设置状态
+           * @param item
+           */
+          function getSelect(arr) {
+            if (angular.isUndefined(arr) || !arr.length) {
+              return [];
+            }
+            var results = [];
+            _.forEach(arr, function (item) {
+              var key = item.brand;
+              key.title = key.brand;
+              key.level = 1;
+              if (key.isChecked) {
+                getState(key).$setCheckState(true);
+                results.push(key);
+                childScope.dataLists.push(getState(key));
+              } else {
+                getState(key).$setCheckState(false);
+              }
+              if (_.isArray(item.series) && item.series.length) {
+                _.forEach(item.series, function (value) {
+                  value.level = 2;
+                  results.push(value);
+                });
+              }
+            });
+            getSubKeysData(results);
+            return results;
+          }
+
+          function getSubKeysData(data) {
+            var result = {};
+            _.forEach(data, function (item) {
+              if (!result[item.level]) {
+                result[item.level] = [];
+              }
+              result[item.level].push(item);
+            });
+
+
+            result[2] && _.forEach(_.uniq(result[2], 'brandid'), function (value) {
+              var items = _.filter(result[2], function (n) {
+                return n.brandid == value.brandid && !n.isChecked;
+              });
+              var parent = getState(value);
+
+              loadingSubData(2, parent, 'series', 'seriesList', function () {
+                var currentArray = _.filter(result[2], function (n) {
+                  return n.brandid == value.brandid;
+                });
+                _.forEach(currentArray, function (value2) {
+                  getState(value2).$setCheckState(true);
+                });
+              });
+            });
+          }
 
 
 
           /**
            * 获取车系
            */
-          childScope.selecthandle = function(level, item, type,listType){
+          childScope.selecthandle = function (level, item, type, listType) {
             _.forEach(clearSubkeys[type](), function (key) {
               key.$open = false;
             });
             if (angular.isArray(item.items)) {
               childScope[listType] = item.items;
             } else {
-              loadingSubData(level, item, type, listType, function(){
+              loadingSubData(level, item, type, listType, function () {
                 item.$isChecked() && item.$setCheckState(true);
               });
             }
@@ -196,8 +295,9 @@
            * @param list
            */
           function setList(list) {
-            childScope.list.push(list);
-            childScope.list = _.sortBy(_.uniq(childScope.list), 'brandid');
+            childScope.dataLists.push(list);
+            childScope.dataLists = _.sortBy(_.uniq(childScope.dataLists), 'brandid');
+            console.log('setList', childScope.dataLists);
           }
 
           /**
@@ -224,12 +324,12 @@
              *  如果以上条件都满足，就把所有子级全部在list删除
              *  添加当前的项
              */
-            if(angular.isUndefined(item.$parent)){ // 第一级
-              _.remove(childScope.list, function (key) {
+            if (angular.isUndefined(item.$parent)) { // 第一级
+              _.remove(childScope.dataLists, function (key) {
                 return isRemoveChecked(item, key, item.level);
               });
               setList(item);
-              return ;
+              return;
             }
             /**
              *  1, 当前选中，
@@ -238,12 +338,12 @@
              *  如果以上条件都满足，就把所有子级全部在list删除
              *  添加当前的项
              */
-            if(item.$checked && item.level != 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))){
-              _.remove(childScope.list, function (key) {
+            if (item.$checked && item.level != 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))) {
+              _.remove(childScope.dataLists, function (key) {
                 return isRemoveChecked(item, key, item.level);
               });
               setList(item);
-              return ;
+              return;
             }
             /**
              *  1, 当前选中，
@@ -255,7 +355,7 @@
              *  添加当前的项
              */
             if (item.$parent && _.every(item.$parent.items, '$checked')) {
-              _.remove(childScope.list, function (key) {
+              _.remove(childScope.dataLists, function (key) {
                 return isAddChecked(item, key, item.level);
               });
               if (item.level > 2) {
@@ -269,12 +369,13 @@
               setList(item);
             }
           }
+
           /**
            * 删除列表指定项
            * @param item     当前项
            */
           function removeList(item) {
-            _.remove(childScope.list, function (key) {
+            _.remove(childScope.dataLists, function (key) {
               return isRemoveChecked(item, key, item.level);
             });
             /**
@@ -286,16 +387,16 @@
              *  如果以上条件都满足，就把所有子级全部在list删除
              *  添加当前的项
              */
-            if(item.$parent){
-              _.remove(childScope.list, function (key) {
+            if (item.$parent) {
+              _.remove(childScope.dataLists, function (key) {
                 return isRemoveChecked(item.$parent, key, item.level);
               });
               _.forEach(item.$siblings(), function (key) {
-                if(angular.isUndefined(key.$isIndeterminate()) && key.$checked){
+                if (angular.isUndefined(key.$isIndeterminate()) && key.$checked) {
                   key.$setCheckState(true);
                 }
               });
-              if(item.level > 2){
+              if (item.level > 2) {
                 $timeout(function () {
                   removeList(item.$parent);
                 }, 100);
@@ -308,7 +409,7 @@
            * 获取结果数据
            * @param data
            */
-          function getResults(data){
+          function getResults(data) {
             var brand = {};
             var results = [];
             _.forEach(data, function (item) {
@@ -357,7 +458,7 @@
                 "model": "AC Schnitzer X5 2015款 ACS35 35i"
               }
              */
-            function getBrand(item){
+            function getBrand(item) {
               return {
                 "brand": item[0].brand,
                 "firstletter": item[0].firstletter,
@@ -367,9 +468,10 @@
                 "isChecked": item.length === 1 && item[0].$checked
               }
             }
-            function getSeries(item){
+
+            function getSeries(item) {
               if (!item.length) {
-                return ;
+                return;
               }
               var results = [];
               var items = _.filter(item, function (key) {
@@ -388,7 +490,8 @@
               });
               return _.uniq(results, 'id');
             }
-            _.forEach(brand, function(item){
+
+            _.forEach(brand, function (item) {
               results.push({
                 brand: getBrand(item),
                 series: getSeries(item)
@@ -398,8 +501,8 @@
           }
 
           childScope.confirm = function () {
-            console.log(getResults(childScope.list));
-            scope.handler({data: {"status": "0", "data": getResults(childScope.list)}});
+            console.log(getResults(childScope.dataLists));
+            scope.handler({data: {"status": "0", "data": getResults(childScope.dataLists)}});
             childScope.close();
           }
         }
@@ -415,16 +518,15 @@
            * 获取车辆品牌列表
            */
           vehicleSelection['brand']().then(function (results) {
-            if(results.data.status == 0){
+            if (results.data.status == 0) {
               brandList = results.data.data;
               cbDialog.showDialogByUrl("app/components/cbVehicle/cbVehicleSelect.html", handler, {
                 windowClass: "viewFramework-cb-vehicle-select-dialog"
               });
-            }else{
-                cbAlert.error("错误提示", results.data.data);
+            } else {
+              cbAlert.error("错误提示", results.data.data);
             }
           });
-
 
 
         });
@@ -434,7 +536,83 @@
 
 
   /** @ngInject */
-  function cbVehicleShow() {
+  function cbVehicleShow($document, $timeout, configuration) {
+    var link = configuration.getConfig().static;
+    console.log(link);
+    return {
+      restrict: "A",
+      scope: {
+        store: "=",
+        handler: "&"
+      },
+      templateUrl: "app/components/cbVehicle/cbVehicleShow.html",
+      link: function (scope, iElement, iAttrs) {
+        console.log(scope.store);
+        // 显示个数
+        var size = 4;
+        console.log(iAttrs.cbVehicleShow !== "edit");
 
+        if(iAttrs.cbVehicleShow !== "edit"){
+          iElement.find('.vehicle-edit').remove();
+        }
+
+        var listLength = 0;
+        setLsit();
+        addMoreClass();
+
+        /**
+         * 根据列表长度显示 设置更多class，做一些其他处理
+         */
+        function addMoreClass(){
+          iElement.find('.brand-box').toggleClass('more', listLength > size);
+        }
+
+        /**
+         * 设置页面显示列表
+         * 拼合logo地址
+         * 获取列表长度
+         */
+        function setLsit(){
+          scope.list = angular.copy(scope.store);
+          listLength = scope.list.length;
+          _.map(scope.list, function (item) {
+            item.brand.logo = link + item.brand.logo;
+          });
+        }
+
+        scope.length = size;
+        scope.isOpen = false;
+        scope.opend = function () {
+          scope.length = scope.isOpen ? size : listLength;
+          scope.isOpen = !scope.isOpen;
+        };
+
+        scope.vehicleShow = function (data) {
+          if (data.status == 0) {
+            console.log('vehicleShow', data);
+            scope.store = data.data;
+            setLsit();
+            addMoreClass();
+            $timeout(function(){
+              scope.length = listLength;
+              scope.isOpen = true;
+            },100);
+            scope.handler({data: {"status": "0", "data": scope.store}});
+          }
+        };
+
+
+        // 处理点击非当前位置，都会收起
+        iElement.on('click', function (event) {
+          event.stopPropagation();
+        });
+        $document.on('click', function(){
+          scope.$apply(function(){
+            scope.isOpen = false;
+            scope.length = size;
+          });
+        });
+      }
+    }
   }
 })();

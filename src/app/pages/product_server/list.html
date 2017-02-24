@@ -35,13 +35,13 @@
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
           <td><span ng-bind="$index+1"></span></td>
           <td><span class="state-unread" ng-bind="item.$$skuvalues"></span></td>
-          <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime')"></span></td>
+          <td><span class="state-unread" ng-bind="item.servertime"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)"></span></td>
           <td><span class="state-unread" ng-bind="item.serverprice | moneyformatFilter"></span></span></td>
           <td><span class="state-unread" ng-bind="item.$$servertimeprice | moneyformatFilter"></span></span></td>
           <td><span><span class="state-unread" ng-bind="item.countorder"></span> 笔</span></td>
           <td>使用车型</td>
           <td><div cb-switch checkstatus="item.status"
-                   ng-click="vm.gridModel2.statusItem(item)"></div></td>
+                   ng-click="vm.gridModel2.statusItem(item, vm.items.guid)"></div></td>
           <td><span ng-bind="item.skudescription"></span></td>
         </tr>
         </tbody>

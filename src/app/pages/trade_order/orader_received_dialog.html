@@ -6,27 +6,51 @@
   </div>
   <div class="modal-body form-horizontal">
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label">商品/材料 合计：</label>
+      <label class="col-sm-3 control-label">商品/材料合计：</label>
       <div class="col-sm-8">
-        <span ng-bind="item.psaleprice"></span> 元
+        <div class="text-border">
+          <span ng-bind="item.psaleprice | number : 2"></span> 元
+        </div>
       </div>
     </div>
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label">工时费 合计：</label>
+      <label class="col-sm-3 control-label">工时费合计：</label>
       <div class="col-sm-8">
-        <span ng-bind="item.ssaleprice"></span> 元
+        <div class="text-border">
+          <span ng-bind="item.ssaleprice | number : 2"></span> 元
+        </div>
       </div>
     </div>
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label">优惠：</label>
+      <label class="col-sm-3 control-label">总计：</label>
       <div class="col-sm-8">
-        <span class="text-danger">-<span ng-bind="item.preferentialprice"></span></span> 元
+        <div class="text-border">
+          <span ng-bind="item.$totalprice | number : 2"></span> 元
+        </div>
       </div>
     </div>
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label h3">应收：</label>
-      <div class="col-sm-8 h3">
-        <span ng-bind="item.arrearsprice"></span> 元
+      <label class="col-sm-3 control-label">优惠方式：</label>
+      <div class="col-sm-8">
+        <div class="text-border">
+          <span ng-bind="item.discounttype | formatStatusFilter : 'discounttype'"></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false">!</i> 优惠金额：</label>
+      <div class="col-sm-8">
+        <div class="text-border">
+          <span ng-bind="item.preferentialprice | number : 2"></span> 元
+        </div>
+      </div>
+    </div>
+    <div class="form-group clearfix">
+      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false">!</i> 应收金额：</label>
+      <div class="col-sm-8">
+        <div class="text-border">
+          <span ng-bind="item.arrearsprice | number : 2"></span> 元
+        </div>
       </div>
     </div>
     <div class="form-group clearfix">
@@ -50,3 +74,17 @@
     </div>
   </div>
 </div>
+<script type="text/ng-template" id="orderProductTemplate.html">
+  <div>
+    开单时，优惠金额的计算公式为：<br>
+    优惠金额 = 总计 X 折扣 - 优惠金额 <br>
+    当您选择无优惠时：<br>
+    折扣为100%，既无折扣<br>
+    优惠额度为0
+  </div>
+</script>
+<script type="text/ng-template" id="orderProductTemplate2.html">
+  <div>
+    应收金额 = 总计 - 优惠金额
+  </div>
+</script>
