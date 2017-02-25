@@ -72,7 +72,6 @@
 
       // 生成表格
       return initTable(scope);
-
     }
 
     function initTable(scope) {
@@ -80,10 +79,8 @@
       var tHead = tHeadConfig(scope);
       // 列表显示
       var tBody = tBodyConfig(scope);
-      // 分页显示
-      var tFoot = tFootConfig(scope);
 
-      return '<table class="table table-hover">' + tHead + tBody + tFoot + "</table>";
+      return '<table class="table table-hover">' + tHead + tBody + "</table>";
     }
 
     function initAddButton(scope) {
@@ -123,7 +120,7 @@
         text = checked ? "序号" : "全选",
         checkbox = checked ? "" : '<input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="tableState.selectAll" ng-change="changeSelectionAll()" />',
         label = checkbox ? "<label style='font-size:12px; font-family:Tahoma;cursor: pointer;'>" + checkbox + text + "</label>" : text;
-      return "<" + cell + ' width="60">' + label + '</' + cell + ">";
+      return "<" + cell + ' style="width:60px;min-width:60px;">' + label + '</' + cell + ">";
     }
 
     function tHeadConfig(scope) {
@@ -136,10 +133,10 @@
           if (scope.config.sortSupport && item.field) {
             var sortHandler = scope.config.sortPrefer ? 'serverSortHandler' : 'clientSortHandler';
 
-            node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + ' ng-click="' + sortHandler + '(\'' + item.field + '\', sortReverse)">' + name + '<span class="icon-updown" ng-class="{\'dropup\': sortReverse[\'' + item.field + '\']}"><i class="caret"></i></span></th>';
+            node += '<th ' + (item.width ? 'style="min-width:' + item.width + 'px;"' : "") + ' ng-click="' + sortHandler + '(\'' + item.field + '\', sortReverse)">' + name + '<span class="icon-updown" ng-class="{\'dropup\': sortReverse[\'' + item.field + '\']}"><i class="caret"></i></span></th>';
           } else {
             if (!item.none) {
-              node += '<th ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + name + '</th>';
+              node += '<th ' + (item.width ? 'style="min-width:' + item.width + 'px;"' : "") + '>' + name + '</th>';
             }
           }
         }
@@ -160,7 +157,7 @@
       }
       angular.forEach(scope.columns, function (item) {
         if (!item.none) {
-          node += '<td ' + (item.width ? 'width="' + item.width + '"' : "") + '>' + item.fieldDirective + '</td>';
+          node += '<td ' + (item.width ? 'style="min-width:' + item.width + 'px;"' : "") + '>' + item.fieldDirective + '</td>';
         }
       });
 
@@ -171,9 +168,6 @@
 
     function tFootConfig(scope) {
       var node = "", btn = "", page = "", config = scope.config;
-      /*if (config.checkboxSupport) {
-       node += checkboxConfig(false);
-       }*/
 
       if (config.batchOperationBarDirective.length > 0) {    // 添加批量操作按钮
         btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
@@ -185,12 +179,10 @@
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
         page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
       }
-      var pageSpan = Math.ceil(scope.columns.length / 2),
-        addSpan = scope.columns.length - pageSpan;
 
-      node += '<td colspan="' + addSpan + '">' + btn + '</td>';
-      node += '<td colspan="' + pageSpan + '">' + page + '</td>';
-      return '<tFoot ng-if="!showNoneDataInfoTip && !loadingState"><tr>' + node + '</tr></tFoot>';
+      node +=  btn;
+      node += page;
+      return node;
     }
 
     function noData(scope) {
@@ -371,8 +363,24 @@
           iEle.find('.gridSettings').html(initAddButton(scope) + initSettings(scope));
           // 初始化表格数据
           iEle.find('.gridSection').html(initGrid(scope));
+          // 初始化表格页脚
+          iEle.find('.gridFoot').html(tFootConfig(scope));
+          setGridSectionWidth();
           $compile(iEle.contents())(scope);
         });
+
+
+        function setGridSectionWidth(){
+          var results = _.reduce(scope.columns, function(result, value) {
+            if(value.none){
+              return result + 60;
+            }else{
+              return result + value.width;
+            }
+          }, 0);
+          iEle.find('.gridSection table').css({minWidth: results});
+        }
+
         // 监听store数据变化
         scope.$watch("store", function (newValue, oldVlaue, scope) {
           if (newValue) {

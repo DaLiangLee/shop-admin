@@ -10,33 +10,33 @@
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
          page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div style="margin-bottom: 100px;">
-      <table class="table">
+    <div style="margin-bottom: 100px; width: 100%; overflow-x: auto;" ng-if="vm.gridModel.itemList">
+      <table class="table" style="min-width:1800px;">
         <thead>
           <tr>
-            <th>类目</th>
-            <th>编码/图片</th>
-            <th>名称</th>
-            <th>品牌</th>
-            <th>保质期（天）</th>
-            <th>序号</th>
-            <th>属性</th>
-            <th>零售单价（元）</th>
-            <th>销量</th>
-            <th>库存</th>
-            <th>零件码</th>
-            <th>条形码</th>
-            <th>适用车型</th>
-            <th>启用状态</th>
-            <th>描述</th>
+            <th style="min-width:100px;">类目</th>
+            <th style="min-width:120px;">编码/图片</th>
+            <th style="min-width:150px;">名称</th>
+            <th style="min-width:150px;">品牌</th>
+            <th style="min-width:100px;">保质期（天）</th>
+            <th style="min-width:50px;">序号</th>
+            <th style="min-width:150px;">属性</th>
+            <th style="min-width:150px;">零售单价（元）</th>
+            <th style="min-width:100px;">销量</th>
+            <th style="min-width:150px;">库存</th>
+            <th style="min-width:150px;">零件码</th>
+            <th style="min-width:150px;">条形码</th>
+            <th style="min-width:200px;">适用车型</th>
+            <th style="min-width:80px;">启用状态</th>
+            <th style="min-width:150px;">描述</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="item in vm.items.items">
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><div><p ng-bind="vm.items.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{vm.items.mainphoto}}" ng-if="vm.items.mainphoto"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" ng-if="!vm.items.mainphoto"></span></div></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="10"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.cnname"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="8"></span></td>
+            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.cnname}}" text-length="8"></span></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
             <td><span ng-bind="$index+1"></span></td>
             <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
@@ -48,7 +48,7 @@
             <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
             <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
                      ng-click="vm.statusItem(item, vm.items.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
-            <td><span ng-bind="item.skudescription"></span></td>
+            <td><span class="state-unread" cb-truncate-text="{{item.skudescription}}" text-length="8"></span></td>
           </tr>
         </tbody>
       </table>

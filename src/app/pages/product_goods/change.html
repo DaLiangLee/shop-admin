@@ -6,7 +6,7 @@
       <h3>基本信息</h3>
       <hr>
       <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 类目：</label>
+        <label class="col-lg-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>类目：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
             <div class="row">
@@ -31,11 +31,14 @@
         <label class="col-lg-1 control-label">编码：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
-                  placeholder="请输入长度40字符以内的编码" cb-placeholder>
+                  placeholder="请输入长度40字符以内的编码" cb-placeholder  ng-maxlength="40">
+          <div class="alert alert-danger" ng-if="goods.code.$dirty && goods.code.$error.maxlength">
+            请输入长度40字符以内的编码
+          </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="goods_add_name" class="col-lg-1 control-label"><span class="text-danger">*</span> 名称：</label>
+        <label for="goods_add_name" class="col-lg-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>名称：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
             <input type="text" id="goods_add_name" class="form-control" name="productname"
@@ -50,7 +53,7 @@
       </div>
 
       <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 品牌：</label>
+        <label class="col-lg-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>品牌：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isChange">
             <div ng-if="!vm.isAttributesetLoad">
@@ -74,13 +77,16 @@
       <div class="form-group">
         <label class="col-lg-1 control-label">卖点：</label>
         <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="productname"
+          <input type="text" id="goods_add_name" class="form-control" name="seodescription"
                  ng-model="vm.dataBase.seodescription"
-                 ng-maxlength="40" placeholder="请输入长度20字符以内的商品卖点" cb-placeholder>
+                 ng-maxlength="20" placeholder="请输入长度20字符以内的商品卖点" cb-placeholder>
+          <div class="alert alert-danger" ng-if="goods.seodescription.$dirty && goods.seodescription.$error.maxlength">
+            请输入长度20字符以内的商品卖点
+          </div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 属性：</label>
+        <label class="col-lg-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>属性：</label>
         <div class="col-lg-11">
           <div ng-if="!vm.isAttributesetLoad">
             <p class="text-border text-border-warning">请先选择商品类目</p>
@@ -89,9 +95,9 @@
             <table class="table">
               <thead>
               <tr>
-                <th width="200px">*如&emsp;规格/型号/颜色&emsp;等</th>
+                <th width="200px"><i class="icon-required"></i>如&emsp;规格/型号/颜色&emsp;等</th>
                 <th>库存数量 <i tooltip="清空即为库存数量无限" tooltip-append-to-body="true" tooltip-placement="right"
-                            tooltip-animation="true">？</i></th>
+                            tooltip-animation="true" class="icon-question"></i></th>
                 <th>零售单价（元）</th>
                 <th>条形码</th>
                 <th>零件码</th>
@@ -110,7 +116,9 @@
                 <td><input class="form-control" type="text" name="" ng-model="item.saleprice" cb-money-range="" data-value-min="0" data-value-max="99999999" placeholder="请输入零售单价"  cb-placeholder></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skucode" placeholder="请输入条形码" cb-placeholder></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.partscode" placeholder="请输入零件码" cb-placeholder></td>
-                <td><button class="btn btn-primary" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型</button><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
+                <td>
+                  <div style="width: 200px;" class="text-border" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型<i class="icon-search" style="float: right;cursor: pointer"></i></div>
+                  <div ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述" cb-placeholder></td>
                 <td>
                   <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>
@@ -149,7 +157,7 @@
         <label class="col-lg-1 control-label">保质期（天）：</label>
         <div class="col-lg-11">
           <input type="text" class="form-control" ng-model="vm.dataBase.shelflife" name="stock" cb-number-range="" data-value-min="-1" data-value-max="1000" placeholder="请输入商品保质期范围0～999天" cb-placeholder>
-          <div class="alert alert-danger" ng-if="goods.stock.$dirty && goods.stock.$error.cbNumberRange">
+          <div class="alert alert-danger" ng-if="vm.dataBase.shelflife.length && goods.stock.$dirty && goods.stock.$error.cbNumberRange">
             请输入0～999以内的整数
           </div>
         </div>
@@ -159,18 +167,18 @@
         <div class="col-lg-11">
           <input type="text" id="goods_provider" class="form-control" name="provider"
                  ng-model="vm.dataBase.provider" ng-maxlength="40" placeholder="请输入供应商名称" cb-placeholder>
-          <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
-            请输入长度为40以内的商品名称
+          <div class="alert alert-danger" ng-if="goods.provider.$dirty && goods.provider.$error.maxlength">
+            请输入长度为40以内的供应商
           </div>
         </div>
       </div>
       <div class="form-group">
         <label for="goods_add_name" class="col-lg-1 control-label">供应商电话：</label>
         <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="productname"
+          <input type="text" id="goods_add_name" class="form-control" name="providertel"
                  ng-model="vm.dataBase.providertel" ng-maxlength="40" placeholder="请输入供应商电话" cb-placeholder>
-          <div class="alert alert-danger" ng-if="goods.productname.$dirty && goods.productname.$error.maxlength">
-            请输入长度为40以内的商品名称
+          <div class="alert alert-danger" ng-if="goods.providertel.$dirty && goods.providertel.$error.maxlength">
+            请输入长度为40以内的供应商电话
           </div>
         </div>
       </div>

@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false">!</i> 优惠金额：</label>
+      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false" class="icon-exclamation"></i> 优惠金额：</label>
       <div class="col-sm-8">
         <div class="text-border">
           <span ng-bind="item.preferentialprice | number : 2"></span> 元
@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="form-group clearfix">
-      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false">!</i> 应收金额：</label>
+      <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false" class="icon-exclamation"></i> 应收金额：</label>
       <div class="col-sm-8">
         <div class="text-border">
           <span ng-bind="item.arrearsprice | number : 2"></span> 元
@@ -80,7 +80,7 @@
     优惠金额 = 总计 X 折扣 - 优惠金额 <br>
     当您选择无优惠时：<br>
     折扣为100%，既无折扣<br>
-    优惠额度为0
+    优惠金额为0
   </div>
 </script>
 <script type="text/ng-template" id="orderProductTemplate2.html">

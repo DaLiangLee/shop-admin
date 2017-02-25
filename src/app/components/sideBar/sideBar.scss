@@ -37,38 +37,6 @@ $active: #038ae3;
         height: 40px;
         font-size: 16px;
         text-align: center;
-        .icon-sidebar{
-          &.icon-sidebar-finance:before {
-            content: "\e900";
-          }
-          &.icon-sidebar-store:before {
-            content: "\e901";
-          }
-          &.icon-sidebar-desktop:before {
-            content: "\e902";
-          }
-          &.icon-sidebar-user:before {
-            content: "\e903";
-          }
-          &.icon-sidebar-stocks:before {
-            content: "\e904";
-          }
-          &.icon-sidebar-trade:before {
-            content: "\e905";
-          }
-          &.icon-sidebar-member:before {
-            content: "\e906";
-          }
-          &.icon-sidebar-product:before {
-            content: "\e907";
-          }
-          &.icon-sidebar-system:before {
-            content: "\e908";
-          }
-          &.icon-sidebar-market:before {
-            content: "\e909";
-          }
-        }
         &.sidebar-nav-fold{
           .icon-arrow-down{
             background-position: 0 0;

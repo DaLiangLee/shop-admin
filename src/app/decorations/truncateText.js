@@ -66,9 +66,9 @@
                         value = value.replace(/["]/g, "&quot;");
                         value = $filter('doubleBracketFilter')(value);
                         if(!copy){
-                            iElement.html('<span tooltip-trigger="' + trigger + '" tooltip-placement="' + tooltipPlacement + '"  cb-tooltip="' + value + '" content-html="false" tooltip-popup-delay="0">' + text + "</span>");
+                            iElement.html('<span tooltip-trigger="' + trigger + '" tooltip-placement="' + tooltipPlacement + '"  cb-tooltip="' + value + '" content-html="false" tooltip-animation="false">' + text + "</span>");
                         }else{
-                            iElement.html('<span tooltip-trigger="' + trigger + '" tooltip-placement="' + tooltipPlacement + '"  tooltip="' + value + '" tooltip-popup-delay="0">' + text + "</span>");
+                            iElement.html('<span tooltip-trigger="' + trigger + '" tooltip-placement="' + tooltipPlacement + '"  tooltip="' + value + '"  tooltip-animation="false">' + text + "</span>");
                         }
                         $compile(iElement.contents())(scope);
                     }else{

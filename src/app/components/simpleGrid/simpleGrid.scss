@@ -25,9 +25,23 @@
     margin-left: 6px;
   }
 }
-
-.table > tbody > tr > td,.table > tfoot > tr > td{
+.gridFoot{
+  height: 80px;
+}
+.gridSection{
+  width: 100%;
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.table > thead > tr > th {
+  vertical-align: bottom;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+.table > tbody > tr > td{
   vertical-align: middle;
+  border-bottom: 1px solid #ddd;
 }
 .simple-grid-tfoot-batch-warp{
   padding-top: 20px;

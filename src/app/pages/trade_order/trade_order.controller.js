@@ -373,6 +373,7 @@
             var productsPrice = 0;
             item1.products && _.forEach(item1.products, function(item2){
               item2.itemsku = JSON.parse(item2.itemsku);
+              item2.$itemskuname = item2.itemsku.catename + " " + item2.itemsku.productname + " " + item2.itemsku.cnname;
               item2.price = computeService.divide(item2.price, 100);
               item2.allprice = computeService.divide(item2.allprice, 100);
               productsPrice = computeService.add(productsPrice, item2.allprice);
@@ -446,37 +447,43 @@
           "id": 1,
           "name": "服务/项目",
           "cssProperty": "state-column",
-          "fieldDirective": '<div ng-if="!item.itemname" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-service-dialog handler="propsParams.serviceHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemname"><span bo-text="item.itemname"></span></div>'
+          "fieldDirective": '<div ng-if="!item.itemname" style="position: relative; width:100%;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-service-dialog handler="propsParams.serviceHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.itemname"><span class="state-unread" cb-truncate-text="{{item.itemname}}" text-length="9"></span></div>',
+          "width": 150
         },
         {
           "id": 2,
           "name": "商品/材料",
           "cssProperty": "state-column",
-          "fieldDirective": '<div ng-if="!item.products.length" style="position: relative; width:200px;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.products.length"><ul class="list-unstyled"><li ng-repeat="key in item.products"><span>{{key.pcatename1}}</span> <span>{{key.productname}}</span> <span>{{key.cnname}}</span></li></ul></div>'
+          "fieldDirective": '<div ng-if="!item.products.length" style="position: relative; width:100%;"><p class="text-border"></p><button style="position: absolute; right:0; top: 0;" order-product-dialog handler="propsParams.productHandler(data, item)" class="btn btn-primary">添加</button></div><div ng-if="item.products.length"><ul class="list-unstyled"><li ng-repeat="key in item.products"><span class="state-unread" cb-truncate-text="{{key.$itemskunam}}" text-length="9"></span></li></ul></div>',
+          "width": 150
         },
         {
           "id": 3,
           "name": "工时费",
           "cssProperty": "state-column",
-          "fieldDirective": '<span class="state-unread" ng-if="item.$$allprice != undefined">￥<span ng-bind="item.price"></span> X <span ng-bind="item.num"></span> = <span ng-bind="item.$$allprice"></span></span>'
+          "fieldDirective": '<span class="state-unread" ng-if="item.$$allprice != undefined">￥<span ng-bind="item.price"></span> X <span ng-bind="item.num"></span> = <span ng-bind="item.$$allprice"></span></span>',
+          "width": 200
         },
         {
           "id": 4,
           "name": "商品/材料费",
           "cssProperty": "state-column",
-          "fieldDirective": '<ul ng-if="item.products.length"><li ng-repeat="key in item.products"><span class="state-unread">￥<span ng-bind="key.price"></span> X <span ng-bind="key.num"></span> = <span ng-bind="key.$$allprice"></span></span></li></ul>'
+          "fieldDirective": '<ul class="list-unstyled" ng-if="item.products.length"><li ng-repeat="key in item.products"><span class="state-unread">￥<span ng-bind="key.price"></span> X <span ng-bind="key.num"></span> = <span ng-bind="key.$$allprice"></span></span></li></ul>',
+          "width": 200
         },
         {
           "id": 5,
           "name": "合计",
           "cssProperty": "state-column",
-          "fieldDirective": '<span class="state-unread" ng-bind="item.$$totalprice"></span>'
+          "fieldDirective": '<span class="state-unread" ng-bind="item.$$totalprice | number : \'2\'"></span>',
+          "width": 150
         },
         {
           "id": 6,
           "name": "施工人员",
           "cssProperty": "state-column",
-          "fieldDirective": '<div simple-select="guid,realname" store="propsParams.employee.store" select="item.servicer" select-handler="propsParams.employee.handler(data, item)"></div>'
+          "fieldDirective": '<div simple-select="guid,realname" store="propsParams.employee.store" select="item.servicer" select-handler="propsParams.employee.handler(data, item)" style="position: absolute;width: 150px;margin-top: -18px;"></div>',
+          "width": 165
         },
         {
           "id": 7,
@@ -544,6 +551,9 @@
       productHandler: function (data, item) {
         if (data.status == 0) {
           item.products = data.data;
+          _.map(item.products, function (item) {
+            item.$itemskunam = item.pcatename1 + " " + item.productname + " " + item.cnname;
+          });
           item.$$productprice = data.productprice;
           item.$$totalprice = computeService.add(data.productprice, item.$$allprice || 0);
           console.log(data);
@@ -552,6 +562,7 @@
         }
       }
     };
+
 
     memberEmployee.list().then(function(results){
       if(results.data.status == 0){
@@ -583,8 +594,10 @@
      * @param data
      */
     function setUserMotors(data) {
-      data.$$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + data.guid;
+      data.$baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + data.guid;
       vm.dataBase.carinfo = data;
+      console.log(data);
+
       vm.dataBase.carno = data.licence;
       vm.dataBase.carmodel = data.model;
     }

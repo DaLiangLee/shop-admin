@@ -616,6 +616,11 @@
       }
 
       /**
+       * 服务名称是否不存在
+       * @type {boolean}
+       */
+      vm.isScateid2 = false;
+      /**
        * 服务名称选择配置
        * @type {{store: Array, handler: Function}}
        */
@@ -630,8 +635,10 @@
                 return item.id != data;
               });
               console.log(attrvalues);
+              vm.isScateid2 = true;
               vm.dataBase.serverskus = [];
             }else{
+              vm.isScateid2 = false;
               cbAlert.error("错误提示", results.data.data);
             }
           });
@@ -693,6 +700,13 @@
         }
       };
 
+      /**
+       * 删除车辆属性
+       * @param item
+       */
+      vm.removeItem = function (item, index) {
+        vm.dataBase.serverskus.splice(index, 1);
+      };
 
       /**
        * 格式化 vm.dataBase数据供提交使用

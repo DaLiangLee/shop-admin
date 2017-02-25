@@ -30,6 +30,13 @@
         </div>
       </div>-->
       <div class="form-group">
+        <label class="col-md-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>角色名称：</label>
+        <div class="col-md-7">
+          <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore"
+               data-multiple></div>
+        </div>
+      </div>
+      <div class="form-group">
         <label class="col-md-1 control-label">工号：</label>
         <div class="col-md-7">
           <input type="text" class="form-control" name="worknum" ng-model="vm.dataBase.worknum"
@@ -37,7 +44,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 姓名：</label>
+        <label class="col-md-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>姓名：</label>
         <div class="col-md-7">
           <input type="text" class="form-control" name="realname" ng-model="vm.dataBase.realname" ng-maxlength="40"
                  placeholder="请输入员工姓名" cb-placeholder="" ng-required="true">
@@ -69,8 +76,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 手机号：</label>
-        <div class="col-md-7">
+        <label class="col-md-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>手机号：</label>
+        <div class="col-md-7" ng-class="{'has-error': employee.mobile.$error.pattern}">
           <input type="text" class="form-control" name="mobile" ng-model="vm.dataBase.mobile" placeholder="请输入员工手机号"
                  cb-placeholder="" ng-required="true"
                  ng-pattern="/^(13[0-9]{9}|15[012356789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|170[0-9]{8}|177[0-9]{8})$/">
@@ -120,17 +127,10 @@
               style="display: inline-block; width: auto;vertical-align: middle;"></span></div>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger">*</span> 角色名称：</label>
-        <div class="col-md-7">
-          <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore"
-               data-multiple></div>
-        </div>
-      </div>
 
       <div class="form-group">
         <div class="col-md-7 col-md-offset-1 text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="employee.$invalid">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>
+          <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-disabled="employee.$invalid || !vm.dataBase.roleStore.length">&emsp;&emsp;&emsp;&emsp;保存&emsp;&emsp;&emsp;&emsp;</button>
           <button type="button" class="btn btn-default"
                   cb-back-button="{'name':'member.employee.list','params':{'page': 1}}"
                   data-router="member.employee.list"

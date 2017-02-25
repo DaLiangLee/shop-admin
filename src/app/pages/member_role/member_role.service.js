@@ -27,15 +27,16 @@
                     {
                         "id": 1,
                         "cssProperty": "state-column",
-                        "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span> <button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="edit" title="编辑角色" item="item" role-item="propsParams.roleItem(data)">编辑</button>',
+                        "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span> <span class="text-primary" style="cursor: pointer;" cb-access-control="chebian:store:member:role:view" member-role-dialog="edit" title="编辑角色" item="item" role-item="propsParams.roleItem(data)"><i  class="icon-pen"></i></span>',
                         "name": '权限名称',
-                        "width": 300
+                        "width": 150
                     },
                     {
                         "id": 2,
                         "cssProperty": "state-column",
                         "fieldDirective": '<span class="state-unread"><span ng-repeat="role in item.items"><i bo-text="role.menuname"></i>    </span><span bo-if="!item.items.length">无</span></span>',
-                        "name": '权限范围'
+                        "name": '权限范围',
+                        "width": 300
                     }
                 ],
                 "config": {

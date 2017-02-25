@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <h2>添加编辑服务</h2>
     <hr>
-    <form class="form-horizontal" autocomplete="off" name="goods" role="form" novalidate ng-if="vm.isLoadData">
+    <form class="form-horizontal" autocomplete="off" name="server" role="form" novalidate ng-if="vm.isLoadData">
       <h3>基本信息</h3>
       <hr>
       <div class="form-group" ng-if="vm.isChange">
@@ -26,7 +26,10 @@
         <label class="col-lg-1 control-label">编码：</label>
         <div class="col-lg-11">
           <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
-                 placeholder="请输入长度40字符以内的服务编码" cb-placeholder>
+                 placeholder="请输入长度40字符以内的服务编码" cb-placeholder ng-maxlength="40">
+          <div class="alert alert-danger" ng-if="server.code.$dirty && server.code.$error.maxlength">
+            请输入长度40字符以内的服务编码
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -49,46 +52,55 @@
       <div class="form-group">
         <label class="col-lg-1 control-label">简介：</label>
         <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="servername"
+          <input type="text" id="goods_add_name" class="form-control" name="seodescription"
                  ng-model="vm.dataBase.seodescription"
                  ng-maxlength="40" placeholder="请输入长度40字符以内的服务简介" cb-placeholder>
+          <div class="alert alert-danger" ng-if="server.seodescription.$dirty && server.seodescription.$error.maxlength">
+            请输入长度40字符以内的服务简介
+          </div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-lg-1 control-label"><span class="text-danger">*</span> 车辆属性：</label>
         <div class="col-lg-11">
-          <div ng-if="!vm.dataBase.scateid1">
-            <p class="text-border text-border-warning">请先选择服务类目</p>
+          <div ng-if="!vm.isScateid2">
+            <p class="text-border text-border-warning">请先选择服务名称</p>
           </div>
-          <div ng-if="vm.dataBase.scateid1">
+          <div ng-if="vm.isScateid2">
             <table class="table">
               <thead>
               <tr>
                 <th>*如 车辆类型 等</th>
                 <th>工时</th>
-                <th>单价（元）</th>
+                <th style="min-width:200px;">单价（元）</th>
                 <th>工时费（元）</th>
                 <th>适用车型</th>
                 <th>描述</th>
-                <th>启用状态</th>
+                <th style="min-width:80px;">启用状态</th>
+                <th style="min-width:80px;">操作</th>
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="item in vm.dataBase.serverskus">
+              <tr ng-repeat="item in vm.dataBase.serverskus" ng-form="list">
                 <td>
                   <div class="text-border" ng-if="!item.$$add"><span ng-bind="item.$$skuname"></span></div>
                   <input ng-if="item.$$add" class="form-control" type="text" name="" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
                 </td>
-                <td><input class="form-control" type="text" name=""
-                           ng-model="item.servertime" cb-number-range=""
-                           data-value-min="1" data-value-max="9999"
-                           placeholder="请输入1～999范围工时" ng-blur="vm.servertimeprice(item)"></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.serverprice" placeholder="请输入单价" cb-money-range="" ng-blur="vm.servertimeprice(item)"></td>
+                <td ng-class="{'has-error': list.servertime.$error.cbMoneyRange}"><input class="form-control" type="text" name="servertime"
+                           ng-model="item.servertime" cb-money-range="1"
+                           data-value-min="0" data-value-max="999" range-enabled="true"
+                           placeholder="请输入0～999范围工时" ng-blur="vm.servertimeprice(item)"></td>
+                <td ng-class="{'has-error': list.serverprice.$error.cbMoneyRange}"><input class="form-control" type="text" name="serverprice" ng-model="item.serverprice" cb-money-range
+                           data-value-min="0" data-value-max="999999" range-enabled="true"
+                           placeholder="请输入0～999999范围单价" ng-blur="vm.servertimeprice(item)"></td>
                 <td><p class="text-border" ng-bind="item.$$servertimeprice"></p></td>
-                <td><button class="btn btn-primary" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型</button><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
+                <td><div style="width: 200px;" class="text-border ng-scope ng-isolate-scope" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型<i class="icon-search" style="float: right;cursor: pointer"></i></div><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
                 <td>
                   <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>
+                </td>
+                <td>
+                  <a class="text-danger" href="javascript:;" ng-click="vm.removeItem(item, $index)">删除</a>
                 </td>
               </tr>
               </tbody>
@@ -109,6 +121,9 @@
           <input type="text" id="goods_add_name" class="form-control" name="shelflife"
                  cb-number-range="" data-value-min="-1" data-value-max="1000" placeholder="请输入服务保质期范围0～999天" cb-placeholder
                  ng-model="vm.dataBase.shelflife">
+          <div class="alert alert-danger" ng-if="vm.dataBase.shelflife.length && server.shelflife.$dirty && server.shelflife.$error.cbNumberRange">
+            请输入0～999以内的整数
+          </div>
         </div>
       </div>
       <div class="form-group">

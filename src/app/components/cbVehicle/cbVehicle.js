@@ -547,7 +547,6 @@
       },
       templateUrl: "app/components/cbVehicle/cbVehicleShow.html",
       link: function (scope, iElement, iAttrs) {
-        console.log(scope.store);
         // 显示个数
         var size = 4;
         console.log(iAttrs.cbVehicleShow !== "edit");
@@ -573,7 +572,10 @@
          * 获取列表长度
          */
         function setLsit(){
-          scope.list = angular.copy(scope.store);
+          scope.list = [];
+          if(angular.isDefined(scope.store)){
+            scope.list = angular.fromJson(scope.store);
+          }
           listLength = scope.list.length;
           _.map(scope.list, function (item) {
             item.brand.logo = link + item.brand.logo;

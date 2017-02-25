@@ -49,7 +49,7 @@
           {
             "id": 5,
             "cssProperty": "state-column",
-            "fieldDirective": '<div><span bo-bind="item.errorcode ? item.errorcode : \'正常\'" bo-class="{\'text-danger\': item.errorcode , \'text-success\': !item.errorcode}"></span><br><a target="_blank" ng-href="{{item.baoyang}}">保养手册</a></div>',
+            "fieldDirective": '<div><span bo-bind="item.errorcode ? item.errorcode : \'正常\'" bo-class="{\'text-danger\': item.errorcode , \'text-success\': !item.errorcode}"></span><br><a target="_blank" ng-href="{{item.baoyang}}"><i class="icon-book"></i></a></div>',
             "name": '车辆健康状况',
             "width": 150
           },

@@ -5,8 +5,8 @@
     </div>
     <form name="add" class="form-horizontal" autocomplete="off" ng-submit="vm.submitBtn()" novalidate>
       <div class="form-group">
-        <label for="inputPassword1" class="col-sm-2 control-label"><span class="text-danger">*</span> 会员手机号：</label>
-        <div class="col-sm-5">
+        <label for="inputPassword1" class="col-sm-2 control-label"><span class="text-danger"><i class="icon-required"></i></span>会员手机号：</label>
+        <div class="col-sm-5" ng-class="{'has-error': add.mobile.$error.pattern}">
           <input type="text"
                  class="form-control"
                  name="mobile"
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="form-group" ng-if="vm.myUsers == -1 || vm.myUsers == 0">
-        <label for="inputPassword2" class="col-sm-2 control-label"><span class="text-danger">*</span> 短信验证码：</label>
+        <label for="inputPassword2" class="col-sm-2 control-label"><span class="text-danger"><i class="icon-required"></i></span>短信验证码：</label>
         <div class="col-sm-5">
           <div class="row">
             <div class="col-sm-8">

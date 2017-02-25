@@ -9,7 +9,7 @@
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
          page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div ng-if="vm.ordersDetails">
+    <div ng-if="vm.ordersDetails" style="min-width: 950px; overflow-x: auto;"  ng-if="vm.gridModel.itemList">
       <table width="100%">
         <tr>
           <td style="vertical-align: top; width: 20%" bindonce="">
@@ -110,26 +110,24 @@
             <table class="table" style="margin-top: 52px;margin-left: 10px;">
               <thead>
                 <tr>
-                  <th>序号</th>
-                  <th>服务/项目</th>
-                  <th>商品/材料</th>
+                  <th style="min-width: 50px">序号</th>
+                  <th style="min-width: 150px">服务/项目</th>
+                  <th style="min-width: 150px">商品/材料</th>
                   <th>工时费</th>
                   <th>商品/材料费</th>
                   <th>合计</th>
-                  <th>施工人员</th>
-                  <th>备注</th>
+                  <th style="min-width: 100px">施工人员</th>
+                  <th style="min-width: 150px">备注</th>
                 </tr>
               </thead>
               <tbody>
               <tr ng-repeat="item in vm.ordersDetails.details" bindonce>
                 <td><span ng-bind="$index + 1"></span></td>
-                <td bo-text="item.$$itemname"></td>
+                <td><span class="state-unread" cb-truncate-text="{{item.$$itemname}}" text-length="8"></span></td>
                 <td>
                   <ul class="list-unstyled">
                     <li ng-repeat="key in item.products">
-                      <span bo-text="key.itemsku.catename"></span>
-                      <span bo-text="key.itemsku.productname"></span>
-                      <span bo-text="key.itemsku.cnname"></span>
+                      <span class="state-unread" cb-truncate-text="{{key.$itemskuname}}" text-length="8"></span>
                     </li>
                   </ul>
                 </td>
@@ -144,8 +142,8 @@
                   </ul>
                 </td>
                 <td><span bo-bind="item.$$totalPrice | moneyformatFilter"></span></td>
-                <td><span bo-bind="item.servicername"></span></td>
-                <td><span bo-bind="item.remark"></span></td>
+                <td><span class="state-unread" cb-truncate-text="{{item.servicername}}" text-length="6"></span></td>
+                <td><span class="state-unread" cb-truncate-text="{{item.remark}}" text-length="9"></span></td>
               </tr>
               </tbody>
               <tfoot>

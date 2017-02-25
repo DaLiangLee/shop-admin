@@ -5,7 +5,7 @@
   </div>
   <div class="modal-body">
     <div cb-access-control="chebian:store:user:customer:search" simple-search config="searchModel.config" search-handler="searchModel.handler(data)"></div>
-    <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList" pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config" sort-changed="gridModel.sortChanged(dtat)" page-changed="gridModel.pageChanged(page)"></div>
+    <div ng-if="gridModel.columns.length" simple-grid columns="gridModel.columns" store="gridModel.itemList" pagination-info="gridModel.paginationinfo" loading-state="gridModel.loadingState" config="gridModel.config" page-changed="gridModel.pageChanged(page)" select-handler="gridModel.selectHandler(item)"></div>
   </div>
   <div class="modal-footer">
     <div class="inline-block margin-right">

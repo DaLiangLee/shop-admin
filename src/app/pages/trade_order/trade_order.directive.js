@@ -27,7 +27,6 @@
           childScope.item = angular.copy(scope.item);
 
           childScope.item.$totalprice = computeService.add(childScope.item.psaleprice, childScope.item.ssaleprice);
-          childScope.item.discounttype = "0";
 
 
           childScope.item.paytype = checkstoreuseraccount ? "0" : "1";
@@ -220,56 +219,63 @@
                 "cssProperty": "state-column",
                 "fieldDirective": '<button class="btn btn-primary" ng-click="propsParams.selectItem(item)">选择</button>',
                 "name": '操作',
-                "width": 100
+                "width": 30
               },
               {
                 "id": 2,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img style="display: block; margin: 0 auto;width: 50px; height: 50px;border-radius: 50px;" bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_50,h_50" alt=""><span bo-if="item.userclass == 0" style="display: inline-block;margin-top: 5px;width: 100%; border: 1px solid #4f9fcf; text-align: center; border-radius: 3px;">车边认证</span></span>',
                 "name": '头像',
-                "width": 150
+                "width": 80
               },
               {
                 "id": 3,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.nickname"></span>',
-                "name": '昵称'
+                "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.nickname}}" text-length="6"></span>',
+                "name": '昵称',
+                "width": 100
               },
               {
                 "id": 4,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.realname"></span>',
-                "name": '姓名'
+                "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.realname}}" text-length="9"></span>',
+                "name": '姓名',
+                "width": 150
               },
               {
                 "id": 5,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
-                "name": '手机号'
+                "name": '手机号',
+                "width": 100
               },
               {
                 "id": 6,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>',
-                "name": '性别'
+                "name": '性别',
+                "width": 30
               },
               {
                 "id": 7,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-                "name": '等级'
+                "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.storegrade}}" text-length="6"></span>',
+                "name": '等级',
+                "width": 100
               },
               {
                 "id": 8,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
-                "name": '储值金额'
+                "fieldDirective": '<span class="state-unread" bo-bind="item.balance | number : \'2\'"></span>',
+                "name": '储值金额',
+                "width": 150
               },
               {
                 "id": 9,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.companyname"></span>',
-                "name": '公司名称'
+                "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.companyname}}" text-length="9"></span>',
+                "name": '公司名称',
+                "width": 150
               }
             ],
             itemList: [],
@@ -285,6 +291,10 @@
             pageChanged: function (data) {    // 监听分页
               currentParams = angular.extend({}, currentParams, {page: data});
               getList(currentParams);
+            },
+            selectHandler: function (item) {
+              scope.handler({data: {"status": "0", "data": item}});
+              childScope.close();
             }
           };
 
@@ -294,8 +304,7 @@
            */
           childScope.gridModel.config.propsParams = {
             selectItem: function (data) {
-              scope.handler({data: {"status": "0", "data": data}});
-              childScope.close();
+              childScope.gridModel.selectHandler(data);
             }
           };
 
@@ -713,11 +722,17 @@
           childScope.item.discounttype = "0";
           childScope.item.discount = 100;
           childScope.item.paid = function () {
-            return computeService.subtract(computeService.multiply(this.totalprice, computeService.divide(this.discount, 100)), this.preferential);
+            // 传递是一个0-100数字，需要先除100；
+            var discountRate = computeService.divide(this.discount, 100);
+            var userDiscount = computeService.multiply(this.totalprice, discountRate);
+            // 公式： 优惠金额 = 合计 X 会员折扣 - 输入优惠
+            return computeService.subtract(userDiscount, this.preferential);
           };
           childScope.item.list = [];
 
           childScope.item.preloaded = function (id) {
+            console.log(id);
+
             if (id == '1' && discount === undefined) {
               userCustomer.getDiscount({userid: scope.userid}).then(function (results) {
                 if (results.data.status == 0) {

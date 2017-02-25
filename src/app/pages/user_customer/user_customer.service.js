@@ -27,7 +27,7 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.worknum"><img width="30px" height="30px" bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""><span bo-if="item.userclass == 0">车边认证</span></span>',
             "name": '头像',
             "width": 150
           },
@@ -49,8 +49,7 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
             "name": '手机号',
-            "width": 100,
-            "field": "mobile"
+            "width": 100
           },
           {
             "id": 5,
@@ -63,13 +62,12 @@
             "id": 6,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.storegrade"></span>',
-            "name": '等级',
-            "field": "storegrade"
+            "name": '等级'
           },
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.balance"></span>',
+            "fieldDirective": '<span class="state-unread"><span bo-bind="item.balance | number : \'2\'"></span> <span class="text-primary" style="cursor: pointer;"><i class="icon-full"></i></span></span>',
             "name": '储值余额',
             "field": "balance"
           },

@@ -29,7 +29,8 @@
             "name": "类目",
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-bind="item.catename"></span>',
-            "field": "catename"
+            "field": "catename",
+            "width": 100
           },
           {
             "id": 2,
@@ -43,39 +44,44 @@
             "id": 2,
             "name": "商品名称",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="10"></span>',
+            "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="8"></span>',
             "field": "productname",
-            "width": 170
+            "width": 150
           },
           {
             "id": 4,
             "name": "品牌",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.cnname"></span>'
+            "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.cnname}}" text-length="8"></span>',
+            "width": 150
           },
           {
             "id": 8,
             "name": "零售价（元）",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.salepriceText"></span>'
+            "fieldDirective": '<span class="state-unread" bo-text="item.salepriceText"></span>',
+            "width": 250
           },
           {
             "id": 8,
             "name": "销量",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span>件</span>'
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span>件</span>',
+            "width": 100
           },
           {
             "id": 9,
             "name": "库存",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><span bo-text="item.$$stockShow"></span>件</span>'
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.$$stockShow"></span>件</span>',
+            "width": 120
           },
           {
             "id": 9,
             "name": "保质期（天）",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>'
+            "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>',
+            "width": 100
           }
 
         ],
@@ -106,7 +112,7 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0">+新增商品</a> ',
+            '<a class="btn btn-primary" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0"><i class="icon-plus"></i> 新增商品</a> ',
             '<button class="btn btn-warning" cb-access-control="chebian:store:product:goods:putdown" simple-grid-change-status="removeProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品下架" ng-if="propsParams.currentStatus == 0">批量下架</button> ',
             '<button class="btn btn-success" cb-access-control="chebian:store:product:goods:putup" simple-grid-change-status="resetRemoveProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品上架" ng-if="propsParams.currentStatus == 1">批量上架</button> ',
             '<button class="btn btn-danger" cb-access-control="chebian:store:product:goods:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">批量删除</button> '

@@ -8,7 +8,7 @@
     <div cb-access-control="chebian:store:user:customer:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)" request-params="vm.gridModel.requestParams"></div>
 
-    <div ng-if="vm.gridModel2.columns.length" simple-grid columns="vm.gridModel2.columns" store="vm.gridModel2.itemList" loading-state="vm.gridModel2.loadingState" config="vm.gridModel2.config"></div>
+    <div ng-if="vm.gridModel2.columns.length && vm.gridModel.itemList" simple-grid columns="vm.gridModel2.columns" store="vm.gridModel2.itemList" loading-state="vm.gridModel2.loadingState" config="vm.gridModel2.config"></div>
   </div>
 </div>
 

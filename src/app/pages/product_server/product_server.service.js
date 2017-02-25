@@ -47,45 +47,52 @@
                       "name": "服务类目",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>',
-                      "field": "scatename1"
+                      "field": "scatename1",
+                      "width": 150
                     },
                     {
                       "id": 2,
                       "name": "服务编码/图片",
                       "cssProperty": "state-column",
                       "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
-                      "field": "code"
+                      "field": "code",
+                      "width": 120
                     },
                     {
                       "id": 3,
                       "name": "服务名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.servername"></span>',
-                      "field": "servername"
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.servername}}" text-length="10"></span>',
+                      "field": "servername",
+                      "width": 150
                     },
                     {
                       "id": 4,
                       "name": "工时费（元）",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.serverprice"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.serverprice"></span>',
+                      "width": 150
                     },
                     {
                       "id": 5,
                       "name": "销量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>笔</span>'
+                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>笔</span>',
+                      "width": 100
                     },
                     {
                       "id": 6,
                       "name": "保修期（天）",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>'
+                      "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>',
+                      "width": 100
                     },
                     {
                       "id": 7,
                       "name": "描述",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" bo-text="item.seodescription"></span>'
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.seodescription}}" text-length="10"></span>',
+                      "width": 150
                     }
                 ],
                 "config": {
