@@ -11,14 +11,14 @@
       </div>
       <table class="table">
         <tbody>
-          <tr ng-repeat="group in store">
+          <tr ng-repeat="group in store" ng-if="group.$items.length">
             <td class="skuname">
               <span ng-bind="group.skuname"></span>
             </td>
             <td class="skuvalue">
-              <div class="pull-left valuelist" ng-if="group.$$items.length">
-                <div style="width: 160px;" class="pull-left" simple-select="id,skuvalue" store="group.$$items"
-                     select="group.$$select" select-handler="selectHandler(data, group)"></div>
+              <div class="pull-left valuelist">
+                <div style="width: 160px;" class="pull-left" simple-select="id,skuvalue" store="group.$items"
+                     select="group.$select" select-handler="selectHandler(data, group)"></div>
               </div>
             </td>
           </tr>

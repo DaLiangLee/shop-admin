@@ -39,7 +39,7 @@
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.cnname}}" text-length="8"></span></td>
             <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
             <td><span ng-bind="$index+1"></span></td>
-            <td><span class="state-unread" ng-bind="item.skuvalues | skuvaluesFilter: 10"></span></td>
+            <td><span class="state-unread" cb-truncate-text="{{item.skuvalues | skuvaluesFilter}}" text-length="8"></span></td>
             <td><span class="state-unread" ng-bind="item.saleprice | moneyformatFilter"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice', vm.items.guid)"></span></td>
             <td><span class="state-unread"><span ng-bind="item.salenums"></span>件</span></td>
             <td><span class="state-unread"><span ng-bind="item.$$stockShow"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.items.guid)"></span></td>

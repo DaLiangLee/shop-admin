@@ -382,7 +382,7 @@
             skuvalues: data.data,
             attrvalues: vm.dataBase.$$attrvalues,
             status: "1",
-            $$skuname: $filter('skuvaluesFilter')(data.data, 7)
+            $$skuname: $filter('skuvaluesFilter')(data.data)
           });
         }
       }
@@ -538,6 +538,13 @@
       vm.dataBase.mainphoto.splice(index, 1);
     };
 
+    /**
+     * 删除属性
+     * @param item
+     */
+    vm.removeItem = function (item, index) {
+      vm.dataBase.items.splice(index, 1);
+    };
 
     vm.statusItem = function (item) {
       console.log(item);
@@ -563,6 +570,7 @@
       var result = angular.copy(data);
       angular.forEach(result.items, function (item) {
         item.skuvalues = angular.toJson(item.skuvalues);
+        item.$$stock = _.trim(item.$$stock);
         item.stock = !item.$$stock && item.$$stock != 0 ? null : item.$$stock;
         item.saleprice = computeService.multiply(item.saleprice || 0, 100);
         item.motobrandids = angular.toJson(item.motobrandids);
@@ -586,14 +594,7 @@
     function interception() {
       var result = false;
       if (!vm.dataBase.items.length) {
-        cbAlert.alert("需要填写至少填写一个属性");
-        return true;
-      }
-      var saleprice = _.filter(vm.dataBase.items, function (item) {
-        return !item.saleprice && item.saleprice !== 0;
-      });
-      if (saleprice.length) {
-        cbAlert.alert("属性的零售单价没有填写");
+        cbAlert.alert("需要填写至少选择一个属性");
         return true;
       }
       return result;
@@ -604,15 +605,9 @@
      * 保存并返回
      */
     vm.submitBack = function () {
-      if (interception()) {
-        return;
-      }
-      productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
-        if (results.data.status == 0) {
-          goto();
-        } else {
-          cbAlert.error("错误提示", results.data.data);
-        }
+      saveServer(function(){
+        cbAlert.close();
+        goto();
       });
     };
 
@@ -620,17 +615,53 @@
      * 保存并复制新建
      */
     vm.submitNewCopy = function () {
+      saveServer(function(){
+        cbAlert.tips("保存成功，请继续添加");
+      });
+    };
+
+    /**
+     * 保存服务处理函数  回调做不同的操作
+     * @param callback
+     */
+    function saveServer(callback) {
       if (interception()) {
         return;
       }
-      productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
-        if (results.data.status == 0) {
-          cbAlert.tips("保存成功，请继续添加");
-        } else {
-          cbAlert.error("错误提示", results.data.data);
-        }
+      // 车辆属性单价
+      var saleprice = _.filter(vm.dataBase.items, function (item) {
+        return !_.isUndefined(item.saleprice);
       });
-    };
+      if (!saleprice.length) {
+        cbAlert.alert("商品属性的属性单价没有填写");
+        return true;
+      }
+      if (saleprice.length !== vm.dataBase.items.length) {
+        cbAlert.confirm("商品属性的单价没有全部填写，是否继续？", function (isConfirm) {
+          if(isConfirm){
+            productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
+              if (results.data.status == 0) {
+                callback && callback();
+              }else{
+                cbAlert.error("错误提示", results.data.data);
+              }
+            });
+          }else{
+            cbAlert.close();
+          }
+        }, "如果没有填写价格的属性将被删除", "warning");
+      }else{
+        productGoods.save(getDataBase(vm.dataBase)).then(function (results) {
+          if (results.data.status == 0) {
+            callback && callback();
+          }else{
+            cbAlert.error("错误提示", results.data.data);
+          }
+        });
+      }
+    }
+
+
 
     function goto() {
       $state.go('product.goods.list', {'page': 1});

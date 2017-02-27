@@ -49,7 +49,7 @@
       <div class="form-group clearfix">
         <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false" class="icon-exclamation"></i> 应收金额：</label>
         <div class="col-sm-8">
-          <span class="h2 text-danger"><span ng-bind="item.paid()"></span>元</span>
+          <span class="h2 text-danger"><span ng-bind="item.paid() | number : 2"></span>元</span>
         </div>
       </div>
     </form>

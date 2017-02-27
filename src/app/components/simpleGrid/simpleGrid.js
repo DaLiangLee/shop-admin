@@ -180,9 +180,9 @@
         page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
       }
 
-      node +=  btn;
+      node += btn;
       node += page;
-      return node;
+      return '<div ng-if="!showNoneDataInfoTip && !loadingState">' + node + '</div>';
     }
 
     function noData(scope) {
@@ -370,11 +370,11 @@
         });
 
 
-        function setGridSectionWidth(){
-          var results = _.reduce(scope.columns, function(result, value) {
-            if(value.none){
+        function setGridSectionWidth() {
+          var results = _.reduce(scope.columns, function (result, value) {
+            if (value.none) {
               return result + 60;
-            }else{
+            } else {
               return result + value.width;
             }
           }, 0);

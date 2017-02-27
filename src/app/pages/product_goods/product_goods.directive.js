@@ -50,6 +50,7 @@
       restrict: "A",
       scope: {
         store: "=",
+        exist: "=",
         itemHandler: "&"
       },
       link: function(scope, iElement){
@@ -59,12 +60,52 @@
            * 获取当前索引sku信息
            * @type {*}
            */
-          childScope.store = [];
-          angular.forEach(scope.store, function(item){
+          //childScope.store = [];
+          /*_.forEach(scope.store, function(item){
             item.$$items = angular.copy(item.items);
-            childScope.store.push(item);
-          });
+            if(findExistData(item.id)){
+              _.forEach(findExistData(item.id), function(items){
+                _.remove(item.$$items, {'id': items.skuvalues[0].items[0].id});
+              });
 
+              console.log(item, findExistData(item.id)[0]);
+            }
+            childScope.store.push(item);
+          });*/
+          childScope.store =  _.chain(scope.store)
+            .tap(function(array) {
+              _.map(array, function(item){
+                item.$select = undefined;
+                item.$preValue = undefined;
+                item.$items = angular.copy(item.items);
+              });
+            })
+            .tap(function(array) {
+              _.map(array, function(item){
+                item.$items = angular.copy(item.items);
+              });
+            })
+            .tap(function(array) {
+              _.map(array, function(item){
+                console.log('findExistData', findExistData(item.id));
+                _.forEach(findExistData(item.id), function(items){
+                  _.remove(item.$items, {'id': items.items[0].id});
+                });
+              });
+            })
+            .tap(function(array) {
+              console.log(array);
+            })
+            .value();
+          function findExistData(id){
+            var items = [];
+            _.forEach(scope.exist, function(item){
+              _.find(item.skuvalues, {'id': id}) && items.push(_.find(item.skuvalues, {'id': id}));
+            });
+            console.log(items);
+
+            return items;
+          }
 
           /**
            * 选择一个value
@@ -72,18 +113,19 @@
            * @param item  父项
            */
           childScope.selectHandler = function (data, item) {
-            item.$$preValue = _.find(item.items, function (key) {
+            item.$preValue = _.find(item.items, function (key) {
               return key.id == data;
             });
             childScope.message = false;
           };
           childScope.confirm = function () {
-            if(childScope.store.length && !getData().length){
+            var results = getData();
+            if(childScope.store.length && !results.length){
               childScope.message = true;
               return ;
             }
 
-            scope.itemHandler({data: {"status":"0", "data": getData()}});
+            scope.itemHandler({data: {"status":"0", "data": results}});
             childScope.close();
           };
 
@@ -93,12 +135,14 @@
           function getData(){
             var results = [];
             angular.forEach(childScope.store, function(item){
-              item.$$preValue && results.push({
+              console.log('$$preValue', item.$preValue);
+
+              item.$preValue && item.$items.length && results.push({
                 id: item.id,
                 skuname: item.skuname,
                 skutype: item.skutype,
                 sort: item.sort,
-                items: [item.$$preValue]
+                items: [item.$preValue]
               });
             });
             return results;

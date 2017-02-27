@@ -11,8 +11,7 @@
 
   /** @ngInject */
   function skuvaluesFilter() {
-    return function(name, num) {
-      num = num || 16;
+    return function(name) {
       if(!name){
         return name;
       }
@@ -22,18 +21,10 @@
       }
       if(angular.isArray(name)){
         angular.forEach(name, function (item) {
-          result += item.skuname + "/"
+          result += item.skuname +": " + item.items[0].skuvalue +" | "
         });
       }
-      result = result.substring(0, result.length - 1);
-      if(result.length > num){
-        result = result.substring(0, num);
-        if(result.lastIndexOf("/") === num - 1){
-          result = result.substring(0, result.length - 1);
-        }
-        result += " 等";
-      }
-      return result;
+      return result.substring(0,result.length-3);
     }
   }
 

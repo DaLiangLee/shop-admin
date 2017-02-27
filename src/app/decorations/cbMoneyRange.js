@@ -63,9 +63,9 @@
            * 检查是否有-，如果有就是负数，如果没有就是正数
            */
           if (rangeEnabled === 'true') {
-            flag = REGULAR.test(value) && (valueMin <= result && result <= valueMax);
+            flag = REGULAR.test(filtration) && (valueMin <= result && result <= valueMax);
           } else {
-            flag = REGULAR.test(value);
+            flag = REGULAR.test(filtration);
           }
           ngModelCtrl.$setValidity('cbMoneyRange', flag);
           return flag ? filtration : undefined;
@@ -92,8 +92,6 @@
               value = value.substring(0, value.indexOf('.')+ ellipsis);
             }
           }
-          console.log(value);
-
           ngModelCtrl.$setViewValue(value);
           ngModelCtrl.$render();
           return value;

@@ -70,9 +70,9 @@
             <table class="table">
               <thead>
               <tr>
-                <th>*如 车辆类型 等</th>
-                <th>工时</th>
-                <th style="min-width:200px;">单价（元）</th>
+                <th><span class="text-danger">*</span> 如 车辆类型 等</th>
+                <th><span class="text-danger">*</span> 工时</th>
+                <th style="min-width:200px;"><span class="text-danger">*</span> 单价（元）</th>
                 <th>工时费（元）</th>
                 <th>适用车型</th>
                 <th>描述</th>
@@ -84,7 +84,7 @@
               <tr ng-repeat="item in vm.dataBase.serverskus" ng-form="list">
                 <td>
                   <div class="text-border" ng-if="!item.$$add"><span ng-bind="item.$$skuname"></span></div>
-                  <input ng-if="item.$$add" class="form-control" type="text" name="" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
+                  <input ng-if="item.$$add" class="form-control" type="text" name="manualskuvalues" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
                 </td>
                 <td ng-class="{'has-error': list.servertime.$error.cbMoneyRange}"><input class="form-control" type="text" name="servertime"
                            ng-model="item.servertime" cb-money-range="1"
@@ -93,7 +93,7 @@
                 <td ng-class="{'has-error': list.serverprice.$error.cbMoneyRange}"><input class="form-control" type="text" name="serverprice" ng-model="item.serverprice" cb-money-range
                            data-value-min="0" data-value-max="999999" range-enabled="true"
                            placeholder="请输入0～999999范围单价" ng-blur="vm.servertimeprice(item)"></td>
-                <td><p class="text-border" ng-bind="item.$$servertimeprice"></p></td>
+                <td><p class="text-border" ng-bind="item.$$servertimeprice" ng-required="true"></p></td>
                 <td><div style="width: 200px;" class="text-border ng-scope ng-isolate-scope" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型<i class="icon-search" style="float: right;cursor: pointer"></i></div><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
                 <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
                 <td>
@@ -128,9 +128,9 @@
       </div>
       <div class="form-group">
         <div class="text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
+          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()" ng-disabled="server.$invalid">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()" ng-disabled="goods.$invalid">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
+          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()" ng-disabled="server.$invalid">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
           </button>
           <button type="button" class="btn btn-default" cb-back-button="{'name':'product.server.list','params':{'page': 1}}" data-router="product.goods.edit">返回
           </button>

@@ -27,6 +27,7 @@
           childScope.item = angular.copy(scope.item);
 
           childScope.item.$totalprice = computeService.add(childScope.item.psaleprice, childScope.item.ssaleprice);
+          console.log(childScope.item);
 
 
           childScope.item.paytype = checkstoreuseraccount ? "0" : "1";
@@ -731,8 +732,6 @@
           childScope.item.list = [];
 
           childScope.item.preloaded = function (id) {
-            console.log(id);
-
             if (id == '1' && discount === undefined) {
               userCustomer.getDiscount({userid: scope.userid}).then(function (results) {
                 if (results.data.status == 0) {

@@ -282,7 +282,6 @@
             angular.forEach(data.data.data, function (item) {
               vm.gridModel.itemList.push(item);
             });
-            console.log(vm.gridModel.itemList);
 
             vm.gridModel.paginationinfo = {
               page: params.page * 1,
@@ -462,7 +461,7 @@
       } else {
         vm.isLoadData = true;
         vm.dataBase.serverstatus = 1;
-        vm.dataBase.mainphoto = "http://audit-oss-chebian.oss-cn-shenzhen.aliyuncs.com/1484035662318_CASE2";
+        vm.dataBase.mainphoto = "";
         vm.dataBase.serverskus = [];
       }
 
@@ -764,14 +763,16 @@
        */
       function interception() {
         var result = false;
+        // 车辆属性
         if (!vm.dataBase.serverskus.length) {
           cbAlert.alert("需要填写至少填写一个车辆属性");
           return true;
         }
+        // 车辆属性工时费
         var servertime = _.filter(vm.dataBase.serverskus, function (item) {
           return !item.servertime && item.servertime !== 0;
         });
-
+        // 车辆属性名称(填写)
         var manualskuvalues = _.filter(vm.dataBase.serverskus, function (item) {
           return !item.$$skuname && !item.manualskuvalues && item.manualskuvalues !== 0;
         });
@@ -783,6 +784,7 @@
           cbAlert.alert("车辆属性的属性名没有填写");
           return true;
         }
+
         return result;
       }
       /**
@@ -812,14 +814,15 @@
         if (interception()) {
           return;
         }
+        // 车辆属性单价
         var serverprice = _.filter(vm.dataBase.serverskus, function (item) {
-          return !item.serverprice && item.serverprice !== 0;
+          return !_.isUndefined(item.serverprice);
         });
-        if(serverprice.length && vm.dataBase.serverskus.length === 1){
-          cbAlert.alert("车辆属性的单价没有填写");
-          return ;
+        if (!serverprice.length) {
+          cbAlert.alert("车辆属性的属性单价没有填写");
+          return true;
         }
-        if (serverprice.length && vm.dataBase.serverskus.length > 1) {
+        if (serverprice.length !== vm.dataBase.serverskus.length) {
           cbAlert.confirm("车辆属性的单价没有全部填写，是否继续？", function (isConfirm) {
             if(isConfirm){
               productServer.saveServer(getDataBase(vm.dataBase)).then(function (results) {

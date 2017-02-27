@@ -549,7 +549,6 @@
       link: function (scope, iElement, iAttrs) {
         // 显示个数
         var size = 4;
-        console.log(iAttrs.cbVehicleShow !== "edit");
 
         if(iAttrs.cbVehicleShow !== "edit"){
           iElement.find('.vehicle-edit').remove();

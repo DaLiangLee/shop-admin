@@ -23,7 +23,6 @@
      */
     var NUMBER_INT_REGULAR = /^(0|-?[1-9][0-9]{0,15})$/,
         NUMBER_REGULAR = /[^0-9]/g;
-
     return {
       restrict: 'A', // 作为元素属性
       require: "?ngModel",  // 获取ngModelController
@@ -60,6 +59,8 @@
             /^-\d*/g.test(viewValue) && (minus = "-");
             // 过滤非数字
             value = viewValue.replace(NUMBER_REGULAR, "");
+            console.log(':'+value+":");
+
             if (NUMBER_INT_REGULAR.test(value)) {
               if (minus === "-" && value == "0") {
                 value = "0";
@@ -85,11 +86,11 @@
            * 检查是否有-，如果有就是负数，如果没有就是正数
            */
           if (value !== "-") {
-            if (rangeEnabled === 'true') {
-              flag = NUMBER_INT_REGULAR.test(value) && (valueMin < result && result < valueMax);
-            } else {
-              flag = NUMBER_INT_REGULAR.test(value);
-            }
+              if (rangeEnabled === 'true') {
+                flag = NUMBER_INT_REGULAR.test(value) && (valueMin < result && result < valueMax);
+              } else {
+                flag = NUMBER_INT_REGULAR.test(value);
+              }
             ngModelCtrl.$setValidity("cbNumberRange", flag);
             return value;
           } else {
