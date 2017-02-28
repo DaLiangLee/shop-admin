@@ -209,9 +209,19 @@
      */
     vm.gridModel2 = {
       editorhandler: function (data, item, type, productid) {
-        console.log(item);
-
-        if(type === "stock" && (item.stock == null || item.stock == undefined) && data > item.stock){
+        /**
+         * 如果没有修改就不要提交给后台了
+         */
+        if(type === "stock" && data == item.stock){
+          return ;
+        }
+        /**
+         * 如果没有修改就不要提交给后台了
+         */
+        if(type === "saleprice" && data == item.saleprice){
+          return ;
+        }
+        if(type === "stock" && (item.stock != null || item.stock != undefined) && data > item.stock){
           cbAlert.alert('修改的库存不能比当前库存大');
           item.$$stock = item.stock;
           return ;
@@ -284,7 +294,7 @@
       /**
        * 路由分页跳转重定向有几次跳转，先把空的选项过滤
        */
-      if (!params.remove) {
+      if (angular.isUndefined(params.remove)) {
         return;
       }
       productGoods.list(params).then(function (data) {

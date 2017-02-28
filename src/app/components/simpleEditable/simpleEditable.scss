@@ -1,10 +1,35 @@
 .k-simple-editable{
   display: inline-block;
   vertical-align: middle;
+  .editable{
+    color: #337ab7;
+    cursor: pointer;
+  }
   .editable-panel{
     display: none;
     .form-control{
 
+    }
+  }
+  .editable-group{
+    width: 100%;
+    text-align: right;
+    height: 20px;
+    span{
+      display: inline-block;
+      vertical-align: top;
+      width: 30px;
+      text-align: center;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      color: #e71e28;
+      i{
+        font-size: 14px;
+      }
+      &.confirm{
+        border-right: 0;
+        color: #337ab7;
+      }
     }
   }
   &.open{

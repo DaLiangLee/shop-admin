@@ -79,6 +79,7 @@
       }).then(function (result) {
         vm.gridModel2.itemList = [];
         angular.forEach(result, function (item) {
+          item.logo = configuration.getStatic() + item.logo;
           item.baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
           vm.gridModel2.itemList.push(item);
         });
@@ -336,6 +337,7 @@
 
       if (getMotors.status == 0) {
         vm.dataLists = angular.copy(getMotors.data);
+        vm.dataLists[0] && (vm.dataLists[0].current = true);
         showMotor(vm.dataLists[0]);
       } else {
         cbAlert.error("错误提示", results.data.data);

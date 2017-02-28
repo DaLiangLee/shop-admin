@@ -4,3 +4,31 @@
   }
 }
 
+.licence-list{
+  li{
+    vertical-align: top;
+    .logo{
+      width: 100px;
+      img{
+        width: 100%;
+      }
+    }
+    .licence{
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      color: #038ae3;
+      background-color: #eee;
+      border: 1px solid #038ae3;
+    }
+    &.active .licence{
+      color: #fff;
+      background-color: #038ae3;
+    }
+    .add .icon-plus{
+      font-size: 60px;
+      color: #038ae3;
+      cursor: pointer;
+    }
+  }
+}

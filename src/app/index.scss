@@ -23,7 +23,7 @@ $navbar-inverse-link-color: #5AADBB;
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"], [class*=" icon-"] ,.glyphicon{
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
@@ -39,10 +39,12 @@ $navbar-inverse-link-color: #5AADBB;
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
 .icon-required:before {
   content: "\e917";
 }
-.icon-arrow_down:before {
+.icon-arrow_down:before,.glyphicon-chevron-down:before{
   content: "\e900";
 }
 .icon-arrow_left:before {
@@ -51,7 +53,7 @@ $navbar-inverse-link-color: #5AADBB;
 .icon-arrow_right:before {
   content: "\e902";
 }
-.icon-arrow_up:before {
+.icon-arrow_up:before,.glyphicon-chevron-up:before{
   content: "\e903";
 }
 .icon-ban-circle:before {

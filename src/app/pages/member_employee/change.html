@@ -29,8 +29,11 @@
           </div>
         </div>
       </div>-->
+      <div class="alert alert-warning" ng-if="!vm.selectModel.store.length">
+        您还没有添加权限，请先 <a ui-sref="member.role.list({page:1})">添加权限</a>
+      </div>
       <div class="form-group">
-        <label class="col-md-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>角色名称：</label>
+        <label class="col-md-1 control-label"><span class="text-danger"><i class="icon-required"></i></span>操作权限：</label>
         <div class="col-md-7">
           <div simple-select="id,rolename" store="vm.selectModel.store" select="vm.dataBase.roleStore"
                data-multiple></div>
@@ -81,9 +84,11 @@
           <input type="text" class="form-control" name="mobile" ng-model="vm.dataBase.mobile" placeholder="请输入员工手机号"
                  cb-placeholder="" ng-required="true"
                  ng-pattern="/^(13[0-9]{9}|15[012356789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|170[0-9]{8}|177[0-9]{8})$/">
+          <div class="alert alert-danger" ng-if="employee.mobile.$dirty && employee.mobile.$error.pattern">
+            请输入正确11位手机号
+          </div>
         </div>
       </div>
-      {{vm.dataBase.birthday}}
       <div class="form-group">
         <label class="col-md-1 control-label">生日：</label>
         <div class="col-md-7">
@@ -98,7 +103,7 @@
       </div>
       <div class="form-group">
         <label class="col-md-1 control-label">岗位：</label>
-        <div class="col-md-7">
+        <div class="col-md-7" style="position: relative;">
           <input type="text" class="form-control" name="username" ng-model="vm.dataBase.position.posname"
                  ng-maxlength="40" cb-pull-down-menu="vm.position"
                  placeholder="请输入岗位" cb-placeholder="">

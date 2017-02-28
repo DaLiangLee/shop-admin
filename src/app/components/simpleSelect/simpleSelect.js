@@ -84,7 +84,7 @@
         var value = scope.config.value;
         var name = scope.config.name;
         var image = scope.config.image;
-
+        var timer = null;
         /**
          * 值相关操作
          * @type {{once: boolean, image: string, text: string, toggle: toggle}}
@@ -265,7 +265,16 @@
             data: scope.select
           });
         };
-
+        iElement.on('mouseenter', function () {
+          $timeout.cancel(timer);
+        });
+        iElement.on('mouseleave', function () {
+          $timeout.cancel(timer);
+          timer = $timeout(function(){
+            scope.choose.hide();
+            close();
+          }, 300);
+        });
         $document.on('click', function () {
           scope.$apply(function(){
             scope.choose.hide();

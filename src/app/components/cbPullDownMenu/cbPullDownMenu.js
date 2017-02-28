@@ -14,17 +14,19 @@
     .directive('cbPullDownMenu', cbPullDownMenu);
 
   /** @ngInject */
-  function cbPullDownMenu($parse) {
+  function cbPullDownMenu($parse, $timeout) {
     return {
-      require: "ngModel",
+      require: "?ngModel",
       link: function (scope, iElement, iAttrs, ngModel) {
         var PullDownMenu,
           position = {
             width: iElement.outerWidth(true),
-            left: iElement.offset().left,
-            top: iElement.offset().top + iElement.outerHeight(true) - 1
+            left: iElement.position().left,
+            top: iElement.position().top + iElement.outerHeight(true) - 1
           },
           dataList,
+          timer = null,
+          parent = iElement.parent(),
           clickSatatus = false;
 
         iElement.on('focus', function () {
@@ -34,15 +36,22 @@
         iElement.on('blur', function () {
           !clickSatatus && hide();
         });
-
+        parent.on('mouseenter', function () {
+          $timeout.cancel(timer);
+        });
+        parent.on('mouseleave', function () {
+          $timeout.cancel(timer);
+          timer = $timeout(function(){
+            iElement.blur();
+          }, 300);
+        });
         scope.$parent.$watch($parse(iAttrs.ngModel), function(value) {
           PullDownMenu && PullDownMenu.find('li').removeClass('active');
           setActive(value, dataList);
         });
 
         function hide(){
-          PullDownMenu.hide();
-          PullDownMenu.find('li').removeClass('active');
+          PullDownMenu && PullDownMenu.hide().find('li').removeClass('active');
         }
 
         function render(position, data) {
@@ -85,7 +94,7 @@
           });
           list += "</ul>";
           PullDownMenu.html(list);
-          angular.element('body').append(PullDownMenu);
+          parent.append(PullDownMenu);
         }
 
       }

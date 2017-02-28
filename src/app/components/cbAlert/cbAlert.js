@@ -408,7 +408,7 @@
           });
         });
       },
-      determine: function(title, message, type, callback){
+      determine: function(title, message, callback,type){
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
             callback = function(){};
@@ -417,7 +417,7 @@
             temporary = new AlertDialog({
               title: title,       //标题
               text: message || "",        //提示文字
-              type: type || 'success',      //类型
+              type: type || "none",      //类型
               showConfirmButton: true    //显示确认按钮
             }, function(){
               $rootScope.$evalAsync( function(){

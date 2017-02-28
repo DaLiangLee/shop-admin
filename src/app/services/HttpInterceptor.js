@@ -17,7 +17,7 @@
       $httpProvider.interceptors.push(HttpInterceptor);
     }]);
   /** @ngInject */
-  function HttpInterceptor($q, $log, cbAlert) {
+  function HttpInterceptor($q, $log, $window, cbAlert, configuration) {
     return {
       request: function (config) {
         return config;
@@ -39,8 +39,8 @@
             break;
           case 403:
             cbAlert.determine("系统提醒", "未登陆", function(){
-              console.log(1);
-            });
+              $window.location.href = configuration.getAPIConfig() + '/logout';
+            }, 'error');
             break;
           case 404:
             cbAlert.error("系统提醒", "找不到资源");

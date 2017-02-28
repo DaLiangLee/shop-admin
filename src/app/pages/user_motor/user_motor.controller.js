@@ -97,6 +97,7 @@
         }
       }).then(function(result){
         _.map(result.items, function (item) {
+          item.logo = configuration.getStatic() + item.logo;
           item.baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
         });
         vm.gridModel.paginationinfo = {

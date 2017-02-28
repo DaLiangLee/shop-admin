@@ -82,7 +82,7 @@
      * 保证在Angular运行之前获取到permission的映射关系
      */
    $.post('http://localhost:3000/shopservice/login', {
-      storecode: 'A1',
+      storecode: 'A13',
       username: '15267009225',
       password: '111111'
     }, function () {

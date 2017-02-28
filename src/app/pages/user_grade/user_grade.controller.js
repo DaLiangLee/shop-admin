@@ -128,7 +128,7 @@
      * 添加新等级
      */
     vm.addGrade = function () {
-      vm.items.push({
+      vm.dataLists.push({
         "gradename": "",
         "discount": "",
         "tradeamount": "",

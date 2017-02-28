@@ -224,6 +224,9 @@
        */
       vm.gridModel2 = {
         editorhandler: function (data, item, type, serverid) {
+          if(type === "servertime" && data == item.servertime){
+            return ;
+          }
           item[type] = data;
           var items = _.pick(item, ['guid', 'servertime']);
           items['serverid'] = serverid;

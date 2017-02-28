@@ -35,7 +35,7 @@
           <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
           <td><span ng-bind="$index+1"></span></td>
           <td><span class="state-unread" ng-bind="item.$$skuvalues"></span></td>
-          <td><span class="state-unread" ng-bind="item.servertime | number : '0'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)"></span></td>
+          <td><div style="position: relative;"><span class="state-unread" ng-bind="item.servertime | number : '0'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)"></span></div></td>
           <td><span class="state-unread" ng-bind="item.serverprice | number : '2'"></span></span></td>
           <td><span class="state-unread" ng-bind="item.$$servertimeprice | number : '2'"></span></span></td>
           <td><span><span class="state-unread" ng-bind="item.countorder | number : '0'"></span> 笔</span></td>

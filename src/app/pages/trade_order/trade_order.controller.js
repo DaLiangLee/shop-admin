@@ -361,13 +361,12 @@
             item1.itemsku = angular.fromJson(item1.itemsku);
             var serverSkus = item1.itemsku.serverSkus[0];
             if(angular.isDefined(serverSkus.manualskuvalues)){
-              item1.$$itemname = item1.itemsku.servername + " 服务属性 " + serverSkus.manualskuvalues;
+              item1.$$itemname = item1.itemname + " 服务属性 " + serverSkus.manualskuvalues;
             }
             if(angular.isDefined(serverSkus.skuvalues)){
               serverSkus.skuvalues = angular.fromJson(serverSkus.skuvalues);
-              item1.$$itemname = item1.servername + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
+              item1.$$itemname = item1.itemname + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
             }
-            console.log(item1.itemsku, serverSkus);
             item1.price = computeService.divide(item1.price, 100);
             item1.allprice = computeService.divide(item1.allprice, 100);
             var productsPrice = 0;

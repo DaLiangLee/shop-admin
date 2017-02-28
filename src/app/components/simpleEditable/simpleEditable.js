@@ -74,13 +74,12 @@
         };
         var $input = iElement.find('.editable-input');
         iElement.on('click', '.editable', function(){
-          console.log(iElement.parent().width());
           var parent = iElement.parent();
           $input.val(scope.editor);
           iElement.addClass('open').css({
-            'width': parent.width(),
-            'left': parent.position().left,
-            'top': parent.position().top
+            'width': iElement.width(),
+            'left': 0,
+            'top': -6
           });
         });
 
