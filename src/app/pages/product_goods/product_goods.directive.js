@@ -60,18 +60,6 @@
            * 获取当前索引sku信息
            * @type {*}
            */
-          //childScope.store = [];
-          /*_.forEach(scope.store, function(item){
-            item.$$items = angular.copy(item.items);
-            if(findExistData(item.id)){
-              _.forEach(findExistData(item.id), function(items){
-                _.remove(item.$$items, {'id': items.skuvalues[0].items[0].id});
-              });
-
-              console.log(item, findExistData(item.id)[0]);
-            }
-            childScope.store.push(item);
-          });*/
           childScope.store =  _.chain(scope.store)
             .tap(function(array) {
               _.map(array, function(item){
@@ -87,14 +75,10 @@
             })
             .tap(function(array) {
               _.map(array, function(item){
-                console.log('findExistData', findExistData(item.id));
                 _.forEach(findExistData(item.id), function(items){
                   _.remove(item.$items, {'id': items.items[0].id});
                 });
               });
-            })
-            .tap(function(array) {
-              console.log(array);
             })
             .value();
           function findExistData(id){
@@ -102,8 +86,6 @@
             _.forEach(scope.exist, function(item){
               _.find(item.skuvalues, {'id': id}) && items.push(_.find(item.skuvalues, {'id': id}));
             });
-            console.log(items);
-
             return items;
           }
 
@@ -124,7 +106,6 @@
               childScope.message = true;
               return ;
             }
-
             scope.itemHandler({data: {"status":"0", "data": results}});
             childScope.close();
           };
@@ -134,9 +115,7 @@
            */
           function getData(){
             var results = [];
-            angular.forEach(childScope.store, function(item){
-              console.log('$$preValue', item.$preValue);
-
+            _.forEach(childScope.store, function(item){
               item.$preValue && item.$items.length && results.push({
                 id: item.id,
                 skuname: item.skuname,

@@ -37,11 +37,20 @@
 .table > thead > tr > th {
   vertical-align: bottom;
   text-align: center;
+  background-color: #e1e9f6;
+  border-top: 1px solid #b2b5ba!important;
   border-bottom: 1px solid #ddd;
 }
 .table > tbody > tr > td{
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
+}
+
+.table > tbody > tr.active > td,.table > tbody > tr.striped.active > td{
+  background-color: #f1f7fb;
+}
+.table > tbody > tr.striped > td{
+  background-color: #f0f0f0;
 }
 .simple-grid-tfoot-batch-warp{
   padding-top: 20px;

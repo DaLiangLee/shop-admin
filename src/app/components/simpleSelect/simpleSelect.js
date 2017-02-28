@@ -209,7 +209,7 @@
             return ;
           }
           if(scope.config.multiple){
-            return  _.findIndex(scope.select, function (key) {
+            return  _.findIndex(scope.choose.list, function (key) {
                 return key[value] == item[value];
               }) > -1;
           }else{
@@ -249,8 +249,6 @@
         };
         scope.remove = function ($event, item) {
           $event.stopPropagation();
-          console.log('remove', item);
-          console.log(scope.choose.list);
 
           var index = _.findIndex(scope.select, function (key) {
             return key[value] == item[value];

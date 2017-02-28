@@ -82,10 +82,8 @@
         });
 
         function setViewValue(value){
-          console.log('setViewValue', value);
           // 如果不是整数或者0
           if(!/^([1-9]\d*|0)$/.test(value)){  //整数或者0
-            console.log(value);
             if(isNaN(parseFloat(value))){
               value = "";
             }else{

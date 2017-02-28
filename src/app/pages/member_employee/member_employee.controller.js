@@ -47,9 +47,10 @@
         if (data.status == 0) {
           memberEmployee.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
-
+              cbAlert.tips("删除成功");
+              getList(currentParams);
             } else {
-              cbAlert.error("错误提示", results.data.rtnInfo);
+              cbAlert.error("错误提示", results.data.data);
             }
           });
         }
@@ -96,8 +97,8 @@
           return item.selected;
         });
         // 如果返回的是空，表示一个没有选中，不用让它继续，防止空提交请求
-        if(!filters.length){
-          return ;
+        if (!filters.length) {
+          return;
         }
         var items = [];
         _.forEach(filters, function (item) {
@@ -108,34 +109,47 @@
           });
         });
         memberEmployee.pwdReset(items).then(function (results) {
-          if (results.data.status == 0) {
+          var result = results.data;
+          if (result.status == 0) {
+            var fail = "", success = "";
+            if (result.data.fail.length) {
+              fail += "<h4>下列员工已超过当日重置限制（3次）：</h4>";
+              _.forEach(result.data.fail, function (item) {
+                fail += item + " ";
+              });
+            }
+
+            if (result.data.success.length) {
+              success += "<h4>下列员工密码重置成功：</h4>";
+              _.forEach(result.data.success, function (item) {
+                success += item + " ";
+              });
+              success += "<br />";
+            }
+            cbAlert.dialog({
+              title: "提示",
+              type: "none",
+              text: '<div style="text-align: left;">' + success + fail + '</div>',
+              html: true
+            });
             getList(currentParams);
           } else {
-            cbAlert.error("错误提示", results.data.data);
+            cbAlert.error("错误提示", result.data);
           }
         });
       }
     };
 
     function setStatus(api, data) {
-      memberEmployee[api](data).then(a).then(function(results){
-        console.log(results);
-        cbAlert.tips("修改成功");
-        getList(currentParams);
+      memberEmployee[api](data).then(function (results) {
+        var result = results.data;
+        if (result.status == 0) {
+          cbAlert.tips("修改成功");
+          getList(currentParams);
+        }
+        cbAlert.error("错误提示", result.data);
       });
     }
-
-    function a(){
-      var deferred = $q.defer();
-      var result = arguments[0].data;
-      if (result.status == 0) {
-        console.log(deferred);
-        deferred.resolve(result);
-        return deferred.promise;
-      }
-      cbAlert.error("错误提示", result.data);
-    }
-
 
     /**
      * 获取员工列表
@@ -147,7 +161,6 @@
       if (!params.page) {
         return;
       }
-      console.log(params);
       memberEmployee.list(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
@@ -157,11 +170,10 @@
           total = result.totalCount;
           vm.gridModel.itemList = [];
           angular.forEach(result.data, function (item) {
-            if(item.onboarddate && item.onboarddate.indexOf("-") > -1){
+            if (item.onboarddate && item.onboarddate.indexOf("-") > -1) {
               item.onboarddate.replace(/\-/gi, "/");
             }
             item.onboarddate && (item.onboarddate = new Date(item.onboarddate));
-
             vm.gridModel.itemList.push(item);
           });
           vm.gridModel.paginationinfo = {
@@ -184,9 +196,9 @@
     vm.searchModel = {
       'handler': function (data) {
         // 如果路由一样需要刷新一下
-        if(angular.equals(currentParams, data)){
+        if (angular.equals(currentParams, data)) {
           $state.reload();
-        }else{
+        } else {
           $state.go(currentStateName, data);
         }
       }
@@ -264,7 +276,7 @@
      * @param arr
      * @returns {Array}
      */
-    function getRoleList(arr){
+    function getRoleList(arr) {
       var results = [];
       angular.forEach(arr, function (item) {
         results.push({
@@ -303,8 +315,7 @@
      * @type {{}}
      */
     vm.selectModel = {};
-    memberEmployee.all().then(function(results){
-      console.log('systemRole', results);
+    memberEmployee.all().then(function (results) {
       if (results.data.status == 0) {
         vm.selectModel.store = results.data.data;
       } else {
@@ -325,7 +336,7 @@
         maxDate: new Date()
       },
       opened: false,
-      open: function(){
+      open: function () {
         vm.date2.opened = false;
       }
     };
@@ -341,7 +352,7 @@
         maxDate: new Date()
       },
       opened: false,
-      open: function(){
+      open: function () {
         vm.date1.opened = false;
       }
     };
@@ -374,13 +385,13 @@
       // 15位
       if (/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/.test(code)) {
         region = getIDCardRegion(code);
-        birthday = getIDCardBirthday("19"+code.substring(6,12));
+        birthday = getIDCardBirthday("19" + code.substring(6, 12));
         gender = getIDCardGender(code.charAt(14));
       }
       // 18位
       if (/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{4}$/.test(code)) {
         region = getIDCardRegion(code);
-        birthday = getIDCardBirthday(code.substring(6,14));
+        birthday = getIDCardBirthday(code.substring(6, 14));
         gender = getIDCardGender(code.charAt(16));
       }
       return {
@@ -395,15 +406,16 @@
      * @param code
      * @returns {string}   省市区
      */
-    function getIDCardRegion(code){
+    function getIDCardRegion(code) {
       return code;
     }
+
     /**
      * 生日
      * @param code
      * @returns {string}  yyyy-mm-dd
      */
-    function getIDCardBirthday(code){
+    function getIDCardBirthday(code) {
       return code.replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
     }
 
@@ -412,18 +424,18 @@
      * @param code
      * @returns {string} 0：女，1：男
      */
-    function getIDCardGender(code){
-      return code%2+"";
+    function getIDCardGender(code) {
+      return code % 2 + "";
     }
 
 
-    vm.setGenderAndBirthday = function(code){
+    vm.setGenderAndBirthday = function (code) {
       var info = getIDCardInfo(code);
-      if(info.birthday && !vm.dataBase.birthday){
+      if (info.birthday && !vm.dataBase.birthday) {
         info.birthday.replace(/\-/, '/');
-        vm.dataBase.birthday = new Date(info.birthday+' 00:00:00');
+        vm.dataBase.birthday = new Date(info.birthday + ' 00:00:00');
       }
-      if(info.gender && !vm.dataBase.gender){
+      if (info.gender && !vm.dataBase.gender) {
         vm.dataBase.gender = info.gender;
       }
     };
@@ -438,10 +450,9 @@
      * 判断当前是否编辑
      */
     if (vm.isChange) {
-      $q.all([memberEmployee.get({memberId: currentParams.id}), memberEmployee.positions()]).then(function(results){
+      $q.all([memberEmployee.get({memberId: currentParams.id}), memberEmployee.positions()]).then(function (results) {
         var member = results[0].data;
         var positions = results[1].data;
-        console.log(member,positions);
         if (member.status == 0 && positions.status == 0) {
           setDataBase(member.data, positions.data);
           vm.position = positions.data;
@@ -456,10 +467,10 @@
         }
       });
     } else {
-      memberEmployee.positions().then(function(results){
-        if(results.data.status == 0){
+      memberEmployee.positions().then(function (results) {
+        if (results.data.status == 0) {
           vm.position = results.data.data.concat([]);
-        }else{
+        } else {
           cbAlert.error("错误提示", results.data.data);
         }
       });
@@ -474,7 +485,7 @@
      * 1，需要验证手机号有没有填，如果没有就报错提示
      * 2，关闭时候需要提示，如果是修改时候，就需要提交api来
      */
-    vm.statusItem = function(){
+    vm.statusItem = function () {
       var title = vm.dataBase.status === "1" ? "是否关闭允许登录店铺后台" : "是否开启允许登录店铺后台";
       var message = vm.dataBase.status === "1" ? "关闭以后不允许登录店铺后台，您确定？" : "开启以后就允许登录店铺后台，您确定？";
       cbAlert.confirm(title, function (isConfirm) {
@@ -520,19 +531,19 @@
      * 获取提交数据
      * @param data
      */
-    function getDataBase(data){
+    function getDataBase(data) {
       var base = angular.extend({}, data);
       base.birthday = getSubmitTime(base.birthday);
       base.onboarddate = getSubmitTime(base.onboarddate);
-      _.map(base.roleStore, function(item){
+      _.map(base.roleStore, function (item) {
         return {"id": item};
       });
       base.positionid = getPositionid(base.position.posname, vm.position);
       var roleStore = [];
-      angular.forEach(base.roleStore, function(item){
-        if(angular.isString(item)){
+      angular.forEach(base.roleStore, function (item) {
+        if (angular.isString(item)) {
           roleStore.push({"id": item});
-        }else{
+        } else {
           roleStore.push(item);
         }
       });
@@ -545,22 +556,22 @@
      * @param time
      * @returns {*}
      */
-    function getSubmitTime(time){
-      if(angular.isUndefined(time) || !time){
+    function getSubmitTime(time) {
+      if (angular.isUndefined(time) || !time) {
         return "";
       }
-      if(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/.test(time)){
+      if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/.test(time)) {
         return dateFilter(new Date(time), 'yyyy-MM-dd HH:mm:ss');
       }
       time.replace(/\-/, '/');
-      return dateFilter(new Date(time+" 00:00:00"), 'yyyy-MM-dd HH:mm:ss');
+      return dateFilter(new Date(time + " 00:00:00"), 'yyyy-MM-dd HH:mm:ss');
     }
 
     /**
      * 提交数据
      */
     vm.submit = function () {
-      if(vm.isChange){
+      if (vm.isChange) {
         memberEmployee.update(getDataBase(vm.dataBase)).then(function (results) {
           if (results.data.status == 0) {
             goto();
@@ -568,7 +579,7 @@
             cbAlert.error("错误提示", results.data.data);
           }
         });
-      }else{
+      } else {
         memberEmployee.add(getDataBase(vm.dataBase)).then(function (results) {
           if (results.data.status == 0) {
             goto();

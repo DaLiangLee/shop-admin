@@ -38,7 +38,9 @@
             cbAlert.error("系统提醒", "没有访问权限");
             break;
           case 403:
-            cbAlert.error("系统提醒", "未登陆");
+            cbAlert.determine("系统提醒", "未登陆", function(){
+              console.log(1);
+            });
             break;
           case 404:
             cbAlert.error("系统提醒", "找不到资源");

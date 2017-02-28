@@ -719,7 +719,7 @@
         function handler(childScope) {
           console.log(scope.offers);
           childScope.item = _.pick(scope.offers, ['psalepriceAll', 'ssalepriceAll', 'totalprice']);
-          childScope.item.preferential = 0;
+          childScope.item.preferentialprice = 0;
           childScope.item.discounttype = "0";
           childScope.item.discount = 100;
           childScope.item.paid = function () {
@@ -727,7 +727,7 @@
             var discountRate = computeService.divide(this.discount, 100);
             var userDiscount = computeService.multiply(this.totalprice, discountRate);
             // 公式： 优惠金额 = 合计 X 会员折扣 - 输入优惠
-            return computeService.subtract(userDiscount, this.preferential);
+            return computeService.subtract(userDiscount, this.preferentialprice);
           };
           childScope.item.list = [];
 
@@ -775,7 +775,7 @@
             scope.offersHandler({
               data: {
                 "status": "0",
-                "data": _.pick(childScope.item, ['preferential', 'discounttype', 'discount']) || 0,
+                "data": _.pick(childScope.item, ['preferentialprice', 'discounttype', 'discount']) || 0,
                 "next": true
               }
             });

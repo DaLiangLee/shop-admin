@@ -70,7 +70,7 @@
     }
 
     /** @ngInject */
-    function cbBackButton($rootScope, preferencenav){
+    function cbBackButton($rootScope){
         return {
             restrict: 'A',
             scope: {},
@@ -83,9 +83,6 @@
                         throw new Error("没有填写返回上一页路由信息");
                     }
                     $rootScope.back(router);
-                    preferencenav.removePreference({
-                      name: current
-                    });
                 });
             }
         };

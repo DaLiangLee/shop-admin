@@ -32,11 +32,11 @@
                ng-blur="vm.isTelephone(item, list.telephone)"
                placeholder="请输入{{item.type | formatStatusFilter : 'storeContactPeople'}}电话">
         <div>
-          <div class="alert alert-danger" ng-if="item.$$isTelephone && list.telephone.$error.telephonePhone">
+          <div class="alert alert-danger" ng-if="item.$isTelephone && list.telephone.$error.telephonePhone">
             手机号码格式不对</div>
-          <div class="alert alert-danger" ng-if="item.$$isTelephone && list.telephone.$error.telephoneFixed">
+          <div class="alert alert-danger" ng-if="item.$isTelephone && list.telephone.$error.telephoneFixed">
             固定座机电话格式不对</div>
-          <div class="alert alert-danger" ng-if="item.$$isTelephone && list.telephone.$error.telephoneAll && !list.telephone.$error.telephoneFixed && !list.telephone.$error.telephonePhone">
+          <div class="alert alert-danger" ng-if="item.$isTelephone && list.telephone.$error.telephoneAll && !list.telephone.$error.telephoneFixed && !list.telephone.$error.telephonePhone">
             输入不是区号+座机或手机格式号码</div>
         </div>
       </div>
@@ -51,7 +51,7 @@
                ng-blur="vm.isEmail(item, list.email)"
                ng-pattern="/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/"
                placeholder="请输入{{item.type | formatStatusFilter : 'storeContactPeople'}}邮箱">
-        <div class="alert alert-danger" ng-if="item.$$isEmail && list.email.$error.pattern">邮箱格式不对</div>
+        <div class="alert alert-danger" ng-if="item.$isEmail && list.email.$error.pattern">邮箱格式不对</div>
       </div>
     </div>
     <br>

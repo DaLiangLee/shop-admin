@@ -109,8 +109,6 @@
         }
       },
       'handler': function (data) {
-        console.log(currentParams, data);
-
         // 如果路由一样需要刷新一下
         if(angular.equals(currentParams, data)){
           $state.reload();
@@ -130,21 +128,22 @@
         return ;
       }
       vm.gridModel.loadingState = true;      // 加载数据
-      memberRole.list(params).then(function (data) {
-        if (data.data.status == 0) {
-          if (!data.data.data.length && params.page != 1) {
+      memberRole.list(params).then(function (results) {
+        var result = results.data;
+        if (result.status == 0) {
+          if (!result.data.length && params.page != 1) {
             $state.go(currentStateName, {page: 1});
           }
-          vm.gridModel.itemList = data.data.data;
+          vm.gridModel.itemList = result.data;
           vm.gridModel.paginationinfo = {
             page: params.page * 1,
             pageSize: params.pageSize,
-            total: data.data.count
+            total: result.count
           };
           vm.gridModel.loadingState = false;
+        }else{
+          cbAlert.error("错误提示", result.data);
         }
-      }, function (data) {
-        $log.debug('getListError', data);
       });
     }
 

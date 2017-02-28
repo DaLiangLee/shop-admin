@@ -36,7 +36,6 @@
       },
       sortChanged: function (data) {
         var orders = [];
-        console.log(data);
         angular.forEach(data.data, function (item, key) {
           orders.push({
             "field": key,
@@ -49,7 +48,7 @@
       },
       selectHandler: function (item) {
         // 拦截用户恶意点击
-        !item.$$active && item.mobile && getMotor(item.mobile);
+        !item.$active && item.mobile && getMotor(item.mobile);
       }
     };
 
@@ -113,7 +112,6 @@
 
           !result.totalCount && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
           vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
-          vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
           vm.gridModel.loadingState = false;
         } else {
           cbAlert.error("错误提示", result.data);
@@ -312,7 +310,6 @@
       var grades = results[0].data || [],
         getUser = results[1].data || {},
         getMotors = results[2].data || [];
-      console.log(grades, getUser);
 
       if (getUser.status == 0 && grades.status == 0) {
         if (!getUser.data) {
@@ -320,12 +317,11 @@
           vm.dataBase.mobile = currentParams.mobile;
         } else {
           vm.dataBase = getUser.data;
-          if(!grades.data.length){
-            vm.dataBase.$$gradename = "";
-          }else{
-            vm.dataBase.$$gradename = _.find(grades.data, function (item) {
+          if(grades.data.length){
+            var items = _.find(grades.data, function (item) {
               return item.guid === vm.dataBase.storegrade;
-            }).gradename;
+            });
+            vm.dataBase.$gradename = items && items.gradename;
           }
         }
         vm.isLoadData = true;
@@ -342,7 +338,7 @@
         vm.dataLists = angular.copy(getMotors.data);
         showMotor(vm.dataLists[0]);
       } else {
-        cbAlert.error("错误提示", result.data);
+        cbAlert.error("错误提示", results.data.data);
       }
 
     });
@@ -363,7 +359,6 @@
       }
       setDataListsStatus();
       item.current = true;
-      console.log(item);
       vm.item = undefined;
       showMotor(item);
     };
@@ -441,13 +436,12 @@
 
 
     vm.vehicleHandler = function (data) {
-      console.log(data);
       if (data.type === 'add') {
         vm.dataLists.push(data.data);
         setDataListsStatus();
         var length = vm.dataLists.length - 1;
         vm.dataLists[length].current = true;
-        console.log(vm.dataLists[length]);
+
 
         showMotor(vm.dataLists[length]);
       }

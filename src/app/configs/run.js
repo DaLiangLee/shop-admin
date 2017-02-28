@@ -48,7 +48,7 @@
            * event, toState, toParams, fromState, fromParams
            *
            */
-          var stateChangeStart = $rootScope.$on('$stateChangeStart', function(event, toState){
+          $rootScope.$on('$stateChangeStart', function(event, toState){
             /*$log.debug('event',event);
              $log.debug('toState',toState);
              $log.debug('toParams',toParams);
@@ -67,7 +67,7 @@
            * 路由加载出错
            * @type {any}
            */
-          var stateChangeError = $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
+          $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
              $log.debug('event',event);
              $log.debug('toState',toState);
              $log.debug('toParams',toParams);
@@ -75,22 +75,13 @@
              $log.debug('fromParams',fromParams);
              $log.debug('error',error);
           });
-          /**
-           * 销毁操作
-           */
-          $rootScope.$on('$destroy',function() {
-            //stateChangeStart();
-            //stateChangeStart = null;
-            stateChangeError();
-            stateChangeError = null;
-          });
         }
 
     /**
      * 手动启动angular
      * 保证在Angular运行之前获取到permission的映射关系
      */
-    $.post('http://localhost:3000/shopservice/login', {
+   $.post('http://localhost:3000/shopservice/login', {
       storecode: 'A1',
       username: '15267009225',
       password: '111111'

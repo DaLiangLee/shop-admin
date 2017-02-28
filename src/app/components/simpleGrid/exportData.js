@@ -8,15 +8,13 @@
     .directive('exportData', exportData);
     function toKeyValue(obj) {
       var parts = [];
-      angular.forEach(obj, function(value, key) {
-        if (angular.isArray(value)) {
-          forEach(value, function(arrayValue) {
-            parts.push(encodeUriQuery(key, true) +
-              (arrayValue === true ? '' : '=' + encodeUriQuery(arrayValue, true)));
+      _.forEach(obj, function(value, key) {
+        if (_.isArray(value)) {
+          _.forEach(value, function(arrayValue) {
+            parts.push(encodeUriQuery(key, true) + (arrayValue === true ? '' : '=' + encodeUriQuery(arrayValue, true)));
           });
         } else {
-          parts.push(encodeUriQuery(key, true) +
-            (value === true ? '' : '=' + encodeUriQuery(value, true)));
+          parts.push(encodeUriQuery(key, true) + (value === true ? '' : '=' + encodeUriQuery(value, true)));
         }
       });
       return parts.length ? parts.join('&') : '';

@@ -50,7 +50,7 @@
              placeholder="账号" ng-pattern="/(^\d{16}$)|(^\d{19}$)/">
     </div>
   </div>
-  <div class="row form-group" ng-if="vm.dataBase.$$isRegtype">
+  <div class="row form-group" ng-if="vm.dataBase.$isRegtype">
     <div class="row col-md-7 col-md-offset-2">
       <div simple-image config="vm.uploadModel.config" image="vm.dataBase.license" upload-handler="vm.uploadModel.handler(data)"></div>
     </div>

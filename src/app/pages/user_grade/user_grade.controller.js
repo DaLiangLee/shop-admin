@@ -16,10 +16,11 @@
 
     function list() {
       userCustomer.grades().then(function (results) {
-        if (results.data.status == 0) {
-          return setGradesData(results.data.data);
+        var result = results.data;
+        if (result.status == 0) {
+          return setGradesData(result.data);
         } else {
-          cbAlert.error(results.data.rtnInfo);
+          cbAlert.error(result.data);
         }
       }).then(function (results) {
         beforeData = angular.copy(results);
@@ -36,7 +37,7 @@
     vm.isDisabled = function () {
       var isDisabled = 0;
       angular.forEach(vm.dataLists, function (item) {
-        if (item.$$samegradename || item.$$sametradeamount || item.$$samegradediscount) {
+        if (item.$samegradename || item.$sametradeamount || item.$samegradediscount) {
           isDisabled++;
         }
       });
@@ -73,9 +74,9 @@
       });
       if (items.length > 1) {
         cbAlert.alert(name + "已经存在");
-        vm.dataLists[index].$$samegradename = true;
+        vm.dataLists[index].$samegradename = true;
       } else {
-        vm.dataLists[index].$$samegradename = false;
+        vm.dataLists[index].$samegradename = false;
       }
       vm.isDisabled();
     };
@@ -96,9 +97,9 @@
       });
       if (items.length > 1) {
         cbAlert.alert("交易额达 " + name + " 条件已经存在");
-        vm.items[index].$$sametradeamount = true;
+        vm.items[index].$sametradeamount = true;
       } else {
-        vm.items[index].$$sametradeamount = false;
+        vm.items[index].$sametradeamount = false;
       }
       vm.isDisabled();
     };
@@ -114,10 +115,10 @@
         return;
       }
       if (0 > name || name > 100) {
-        vm.items[index].$$samegradediscount = true;
+        vm.items[index].$samegradediscount = true;
         cbAlert.alert("折扣只能填0-100");
       } else {
-        vm.items[index].$$samegradediscount = false;
+        vm.items[index].$samegradediscount = false;
       }
       vm.isDisabled();
     };

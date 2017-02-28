@@ -353,22 +353,22 @@
   function cbAlert($rootScope){
     var temporary = null;
     return {
-      dialog: function( arg1, arg2, arg3 ) {
+      dialog: function( options, callback, status ) {
         $rootScope.$evalAsync(function(){
-          if( angular.isFunction(arg2) ) {
-            temporary = new AlertDialog( arg1, function(isConfirm){
+          if( angular.isFunction(callback) ) {
+            temporary = new AlertDialog( options, function(isConfirm){
               $rootScope.$evalAsync( function(){
-                arg2(isConfirm);
+                callback(isConfirm);
               });
-            }, arg3 );
+            }, status );
           } else {
-            new AlertDialog( arg1, arg2, arg3 );
+            new AlertDialog( options, callback, status );
           }
         });
       },
-      alert: function( arg1, arg2, arg3 ) {
+      alert: function( options, callback, status ) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( arg1, arg2, arg3 );
+          new AlertDialog( options, callback, status );
         });
       },
       ajax: function(title, callback, message, type){
@@ -408,6 +408,25 @@
           });
         });
       },
+      determine: function(title, message, type, callback){
+        $rootScope.$evalAsync(function(){
+          if(!angular.isFunction(callback)){
+            callback = function(){};
+          }
+          $rootScope.$evalAsync(function(){
+            temporary = new AlertDialog({
+              title: title,       //标题
+              text: message || "",        //提示文字
+              type: type || 'success',      //类型
+              showConfirmButton: true    //显示确认按钮
+            }, function(){
+              $rootScope.$evalAsync( function(){
+                callback();
+              });
+            });
+          });
+        });
+      },
       prompt: function (title, callback) {
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
@@ -429,7 +448,7 @@
       },
       success: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message || "", 'success' );
+          new AlertDialog( title, message || "", 'success');
         });
       },
       tips: function(title, delay, type) {
@@ -446,17 +465,17 @@
       },
       error: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message || "", 'error' );
+          new AlertDialog( title, message || "", 'error');
         });
       },
       warning: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message || "", 'warning' );
+          new AlertDialog( title, message || "", 'warning');
         });
       },
       info: function(title, message) {
         $rootScope.$evalAsync(function(){
-          new AlertDialog( title, message || "", 'info' );
+          new AlertDialog( title, message || "", 'info');
         });
       },
       close: function() {

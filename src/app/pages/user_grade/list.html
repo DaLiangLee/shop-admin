@@ -23,15 +23,15 @@
             <td ng-bind="index+1"></td>
             <td>
               <span ng-if="item.isdefault == 1" ng-bind="item.gradename"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$$samegradename}"><input type="text" name="" class="form-control" ng-model="item.gradename" ng-blur="vm.blurGradesName(item.gradename, index)"></span>
+              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradename}"><input type="text" name="" class="form-control" ng-model="item.gradename" ng-blur="vm.blurGradesName(item.gradename, index)"></span>
             </td>
             <td>
               <span ng-if="item.isdefault == 1" ng-bind="item.tradeamount | formatStatusFilter : 'gradeTradeamount'"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$$sametradeamount}">交易额达 <input type="text" name="" class="form-control" ng-model="item.tradeamount" ng-blur="vm.blurTradeamount(item.tradeamount, index)" placeholder="请输入0-99999999" cb-number-range="" data-value-min="-1" data-value-max="1000000000"> 元</span>
+              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$sametradeamount}">交易额达 <input type="text" name="" class="form-control" ng-model="item.tradeamount" ng-blur="vm.blurTradeamount(item.tradeamount, index)" placeholder="请输入0-99999999" cb-number-range="" data-value-min="-1" data-value-max="1000000000"> 元</span>
             </td>
             <td>
               <span ng-if="item.isdefault == 1" ng-bind="item.discount | formatStatusFilter : 'gradeDiscount'"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$$samegradediscount}"><input type="text" name="" class="form-control" placeholder="请输入0-100" ng-model="item.discount" cb-number-range="" data-value-min="-1" data-value-max="101" ng-blur="vm.blurDiscount(item.discount, index)"> %</span>
+              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradediscount}"><input type="text" name="" class="form-control" placeholder="请输入0-100" ng-model="item.discount" cb-number-range="" data-value-min="-1" data-value-max="101" ng-blur="vm.blurDiscount(item.discount, index)"> %</span>
             </td>
           </tr>
         </tbody>

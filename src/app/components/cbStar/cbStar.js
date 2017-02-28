@@ -25,8 +25,6 @@
             flag: scope.star > i
           })
         }
-        console.log(scope.items);
-
       }
     }
   }

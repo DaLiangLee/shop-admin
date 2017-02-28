@@ -15,11 +15,6 @@
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     /**
-     * 记录当前子项
-     * @type {string}
-     */
-    var recordChild = "";
-    /**
      * 表格配置
      *
      */
@@ -39,7 +34,7 @@
       },
       selectHandler: function(item){
         // 拦截用户恶意点击
-        !item.$$active && item.guid && getUser(item.guid);
+        !item.$active && item.guid && getUser(item.guid);
       }
     };
 
@@ -65,10 +60,9 @@
         if (result.status == 0) {
           return result.data;
         } else {
-          cbAlert.error("错误提示", result.rtnInfo);
+          cbAlert.error("错误提示", result.data);
         }
       }).then(function(result){
-        recordChild = guid;
         vm.gridModel2.itemList = result;
         vm.gridModel2.loadingState = false;
       });
@@ -117,7 +111,7 @@
           vm.gridModel2.loadingState = false;
         }
         vm.gridModel.itemList = result.items;
-        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$$active = true);
+        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$active = true);
         vm.gridModel.loadingState = false;
       });
     }

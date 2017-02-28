@@ -49,7 +49,7 @@
                       "id": 4,
                       "name": "订单编号",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<a ui-sref="trade.order.detail({orderid: item.orderid})" bo-text="item.orderid"></a>',
+                      "fieldDirective": '<span bo-text="item.orderid"></span>',
                       "width": 170
                     },
                     {

@@ -61,20 +61,15 @@
         title: "上传店招图片"
       },
       handler: function(data){
-
         if(data.status == 0){
           var items = _.map(data.data,function (item) {
             return _.pick(item, ['url']).url;
           });
-          console.log("上传店招图片", items);
-
           shopHome.savePhotos({
             photos: items.join(',')
           }).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.tips("修改店招图片成功");
-
-              //vm.dataBase.store.photos = data.content;
             } else {
               cbAlert.error(results.data.data);
             }
@@ -214,7 +209,7 @@
           if (!account.data.length) {
             vm.onceSubmit = true;
             vm.dataBase.storeid = account.storeid;
-            vm.dataBase.$$isRegtype = account.storetype == 1;
+            vm.dataBase.$isRegtype = account.storetype == 1;
             vm.binkStore = bank.data;
           } else {
             vm.onceSubmit = false;
@@ -336,7 +331,6 @@
         message: ""
       };
       angular.forEach(vm.dataLists, function (item) {
-        console.log(item);
         var contactname = $filter("formatStatusFilter")(item.type, "storeContactPeople");
         if(item.email && !item.telephone && !item.contactname){
           result = {
@@ -361,7 +355,7 @@
      */
     vm.isTelephone = function(data, validate){
       if(!!data.telephone && validate.$dirty){
-        data.$$isTelephone = validate.$error.telephoneAll || validate.$error.telephoneFixed || validate.$error.telephonePhone;
+        data.$isTelephone = validate.$error.telephoneAll || validate.$error.telephoneFixed || validate.$error.telephonePhone;
       }
       vm.isDisabled();
     };
@@ -373,9 +367,9 @@
      */
     vm.isEmail = function(data, validate){
       if(!!data.email && validate.$dirty){
-        data.$$isEmail = validate.$error.pattern;
+        data.$isEmail = validate.$error.pattern;
       }else{
-        data.$$isEmail = validate.$error.pattern;
+        data.$isEmail = validate.$error.pattern;
       }
       vm.isDisabled();
     };
@@ -387,7 +381,7 @@
     vm.isDisabled = function(){
       var isDisabled = 0;
       angular.forEach(vm.dataLists, function (item) {
-        if(item.$$isTelephone || item.$$isEmail){
+        if(item.$isTelephone || item.$isEmail){
           isDisabled++;
         }
       });

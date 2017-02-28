@@ -80,7 +80,7 @@
       // 列表显示
       var tBody = tBodyConfig(scope);
 
-      return '<table class="table table-hover">' + tHead + tBody + "</table>";
+      return '<table class="table">' + tHead + tBody + "</table>";
     }
 
     function initAddButton(scope) {
@@ -107,7 +107,7 @@
 
     // 导出数据
     function exportDataConfig() {
-      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span>导出数据</span></a>'
+      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span>导出</span></a>'
     }
 
     // 自定义列表项
@@ -153,7 +153,7 @@
       if (scope.config.checkboxSupport) {
         scope.selectedScopeProperty = scope.selectedScopeProperty || "selectedItems";
         var model = rowItemName + "." + scope.selectedProperty;
-        node = '<td width="70"><label style="font-size:12px; font-family:Tahoma;cursor: pointer;"><input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="' + model + '" ng-change="changeSelection({data: ' + rowItemName + '})"/>{{$index+1}}</label></td>';
+        node = '<td width="70"><label style="font-size:12px; font-family:Tahoma;cursor: pointer;">{{$index+1}} <input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="' + model + '" ng-change="changeSelection({data: ' + rowItemName + '})"/></label></td>';
       }
       angular.forEach(scope.columns, function (item) {
         if (!item.none) {
@@ -161,7 +161,7 @@
         }
       });
 
-      var statusShowClass = scope.config.isActiveClass ? ' ng-class="{' + scope.config.activeClass + ': item.$$active}" ' : "";
+      var statusShowClass = scope.config.isActiveClass ? ' ng-class="{' + scope.config.activeClass + ': item.$active, \'striped\': $odd}" ' : "";
       var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
       return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
     }
@@ -319,7 +319,6 @@
         $scope.changeSelection = function () {
           var tableState = getTableStateAll($scope);
           $scope.tableState.selectAll = tableState.selectAll;
-          console.log($scope.tableState.selectAll);
           $scope.selectionChangeHandler(tableState.results);
         };
 
@@ -342,9 +341,9 @@
         // 清除全部状态，设置当前状态
         function setItemActive(item) {
           _.forEach($scope.store, function (key) {
-            key.$$active = false;
+            key.$active = false;
           });
-          item.$$active = true;
+          item.$active = true;
         }
       }],
       link: function (scope, iElement) {
@@ -384,7 +383,7 @@
         // 监听store数据变化
         scope.$watch("store", function (newValue, oldVlaue, scope) {
           if (newValue) {
-            (scope.config.isActiveClass && newValue[0]) && (scope.store[0].$$active = true);
+            (scope.config.isActiveClass && newValue[0]) && (scope.store[0].$active = true);
             scope.showNoneDataInfoTip = newValue.length === 0;
             var tableState = getTableStateAll(scope);
             scope.tableState.selectAll = tableState.selectAll;

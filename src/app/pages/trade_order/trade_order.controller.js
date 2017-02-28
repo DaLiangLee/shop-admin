@@ -353,18 +353,18 @@
         var result = results.data;
         if (result.status == 0) {
           var temp = result.data;
-          temp.userinfo = JSON.parse(temp.userinfo);
-          temp.carinfo = JSON.parse(temp.carinfo);
+          temp.userinfo = angular.fromJson(temp.userinfo);
+          temp.carinfo = angular.fromJson(temp.carinfo);
           temp.ssaleprice = computeService.divide(temp.ssaleprice, 100);
           temp.psaleprice = computeService.divide(temp.psaleprice, 100);
           _.forEach(temp.details, function(item1){
-            item1.itemsku = JSON.parse(item1.itemsku);
+            item1.itemsku = angular.fromJson(item1.itemsku);
             var serverSkus = item1.itemsku.serverSkus[0];
             if(angular.isDefined(serverSkus.manualskuvalues)){
               item1.$$itemname = item1.itemsku.servername + " 服务属性 " + serverSkus.manualskuvalues;
             }
             if(angular.isDefined(serverSkus.skuvalues)){
-              serverSkus.skuvalues = JSON.parse(serverSkus.skuvalues);
+              serverSkus.skuvalues = angular.fromJson(serverSkus.skuvalues);
               item1.$$itemname = item1.servername + " 服务属性 " + serverSkus.skuvalues.skuname + serverSkus.skuvalues.items[0].skuvalue;
             }
             console.log(item1.itemsku, serverSkus);
@@ -372,7 +372,7 @@
             item1.allprice = computeService.divide(item1.allprice, 100);
             var productsPrice = 0;
             item1.products && _.forEach(item1.products, function(item2){
-              item2.itemsku = JSON.parse(item2.itemsku);
+              item2.itemsku = angular.fromJson(item2.itemsku);
               item2.$itemskuname = item2.itemsku.catename + " " + item2.itemsku.productname + " " + item2.itemsku.cnname;
               item2.price = computeService.divide(item2.price, 100);
               item2.allprice = computeService.divide(item2.allprice, 100);
@@ -702,8 +702,8 @@
       var result = angular.extend({}, data);
       result.carinfo = _.omit(result.carinfo, ["$$hashKey", "$$baoyang"]);
       result.carinfo.licence = _.isUndefined(result.carinfo.licence) ? "" : result.carinfo.licence;
-      result.carinfo = JSON.stringify(result.carinfo);
-      result.userinfo = JSON.stringify(result.userinfo);
+      result.carinfo = angular.toJson(result.carinfo);
+      result.userinfo = angular.toJson(result.userinfo);
       result.waitinstore = result.waitinstore ? 1 : 0;
       result.preferentialprice = result.preferentialprice*100;
       _.remove(result.details, function(item){

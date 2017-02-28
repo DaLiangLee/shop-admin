@@ -59,7 +59,6 @@
             /^-\d*/g.test(viewValue) && (minus = "-");
             // 过滤非数字
             value = viewValue.replace(NUMBER_REGULAR, "");
-            console.log(':'+value+":");
 
             if (NUMBER_INT_REGULAR.test(value)) {
               if (minus === "-" && value == "0") {
