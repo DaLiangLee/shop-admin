@@ -153,11 +153,11 @@
       if (scope.config.checkboxSupport) {
         scope.selectedScopeProperty = scope.selectedScopeProperty || "selectedItems";
         var model = rowItemName + "." + scope.selectedProperty;
-        node = '<td width="70"><label style="font-size:12px; font-family:Tahoma;cursor: pointer;">{{$index+1}} <input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="' + model + '" ng-change="changeSelection({data: ' + rowItemName + '})"/></label></td>';
+        node = '<td><label style="font-size:12px; font-family:Tahoma;cursor: pointer;"><input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="' + model + '" ng-change="changeSelection({data: ' + rowItemName + '})"/></label></td>';
       }
       angular.forEach(scope.columns, function (item) {
         if (!item.none) {
-          node += '<td ' + (item.width ? 'style="min-width:' + item.width + 'px;"' : "") + '>' + item.fieldDirective + '</td>';
+          node += '<td>' + item.fieldDirective + '</td>';
         }
       });
 
@@ -173,11 +173,17 @@
         btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
         angular.forEach(config.batchOperationBarDirective, function (item) {
           btn += item;
+
+
         });
         btn += '</div>';
       }
-      if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
-        page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
+      /*if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
+       page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
+       }*/
+
+      if (config.paginationSupport && !scope.showNoneDataInfoTip) {
+        page = '<div class="simple-grid-page-warp pull-right cb-pagination" simple-grid-page="" previous-text="&#xe901;" next-text="&#xe902;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'
       }
 
       node += btn;
