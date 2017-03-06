@@ -36,9 +36,9 @@ function browserSyncInit(baseDir, browser) {
   // 代理刘易
   //server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.127:8080', changeOrigin: true});
   // 代理姚东
-  //server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.98:8081', changeOrigin: true});
+  server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.98:8081', changeOrigin: true});
   // 代理服务器
-  server.middleware = proxyMiddleware('/shopservice', {target: 'http://shop.cb.cn', changeOrigin: true});
+  //server.middleware = proxyMiddleware('/shopservice', {target: 'http://shop.cb.cn', changeOrigin: true});
 
   browserSync.instance = browserSync.init({
     startPath: '/',
@@ -71,3 +71,8 @@ gulp.task('serve:e2e-dist', ['cleanTmp', 'build'], function () {
   browserSyncInit(conf.paths.dist, []);
 });
 
+gulp.task('gitpush', function () {
+  gulp.src([
+    path.join(conf.paths.src, '/**/*.*')
+  ]).pipe(gulp.dest(path.join('D:/github/shop', '/src')))
+});

@@ -442,6 +442,18 @@
                         }
                     }
                 },
+                "markting": {
+                  "debitcard": {
+                    "list": {
+                      "url": "/markting/storedebitcard/list",
+                      "type": "GET"
+                    },
+                    "saveorupdate": {
+                      "url": "/markting/storedebitcard/saveorupdate",
+                      "type": "POST"
+                    }
+                  }
+                },
                 "upload": {
                   "user": {
                     "url": "/user/customer/uploadAvatar",

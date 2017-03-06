@@ -16,45 +16,14 @@
     var currentStateName = currentState.name;
     var currentParams = angular.extend({}, $state.params, {pageSize: 5});
     var total = 0;
-    /**
-     * 表格配置
-     */
-    vm.gridModel = {
-      columns: angular.copy(tadeOrderConfig.DEFAULT_GRID.columns),
-      requestParams: {
-        params: currentParams,
-        request: "trade,order,excelorders",
-        permission: "chebian:store:trade:porder:export"
-      },
-      itemList: [],
-      config: angular.copy(tadeOrderConfig.DEFAULT_GRID.config),
-      loadingState: true,      // 加载数据
-      pageChanged: function (data) {    // 监听分页
-        var page = angular.extend({}, currentParams, {page: data});
-        $state.go(currentStateName, page);
-      },
-      sortChanged: function (data) {
-        var orders = [];
-        angular.forEach(data.data, function (item, key) {
-          orders.push({
-            "field": key,
-            "direction": item
-          });
-        });
-        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
-        getList(order);
-      },
-      selectHandler: function (item) {
-        // 拦截用户恶意点击
-        !item.$$active && item.guid && getOrdersDetails(item.guid);
-      }
-    };
+
+
 
     /**
      * 组件数据交互
      *
      */
-    vm.gridModel.config.propsParams = {
+    var propsParams = {
       currentStatus: currentParams.status,
       statistics: {},
       closed: function (item) {   // 关闭
@@ -130,134 +99,48 @@
       }
     };
 
-    var createtime = [
-      {
-        "label": "今日",
-        id: 0,
-        start: 0,
-        end: 0
-      },
-      {
-        "label": "本周",
-        id: 1,
-        start: 1,
-        end: 1
-      },
-      {
-        "label": "本月",
-        id: 2,
-        start: 2,
-        end: 2
-      },
-      {
-        "label": "本年度",
-        id: 3,
-        start: 3,
-        end: 3
-      }
-    ];
 
     /**
-     * 根据start和end获取列表的model
-     * @param list        列表
-     * @param start       起始
-     * @param end         结束
-     * @returns {number}  如果找不到返回-1,找到返回正确的索引
+     * 表格配置
      */
-    function getListIndex(list, start, end) {
-      if (angular.isUndefined(start) && angular.isUndefined(end)) {
-        return -1;
+    vm.gridModel = {
+      columns: _.clone(tadeOrderConfig.DEFAULT_GRID.columns),
+      requestParams: {
+        params: currentParams,
+        request: "trade,order,excelorders",
+        permission: "chebian:store:trade:porder:export"
+      },
+      itemList: [],
+      config: _.merge(tadeOrderConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
+      loadingState: true,      // 加载数据
+      pageChanged: function (data) {    // 监听分页
+        var page = angular.extend({}, currentParams, {page: data});
+        $state.go(currentStateName, page);
+      },
+      sortChanged: function (data) {
+        var orders = [];
+        angular.forEach(data.data, function (item, key) {
+          orders.push({
+            "field": key,
+            "direction": item
+          });
+        });
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        getList(order);
+      },
+      selectHandler: function (item) {
+        // 拦截用户恶意点击
+        !item.$$active && item.guid && getOrdersDetails(item.guid);
       }
-      var items;
-      end = end || start;
-      items = _.filter(list, function (item) {
-        return item.start == start && item.end == end;
-      });
-      return items.length === 1 ? items[0].id : -2;
-    }
+    };
 
+    var DEFAULT_SEARCH = _.clone(tadeOrderConfig.DEFAULT_SEARCH, {});
     /**
      * 搜索操作
      *
      */
     vm.searchModel = {
-      'config': {
-        other: currentParams,
-        keyword: {
-          placeholder: "请输入订单编号、会员信息、车辆信息等",
-          model: currentParams.keyword,
-          name: "keyword",
-          isShow: true
-        },
-        searchDirective: [
-          {
-            label: "订单状态",
-            all: true,
-            type: "list",
-            name: "status",
-            model: currentParams.status,
-            list: [
-              {
-                id: 1,
-                label: "服务中"
-              },
-              {
-                id: 2,
-                label: "完工待离店"
-              },
-              {
-                id: 3,
-                label: "完成"
-              },
-              {
-                id: 4,
-                label: "已取消"
-              }
-            ]
-          },
-          {
-            label: "付款状态",
-            all: true,
-            type: "list",
-            name: "paystatus",
-            model: currentParams.paystatus,
-            list: [
-              {
-                id: 0,
-                label: "已收款"
-              },
-              {
-                id: 1,
-                label: "待收款"
-              }
-            ]
-          },
-          {
-            label: "时间",
-            all: true,
-            custom: true,
-            region: true,
-            type: "date",
-            name: "createtime",
-            model: getListIndex(createtime, currentParams.createtime0, currentParams.createtime1),
-            list: createtime,
-            start: {
-              name: "createtime0",
-              model: currentParams.createtime0,
-              config: {
-                minDate: new Date("2017/01/01 00:00:00")
-              }
-            },
-            end: {
-              name: "createtime1",
-              model: currentParams.createtime1,
-              config: {
-                minDate: new Date("2017/01/05 00:00:00")
-              }
-            }
-          }
-        ]
-      },
+      'config': DEFAULT_SEARCH.config(currentParams),
       'handler': function (data) {
         console.log(data);
 
@@ -270,7 +153,7 @@
           console.log(currentParams);
           $state.go(currentStateName, currentParams);
         } else {
-          var items = _.find(createtime, function (item) {
+          var items = _.find(DEFAULT_SEARCH.createtime, function (item) {
             return item.id == data.createtime0;
           });
           if (angular.isDefined(items)) {

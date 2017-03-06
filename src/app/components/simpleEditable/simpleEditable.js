@@ -26,15 +26,6 @@
   /** @ngInject */
   function simpleEditable(cbAlert) {
 
-    /**
-     * 默认配置
-     * @type {{searchParams: string, searchPrefer: boolean, searchDirective: Array}}
-     */
-    var DEFAULT_CONFIG = {
-      searchID: "",               //表单id
-      searchPrefer: false,       //过滤形式（客户端false还是服务端true）   如果数据少可以选择本地过滤。后期扩展使用暂不适用
-      searchDirective: []        //自定义列表项配置    必填项
-    };
     return {
       restrict: "A",
       replace: true,
@@ -74,7 +65,6 @@
         };
         var $input = iElement.find('.editable-input');
         iElement.on('click', '.editable', function(){
-          var parent = iElement.parent();
           $input.val(scope.editor);
           iElement.addClass('open').css({
             'width': iElement.width(),
@@ -83,9 +73,8 @@
           });
         });
 
-        iElement.on('click', '.confirm', function(){
+        iElement.on('click', '.confirm', function(ev){
           if(isEmpty && !$input.val()){
-
           }else{
             if(!check[type]($input.val())){
               cbAlert.alert(message[type]);
@@ -110,7 +99,6 @@
           iElement.removeClass('open');
           $input.val('');
         }
-
       }
     }
   }

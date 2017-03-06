@@ -63,11 +63,16 @@
 
         var rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : simpleGridPageConfig.rotate;
         // 一页多少条数据
-        var maxSize = angular.isDefined($scope.paginationInfo.pageSize) ? $scope.paginationInfo.pageSize : simpleGridPageConfig.itemsPerPage;
+        if(angular.isDefined($scope.paginationInfo)){
+          var maxSize = angular.isDefined($scope.paginationInfo.pageSize) ? $scope.paginationInfo.pageSize : simpleGridPageConfig.itemsPerPage;
+        }else{
+          var maxSize = simpleGridPageConfig.itemsPerPage;
+        }
 
+        // 格式化内容
         var pageLabel = function(num){
           return num;
-        }
+        };
 
 
         // 显示按钮信息  首页 上一页 下一页 尾页
@@ -106,7 +111,12 @@
         }
 
 
-
+        /**
+         * 获取分页列表
+         * @param currentPage   当前页
+         * @param totalPages    总页数
+         * @returns {Array}     分页列表
+         */
         function getPages(currentPage, totalPages){
           var pages = [];
           // 默认的页面限制
@@ -114,8 +124,6 @@
           // 开始页面，总条数
           var startPage = 1, endPage = totalPages;
           var isMaxSized = angular.isDefined(maxSize) && maxSize < totalPages;
-
-          console.log(isMaxSized);
 
           // 计算最小和最大页面
           if (isMaxSized) {

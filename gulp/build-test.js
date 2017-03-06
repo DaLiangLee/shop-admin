@@ -6,7 +6,6 @@ var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
 
-
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
@@ -87,5 +86,12 @@ gulp.task('cleanTmp', function () {
 gulp.task('cleanTest', function () {
   return $.del([path.join(conf.paths.dist, '/')]);
 });
+
+gulp.task('zip', function () {
+  return gulp.src([path.join(conf.paths.dist, '/**/*.*')])
+    .pipe($.zip('test.zip'))
+    .pipe(gulp.dest('export'))
+});
+
 
 gulp.task('buildTest', ['htmlTest', 'fontsTest', 'otherTest']);

@@ -39,7 +39,7 @@
             break;
           case 403:
             cbAlert.determine("系统提醒", "未登陆", function(){
-              $window.location.href = configuration.getAPIConfig() + '/logout';
+              $window.location.href = configuration.getAPIConfig(admin) + '/logout';
             }, 'error');
             break;
           case 404:

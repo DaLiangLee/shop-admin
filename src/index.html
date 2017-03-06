@@ -32,9 +32,9 @@
   <script>
       var userPermissionList = {
         "message": [],
-        "guid": "817203342001590272",
-        "username": "B10220013886022473",
-        "storeid": "817203343418990592",
+        "guid": "836541896838361088",
+        "username": "B1213886022473",
+        "storeid": "836541898691969024",
         "menu": {
           "category": "all",
           "display": "1",
@@ -427,7 +427,7 @@
                   "permission": "chebian:store:product:package:view"
                 }
               ],
-              "menuname": "商品服务"
+              "menuname": "商品与服务"
             },
             {
               "category": "trade",
@@ -575,6 +575,32 @@
               "menuname": "交易管理"
             },
             {
+              "category": "finance",
+              "display": "1",
+              "id": 6,
+              "items": [
+                {
+                  "category": "finance",
+                  "display": "1",
+                  "href": "/finance/journal",
+                  "id": 60300,
+                  "items": [],
+                  "menuname": "收支明细",
+                  "permission": "chebian:store:finance:journal:view"
+                },
+                {
+                  "category": "finance",
+                  "display": "1",
+                  "href": "/finance/debitcard",
+                  "id": 60400,
+                  "items": [],
+                  "menuname": "储存卡账单",
+                  "permission": "chebian:store:finance:debitcard:view"
+                }
+              ],
+              "menuname": "财务管理"
+            },
+            {
               "category": "user",
               "display": "1",
               "id": 7,
@@ -707,7 +733,7 @@
                   "permission": "chebian:store:user:customer:grades:view"
                 }
               ],
-              "menuname": "会员管理"
+              "menuname": "会员中心"
             },
             {
               "category": "member",
@@ -802,7 +828,7 @@
                       "permission": "chebian:store:member:employee:search"
                     }
                   ],
-                  "menuname": "店员管理",
+                  "menuname": "员工管理",
                   "permission": "chebian:store:member:employee:view"
                 },
                 {
@@ -852,7 +878,7 @@
                   "permission": "chebian:store:member:role:view"
                 }
               ],
-              "menuname": "店员管理"
+              "menuname": "人事管理"
             },
             {
               "category": "system",
@@ -882,9 +908,19 @@
             },
             {
               "category": "markting",
-              "display": "0",
+              "display": "1",
               "id": 11,
-              "items": [],
+              "items": [
+                {
+                  "category": "markting",
+                  "display": "1",
+                  "href": "/markting/debitcard",
+                  "id": 120000,
+                  "items": [],
+                  "menuname": "店铺活动",
+                  "permission": "chebian:store:markting:debitcard:view"
+                }
+              ],
               "menuname": "营销中心"
             }
           ],
@@ -895,25 +931,25 @@
           "chebian:store:trade:porder:cancel",
           "chebian:store:system:modpwd:view",
           "chebian:store:product:server:view",
-          "chebian:store:trade:comment:view",
           "chebian:store:product:goods:price",
           "chebian:store:product:package:export",
           "chebian:store:product:package:add",
           "chebian:store:product:server:price",
           "chebian:store:member:role:view",
+          "chebian:store:markting:debitcard:view",
           "chebian:store:trade:porder:addsub",
           "chebian:store:user:customer:edit",
           "chebian:store:product:server:import",
           "chebian:store:product:package:putdown",
           "chebian:store:user:customer:remark",
+          "chebian:store:finance:journal:view",
           "chebian:store:user:customer:detail",
+          "chebian:store:trade:comment:search",
           "chebian:store:trade:porder:add",
           "chebian:store:trade:porder:detail",
           "chebian:store:product:goods:putup",
           "chebian:store:trade:porder:export",
           "chebian:store:trade:porder:combin",
-          "chebian:store:trade:comment:search",
-          "chebian:store:trade:comment:export",
           "chebian:store:product:package:remove",
           "chebian:store:product:server:batchadd",
           "chebian:store:store:shop:close",
@@ -947,6 +983,7 @@
           "chebian:store:member:employee:export",
           "chebian:store:member:role:add",
           "chebian:store:member:employee:search",
+          "chebian:store:finance:debitcard:view",
           "chebian:store:product:goods:add",
           "chebian:store:store:shop:belong",
           "chebian:store:user:customer:reset",
@@ -954,18 +991,19 @@
           "chebian:store:product:server:putdown",
           "chebian:store:product:package:edit",
           "chebian:store:member:employee:edit",
-          "chebian:store:user:comment:reply",
+          "chebian:store:trade:comment:export",
+          "chebian:store:trade:comment:view",
           "chebian:store:product:goods:putdown",
+          "chebian:store:trade:comment:reply",
           "chebian:store:member:employee:add",
           "chebian:store:product:server:putup",
           "chebian:store:product:server:edit",
           "chebian:store:member:role:remove",
           "chebian:store:user:customer:view",
           "chebian:store:store:shop:list",
-          "chebian:store:trade:comment:reply",
-          "chebian:store:trade:comment:details",
           "chebian:store:user:customer:grades:view",
           "chebian:store:trade:porder:view",
+          "chebian:store:trade:comment:details",
           "chebian:store:user:customer:export",
           "chebian:store:product:package:import",
           "chebian:store:member:role:edit",
@@ -980,9 +1018,8 @@
           "chebian:store:store:shop:search",
           "chebian:store:product:server:remove"
         ],
-        "storecode": "B0102200",
+        "storecode": "B0000012",
         "api": "http://localhost:3000/shopservice",
-        "static": "",
         "role": [
           {
             "datascope": "1",

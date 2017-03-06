@@ -313,57 +313,37 @@
         url: '/finance',
         template: '<div ui-view></div>',
         title: '财务管理',
-        permission: "chebian:store:finance:account:view"
+        permission: "chebian:store:finance:journal:view"
       })
-      .state('finance.account', {      // 账户管理
-        url: '/account',
-        template: '<div ui-view></div>',
-        title: '账户管理',
-        permission: "chebian:store:finance:account:view"
-      })
-      .state('finance.account.home', {      // 账户管理
-        url: '/home',
+      .state('finance.journal', {      // 收支明细
+        url: '/journal',
         templateUrl: 'app/pages/finance_account/home.html',
         controller: 'FinanceAccountHomeController',
         controllerAs: 'vm',
-        title: '账户管理',
-        permission: "chebian:store:finance:account:view"
+        title: '收支明细',
+        permission: "chebian:store:finance:journal:view"
       })
-      .state('finance.account.list', {      // 交易记录
-        url: '/home',
-        templateUrl: 'app/pages/finance_account/list.html',
-        controller: 'FinanceAccountListController',
-        controllerAs: 'vm',
-        title: '交易记录',
-        permission: "chebian:store:finance:account:view"
-      })
-      .state('finance.receivable', {      // 收款管理
-        url: '/receivable',
-        template: '<div ui-view></div>',
-        title: '收款管理',
-        permission: "chebian:store:finance:receivable:view"
-      })
-      .state('finance.receivable.list', {      // 收款管理
+      .state('finance.journal.list', {      // 收支明细
         url: '/list/:page',
-        templateUrl: 'app/pages/finance_receivable/list.html',
-        controller: 'FinanceReceivableLsitController',
+        templateUrl: 'app/pages/finance_journal/list.html',
+        controller: 'FinanceJournalListController',
         controllerAs: 'vm',
-        title: '收款管理',
-        permission: "chebian:store:finance:receivable:view"
+        title: '收支明细',
+        permission: "chebian:store:finance:journal:view"
       })
-      .state('finance.refund', {      // 退款管理
-        url: '/refund',
+      .state('finance.debitcard', {      // 储存卡账单
+        url: '/debitcard',
         template: '<div ui-view></div>',
-        title: '退款管理',
-        permission: "chebian:store:finance:refund:view"
+        title: '储存卡账单',
+        permission: "chebian:store:finance:debitcard:view"
       })
-      .state('finance.refund.list', {      // 退款管理
+      .state('finance.debitcard.list', {      // 储存卡账单
         url: '/list/:page',
-        templateUrl: 'app/pages/finance_refund/list.html',
-        controller: 'FinanceRefundListController',
+        templateUrl: 'app/pages/finance_debitcard/list.html',
+        controller: 'FinanceDebitcardLsitController',
         controllerAs: 'vm',
-        title: '退款管理',
-        permission: "chebian:store:finance:refund:view"
+        title: '储存卡账单',
+        permission: "chebian:store:finance:debitcard:view"
       })
       .state('user', {      // 会员管理
         url: '/user',
@@ -526,6 +506,26 @@
         controllerAs: 'vm',
         title: '修改密码',
         permission: "chebian:store:system:modpwd:view"
+      })
+      .state('markting', {      // 营销中心
+        url: '/markting',
+        template: '<div ui-view></div>',
+        title: '营销中心',
+        permission: "chebian:store:markting:debitcard:view"
+      })
+      .state('markting.debitcard', {      // 店铺活动
+        url: '/debitcard',
+        template: '<div ui-view></div>',
+        title: '店铺活动',
+        permission: "chebian:store:markting:debitcard:view"
+      })
+      .state('markting.debitcard.list', {      // 店铺活动
+        url: '/list',
+        templateUrl: 'app/pages/markting_debitcard/debitcard.html',
+        controller: 'MarktingDebitcardController',
+        controllerAs: 'vm',
+        title: '店铺活动',
+        permission: "chebian:store:markting:debitcard:view"
       });
   }
 })();

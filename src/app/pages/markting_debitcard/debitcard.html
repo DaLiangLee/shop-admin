@@ -1,0 +1,12 @@
+<div class="g-view">
+  <div class="container-fluid">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="javascript:;" class="text-muted">储值卡设置</a></li>
+    </ul>
+    <br />
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config"></div>
+
+    <button ng-click="vm.add()">添加</button>
+  </div>
+</div>
+

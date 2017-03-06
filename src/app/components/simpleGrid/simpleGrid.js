@@ -119,8 +119,8 @@
       var cell = checked ? "th" : "th",
         text = checked ? "序号" : "全选",
         checkbox = checked ? "" : '<input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="tableState.selectAll" ng-change="changeSelectionAll()" />',
-        label = checkbox ? "<label style='font-size:12px; font-family:Tahoma;cursor: pointer;'>" + checkbox + text + "</label>" : text;
-      return "<" + cell + ' style="width:60px;min-width:60px;">' + label + '</' + cell + ">";
+        label = checkbox ? "<label>" + checkbox + "</label>" : text;
+      return "<" + cell + ' style="width:20px;min-width:20px;">' + label + '</' + cell + ">";
     }
 
     function tHeadConfig(scope) {
@@ -173,14 +173,9 @@
         btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
         angular.forEach(config.batchOperationBarDirective, function (item) {
           btn += item;
-
-
         });
         btn += '</div>';
       }
-      /*if (config.paginationSupport && !scope.showNoneDataInfoTip) {    //添加分页
-       page = '<div class="simple-grid-page-warp pull-right" simple-grid-pagination pagination-info="paginationInfo" max-size="config.paginationInfo.maxSize"' + ' on-select-page="pageSelectChanged(page)" show-page-goto="' + config.paginationInfo.showPageGoto + '"></div></div>';
-       }*/
 
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {
         page = '<div class="simple-grid-page-warp pull-right cb-pagination" simple-grid-page="" previous-text="&#xe901;" next-text="&#xe902;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'

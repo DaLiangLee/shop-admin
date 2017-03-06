@@ -14,17 +14,12 @@
 
     /** @ngInject */
     function treeService(){
-        var results = {
-            id: [],
-            item: []
-            },
-            _this = this,
-            setState = false;
+        var _this = this;
         var enhanceItem = function (item, childrenName, parent) {
             if (parent) {
                 item.$parent = parent;
                 item.$siblings = function () {
-                  if(!angular.isArray(item.$parent.items)){
+                  if(!_.isArray(item.$parent.items)){
                     return [];
                   }
                   return _.filter(item.$parent.items, function (key) {
@@ -34,7 +29,7 @@
             }
             item.$hasChildren = function () {
                 var subItems = this.$children();
-                return angular.isArray(subItems) && subItems.length;
+                return _.isArray(subItems) && subItems.length;
             };
 
             item.$children = function () {
@@ -42,7 +37,7 @@
             };
             var getFlattenData = function (items) {
                 var result = items || [];
-                angular.forEach(items, function (item) {
+                _.forEach(items, function (item) {
                     result = result.concat(getFlattenData(item.items));
                 });
                 return result;
@@ -81,7 +76,7 @@
             var setCheckState = function (node, checked) {
                 node.$checked = checked;
                 if (node.$hasChildren()) {
-                    angular.forEach(node.$children(), function (subNode) {
+                    _.forEach(node.$children(), function (subNode) {
                         setCheckState(subNode, checked);
                     });
                 }
@@ -94,14 +89,7 @@
                 setCheckState(this, false);
             };
             item.$setCheckState = function(checked) {
-                if(!checked){
-                    results = {
-                        id: [],
-                        item: []
-                    }
-                }
                 _this.checkStateChange(this, checked);
-                //console.log('$setCheckState', this, checked);
                 setCheckState(this, checked)
             };
             item.$isChecked = function () {
@@ -117,7 +105,7 @@
             item.$isIndeterminate = function () {
                 return this.$indeterminate;
             };
-            angular.forEach(item.$children(), function (subItem) {
+            _.forEach(item.$children(), function (subItem) {
                 enhanceItem(subItem, childrenName, item);
             });
         };
@@ -132,10 +120,10 @@
          * @returns {*}
          */
         this.enhance = function (items, childrenName) {
-            if (angular.isUndefined(childrenName)) {
+            if (_.isUndefined(childrenName)) {
                 childrenName = 'items';
             }
-            angular.forEach(items, function (item) {
+            _.forEach(items, function (item) {
                 enhanceItem(item, childrenName);
             });
             return items;
@@ -149,7 +137,7 @@
          */
         var setCheckItem = function (item, findItems, findName) {
             item.$setCheckState(_.indexOf(findItems, item[findName]) >= 0);
-            angular.forEach(item.$children(), function (subItem) {
+            _.forEach(item.$children(), function (subItem) {
                 setCheckItem(subItem, findItems, findName);
             });
         };
@@ -165,20 +153,10 @@
             if(!findItems.length){
                 return ;
             }
-            setState = true;
-            angular.forEach(items, function (item) {
+            _.forEach(items, function (item) {
                 setCheckItem(item, findItems, findName);
             });
         };
-        /**
-         * 获取选中状态的结果
-         * @param items   树形菜单
-         * @param type    id或者item 默认id
-         * @param form    linear或者tree  默认linear
-         */
-        /*this.getCheckState = function (items, type, form) {
-
-        }*/
     }
     /** @ngInject */
     function treeFilter(treeService) {
@@ -197,7 +175,7 @@
                         return scope.$eval(attrs.bfCheckIndeterminate);
                     },
                     function (value) {
-                        angular.forEach(element, function (DOM) {
+                        _.forEach(element, function (DOM) {
                             DOM.indeterminate = value;
                         });
                     }

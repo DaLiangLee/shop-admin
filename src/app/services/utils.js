@@ -70,6 +70,26 @@
   function utils() {
     return {
       /**
+       * 根据start和end获取列表的model
+       * @param list        列表
+       * @param start       起始
+       * @param end         结束
+       * @returns {number}  如果找不到返回-1,找到返回正确的索引
+       */
+      getCustomModel: function(list, start, end) {
+        if (_.isUndefined(start) && _.isUndefined(end)) {
+          return -1;
+        }
+        var items;
+        end = end || start;
+        items = _.filter(list, function (item) {
+          return item.start == start && item.end == end;
+        });
+        return items.length === 1 ? items[0].id : -2;
+      },
+
+
+      /**
        * 获取车辆品牌列表
        * 后端传递是一个带#拼接字符串数组
        * 需要处理

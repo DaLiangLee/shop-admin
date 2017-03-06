@@ -15,7 +15,7 @@
     }
 
     /** @ngInject */
-    function tadeOrderConfig() {
+    function tadeOrderConfig(utils) {
         return {
             DEFAULT_GRID: {
                 "columns": [
@@ -159,7 +159,115 @@
                     ]
                 }
             },
-            DEFAULT_SEARCH: {}
+            DEFAULT_SEARCH: {
+              createtime: [
+                {
+                  "label": "今日",
+                  id: 0,
+                  start: 0,
+                  end: 0
+                },
+                {
+                  "label": "本周",
+                  id: 1,
+                  start: 1,
+                  end: 1
+                },
+                {
+                  "label": "本月",
+                  id: 2,
+                  start: 2,
+                  end: 2
+                },
+                {
+                  "label": "本年度",
+                  id: 3,
+                  start: 3,
+                  end: 3
+                }
+              ],
+              status: [
+                {
+                  id: 1,
+                  label: "服务中"
+                },
+                {
+                  id: 2,
+                  label: "完工待离店"
+                },
+                {
+                  id: 3,
+                  label: "完成"
+                },
+                {
+                  id: 4,
+                  label: "已取消"
+                }
+              ],
+              paystatus: [
+                {
+                  id: 0,
+                  label: "已收款"
+                },
+                {
+                  id: 1,
+                  label: "待收款"
+                }
+              ],
+              config: function(params){
+                return {
+                  other: params,
+                  keyword: {
+                    placeholder: "请输入订单编号、会员信息、车辆信息等",
+                    model: params.keyword,
+                    name: "keyword",
+                    isShow: true
+                  },
+                  searchDirective: [
+                    {
+                      label: "订单状态",
+                      all: true,
+                      type: "list",
+                      name: "status",
+                      model: params.status,
+                      list: this.status
+                    },
+                    {
+                      label: "付款状态",
+                      all: true,
+                      type: "list",
+                      name: "paystatus",
+                      model: params.paystatus,
+                      list: this.paystatus
+                    },
+                    {
+                      label: "时间",
+                      all: true,
+                      custom: true,
+                      region: true,
+                      type: "date",
+                      name: "createtime",
+                      model: utils.getCustomModel(this.createtime, params.createtime0, params.createtime1),
+                      list: params,
+                      start: {
+                        name: "createtime0",
+                        model: params.createtime0,
+                        config: {
+                          minDate: new Date("2017/01/01 00:00:00")
+                        }
+                      },
+                      end: {
+                        name: "createtime1",
+                        model: params.createtime1,
+                        config: {
+                          minDate: new Date("2017/01/05 00:00:00")
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
         }
     }
 
