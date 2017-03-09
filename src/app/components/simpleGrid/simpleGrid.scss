@@ -1,111 +1,176 @@
-.pagination-info{
+@import '../../config.scss';
+.pagination-info {
   display: inline-block;
   vertical-align: top;
   zoom: 1;
   margin: 20px 0;
   line-height: 34px;
-  padding: 0px 16px;
+  padding: 0 16px;
   color: #888;
 }
-.pagination-goto-page{
+
+.pagination-goto-page {
   display: inline-block;
   vertical-align: top;
   padding-left: 15px;
   padding-right: 15px;
   margin-top: 20px;
-  input{
+  input {
     display: inline-block;
     vertical-align: top;
     width: 40px;
     padding-right: 5px;
   }
-  button{
+  button {
     vertical-align: top;
     padding: 6px 8px;
     margin-left: 6px;
   }
 }
-.gridFoot{
-  height: 80px;
-}
-.gridSection{
-  width: 100%;
-  height: auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-.table > thead > tr > th {
-  vertical-align: bottom;
-  text-align: center;
-  background-color: #e1e9f6;
-  border-top: 1px solid #b2b5ba!important;
-  border-bottom: 1px solid #ddd;
-}
-.table > tbody > tr > td{
-  vertical-align: middle;
-  border-bottom: 1px solid #ddd;
+
+
+/**
+下拉选择更多操作选项
+ */
+.w-issue-actions-trigger{
+  display: none;
 }
 
-.table > tbody > tr.active > td,.table > tbody > tr.striped.active > td{
-  background-color: #f1f7fb;
+
+/**
+表格组件
+ */
+.w-table {
+  width: 100%;
+  font-size: 14px;
+  > thead {
+    color: #333333;
+    background-color: #e8f2ff;
+    border: 1px solid #d7d7d7;
+    border-bottom: 3px solid #337ab7;
+    th {
+      padding: 10px;
+      font-weight: bold;
+    }
+  }
+  > tbody {
+    border-left: 1px solid #d7d7d7;
+    border-right: 1px solid #d7d7d7;
+    tr{
+      > td{
+        padding: 10px;
+        border-bottom: 1px solid #d7d7d7;
+      }
+      .active{
+
+      }
+    }
+  }
+  .table-striped > tbody > tr{
+    &:nth-of-type(odd) {
+      background-color: $table-bg-default;
+    }
+    &:nth-of-type(even) {
+      background-color: $table-bg-accent;
+    }
+  }
+  .table-striped-ie > tbody > tr{
+    .striped-odd {
+      background-color: $table-bg-default;
+    }
+    .striped-even {
+      background-color: $table-bg-accent;
+    }
+  }
+  .table-hover{
+    > tbody > tr:hover {
+      background-color: $table-bg-hover;
+      .w-issue-actions-trigger{
+        display: block;
+      }
+    }
+  }
+  .table-header-center tr > th,.table-body-center tr > td{
+    text-align: center;
+  }
 }
-.table > tbody > tr.striped > td{
-  background-color: #f0f0f0;
-}
-.simple-grid-tfoot-batch-warp{
-  padding-top: 20px;
+
+/**
+表格组合
+ */
+.w-grid {
+  .grid-header {
+    margin-bottom: 20px;
+  }
+  .grid-body {
+    width: 100%;
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .grid-preloader {
+    margin-top: 100px;
+    text-align: center;
+  }
+  .grid-none-data-wrap {
+
+  }
+  .grid-footer {
+    height: 80px;
+  }
+
 }
 
 /**
 表格分页组件
  */
-.k-pagination{
+.w-pagination {
   list-style: none;
   font-size: 0;
-  li{
+  li {
     display: inline-block;
     vertical-align: top;
     font-size: 12px;
     text-align: center;
-    &.pagination-page{
+    &.pagination-page {
 
     }
-    a{
+    a {
       display: inline-block;
-      &:hover,&:focus{
+      &:hover, &:focus {
         text-decoration: none;
       }
     }
   }
 }
 
-.cb-pagination{
+.cb-pagination {
   padding-top: 15px;
-  li{
+  li {
     margin: 0 2px;
-    a{
+    a {
       width: 26px;
       line-height: 26px;
       font-size: 16px;
       color: #7bade2;
       border: 1px solid #7bade2;
       font-family: "icomoon";
-      &:hover{
+      &:hover {
         background-color: #e1e9f6;
         border-color: #7bade2;
       }
     }
-    &.disabled a{
+    &.disabled a {
       cursor: not-allowed;
-      color:#333;
+      color: #333;
       background-color: #ccc;
       border-color: #ccc;
     }
   }
-  .pagination-page{
+  .pagination-page {
     margin-top: 3px;
     line-height: 20px;
-    a{
+    a {
       width: auto;
       min-width: 20px;
       line-height: 20px;
@@ -114,8 +179,8 @@
       color: #333;
       border: none;
     }
-    &.active{
-      a{
+    &.active {
+      a {
         width: auto;
         min-width: 18px;
         line-height: 18px;
@@ -125,5 +190,5 @@
       }
     }
   }
-
 }
+

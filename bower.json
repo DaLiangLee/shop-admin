@@ -11,12 +11,10 @@
     "angular-sanitize": "~1.2.29",
     "angular-ui-router": "~0.2.15",
     "bootstrap-sass": "~3.3.5",
-    "angular-bootstrap": "~1.3.3",
     "animate.css": "~3.4.0",
     "font-awesome": "^4.6.3",
     "angular-bootstrap": "~0.12.0",
     "echarts": "^3.2.3",
-    "fex-webuploader": "https://github.com/fex-team/webuploader.git#^0.1.5",
     "plupload": "https://github.com/moxiecode/plupload.git#^2.1.9"
   },
   "devDependencies": {

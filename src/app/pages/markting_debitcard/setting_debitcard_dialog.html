@@ -1,0 +1,66 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+            aria-hidden="true">&times;</button>
+    <h5 class="modal-title">储值卡设置</h5>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal" autocomplete="off" name="setting" role="form" novalidate>
+      <div class="setting f-cb">
+        <div class="m-group f-cb cover">
+          <div class="u-label f-fl">储值卡图片：</div>
+          <div class="u-control f-fl">
+            <ol class="btn-group f-fl" dg-click="select($event, item)" selector="li">
+              <li ng-repeat="item in covers" class="{{item.sClass}}" ng-class="{'active': item.active}">
+                <img ng-src="{{item.images}}" alt="">
+                <span></span>
+              </li>
+            </ol>
+            <div class="images-group f-fl">
+              <img class="images" ng-src="{{dataBase.cover}}" alt="">
+              <h4 class="title">车边生活</h4>
+              <h3 class="text">
+                <span ng-if="dataBase.name" ng-bind="dataBase.name"></span>
+                <span ng-if="!dataBase.name">1111</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="f-cb group-row">
+          <div class="m-group f-fl">
+            <div class="u-label f-fl">充值活动： </div>
+            <div class="u-control f-fl">
+                <input type="text" class="input" ng-model="dataBase.name" name="name" placeholder="输入充值活动名称" cb-placeholder>
+            </div>
+          </div>
+          <div class="m-group f-fl">
+            <div class="u-label f-fl">充值金额：</div>
+            <div class="u-control f-fl">
+                <input type="text" class="input" ng-model="dataBase.rechargeamount" name="rechargeamount" cb-number-range=""  range-enabled="true" data-value-min="-1" data-value-max="1000" placeholder="输入充值金额" cb-placeholder>
+            </div>
+          </div>
+        </div>
+        <div class="f-cb group-row">
+          <div class="m-group f-fl">
+            <div class="u-label f-fl">赠送金额：</div>
+            <div class="u-control f-fl">
+              <input type="text" class="input" ng-model="dataBase.giveamount" name="giveamount" cb-number-range=""  range-enabled="true" data-value-min="-1" data-value-max="1000" placeholder="输入赠送金额" cb-placeholder>
+            </div>
+          </div>
+          <div class="m-group f-fl">
+            <div class="u-label f-fl">发卡数量：</div>
+            <div class="u-control f-fl">
+              <input type="text" class="input" ng-model="dataBase.quantity" name="quantity" cb-number-range=""  range-enabled="true" data-value-min="-1" data-value-max="1000" placeholder="输入发卡数量" cb-placeholder>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="inline-block margin-right">
+      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="setting.$invalid">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    </div>
+  </div>
+</div>

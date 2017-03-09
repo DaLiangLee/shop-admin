@@ -5,7 +5,8 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
-
+var conf = require('./conf');
+var pngquant = require('imagemin-pngquant');
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
@@ -93,5 +94,14 @@ gulp.task('zip', function () {
     .pipe(gulp.dest('export'))
 });
 
+gulp.task('images', function () {
+  return gulp.src([path.join(conf.paths.src, '/assets/images/*.+(png|jpg|gif|svg)*')])
+    .pipe($.imagemin({
+      progressive: true,
+      svgoPlugins: [{removeViewBox: false}],
+      use: [pngquant()]
+    }))
+    .pipe(gulp.dest('images'));
+});
 
 gulp.task('buildTest', ['htmlTest', 'fontsTest', 'otherTest']);

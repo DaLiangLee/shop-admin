@@ -57,16 +57,26 @@
             "cssProperty": "state-column",
             "fieldDirective": '<div cb-switch checkstatus="item.status" ng-click="propsParams.statusItem(item)"></div>',
             "name": '启用'
+          },
+          {
+            "id": 9,
+            "cssProperty": "state-column",
+            "fieldDirective": '<a href="javascript:;" class="u-btn-link" setting-debitcard-dialog="" item="item" item-handler="propsParams.saveorupdate(data)">编辑</a>',
+            "name": '操作'
           }
         ],
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
           'sortSupport': true,
-          'useBindOnce': true  // 是否单向绑定
+          'useBindOnce': true,  // 是否单向绑定
+          'addColumnsBarDirective': [
+            '<button class="u-btn u-btn-primary" setting-debitcard-dialog="" item-handler="propsParams.saveorupdate(data)" ng-if="propsParams.currentStatus == 1">添加</button> '
+          ]
         }
       },
       DEFAULT_SEARCH: {
       }
+
     }
   }
 

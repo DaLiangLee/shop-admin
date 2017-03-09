@@ -1,0 +1,22 @@
+/*功能  function*******************************************************/
+/**
+ * 为方便一些常用样式的使用，我们将这些使用率较高的样式剥离出来，按需使用，
+ * 通常这些选择器具有固定样式表现，比如清除浮动等！不可滥用！
+ */
+.f-fl{float:left;}
+.f-fr{float:right;}
+/** 解决ie6双边距问题 */
+.f-fl,.f-fr{_display:inline;}
+.f-cb:after,.f-cb:before{content: "";display:table;clear:both;}
+.f-cb{*zoom:1}
+.f-tal{text-align: left;}
+.f-tac{text-align: center;}
+.f-tar{text-align: right;}
+.f-st{font-family:\5b8b\4f53,"SimSun", "宋体";}
+.f-fz16{font-size: 16px;}
+.f-fz18{font-size: 18px;}
+.f-fz20{font-size: 20px;}
+.f-fz24{font-size: 24px;}
+.f-fz30{font-size: 30px;}
+.f-show{display: block !important;}
+.f-hide{display: none !important;}

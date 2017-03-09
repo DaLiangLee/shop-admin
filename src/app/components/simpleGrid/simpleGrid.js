@@ -31,6 +31,8 @@
  *    注意数据需要和columns里的fieldDirective对应
  *
  * config    全局配置参数
+ *    hoverSupport      是否支持鼠标移入效果
+ *    stripedSupport    是否支持隔行变色
  *    columnsClass       tr上面加class     {'classname' : true添加，false不添加}
  *    sortSupport        是否开启排序       默认false
  *    sortPrefer      排序形式（客户端false还是服务端true）       默认false客户端
@@ -80,7 +82,7 @@
       // 列表显示
       var tBody = tBodyConfig(scope);
 
-      return '<table class="table">' + tHead + tBody + "</table>";
+      return '<table class="w-table table-striped table-hover">' + tHead + tBody + "</table>";
     }
 
     function initAddButton(scope) {
@@ -358,17 +360,16 @@
         // 监听columns
         scope.$watch('columns', function () {
           // 初始化表格无数据显示
-          iEle.find('.simple-grid-none-data-wrap').html(noData(scope));
+          iEle.find('.grid-none-data-wrap').html(noData(scope));
           // 初始化表格设置
-          iEle.find('.gridSettings').html(initAddButton(scope) + initSettings(scope));
+          iEle.find('.grid-header').html(initAddButton(scope) + initSettings(scope));
           // 初始化表格数据
-          iEle.find('.gridSection').html(initGrid(scope));
+          iEle.find('.grid-body').html(initGrid(scope));
           // 初始化表格页脚
-          iEle.find('.gridFoot').html(tFootConfig(scope));
+          iEle.find('.grid-footer').html(tFootConfig(scope));
           setGridSectionWidth();
           $compile(iEle.contents())(scope);
         });
-
 
         function setGridSectionWidth() {
           var results = _.reduce(scope.columns, function (result, value) {

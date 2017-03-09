@@ -59,7 +59,22 @@
       .when('/system/role', '/system/role/list/')    // 角色管理
       .when('/system/role/', '/system/role/list/')
       .when('/system/role/list', '/system/role/list/1')
-      .when('/system/role/list/', '/system/role/list/1');
+      .when('/system/role/list/', '/system/role/list/1')
+      .when('/system/role/list/', '/system/role/list/1')
+      .when('/markting', '/notfound')
+      .when('/markting/', '/notfound')
+      .when('/markting/debitcard', '/markting/debitcard/list')   // 店铺活动
+      .when('/markting/debitcard/', '/markting/debitcard/list')
+      .when('/finance', '/notfound')
+      .when('/finance/', '/notfound')
+      .when('/finance/journal', '/finance/journal/list/')            // 收支明细
+      .when('/finance/journal/', '/finance/journal/list/')
+      .when('/finance/journal/list', '/finance/journal/list/1')
+      .when('/finance/journal/list/', '/finance/journal/list/1')
+      .when('/finance/debitcard', '/finance/debitcard/list/')   // 储值卡账单
+      .when('/finance/debitcard/', '/finance/debitcard/list/')
+      .when('/finance/debitcard/list', '/finance/debitcard/list/1')
+      .when('/finance/debitcard/list/', '/finance/debitcard/list/1');
 
     /**
      * 路由配置
@@ -317,9 +332,7 @@
       })
       .state('finance.journal', {      // 收支明细
         url: '/journal',
-        templateUrl: 'app/pages/finance_account/home.html',
-        controller: 'FinanceAccountHomeController',
-        controllerAs: 'vm',
+        template: '<div ui-view></div>',
         title: '收支明细',
         permission: "chebian:store:finance:journal:view"
       })
@@ -343,6 +356,14 @@
         controller: 'FinanceDebitcardLsitController',
         controllerAs: 'vm',
         title: '储存卡账单',
+        permission: "chebian:store:finance:debitcard:view"
+      })
+      .state('finance.debitcard.detail', {      // 储存卡账单详情
+        url: '/detail/:detail',
+        templateUrl: 'app/pages/finance_debitcard/detail.html',
+        controller: 'FinanceDebitcardDetailController',
+        controllerAs: 'vm',
+        title: '储存卡账单详情',
         permission: "chebian:store:finance:debitcard:view"
       })
       .state('user', {      // 会员管理

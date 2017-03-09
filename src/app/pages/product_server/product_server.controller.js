@@ -47,7 +47,7 @@
         },
         selectHandler: function (item) {
           // 拦截用户恶意点击
-          !item.$$active && item.guid && getServerSkus(item.guid);
+          !item.$active && item.guid && getServerSkus(item.guid);
         }
       };
 
@@ -193,26 +193,25 @@
             results.data.data.serverSkus && angular.forEach(results.data.data.serverSkus, function (item) {
               item.serverprice = item.serverprice/100;
               if((!item.serverprice && item.serverprice != 0) || (!item.servertime && item.servertime != 0)){
-                item.$$servertimeprice = "";
+                item.$servertimeprice = "";
               }else{
-                item.$$servertimeprice = computeService.multiply(item.serverprice, item.servertime);
+                item.$servertimeprice = computeService.multiply(item.serverprice, item.servertime);
               }
              if(item.skuvalues){
-                item.skuvalues = JSON.parse(item.skuvalues);
-                item.$$skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
+                item.skuvalues = angular.fromJson(item.skuvalues);
+                item.$skuvalues = _.trunc(item.skuvalues.skuname + item.skuvalues.items[0].skuvalue, {
                   'length': 10,
                   'omission': ' 等'
                 })
               }
               if(item.manualskuvalues){
-                item.$$skuvalues = _.trunc(item.manualskuvalues, {
+                item.$skuvalues = _.trunc(item.manualskuvalues, {
                   'length': 10,
                   'omission': ' 等'
                 })
               }
             });
             vm.items = results.data.data;
-            console.log(vm.items);
           } else {
             cbAlert.error(results.data.data);
           }
@@ -240,7 +239,6 @@
           });
         },
         statusItem: function (item, serverid) {
-          console.log(JSON.stringify(item));
           var tips = item.status === "0" ? '是否确认启用该服务SKU？' : '是否确认禁用该服务SKU？';
           cbAlert.ajax(tips, function (isConfirm) {
             if (isConfirm) {
@@ -358,11 +356,7 @@
         columns: angular.copy(productServerChangeConfig.DEFAULT_GRID.columns),
         itemList: [],
         config: angular.copy(productServerChangeConfig.DEFAULT_GRID.config),
-        loadingState: vm.isChange,      // 加载数据
-        pageChanged: function (data) {    // 监听分页
-          //var page = angular.extend({}, currentParams, {page: data});
-          //$state.go(currentStateName, page);
-        }
+        loadingState: vm.isChange     // 加载数据
       };
 
       /**
@@ -387,7 +381,6 @@
               return ;
             }
             productServer.removeOfferprice(item).then(function (results) {
-              console.log('saveOfferprice', results);
               if(results.data.status == 0) {
                 cbAlert.tips('删除成功');
                 /**
@@ -405,7 +398,6 @@
           if (data.status == '0') {
             console.log(data.data);
             productServer.saveOfferprice(data.data).then(function (results) {
-              console.log('saveOfferprice', results);
               if(results.data.status == 0) {
                 getOfferpriceList();
                 //vm.gridModel.itemList.push(getOfferprice(results.data.data));
@@ -414,7 +406,6 @@
           }
         },
         statusItem: function (data) {
-          $log.debug('statusItem', data);
           if (data.status == '0') {
             var item = null;
             if(data.removal.length == 1){
@@ -424,8 +415,6 @@
             }
             productServer[data.type](item).then(function (data) {
               getOfferpriceList();
-            }, function (data) {
-              $log.debug('statusItem', data);
             });
           }
         },
@@ -473,7 +462,6 @@
        * @param item
        */
       function setSkuvalues(sku){
-        console.log(sku);
         var skuvaluesList = [];
         angular.forEach(sku, function (skuname) {
           angular.forEach(skuname.items, function (skuvalue) {

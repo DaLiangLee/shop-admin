@@ -1,0 +1,24 @@
+/*布局  grid***********************************************************/
+
+$mini: 40px;
+$full: 150px;
+$topbar: 110px;
+
+
+
+
+
+
+/**
+ * 将页面分割为几个大块，通常有头部、主体、主栏、侧栏、尾部等！
+ * min-width 等于可视区宽度，可以解决ie6以上浏览器小于页面宽度或者浏览器缩小，拉动滚动出现白边问题
+ */
+.g-wp{width:1200px;min-width: 1200px;margin-left:auto;margin-right:auto}
+.g-wa{width:100%;min-width: 1200px;}
+.g-hd{}
+.g-mn{}
+.g-bd{}
+.g-ft{}
+.g-sd{}
+
+

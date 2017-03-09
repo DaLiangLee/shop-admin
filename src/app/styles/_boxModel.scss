@@ -1,0 +1,17 @@
+/*盒子模型 Box Model***********************************************************/
+/**
+ * 将盒子模型宽度，高度，边框，外边距，内填充统一声明，按需使用，通常被重复用。
+ *
+ */
+.b-w10{width:10px;}
+.b-h100{height: 100px;}
+.b-b1{border: 1px solid #000;}
+.b-ml10{margin-left: 10px;}
+.b-pr10{padding-right: 10px;}
+.b-w0{width: 0 !important;}
+.b-wa{width: auto !important;}
+.b-h0{height: 0 !important;}
+.b-ha{height: auto !important;}
+.b-b0{border: 0 !important;}
+.b-m0{margin: 0 !important;}
+.b-p0{padding: 0 !important;}

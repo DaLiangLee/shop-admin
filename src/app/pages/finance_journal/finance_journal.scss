@@ -1,0 +1,52 @@
+.viewFramework-setting-debitcard-dialog{
+  .modal-dialog{
+    width: 1000px;
+  }
+  .setting{
+    .group{
+      width: 50%;
+      .label{
+        width: 40%;
+        height: 58px;
+        vertical-align: middle;
+        background-color: #f2f2f2;
+      }
+      .control{
+        width: 60%;
+        height: 58px;
+      }
+      &.cover{
+        width: 100%;
+        .control{
+          height: 340px;
+          .btn-group{
+            li{
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              background-color: #ddd;
+              &.active{
+                background-color: red;
+              }
+            }
+            .cover1{
+              background-color: #d81e06;
+            }
+            .cover2{
+              background-color: #d4237a;
+            }
+            .cover3{
+              background-color: #e0620d;
+            }
+            .cover4{
+              background-color: #038ae3;
+            }
+            .cover5{
+              background-color: #1afa29;
+            }
+          }
+        }
+      }
+    }
+  }
+}

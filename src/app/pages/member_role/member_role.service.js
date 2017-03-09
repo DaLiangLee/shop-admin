@@ -37,6 +37,13 @@
                         "fieldDirective": '<span class="state-unread"><span ng-repeat="role in item.items"><i bo-text="role.menuname"></i>    </span><span bo-if="!item.items.length">无</span></span>',
                         "name": '权限范围',
                         "width": 300
+                    },
+                    {
+                      "id": 3,
+                      "cssProperty": "state-column",
+                      "fieldDirective": '<span class="w-issue-actions-trigger">...</span>',
+                      "name": '权限范围',
+                      "width": 300
                     }
                 ],
                 "config": {

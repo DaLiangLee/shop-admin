@@ -1,4 +1,4 @@
-<ul class="k-pagination" bindonce="" role="menu">
+<ul class="w-pagination" bindonce="" role="menu">
   <li role="menuitem" bo-if="boundaryLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-first"><a href="javascript:;" ng-click="selectPage(1, $event)" ng-disabled="noPrevious()||ngDisabled" bo-text="getText('first')"></a></li>
   <li role="menuitem" bo-if="directionLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-prev"><a href="javascript:;" ng-click="selectPage(page - 1, $event)" ng-disabled="noPrevious()||ngDisabled" bo-text="getText('previous')"></a></li>
   <li role="menuitem" ng-repeat="page in pages track by $index" ng-class="{active: page.active,disabled: ngDisabled&&!page.active}" class="pagination-page"><a  href="javascript:;" ng-click="selectPage(page.number, $event)" ng-disabled="ngDisabled&&!page.active" ng-bind="page.text"></a></li>

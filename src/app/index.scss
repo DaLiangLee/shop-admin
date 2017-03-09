@@ -4,7 +4,6 @@
  */
 $navbar-inverse-link-color: #5AADBB;
 
-
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
  *  sass dependencies when defined in the bower.json of your dependencies
@@ -12,141 +11,101 @@ $navbar-inverse-link-color: #5AADBB;
 // bower:scss
 // endbower
 
-@font-face {
-  font-family: 'icomoon';
-  src:  url('../assets/fonts/icomoon.eot?dwwg1l');
-  src:  url('../assets/fonts/icomoon.eot?dwwg1l#iefix') format('embedded-opentype'),
-  url('../assets/fonts/icomoon.ttf?dwwg1l') format('truetype'),
-  url('../assets/fonts/icomoon.woff?dwwg1l') format('woff'),
-  url('../assets/fonts/icomoon.svg?dwwg1l#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
+/* 皮肤 skin********************************************************/
+/**
+ * 如果你需要把皮肤型的样式抽离出来，通常为文字色、背景色（图）、边框色等，
+ * 非换肤型网站通常只提取文字色！非换肤型网站不可滥用此类！
+ */
+.s-title {
 }
 
-[class^="icon-"], [class*=" icon-"] ,.glyphicon{
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: none;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  vertical-align: middle;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*图标 iconfont*******************************************************/
+/**
+ * 图标分为图标字体和图片图标，这些图标网站整体统一可以共用，图片可以同雪碧图。
+ */
+.i-iconfont {
 }
 
-
-
-.icon-required:before {
-  content: "\e917";
-}
-.icon-arrow_down:before,.glyphicon-chevron-down:before{
-  content: "\e900";
-}
-.icon-arrow_left:before {
-  content: "\e901";
-}
-.icon-arrow_right:before {
-  content: "\e902";
-}
-.icon-arrow_up:before,.glyphicon-chevron-up:before{
-  content: "\e903";
-}
-.icon-ban-circle:before {
-  content: "\e904";
-}
-.icon-book:before {
-  content: "\e905";
-}
-.icon-calendar:before {
-  content: "\e906";
-}
-.icon-exclamation:before {
-  content: "\e908";
+/*模块  module********************************************************/
+/**
+ * 通常是一个语义化的可以重复使用的较大的整体！比如导航、登录、注册、各种列表、评论、搜索等！
+ */
+.m-logo {
 }
 
-.icon-full:before {
-  content: "\e90a";
-}
-.icon-info:before {
-  content: "\e90b";
+.m-list {
 }
 
-.icon-minus:before {
-  content: "\e90e";
-}
-.icon-ok:before {
-  content: "\e90f";
-}
-.icon-ok_circle:before {
-  content: "\e910";
-}
-.icon-pen:before {
-  content: "\e911";
-}
-.icon-plus:before {
-  content: "\e912";
+/*组件  widget********************************************************/
+/**
+ * 通常是一个语义化的可以重复使用的独立的较大的整体！比如模态，灯箱，轮播图，选项卡，提示等！
+ */
+.k-motai {
 }
 
-.icon-question:before {
-  content: "\e914";
-}
-.icon-remove:before {
-  content: "\e915";
-}
-.icon-remove_circle:before {
-  content: "\e916";
-}
-.icon-search:before {
-  content: "\e918";
-}
-.icon-star:before {
-  content: "\e919";
-}
-.icon-triangle_down:before {
-  content: "\e91e";
-}
-.icon-triangle_up:before {
-  content: "\e91f";
+.k-lightbox {
 }
 
-// 侧边栏使用
-.icon-sidebar-user:before {
-  content: "\e920";
-}
-.icon-sidebar-product:before {
-  content: "\e913";
-}
-.icon-sidebar-stocks:before {
-  content: "\e91a";
-}
-.icon-sidebar-store:before {
-  content: "\e91b";
-}
-.icon-sidebar-system:before {
-  content: "\e91c";
-}
-.icon-sidebar-trade:before {
-  content: "\e91d";
-}
-.icon-sidebar-markting:before {
-  content: "\e90c";
-}
-.icon-sidebar-member:before {
-  content: "\e90d";
-}
-.icon-sidebar-desktop:before {
-  content: "\e907";
-}
-.icon-sidebar-finance:before {
-  content: "\e909";
+.k-slide {
 }
 
-body{
+.k-tab {
+}
+
+/*元件  unit********************************************************/
+/**
+ * 通常是一个不可再分的较为小巧的个体，通常被重复用于各种模块和组件中！比如按钮、输入框、loading等！
+ */
+.u-btn {
+}
+
+.u-inp {
+}
+
+/*状态  condition********************************************************/
+/**
+ * 为状态类样式加入前缀，统一标识，方便识别
+ */
+.c-sel {
+}
+
+/* (selected)    选中 */
+.c-cur {
+}
+
+/* (current)    当前 */
+.c-show {
+}
+
+/* (show)    显示 */
+.c-hide {
+}
+
+/* (hide)    隐藏 */
+.c-open {
+}
+
+/* (open)    打开 */
+.c-close {
+}
+
+/* (close)    关闭 */
+.c-err {
+}
+
+/* (error)    出错 */
+.c-dis {
+}
+
+/* (disabled)    不可用 */
+.c-sel {
+}
+
+/* (selected)    选中 */
+
+@import 'styles/_icon.scss';
+
+body {
   min-width: 1000px;
 }
 
@@ -165,7 +124,7 @@ body{
   }
 }
 
-.text-border{
+.text-border {
   display: block;
   width: 100%;
   min-height: 34px;
@@ -179,29 +138,19 @@ body{
   border: 1px solid #ccc;
   background-color: #eee;
   border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-  &.text-border-warning{
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  &.text-border-warning {
     color: #ff9600;
     border-color: #ff9600;
   }
-  &.text-border-error{
+  &.text-border-error {
     color: #db2822;
     border-color: #db2822;
   }
 }
 
-.table-hover {
-  > tbody > tr.downline {
-    background-color: #eaeaea;
-    &:hover{
-      background-color: #eaeaea;
-    }
-  }
-}
-
-
-.default-product-image{
+.default-product-image {
   display: inline-block;
   width: 300px;
   height: 300px;
@@ -209,7 +158,7 @@ body{
   background-size: cover;
 }
 
-.default-service-image{
+.default-service-image {
   display: inline-block;
   width: 300px;
   height: 300px;
@@ -224,4 +173,18 @@ body{
 // injector
 // endinjector
 
-
+.k-breadcrumb {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 15px;
+  border-bottom: 1px solid #cccccc;
+  li {
+    float: left;
+  }
+  > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    font-family: 'icomoon';
+    content: "\e902";
+  }
+}

@@ -1,0 +1,6 @@
+<div class="w-tabs">
+  <ul class="f-cb tabs-nav" ng-class="{'tabs-stacked': vertical, 'tabs-justified': justified}" ng-transclude></ul>
+  <div class="tabs-content">
+    <div class="tabs-pane" ng-repeat="tab in tabs" ng-class="{active: tab.active}" simple-tab-content="tab"></div>
+  </div>
+</div>
