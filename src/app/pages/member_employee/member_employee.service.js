@@ -123,7 +123,7 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:member:employee:add" ui-sref="member.employee.add()">+添加员工</a> ',
+            '<a class="btn btn-primary" cb-access-control="chebian:store:member:employee:add" ui-sref="member.employee.add()">添加员工</a> ',
             '<button class="btn btn-danger" cb-access-control="chebian:store:member:employee:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> ',
             '<button class="btn btn-warning" cb-access-control="chebian:store:member:employee:reset" ng-click="propsParams.resetItem()">重置密码</button> '
           ]

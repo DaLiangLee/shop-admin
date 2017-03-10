@@ -59,7 +59,7 @@
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                        '<button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">+添加角色</button> ',
+                        '<button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">添加角色</button> ',
                       '<button class="btn btn-danger" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
                     ]
                 }

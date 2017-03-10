@@ -120,7 +120,33 @@
      */
     this.divide = function (dividend, divisor) {
       return divide(dividend || 0, divisor || 0);
-    }
+    };
+
+
+    /**
+     * 提交给后台需要把钱换算分
+     * @param money
+     */
+    this.pushMoney = function (money) {
+      if(!money){
+        return money;
+      }
+      return multiply(money || 0, 100);
+    };
+
+    /**
+     * 后台返回需要把钱换算元
+     * @param money
+     */
+    this.pullMoney = function (money) {
+      if(!money){
+        return money;
+      }
+      return divide(money || 0, 100);
+    };
+
+
+
   }
 
 })();

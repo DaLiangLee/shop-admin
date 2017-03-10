@@ -112,7 +112,7 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0"><i class="icon-plus"></i> 新增商品</a> ',
+            '<a class="btn btn-primary" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0">新增商品</a> ',
             '<button class="btn btn-warning" cb-access-control="chebian:store:product:goods:putdown" simple-grid-change-status="removeProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品下架" ng-if="propsParams.currentStatus == 0">批量下架</button> ',
             '<button class="btn btn-success" cb-access-control="chebian:store:product:goods:putup" simple-grid-change-status="resetRemoveProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品上架" ng-if="propsParams.currentStatus == 1">批量上架</button> ',
             '<button class="btn btn-danger" cb-access-control="chebian:store:product:goods:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">批量删除</button> '

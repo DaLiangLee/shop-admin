@@ -9,18 +9,18 @@
     .controller('FinanceJournalListController', FinanceJournalListController);
 
   /** @ngInject */
-  function FinanceJournalListController($state, cbAlert, marktingDebitcard, marktingDebitcardConfig, configuration) {
+  function FinanceJournalListController($state, cbAlert, financeJournal, financeJournalConfig, computeService, configuration) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params);
+    var currentParams = angular.extend({}, $state.params, {pageSize: 10});
 
     /**
      * 组件数据交互
      *
      */
     var propsParams = {
-      statusItem: function(item){
+      statusItem: function (item) {
         var tips = item.status === "0" ? '是否确认启用该活动？' : '是否确认禁用该活动？';
         cbAlert.ajax(tips, function (isConfirm) {
           if (isConfirm) {
@@ -52,9 +52,9 @@
      *
      */
     vm.gridModel = {
-      columns: _.clone(marktingDebitcardConfig.DEFAULT_GRID.columns),
+      columns: _.clone(financeJournalConfig.DEFAULT_GRID.columns),
       itemList: [],
-      config: _.merge(marktingDebitcardConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
+      config: _.merge(financeJournalConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
       loadingState: true      // 加载数据
     };
 
@@ -69,11 +69,26 @@
       if (!params.page) {
         return;
       }
-      marktingDebitcard.list(params).then(function (results) {
+      financeJournal.search(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
+          _.forEach(result.data, function (item) {
+            item.journalmoney = computeService.pullMoney(item.journalmoney);
+          });
           vm.gridModel.itemList = result.data;
           vm.gridModel.loadingState = false;
+          vm.gridModel.paginationinfo = {
+            page: params.page * 1,
+            pageSize: params.pageSize,
+            total: result.totalCount
+          };
+          _.forEach(result.message, function (value, key, obj) {
+            console.log(arguments);
+            if(value > 0){
+              obj[key] = computeService.pullMoney(value);
+            }
+          });
+          vm.gridModel.config.propsParams.message = _.merge(result.message, {totalCount: result.totalCount});
         } else {
           cbAlert.error("错误提示", result.data);
         }

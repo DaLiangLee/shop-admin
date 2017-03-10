@@ -105,7 +105,7 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:user:customer:add" ui-sref="user.customer.add()">+新增会员</a> ',
+            '<a class="btn btn-primary" cb-access-control="chebian:store:user:customer:add" ui-sref="user.customer.add()">新增会员</a> ',
             '<button class="btn btn-danger" cb-access-control="chebian:store:user:customer:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
           ]
         }

@@ -110,7 +110,7 @@
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                      '<button class="btn btn-primary" cb-access-control="chebian:store:product:server:edit" ui-sref="product.server.add()" ng-if="propsParams.currentStatus == 1">+新增服务</button> ',
+                      '<button class="btn btn-primary" cb-access-control="chebian:store:product:server:edit" ui-sref="product.server.add()" ng-if="propsParams.currentStatus == 1">新增服务</button> ',
                       '<button class="btn btn-warning" cb-access-control="chebian:store:product:server:putdown" simple-grid-change-status="removeServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务下架" ng-if="propsParams.currentStatus == 1">批量下架</button> ',
                       '<button class="btn btn-success" cb-access-control="chebian:store:product:server:putup" simple-grid-change-status="resetRemoveServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务上架" ng-if="propsParams.currentStatus == 0">批量上架</button> ',
                       '<button class="btn btn-danger" cb-access-control="chebian:store:product:server:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的服务删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 0">批量删除</button> '

@@ -11,11 +11,11 @@
 
 
   /** @ngInject */
-  function FinanceDebitcardLsitController($state, cbAlert, marktingDebitcard, marktingDebitcardConfig, configuration) {
+  function FinanceDebitcardLsitController($state, cbAlert, financeDebitcard, financeDebitcardConfig, configuration) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params);
+    var currentParams = angular.extend({}, $state.params, {pageSize: 10});
 
 
 
@@ -32,7 +32,7 @@
           if (isConfirm) {
             item.status = item.status === "0" ? "1" : "0";
             var items = _.pick(item, ['guid', 'status']);
-            marktingDebitcard.saveorupdate(items).then(function (results) {
+            financeDebitcard.saveorupdate(items).then(function (results) {
               if (results.data.status == '0') {
                 cbAlert.success('修改成功');
                 getList(params);
@@ -58,9 +58,9 @@
      *
      */
     vm.gridModel = {
-      columns: _.clone(marktingDebitcardConfig.DEFAULT_GRID.columns),
-      itemList: [],
-      config: _.merge(marktingDebitcardConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
+      columns: _.clone(financeDebitcardConfig.DEFAULT_GRID.columns),
+      financeDebitcard: [],
+      config: _.merge(financeDebitcardConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
       loadingState: true      // 加载数据
     };
 
@@ -73,7 +73,7 @@
         status: 1
       }
 
-      marktingDebitcard.saveorupdate(add).then(function (results) {
+      financeDebitcard.saveorupdate(add).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
           getList(params);
@@ -84,26 +84,47 @@
     };
 
     /**
-     * 获取员工列表
+     * 获取列表
+     * @param params   传递参数
      */
     function getList(params) {
-      marktingDebitcard.list(params).then(function (results) {
+      /**
+       * 路由分页跳转重定向有几次跳转，先把空的选项过滤
+       */
+      if (!params.page) {
+        return;
+      }
+      financeDebitcard.search(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
+          _.forEach(result.data, function (item) {
+            item.journalmoney = computeService.pullMoney(item.journalmoney);
+          });
           vm.gridModel.itemList = result.data;
           vm.gridModel.loadingState = false;
+          vm.gridModel.paginationinfo = {
+            page: params.page * 1,
+            pageSize: params.pageSize,
+            total: result.totalCount
+          };
+          _.forEach(result.message, function (value, key, obj) {
+            console.log(arguments);
+            if(value > 0){
+              obj[key] = computeService.pullMoney(value);
+            }
+          });
+          vm.gridModel.config.propsParams.message = _.merge(result.message, {totalCount: result.totalCount});
         } else {
           cbAlert.error("错误提示", result.data);
         }
       });
     }
-
     getList(currentParams);
 
   }
 
   /** @ngInject */
-  function FinanceDebitcardDetailController($state, cbAlert, marktingDebitcard, marktingDebitcardConfig, configuration) {
+  function FinanceDebitcardDetailController($state, cbAlert, financeDebitcard, financeDebitcardConfig, configuration) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -175,7 +196,7 @@
      * 获取员工列表
      */
     function getList(params) {
-      marktingDebitcard.list(params).then(function (results) {
+      marktingDebitcard.search(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
           vm.gridModel.itemList = result.data;

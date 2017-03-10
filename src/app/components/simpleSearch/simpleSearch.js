@@ -227,7 +227,9 @@
         /**
          * 点击查询
          */
-        $scope.setSearch = function () {
+        $scope.setSearch = function (event) {
+          event.preventDefault;
+          event.stopPropagation;
           $scope.searchHandler({data: getParams(_this.searchParams)});
         };
 
@@ -308,6 +310,8 @@
       templateUrl: "app/components/simpleSearch/date.html",
       link: function (scope, iElement, iAttrs, iCtrl) {
         scope.searchParams = iCtrl.searchParams;
+        console.log(scope);
+
         scope.handler = function () {
           iCtrl.searchParams[scope.items.name] = scope.searchParams[scope.items.name];
           if (scope.searchParams[scope.items.name] == -1 || scope.searchParams[scope.items.name] == -2) {

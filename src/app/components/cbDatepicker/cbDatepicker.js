@@ -102,13 +102,80 @@
         $scope.datepicker = {};
         var datepickerModel = $scope.datepickerModel;
         setConfig();
+        $scope.datepicker = {
+          model: "",
+          setOpen: function () {
+            console.log('setOpen', $scope.datepickerOptions);
+            if(!$scope.isOpen){
+              setConfig();
+              $scope.datepickerOpen();
+            }else{
+              $scope.datepickerModel = this.model;
+            }
+            $scope.isOpen = !$scope.isOpen;
+          },
+          move: function(dir, event) {
+            event.stopPropagation();
+            var year = _this.activeDate.getFullYear() + dir * (_this.step.years || 0),
+              month = _this.activeDate.getMonth() + dir * (_this.step.months || 0);
+            _this.activeDate.setFullYear(year, month, 1);
+            _this.refreshView();
+          },
+          toggleMode: function (direction, event) {
+            event.stopPropagation();
+            $scope.datepickerMode = modes[direction];
+          },
+          close: function (event) {
+            $scope.isOpen = false;
+            $scope.datepickerModel = this.model;
+            if(_this.datepickerMode === "day"){
+              $scope.datepickerMode = 'day';
+            }
+            event && $scope.datepickerHandler({data:$scope.datepickerModel});
+          },
+          select: function (day, event) {
+            event.stopPropagation();
+            if (day === null) {
+              this.model = "";
+            } else if (day === 'today') {
+              this.model = dateFilter(new Date(), _this.format);
+              event && this.close(event);
+            } else if (day === 'time') {
+              this.model = dateFilter(new Date(_this.datepickerTime), _this.format);
+              event && this.close(event);
+            } else {
+              if (day.next === -1) {
+                if(_this.isHour){
+                  console.log(day);
+
+                  $scope.datepickerMode = 'time';
+                  if(day.current){
+                    _this.datepickerTime = _this.activeDate;
+                  }else{
+                    _this.datepickerTime = day.date;
+                  }
+                }else{
+                  this.model = dateFilter(day.date, _this.format);
+                  $scope.datepickerMode = 'day';
+                  event && this.close(event);
+                }
+              } else {
+                _this.activeDate = day.date;
+                $scope.datepickerMode = modes[day.next];
+              }
+            }
+          }
+        };
         if ( $scope.datepickerModel ) {
           var datepicker = $scope.datepickerModel;
+          console.log(datepicker);
           if(!/(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}:\d{2}:\d{2})/.test(datepicker)){
             $scope.datepicker.model = "";
+            console.log(1);
           }else{
             var date = new Date( datepicker.replace(/\-/, '/') );
             var isValid = !isNaN(date);
+            console.log(dateFilter(date, _this.format));
             if ( isValid ) {
               $scope.datepicker.model = dateFilter(date, _this.format);
             } else {
@@ -125,18 +192,6 @@
           });
           datepickerModel = $scope.datepicker.model;
         }
-
-
-        $scope.setOpen = function(){
-          console.log('setOpen', $scope.datepickerOptions);
-          if(!$scope.isOpen){
-            setConfig();
-            $scope.datepickerOpen();
-          }else{
-            $scope.datepickerModel = $scope.datepicker.model;
-          }
-          $scope.isOpen = !$scope.isOpen;
-        };
 
 
         $scope.datepickerMode = 'day';
@@ -195,76 +250,23 @@
         this.refreshView = function() {
           this._refreshView && this._refreshView();
         };
-
-        $scope.move = function (dir, event) {
-          event.stopPropagation();
-          var year = _this.activeDate.getFullYear() + dir * (_this.step.years || 0),
-            month = _this.activeDate.getMonth() + dir * (_this.step.months || 0);
-          _this.activeDate.setFullYear(year, month, 1);
-          _this.refreshView();
-        };
-        $scope.toggleMode = function (direction, event) {
-          event.stopPropagation();
-          $scope.datepickerMode = modes[direction];
-        };
         $scope.isOpen = false;
         $scope.currentText = angular.extend({}, cbDatepickerConfig).currentText;
         $scope.clearText = angular.extend({}, cbDatepickerConfig).clearText;
         $scope.closeText = angular.extend({}, cbDatepickerConfig).closeText;
-        $scope.close = function (event) {
-          $scope.isOpen = false;
-          $scope.datepickerModel = $scope.datepicker.model;
-          if(_this.datepickerMode === "day"){
-            $scope.datepickerMode = 'day';
-          }
-          event && $scope.datepickerHandler({data:$scope.datepickerModel});
-        };
-
-        $scope.select = function (day, event) {
-          event.stopPropagation();
-          if (day == null) {
-            $scope.datepicker.model = "";
-          } else if (day == 'today') {
-            $scope.datepicker.model = dateFilter(new Date(), _this.format);
-            event && $scope.close(event);
-          } else if (day == 'time') {
-            $scope.datepicker.model = dateFilter(new Date(_this.datepickerTime), _this.format);
-            event && $scope.close(event);
-          } else {
-            if (day.next === -1) {
-              if(_this.isHour){
-                console.log(day);
-
-                $scope.datepickerMode = 'time';
-                if(day.current){
-                  _this.datepickerTime = _this.activeDate;
-                }else{
-                  _this.datepickerTime = day.date;
-                }
-              }else{
-                $scope.datepicker.model = dateFilter(day.date, _this.format);
-                $scope.datepickerMode = 'day';
-                event && $scope.close(event);
-              }
-            } else {
-              _this.activeDate = day.date;
-              $scope.datepickerMode = modes[day.next];
-            }
-          }
-        };
       }],
       link: function (scope, iElement, iAttrs) {
         $document.on('click', function(event){
           if(!iElement.find(event.target).length){
             scope.$apply(function(){
-              scope.close();
+              scope.datepicker.close();
             });
           }
         });
 
         iElement.find('.datepicker-model').on('focus', function() {
           scope.$apply(function(){
-            !scope.isOpen && scope.setOpen();
+            !scope.isOpen && scope.datepicker.setOpen();
           });
         });
       }

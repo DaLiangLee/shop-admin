@@ -1,6 +1,6 @@
 <div>
-  <div class="searchSection">
-    <form class="form-horizontal f-cb" autocomplete="off" ng-submit="setSearch()" novalidate>
+  <div class="w-search">
+    <form class="form-horizontal f-cb" autocomplete="off" novalidate>
       <div simple-search-keyword="" ng-if="isKeywordShow"></div>
       <div ng-if="isShowmore">
         <div class="form-group" ng-repeat="item in search.directive">
@@ -20,7 +20,7 @@
       </div>
       <div class="form-group">
         <div class="text-center">
-          <button type="submit" style="width: 300px;" class="btn btn-success" ng-disabled="isDisabled">查询</button>
+          <button type="button" ng-click="setSearch($event)" style="width: 300px;" class="btn btn-success" ng-disabled="isDisabled">查询</button>
         </div>
       </div>
     </form>

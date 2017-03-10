@@ -54,12 +54,12 @@ gulp.task('html', ['inject', 'partials'], function () {
     .pipe(cssFilter.restore)
     .pipe($.revReplace())
     .pipe(htmlFilter)
-    .pipe($.htmlmin({
+/*    .pipe($.htmlmin({
       removeEmptyAttributes: true,
       removeAttributeQuotes: true,
       collapseBooleanAttributes: true,
       collapseWhitespace: true
-    }))
+    }))*/
     .pipe(htmlFilter.restore)
     .pipe(gulp.dest(path.join(conf.paths.build, '/')))
     .pipe($.size({ title: path.join(conf.paths.build, '/'), showFiles: true }));
@@ -91,4 +91,33 @@ gulp.task('clean', function () {
   return $.del([path.join(conf.paths.build, '/'), path.join(conf.paths.tmp, '/')]);
 });
 
-gulp.task('build', ['html', 'fonts', 'other']);
+gulp.task('htmlToJSP', ['html', 'fonts', 'other'], function () {
+  return gulp.src([
+      path.join(conf.paths.build, '/index.html')
+    ])
+    .pipe($.rename({
+      basename: "index",
+      extname: ".jsp"      // 修改一个jsp后缀html文件
+    }))
+    .pipe($.replace('<!doctype html>', '<%@ page contentType="text/html;charset=UTF-8" %><%@ include file="/WEB-INF/views/include/_taglib.jsp" %><!doctype html>'))
+    .pipe($.replace('<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />', '<%@ include file="/WEB-INF/views/include/_header.jsp" %>'))
+    .pipe($.replace(/<\s*script[^>]* id="BUILD_FLAG">(.|[\r\n])*?<\s*\/script[^>]*>/gi, '<script>var userPermissionList = ${member};</script>'))
+    .pipe($.replace('"styles/', '"${ctxStatic}/shops/styles/'))
+    .pipe($.replace('"assets/', '"${ctxStatic}/shops/'))
+    .pipe($.replace('"scripts/', '"${ctxStatic}/shops/scripts/'))
+    .pipe(gulp.dest('release'));
+});
+
+gulp.task('zip', ['htmlToJSP'], function () {
+  return gulp.src([
+    path.join(conf.paths.build, '/**/*'),
+    path.join('!' + conf.paths.build, '/index.html')
+  ])
+    .pipe($.zip('release.zip'))
+    .pipe(gulp.dest('release'))
+});
+
+
+gulp.task('build', ['zip'], function () {
+  gulp.start('clean');
+});

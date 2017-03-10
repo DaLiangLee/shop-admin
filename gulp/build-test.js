@@ -88,12 +88,6 @@ gulp.task('cleanTest', function () {
   return $.del([path.join(conf.paths.dist, '/')]);
 });
 
-gulp.task('zip', function () {
-  return gulp.src([path.join(conf.paths.dist, '/**/*.*')])
-    .pipe($.zip('test.zip'))
-    .pipe(gulp.dest('export'))
-});
-
 gulp.task('images', function () {
   return gulp.src([path.join(conf.paths.src, '/assets/images/*.+(png|jpg|gif|svg)*')])
     .pipe($.imagemin({

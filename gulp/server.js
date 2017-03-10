@@ -71,8 +71,16 @@ gulp.task('serve:e2e-dist', ['cleanTmp', 'build'], function () {
   browserSyncInit(conf.paths.dist, []);
 });
 
+gulp.task('gitpushAll', function () {
+  console.log(__dirname);
+  var dir = __dirname.replace('\gulp', '');
+  gulp.src([
+    path.resolve(dir + '/**/*.*')
+  ]).pipe(gulp.dest(path.join('D:/github/shop', '/')))
+});
+
 gulp.task('gitpush', function () {
   gulp.src([
-    path.join(conf.paths.src, '/**/*.*')
+    path.join(conf.paths.src, '/**/*.*'),
   ]).pipe(gulp.dest(path.join('D:/github/shop', '/src')))
 });
