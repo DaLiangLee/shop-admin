@@ -51,6 +51,7 @@
     "gulp-util": "~3.0.6",
     "gulp-zip": "^4.0.0",
     "http-proxy-middleware": "~0.9.0",
+    "imagemin-pngquant": "^5.0.0",
     "karma": "~0.13.10",
     "karma-angular-filesort": "~1.0.0",
     "karma-chrome-launcher": "^2.0.0",

@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/10/19.
  */
-(function() {
+/*(function() {
     'use strict';
 
     angular
@@ -16,7 +16,7 @@
         .directive('cbAssertSameAs', cbAssertSameAs)
         .directive('cbFieldError', cbFieldError);
 
-    /** @ngInject */
+    /!** @ngInject *!/
     function cbFormErrorFilter(cbFormErrorInfo){
         return function(name, customMessage){
             var errors = angular.extend({}, cbFormErrorInfo, customMessage);
@@ -24,7 +24,7 @@
         }
     }
 
-    /** @ngInject */
+    /!** @ngInject *!/
     function cbFieldError($compile){
         return {
             "restrict": "A",
@@ -58,7 +58,7 @@
         }
     }
 
-    /** @ngInject */
+    /!** @ngInject *!/
     function cbAssertSameAs(){
         return {
             "restrict": "A",
@@ -84,4 +84,4 @@
         }
     }
 
-})();
+})();*/

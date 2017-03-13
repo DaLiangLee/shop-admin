@@ -351,7 +351,7 @@
         permission: "chebian:store:finance:debitcard:view"
       })
       .state('finance.debitcard.list', {      // 储存卡账单
-        url: '/list/:page',
+        url: '/list/:page?keyword&userbalance0&userbalance1&recharge0&recharge1&cost0&cost1',
         templateUrl: 'app/pages/finance_debitcard/list.html',
         controller: 'FinanceDebitcardLsitController',
         controllerAs: 'vm',
@@ -359,7 +359,7 @@
         permission: "chebian:store:finance:debitcard:view"
       })
       .state('finance.debitcard.detail', {      // 储存卡账单详情
-        url: '/detail/:detail',
+        url: '/detail/:userid?balance&mobile',
         templateUrl: 'app/pages/finance_debitcard/detail.html',
         controller: 'FinanceDebitcardDetailController',
         controllerAs: 'vm',

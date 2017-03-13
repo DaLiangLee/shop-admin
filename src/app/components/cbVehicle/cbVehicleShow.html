@@ -2,7 +2,7 @@
   <div class="brand-box" ng-class="{'show': isOpen}">
     <ul class="list-inline list">
       <li ng-repeat="keys in list | limitTo : length">
-        <img ng-src="{{keys.brand.logo}}" alt="" cb-popover="" popover-placement="left" popover-template-id="vehicleShowTemplate.html" popover-template-data="keys" popover-animation="false">
+        <img ng-src="{{keys.brand.$logo}}" alt="" cb-popover="" popover-placement="left" popover-template-id="vehicleShowTemplate.html" popover-template-data="keys" popover-animation="false">
       </li>
     </ul>
     <span class="text-primary vehicle-edit" cb-vehicle-select="edit" select="store" handler="vehicleShow(data)">编辑</span>

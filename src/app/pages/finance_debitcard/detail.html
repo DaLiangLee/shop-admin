@@ -5,6 +5,13 @@
 </ol>
 <div class="g-view">
   <div class="container-fluid">
-    1
+    <div cb-access-control="chebian:store:finance:debitcard:view" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+    <div ng-if="vm.userModel">
+      {{vm.userModel}}
+    </div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config"></div>
+    <div class="f-tac">
+      <button type="button" class="btn btn-default" cb-back-button="{'name':'finance.debitcard.list','params':{'page': 1}}" data-router="finance.debitcard.detail">返回</button>
+    </div>
   </div>
 </div>

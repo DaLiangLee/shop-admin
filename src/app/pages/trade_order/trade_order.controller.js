@@ -134,7 +134,7 @@
       }
     };
 
-    var DEFAULT_SEARCH = _.clone(tadeOrderConfig.DEFAULT_SEARCH, {});
+    var DEFAULT_SEARCH = _.clone(tadeOrderConfig.DEFAULT_SEARCH);
     /**
      * 搜索操作
      *

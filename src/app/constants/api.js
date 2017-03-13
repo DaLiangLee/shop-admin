@@ -591,6 +591,14 @@
           }
         }
       }
-    });
+    })
+    .constant('webDefaultConfig', {
+      WEB_DEFAULT_IMAGE: {
+        "logo": "",
+        "user": "",
+        "product": "",
+        "server": ""
+      }
+    })
 
 })();

@@ -17,54 +17,56 @@
 
   /** @ngInject */
   function financeDebitcardConfig() {
+    var GRID = [
+      {
+        "id": 3,
+        "cssProperty": "state-column",
+        "fieldDirective": '<span class="state-unread" bo-bind="item.map.recharge | number : 2"></span>',
+        "name": '充值',
+        "width": 150
+      },
+      {
+        "id": 4,
+        "cssProperty": "state-column",
+        "fieldDirective": '<span class="state-unread" bo-bind="item.map.gift | number : 2"></span>',
+        "name": '赠送'
+      },
+      {
+        "id": 5,
+        "cssProperty": "state-column",
+        "fieldDirective": '<span class="state-unread" bo-bind="item.map.cost | number : 2"></span>',
+        "name": '消费'
+      },
+      {
+        "id": 6,
+        "cssProperty": "state-column",
+        "fieldDirective": '<span class="state-unread" bo-bind="item.map.balance | number : 2"></span>',
+        "name": '余额'
+      }
+    ];
     return {
       DEFAULT_GRID: {
         "columns": [
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.journaltime">',
-            "name": '时间',
+            "fieldDirective": '<span class="state-unread"><img bo-src-i="{{item.map.avatar}}" alt=""><span bo-text="item.map.realname"></span></span>',
+            "name": '姓名',
             "width": 150
           },
           {
-            "id": 3,
+            "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.tradetype | formatStatusFilter : \'tradetype\'"></span>',
-            "name": '业务类型'
-          },
-          {
-            "id": 4,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.details"></span>',
-            "name": '交易详情',
-            "width": 150
-          },
-          {
-            "id": 5,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.userinfo"></span>',
-            "name": '交易对象'
-          },
-          {
-            "id": 6,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.journalmoney | number : 2"></span>',
-            "name": '交易金额'
-          },
-          {
-            "id": 7,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.paytype | formatStatusFilter : \'paytype\'"></span>',
-            "name": '支付方式'
-          },
+            "fieldDirective": '<span class="state-unread" bo-text="item.map.mobile"></span>',
+            "name": '手机号'
+          }
+        ].concat(GRID).concat([
           {
             "id": 8,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.memberinfo"></span>',
-            "name": '制单人'
-          }
-        ],
+            "fieldDirective": '<a ui-sref="finance.debitcard.detail({userid: item.map.userid, balance: item.map.balance, mobile: item.map.mobile})" class="u-btn-link">查看详情</a>',
+            "name": '操作'
+          }]),
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
           'sortSupport': true,
@@ -75,13 +77,138 @@
             showPageGoto: true
           },
           'batchOperationBarDirective': [
-            '<p><strong>现金：</strong> <span ng-bind="propsParams.message.cardOrCash | number : 2"></span> <strong>微信支付：</strong> <span ng-bind="propsParams.message.weixin | number : 2"></span> <strong>储值卡：</strong> <span ng-bind="propsParams.message.gift | number : 2"></span> <strong>银行卡：</strong> <span ng-bind="propsParams.message.userAccount | number : 2"></span> <strong>支付宝：</strong> <span ng-bind="propsParams.message.alipay | number : 2"></span> <strong>笔数：</strong> <span ng-bind="propsParams.message.totalCount | number : 0"></span>  <strong>合计：</strong> <span ng-bind="propsParams.message.totolMoney | number : 2"></span> </p>'
+            '<p><strong>充值：</strong> <span ng-bind="propsParams.message.charge | number : 2"></span> <strong>赠送：</strong> <span ng-bind="propsParams.message.gift | number : 2"></span> <strong>消费：</strong> <span ng-bind="propsParams.message.cost | number : 2"></span> <strong>余额：</strong> <span ng-bind="propsParams.message.balance | number : 2"></span> </p>'
+          ]
+        }
+      },
+      DEFAULT_GRID_DETAIL: {
+        "columns": [
+          {
+            "id": 1,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.journaltime"></span></span>',
+            "name": '时间',
+            "width": 150
+          },
+          {
+            "id": 2,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread">订单编号：<span bo-text="item.credentialsid"></span></span>',
+            "name": '交易内容'
+          }
+        ].concat(GRID).concat([
+          {
+            "id": 7,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.memberinfo"></span>',
+            "name": '制单人'
+          }]),
+        "config": {
+          'settingColumnsSupport': false,   // 设置表格列表项
+          'sortSupport': true,
+          'useBindOnce': true,  // 是否单向绑定
+          'paginationSupport': true,  // 是否有分页
+          "paginationInfo": {   // 分页配置信息
+            maxSize: 5,
+            showPageGoto: true
+          },
+          'batchOperationBarDirective': [
+            '<p><strong>充值：</strong> <span ng-bind="propsParams.message.charge | number : 2"></span> <strong>赠送：</strong> <span ng-bind="propsParams.message.gift | number : 2"></span> <strong>消费：</strong> <span ng-bind="propsParams.message.cost | number : 2"></span> <strong>余额：</strong> <span ng-bind="propsParams.message.balance | number : 2"></span> </p>'
           ]
         }
       },
       DEFAULT_SEARCH: {
-      }
+        createtime: [
+          {
+            "label": "今日",
+            id: 0,
+            start: 0,
+            end: 0
+          },
+          {
+            "label": "本周",
+            id: 1,
+            start: 1,
+            end: 1
+          },
+          {
+            "label": "本月",
+            id: 2,
+            start: 2,
+            end: 2
+          },
+          {
+            "label": "本年度",
+            id: 3,
+            start: 3,
+            end: 3
+          }
+        ],
+        config: function(params){
+          return {
+            other: params,
+            keyword: {
+              placeholder: "请输入姓名、手机号",
+              model: params.keyword,
+              name: "keyword",
+              isShow: true
+            },
+            searchDirective: [
+              {
+                label: "充值",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "recharge",
+                start: {
+                  name: "recharge0",
+                  model: params.recharge0
+                },
+                end: {
+                  name: "recharge1",
+                  model: params.recharge1
+                }
+              },
+              {
+                label: "消费",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "cost",
+                start: {
+                  name: "cost0",
+                  model: params.cost0
+                },
+                end: {
+                  name: "cost1",
+                  model: params.cost1
+                }
+              },
+              {
+                label: "余额",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "userbalance",
+                start: {
+                  name: "userbalance0",
+                  model: params.userbalance0
+                },
+                end: {
+                  name: "userbalance1",
+                  model: params.userbalance1
+                }
+              }
+            ]
+          }
+        }
+      },
+      DEFAULT_SEARCH_DETAIL: {
 
+      }
     }
   }
 

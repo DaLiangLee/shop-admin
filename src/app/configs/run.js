@@ -49,12 +49,11 @@
            *
            */
           $rootScope.$on('$stateChangeStart', function(event, toState){
-            /*$log.debug('event',event);
+            $log.debug('event',event);
              $log.debug('toState',toState);
-             $log.debug('toParams',toParams);
+             /*$log.debug('toParams',toParams);
              $log.debug('fromState',fromState);
              $log.debug('fromParams',fromParams);*/
-            //preferencenav.setPreferences(toState, toParams);
             /**
              * 如果没有权限访问会跳到没有权限403页面
              */

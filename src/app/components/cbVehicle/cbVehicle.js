@@ -536,9 +536,7 @@
 
 
   /** @ngInject */
-  function cbVehicleShow($document, $timeout, configuration) {
-    var link = configuration.getConfig().static;
-    console.log(link);
+  function cbVehicleShow($document, $timeout, utils) {
     return {
       restrict: "A",
       scope: {
@@ -577,7 +575,7 @@
           }
           listLength = scope.list.length;
           _.map(scope.list, function (item) {
-            item.brand.logo = link + item.brand.logo;
+            item.brand.$logo = utils.getImageSrc(item.brand.logo, 'logo');
           });
         }
 

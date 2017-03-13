@@ -1,9 +1,9 @@
 <div>
   <div class="w-search">
-    <form class="form-horizontal f-cb" autocomplete="off" novalidate>
+    <form class="form-horizontal f-cb" name="searchModel" autocomplete="off" novalidate>
       <div simple-search-keyword="" ng-if="isKeywordShow"></div>
       <div ng-if="isShowmore">
-        <div class="form-group" ng-repeat="item in search.directive">
+        <div class="form-group" ng-form="listModel" ng-repeat="item in search.directive">
           <label class="col-lg-1 control-label">{{item.label}}：</label>
           <div class="col-lg-9" ng-switch="item.type">
             <div class="list" ng-switch-when="list">
@@ -18,6 +18,7 @@
           </div>
         </div>
       </div>
+      {{searchModel}}
       <div class="form-group">
         <div class="text-center">
           <button type="button" ng-click="setSearch($event)" style="width: 300px;" class="btn btn-success" ng-disabled="isDisabled">查询</button>

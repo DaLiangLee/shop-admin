@@ -11,7 +11,6 @@
    */
   angular
     .module('shopApp')
-    .factory('$$utils', $$utils)
     .factory('utils', utils);
 
   /** @ngInject */
@@ -67,7 +66,7 @@
   }
 
   /** @ngInject */
-  function utils() {
+  function utils(configuration, webDefaultConfig) {
     return {
       /**
        * 根据start和end获取列表的model
@@ -88,6 +87,25 @@
         return items.length === 1 ? items[0].id : -2;
       },
 
+      /**
+       * 根据地址和类型获取图片地址，或者设置默认图片
+       * @param src        图片地址
+       * @param type       默认图片类型  logo 汽车车标， user 会员头像， product 商品图片 server 服务图片
+       * @returns {string}  返回一个正确的地址
+       */
+      getImageSrc: function (src, type) {
+        if(!!src){
+          return configuration.getStatic() + src;
+        }
+        if(arguments.length == 1){
+          throw Error('没有传递type或者src');
+        }
+        var types = webDefaultConfig.WEB_DEFAULT_IMAGE;
+        if(_.isUndefined(types[type])){
+          throw Error('默认图片类型错误，请查阅api.js查看webDefaultConfig.WEB_DEFAULT_IMAGE');
+        }
+        return types[type];
+      },
 
       /**
        * 获取车辆品牌列表

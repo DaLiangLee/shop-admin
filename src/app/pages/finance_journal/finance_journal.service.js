@@ -23,7 +23,7 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.journaltime">',
+            "fieldDirective": '<span class="state-unread" bo-text="item.journaltime"></span>',
             "name": '时间',
             "width": 150
           },

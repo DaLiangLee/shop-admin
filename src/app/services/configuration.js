@@ -35,7 +35,7 @@
                 return admin ? (config.api || "") : (config.api ? config.api + "/admin" : "/admin");
             },
             getStatic: function(){
-                return (angular.isUndefined(config.static) || config.static == "") ? "" : config.static;
+              return (angular.isUndefined(config.static) || config.static == "") ? "" : config.static;
             },
             getUserConfig: function() {
                 return {

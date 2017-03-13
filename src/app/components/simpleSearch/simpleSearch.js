@@ -448,21 +448,27 @@
           }
           // 比较是否在合法范围内
           if (!rangeEnabled(start, scope.items.start.config)) {
-            cbAlert.error(getPlaceholder('start'));
+            //cbAlert.error();
+            console.log(getPlaceholder('start'));
+            scope.items.start.error = true;
+            scope.items.start.message = getPlaceholder('start');
             iCtrl.isDisabled(scope.items.start.name, true);
             return;
           } else {
+            scope.items.start.error = false;
             iCtrl.isDisabled(scope.items.start.name, false);
           }
           // 比较大小
           if (angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)) {
-            cbAlert.error("结束输入不能比起始输入小");
+            //cbAlert.error("结束输入不能比起始输入小");
+            scope.items.start.error = true;
+            scope.items.start.message = "起始输入不能比结束输入大";
             iCtrl.isDisabled(scope.items.start.name, true);
             return;
           } else {
+            scope.items.start.error = false;
             iCtrl.isDisabled(scope.items.start.name, false);
           }
-
         };
 
         // 终止处理函数
@@ -475,19 +481,25 @@
             iCtrl.isDisabled(scope.items.start.name, false);
           }
           // 比较是否在合法范围内
-          if (!rangeEnabled(start, scope.items.start.config)) {
-            cbAlert.error(getPlaceholder('end'));
+          if (!rangeEnabled(end, scope.items.end.config)) {
+            console.log(11);
+
+            scope.items.end.error = true;
+            scope.items.end.message = getPlaceholder('end');
             iCtrl.isDisabled(scope.items.end.name, true);
             return;
           } else {
+            scope.items.end.error = false;
             iCtrl.isDisabled(scope.items.end.name, false);
           }
           // 比较大小
           if (angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)) {
-            cbAlert.error("结束输入不能比起始输入小");
+            scope.items.end.error = true;
+            scope.items.end.message = "结束输入不能比起始输入小";
             iCtrl.isDisabled(scope.items.end.name, true);
             return;
           } else {
+            scope.items.end.error = false;
             iCtrl.isDisabled(scope.items.end.name, false);
           }
         };
