@@ -7,10 +7,9 @@
     </label>
   </div>
   <div class="radio-inline" ng-form="" style="padding-top: 0; margin-top: -2px;" ng-if="searchParams[items.name] == -2">
-    <div class="pull-left" ng-class="{'has-error': items.start.error}" style="width: 200px;">
+    <div class="pull-left" ng-class="{'has-error': items.start.error}" style="width: 200px;" cb-field-error field-error-status="items.start.error"
+         field-error-message="items.start.message">
       <input type="text" class="form-control" name="{{items.start.name}}"
-             cb-field-error="items.start.error"
-             field-error-message="{{items.start.message}}"
              ng-model="searchParams[items.start.name]"
              ng-change="items.start.handler(searchParams[items.start.name], searchParams[items.end.name])"
              cb-number-range=""
@@ -18,13 +17,10 @@
              data-value-max="{{items.start.config.max}}"
              placeholder="{{items.start.config.placeholder}}">
     </div>
-    <div class="pull-left">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</div>
-    <div class="pull-left" ng-class="{'has-error': items.end.error}" style="width: 200px;">
-      {{items.end.error}}
+    <div class="pull-left" style="vertical-align: top; margin-top: 6px;">&nbsp;~&nbsp;&nbsp;</div>
+    <div class="pull-left" ng-class="{'has-error': items.end.error}" style="width: 200px;" cb-field-error field-error-status="items.end.error" field-error-message="items.end.message">
       <input type="text" class="form-control" name="{{items.end.name}}"
              ng-model="searchParams[items.end.name]"
-             cb-field-error="items.end.error"
-             field-error-message="{{items.end.message}}"
              ng-change="items.end.handler(searchParams[items.start.name], searchParams[items.end.name])"
              cb-number-range=""
              data-value-min="{{items.end.config.min}}"

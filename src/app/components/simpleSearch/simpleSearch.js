@@ -431,83 +431,135 @@
           scope.items[dir].config.placeholder = "请输入 " + (config.min + 1) + " ~ " + (config.max - 1);
         }
 
+        var compareMessage = {
+          "start": "起始不能比结束大",
+          "end": "结束不能比起始小"
+        };
+
+
         function getPlaceholder(dir) {
           var config = scope.items[dir].config;
-          return "不在合法 " + config.min + " ~ " + config.max + "范围内";
+          return "不在合法 " + (config.min+1) + " ~ " + (config.max-1) + "范围内";
+        }
+
+        function 	validate(start, end, type){
+          /**
+           * 1. start有输入，end没有输入，start撤销输入。表示用户不想输入了
+           * 2. 2. end有输入，start没有输入，end撤销输入。表示用户不想输入了
+           * 3. 如果end有输入，start撤销，需要提示用户，必须输入start
+           * 4. 如果start有输入，end撤销，需要提示用户，必须输入end
+           * 5. 都撤销了
+           * 6. start有输入，end没有输入过
+           * 7. end有输入，start没有输入过
+           */
+
+          console.log('validate',start, end);
+          if(_.isUndefined(end) && angular.isDefined(start) && _.isEmpty(_.trim(start))){
+            console.log('1. start有输入，end没有输入，start撤销输入。表示用户不想输入了');
+            if(validateRangeEnabled(start, end, type)){
+              scope.items.start.error = true;
+              scope.items.start.message = getPlaceholder('start');
+              iCtrl.isDisabled(scope.items.start.name, true);
+            }else{
+              scope.items.start.error = false;
+              scope.items.start.message = "";
+              iCtrl.isDisabled(scope.items.start.name, false);
+            }
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return;
+          }else if(_.isUndefined(start) && angular.isDefined(end) && _.isEmpty(_.trim(end))){
+            console.log('2. end有输入，start没有输入，end撤销输入。表示用户不想输入了');
+            if(validateRangeEnabled(start, end, type)){
+              scope.items.end.error = true;
+              scope.items.end.message = getPlaceholder('start');
+              iCtrl.isDisabled(scope.items.end.name, true);
+            }else{
+              scope.items.end.error = false;
+              scope.items.end.message = "";
+              iCtrl.isDisabled(scope.items.end.name, false);
+            }
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return;
+          }else if(angular.isDefined(end) && !_.isEmpty(_.trim(end)) && angular.isDefined(start) && _.isEmpty(_.trim(start))){
+            console.log('3. 如果end有输入，start撤销，需要提示用户，必须输入start');
+            scope.items.start.error = true;
+            scope.items.start.message = "必须输入起始值";
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return;
+          }else if(angular.isDefined(start) && !_.isEmpty(_.trim(start)) && angular.isDefined(end) && _.isEmpty(_.trim(end))){
+            console.log('4. 如果start有输入，end撤销，需要提示用户，必须输入end');
+            scope.items.end.error = true;
+            scope.items.end.message = "必须输入结束值";
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return;
+          }else if(_.isEmpty(_.trim(start)) && _.isEmpty(_.trim(end))){
+            console.log('5. 都撤销了');
+            scope.items.start.error = false;
+            scope.items.start.message = "";
+            scope.items.end.error = false;
+            scope.items.end.message = "";
+            iCtrl.isDisabled(scope.items.start.name, false);
+            iCtrl.isDisabled(scope.items.end.name, false);
+            return;
+          }else if(angular.isDefined(start) && _.isUndefined(end)){
+            console.log('6. start有输入，end没有输入过');
+            if(validateRangeEnabled(start, end, type)){
+              scope.items.start.error = true;
+              scope.items.start.message = getPlaceholder('start');
+              iCtrl.isDisabled(scope.items.start.name, true);
+            }else{
+              scope.items.start.error = false;
+              scope.items.start.message = "";
+              iCtrl.isDisabled(scope.items.start.name, false);
+            }
+            iCtrl.isDisabled(scope.items.end.name, true);
+            return;
+          }else if(angular.isDefined(end) && _.isUndefined(start)){
+            console.log('7. end有输入，start没有输入过');
+            if(validateRangeEnabled(start, end, type)){
+              scope.items.end.error = true;
+              scope.items.end.message = getPlaceholder('end');
+              iCtrl.isDisabled(scope.items.end.name, true);
+            }else{
+              scope.items.end.error = false;
+              scope.items.end.message = "";
+              iCtrl.isDisabled(scope.items.end.name, false);
+            }
+            iCtrl.isDisabled(scope.items.start.name, true);
+            return;
+          }
+          if(!compare(start, end)){
+            scope.items[type].error = true;
+            scope.items[type].message = compareMessage[type];
+            iCtrl.isDisabled(scope.items[type].name, true);
+            return;
+          }
+          scope.items.start.error = false;
+          scope.items.start.message = "";
+          scope.items.end.error = false;
+          scope.items.end.message = "";
+          iCtrl.isDisabled(scope.items.start.name, false);
+          iCtrl.isDisabled(scope.items.end.name, false);
+        }
+
+        function validateRangeEnabled(start, end, type){
+          var value = type === "start" ? start : end;
+          return !rangeEnabled(value, scope.items[type].config);
         }
 
         // 起始处理函数
         scope.items.start.handler = function (start, end) {
-          console.log('start', compare(start, end), rangeEnabled(start, scope.items.start.config));
-          // 如果结束没有输入，只输入开始，就需要判断
-          if (angular.isDefined(start) && angular.isUndefined(end)) {
-            iCtrl.isDisabled(scope.items.end.name, true);
-            return;
-          } else {
-            iCtrl.isDisabled(scope.items.end.name, false);
-          }
-          // 比较是否在合法范围内
-          if (!rangeEnabled(start, scope.items.start.config)) {
-            //cbAlert.error();
-            console.log(getPlaceholder('start'));
-            scope.items.start.error = true;
-            scope.items.start.message = getPlaceholder('start');
-            iCtrl.isDisabled(scope.items.start.name, true);
-            return;
-          } else {
-            scope.items.start.error = false;
-            iCtrl.isDisabled(scope.items.start.name, false);
-          }
-          // 比较大小
-          if (angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)) {
-            //cbAlert.error("结束输入不能比起始输入小");
-            scope.items.start.error = true;
-            scope.items.start.message = "起始输入不能比结束输入大";
-            iCtrl.isDisabled(scope.items.start.name, true);
-            return;
-          } else {
-            scope.items.start.error = false;
-            iCtrl.isDisabled(scope.items.start.name, false);
-          }
+          validate(start, end, 'start');
         };
 
         // 终止处理函数
         scope.items.end.handler = function (start, end) {
-          // 如果开始没有输入，只输入结束，就需要判断
-          if (angular.isUndefined(start) && angular.isDefined(end)) {
-            iCtrl.isDisabled(scope.items.start.name, true);
-            return;
-          } else {
-            iCtrl.isDisabled(scope.items.start.name, false);
-          }
-          // 比较是否在合法范围内
-          if (!rangeEnabled(end, scope.items.end.config)) {
-            console.log(11);
-
-            scope.items.end.error = true;
-            scope.items.end.message = getPlaceholder('end');
-            iCtrl.isDisabled(scope.items.end.name, true);
-            return;
-          } else {
-            scope.items.end.error = false;
-            iCtrl.isDisabled(scope.items.end.name, false);
-          }
-          // 比较大小
-          if (angular.isDefined(start) && angular.isDefined(end) && !compare(start, end)) {
-            scope.items.end.error = true;
-            scope.items.end.message = "结束输入不能比起始输入小";
-            iCtrl.isDisabled(scope.items.end.name, true);
-            return;
-          } else {
-            scope.items.end.error = false;
-            iCtrl.isDisabled(scope.items.end.name, false);
-          }
+          validate(start, end, 'end');
         };
 
 
         // 是否在限制范围内
         function rangeEnabled(data, config) {
-          console.log(data, config);
           data = data || 0;
           return config.min < data && data < config.max;
         }

@@ -166,7 +166,7 @@
               {
                 "id": 5,
                 "cssProperty": "state-column",
-                "fieldDirective": '<span class="state-unread" bo-text="item.position"></span>',
+                "fieldDirective": '<span class="state-unread" bo-text="item.posname"></span>',
                 "name": '岗位'
               },
               {

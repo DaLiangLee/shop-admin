@@ -1,27 +1,22 @@
 /**
- * Created by Administrator on 2016/11/1.
+ * Created by Administrator on 2017/3/14.
  */
-
 /**
- * 数字范围验证
- * valueMin        最小值
- * valueMax        最大值
- * rangeEnabled    验证范围是否开启
+ * 手机号码输入格式化
  */
 (function () {
   'use strict';
   angular
     .module('shopApp')
-    .directive('cbNumberRange', cbNumberRange);
+    .directive('cbPhone', cbPhone);
 
   /** @ngInject */
-  function cbNumberRange() {
+  function cbPhone(webSiteVerification) {
+
     /**
-     * 整型正则表达式
-     * 1，可以输入0或者大于0数字或者小于0 没有-0
-     * 2，只能输入长度1-16位，超过16会出现溢出，大于16位会被自动替换为0，四舍五入到16位
+     *
      */
-    var NUMBER_INT_REGULAR = /^(0|-?[1-9][0-9]{0,15})$/,
+    var PHONE_REGULAR = webSiteVerification.REGULAR.phone,
         NUMBER_REGULAR = /[^0-9]/g;
     return {
       restrict: 'A', // 作为元素属性
@@ -32,20 +27,6 @@
         if (!ngModelCtrl) {
           return;
         }
-        // 最小值
-        var valueMin = iAttrs.valueMin * 1 || 0,
-          // 最大值
-          valueMax = iAttrs.valueMax * 1 || Number.MAX_VALUE,
-          // 是否启动范围验证
-          rangeEnabled = iAttrs.rangeEnabled || 'true';
-        // 监听属性valueMin 赋值变量valueMin
-        iAttrs.$observe("valueMin", function (value) {
-          valueMin = value * 1 || 0;
-        });
-        // 监听属性valueMax 赋值变量valueMax
-        iAttrs.$observe("valueMax", function (value) {
-          valueMax = value * 1 || Number.MAX_VALUE;
-        });
 
         // $parsers接受一个数组，用于将viewValue转化成modelValue
         ngModelCtrl.$parsers.push(function (viewValue) {
@@ -55,12 +36,10 @@
           var value;
           if (angular.isString(viewValue)) {
             var minus = "";
-            // 是否是负数
-            /^-\d*/g.test(viewValue) && (minus = "-");
             // 过滤非数字
             value = viewValue.replace(NUMBER_REGULAR, "");
 
-            if (NUMBER_INT_REGULAR.test(value)) {
+            if (PHONE_REGULAR.test(value)) {
               if (minus === "-" && value == "0") {
                 value = "0";
               } else {
@@ -89,11 +68,11 @@
            * 检查是否有-，如果有就是负数，如果没有就是正数
            */
           if (value !== "-") {
-              if (rangeEnabled === 'true') {
-                flag = NUMBER_INT_REGULAR.test(value) && (valueMin < result && result < valueMax);
-              } else {
-                flag = NUMBER_INT_REGULAR.test(value);
-              }
+            if (rangeEnabled === 'true') {
+              flag = NUMBER_INT_REGULAR.test(value) && (valueMin < result && result < valueMax);
+            } else {
+              flag = NUMBER_INT_REGULAR.test(value);
+            }
             ngModelCtrl.$setValidity("cbNumberRange", flag);
             return value;
           } else {

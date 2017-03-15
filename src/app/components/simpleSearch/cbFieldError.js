@@ -12,19 +12,19 @@
   function cbFieldError(){
     return {
       "restrict": "A",
-      "require": "ngModel",
-      "scope": true,
-      "link": function(scope, iElement, iAttrs, ngModel){
+      "scope": {
+        fieldErrorStatus: "=",
+        fieldErrorMessage: "="
+      },
+      "link": function(scope, iElement, iAttrs){
         var tooltip = null,
-            parent = iElement.parent();
-        parent.css({'position': 'relative'});
+            input = iElement.find('> input');
+          iElement.css({'position': 'relative'});
         // 监听属性触发器
-        var error = iAttrs.$observe("cbFieldError", function (val) {
-          console.log(arguments);
-
+        var error = scope.$watch("fieldErrorStatus", function (val) {
+          console.log('cbFieldError',arguments);
           if(angular.isDefined(val)){
-            console.log(val);
-
+            console.log('cbFieldError', val);
             if(val){
               create();
             }else{
@@ -34,48 +34,46 @@
         });
 
         // 监听属性触发器
-        var message = iAttrs.$observe("fieldErrorMessage", function (val) {
+        var message = scope.$watch("fieldErrorMessage", function (val) {
           if(val){
             show(val);
           }
         });
         function show(val){
-          setContent(val);
+          tooltip && setContent(val);
         }
-
         function create(){
           if(!tooltip){
             tooltip = angular.element('<div class="tooltip top"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>');
-            parent.append(tooltip);
+            iElement.append(tooltip);
+            return;
           }
+          tooltip.show();
         }
         function setContent(content){
           tooltip.find('.tooltip-inner').html(content);
-          setPosition(tooltip);
+          tooltip.css(setPosition(tooltip));
           tooltip.css({'opacity': 1});
         }
 
-
-        function setPosition(tooltip){
-          var iEh = iElement.outerHeight(true);
-          var iEw = iElement.outerWidth(true);
-          var iTh = tooltip.Height();
-          var iTw = tooltip.width();
-
+        function setPosition(tip){
+          var iEw = input.outerWidth(true);
+          var iTh = tip.height();
+          var iTw = tip.width();
           var left = 0;
           if(iEw > iTw){
             left = (iEw - iTw)/2;
           }else{
             left = (iTw - iEw)/2;
           }
-          tooltip.css({
+          return {
             left: left,
-            top: -iTh
-          })
+            top: -(iTh+7)
+          }
         }
 
         function hide() {
-          tooltip.hide();
+          tooltip && tooltip.hide();
         }
 
         scope.$on('$destroy', function() {
