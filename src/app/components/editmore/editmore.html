@@ -1,0 +1,10 @@
+<div class="edit-more">
+  <span class="more"  ng-click="propsParams.nextshow(item,$event) ">•••</span>
+  <div class="edits" ng-show="item.$show">
+    <!--<ul>-->
+      <!--<li><a href="javascript:;" class="state-unread text-danger" ng-if="item.status == 1 && item.paystatus == 1" ng-click="propsParams.closed(item)">关闭</a></li>-->
+      <!--<li><a href="javascript:;" class="state-unread" ng-if="item.paystatus == 1 && item.status != 4" orader-received-dialog item="item" item-handler="propsParams.received(data)">收款</a></li>-->
+      <!--<li><a href="javascript:;" class="state-unread" ng-if="item.status == 1" ng-click="propsParams.completed(item)">完工</a></li>-->
+    <!--</ul>-->
+    <a class="to-close" ng-click="propsParams.editclose(item,$event)" href="javascript:;">关闭</a></div>
+</div>

@@ -1,0 +1,91 @@
+.w-form{
+  &.form-inline{
+
+  }
+}
+.form-group{
+  padding:2px 0 10px;
+  margin:0;  //bootstarp
+  *zoom:1;
+  &:after,&:before{
+    content: "";
+    display:table;
+    clear:both;
+  }
+}
+.control-label{
+  float:left;
+  text-align: right;
+  height:34px;
+  padding: 6px 12px;
+  width: 24%;
+}
+.control-content{
+  float: left;
+  width: 76%;
+  position: relative;
+  &.w5{
+    width: 50%;
+  }
+}
+.input-group{     // input 分组
+  position: relative;
+  .input-addon{
+    position: absolute;
+    top:0;
+  }
+  .input-addon:first-child{    // input之前
+    left: 0;
+  }
+  .input-control + .input-addon{ // input之后
+    right: 0;
+  }
+}
+
+.input-control{
+  display: block;
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  &.readonly{
+    color: #555;
+    word-wrap: break-word;
+    word-break: break-all;
+    background-color: #eee;
+
+  }
+}
+.input-control:focus,.t-focuse {
+  border-color: #66afe9;
+  outline: 0;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+}
+.has-error{
+  .input-control{
+    border-color: #a94442;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  }
+  .input-control:focus{
+    border-color: #843534;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+  }
+}
+.has-warning{
+  .input-control{
+    color: #ff9600;
+    border-color: #ff9600;
+  }
+}
+textarea.input-control{
+  height:auto;
+}
+
+

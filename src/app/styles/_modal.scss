@@ -1,0 +1,122 @@
+
+.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  display: none;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-modal;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  &.fade .modal-dialog {
+    @include translate(0, -25%);
+    @include transition-transform(0.3s ease-out);
+  }
+  &.in .modal-dialog { @include translate(0, 0) }
+}
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 10px;
+}
+.modal-content {
+  position: relative;
+  background-color:#fff;
+  border: 1px solid #ccc;
+  border-top: 1px solid #038AE3;
+  border-radius:4px;
+  outline: 0;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $zindex-modal-background;
+  background-color: $modal-backdrop-bg;
+  // Fade for backdrop
+  &.fade { @include opacity(0); }
+  &.in { @include opacity($modal-backdrop-opacity); }
+}
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+  height:36px;
+  background:#038AE3;
+  padding:0 10px 0 20px;
+  margin: 0 -1px;
+  border-bottom: 1px solid $modal-header-border-color;
+  @include clearfix;
+}
+// Close icon
+.modal-header .close {
+  margin-top: -2px;
+  padding:0 10px;
+  color:#fff;
+  opacity:1;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight:normal;
+}
+
+// Title text within header
+.modal-title {
+  margin: 0;
+  line-height: 36px;
+  color:#fff;
+}
+
+// Modal body
+// Where all modal content resides (sibling of .modal-header and .modal-footer)
+.modal-body {
+  position: relative;
+  padding: $modal-inner-padding;
+}
+
+// Footer (for actions)
+.modal-footer {
+  padding: $modal-inner-padding;
+  text-align: right; // right align buttons
+  border-top: 1px solid $modal-footer-border-color;
+  @include clearfix; // clear it in case folks use .pull-* classes on buttons
+}
+
+// Measure scrollbar width for padding body during modal show/hide
+.modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+// Scale up the modal
+@media (min-width: $screen-sm-min) {
+  // Automatically set modal's width for larger viewports
+  .modal-dialog {
+    width: $modal-md;
+    margin: 30px auto;
+  }
+  .modal-content {
+    @include box-shadow(0 5px 15px rgba(0,0,0,.5));
+  }
+
+  // Modal sizes
+  .modal-sm { width: $modal-sm; }
+}
+
+@media (min-width: $screen-md-min) {
+  .modal-lg { width: $modal-lg; }
+}

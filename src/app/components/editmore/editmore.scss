@@ -1,0 +1,61 @@
+.edit-more{
+  position: relative;
+  overflow:visible;
+  width: 40px;
+  height:30px;
+  .more{
+    display:none;
+    width: 36px;
+    height:24px;
+    line-height: 22px;
+    text-align: center;
+    border: 1px solid #00a2d4;
+    border-radius:4px;
+    cursor: pointer;
+  }
+  .more.active{
+    display: block;
+  }
+  .edits{
+    width: 92px;
+    background: #fff;
+    border: 1px solid #ccc;
+    //display:none;
+    position: absolute;
+    left: 0px;
+    top: 24px;
+    overflow: hidden;
+    z-index: 3;
+    li,.to-close{
+      list-style: none;
+      height:32px;
+      line-height:32px;
+      padding:0 4px;
+      font-size: 12px;
+      border-top: 1px solid #ccc;
+      display: block;
+      width:100%;
+      box-sizing: border-box;
+    }
+    li:first-of-type{
+      border-top:none;
+    }
+    .to-close{
+      text-align: center;
+
+    }
+    li:hover{
+      background:#c0c0c0;
+    }
+  }
+  .edits:hover{
+    .more{
+      display:block;
+    }
+  }
+}
+.edit-more:hover{
+  .more{
+    display:block;
+  }
+}

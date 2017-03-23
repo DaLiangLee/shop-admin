@@ -1,0 +1,54 @@
+.search-wrap{
+  width:400px;
+  padding: 1px;
+  //border:1px solid #93c3e4;
+  border-radius:6px;
+  position: relative;
+  overflow: hidden;
+  float: left;
+}
+.search-text{
+  height: 30px;
+  width: 397px;
+  padding:0 30px 0 14px;
+}
+.icon-search{
+  position: absolute;
+  width:20px;
+  height: 20px;
+  right:10px;
+  top:6px;
+}
+.icon-search:before{
+  content: "\e918";
+  color:#2787ca;
+  font-weight: bold;
+}
+.click-more{
+  float: left;
+  width:82px;
+  padding-left:20px;
+  line-height:32px;
+  border: 1px solid #088ae3;
+  border-radius:4px;
+  background:none;
+  color:#2787ca;
+  font-size:14px;
+  cursor: pointer;
+  margin-top: 1px;
+}
+.lineH3{
+  line-height:34px;
+}
+.btn-date{
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+//kennegbuxuyao
+.isshowmore {
+  .control-label{
+    width: auto;
+  }
+}
