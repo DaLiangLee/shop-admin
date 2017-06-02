@@ -1,0 +1,46 @@
+.w-amount {
+  &-choose {
+    position: relative;
+    width: 49px;
+    height: 26px;
+    overflow: hidden;
+    border: 1px solid #CCCCCC;
+
+    input {
+      width: 34px;
+      font-size: 12px;
+      height: 24px;
+      line-height: 24px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 0;
+      text-align: center;
+    }
+
+    button {
+      width: 13px;
+      height: 13px;
+      line-height: 13px;
+      overflow: hidden;
+      background: #f1f1f1;
+      position: absolute;
+      right: -1px;
+      border: 1px solid #CCCCCC;
+      cursor: pointer;
+
+      &[disabled] {
+        color: #CCCCCC;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-add {
+    top: -1px;
+  }
+  &-reduce {
+    bottom: -1px;
+  }
+}
+

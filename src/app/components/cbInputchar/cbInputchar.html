@@ -1,0 +1,11 @@
+<div class="w-inputchar">
+    <input type="text" class="w-input-item input-control" cb-inputchar-model ng-blur="showCharNum()" ng-focus="showCharClear()" ng-model="curCharNum" placeholder="请输入您的商品信息" />
+    <div class="w-input-item w-input-choose w-input-num" ng-class="{'is-hide': !isBlur}">
+        <span>
+            <span class="text-danger">{{curCharNum.length ? curCharNum.length : '0'}}</span>
+            /
+            <span class="text-danger">{{maxCharNum}}</span>
+        </span>
+    </div>
+    <span class="w-input-item w-input-choose w-input-clear text-danger" ng-click="clearContent()" ng-class="{'is-hide': isBlur}">x</span>
+</div>

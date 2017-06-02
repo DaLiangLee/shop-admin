@@ -1,0 +1,17 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">上传结果</h5>
+    </div>
+    <div class="modal-body">
+        <p>上传总数:&nbsp;&nbsp;<span ng-bind="config.totalCount"></span> 条</p>
+        <p>成功上传:&nbsp;&nbsp;<span ng-bind="config.successCount"></span> 条</p>
+        <p>失败上传:&nbsp;&nbsp;<span ng-bind="config.errorCount" ng-class="{'text-red': config.hasError}"></span> 条 <span></span></p>
+        <p ng-if="config.hasError">下载未成功上传的数据: <a ng-href="{{config.downloadUrl}}" target="_blank">下载文件</a></p>
+    </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="close(false)">确　定</button>
+        </div>
+    </div>
+</div>

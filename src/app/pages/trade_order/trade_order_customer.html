@@ -1,0 +1,14 @@
+<div class="w-order-info-wraper" ng-if="customer">
+  <!--userType：n(找不到)，u(会员)，c(客户)。-->
+  <div class="info f-cb">
+    <div class="user f-fl info-item">
+      <span class="default-user-image user-avatar" ng-if="!customer.user_avatar"></span>
+      <img class="user-avatar" ng-if="customer.user_avatar" ng-src="{{customer.user_avatar}}" alt=""><h4 ng-bind="customer.realname"></h4>
+      <p ng-bind="customer.mobile"></p>
+    </div>
+    <div class="motor f-fl info-item">
+      <span class="default-car-image brand-logo" ng-if="!customer.motor_logo"></span>
+      <img class="brand-logo" ng-if="customer.motor_logo" ng-src="{{customer.motor_logo}}" alt=""><strong ng-bind="customer.licence"></strong>
+    </div>
+  </div>
+</div>

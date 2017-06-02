@@ -1,0 +1,43 @@
+<ol class="k-breadcrumb">
+    <li><p class="feedback-title">建议反馈</p></li>
+</ol>
+<div class="g-view">
+    <div class="container-fluid w-feedback-container">
+        <p class="text-muted feedback-info alert alert-warning">感谢您使用车边店铺智能管理平台！在使用过程中如遇到任何问题，或有好的建议，欢迎随时通过建议反馈系统告诉我们。</p>
+
+        <form class="form-horizontal" novalidate name="feedback" ng-submit="vm.submitFeedback()" autocomplete="off">
+            <div class="form-group">
+                <div class="radio-inline">
+                    <label>
+                        <input type="radio" name="optionsRadios" ng-value="1" ng-model="vm.dataBase.type">
+                        问题反馈
+                    </label>
+                </div>
+                <div class="radio-inline">
+                    <label>
+                        <input type="radio" name="optionsRadios"  ng-value="2" ng-model="vm.dataBase.type">
+                        改进建议
+                    </label>
+                </div>
+            </div>
+            <div ng-switch="vm.dataBase.type">
+                <div class="form-group" ng-switch-when="1">
+                    <textarea text-editor="" data-value-max="150" style="resize: vertical;" class="input-control" rows="5" cb-placeholder ng-model="vm.dataBase.context" name="content" placeholder="详细描述问题，例如：点了开单无法生成订单" cb-placeholder  ng-required="true"></textarea>
+                </div>
+
+                <div class="form-group" ng-switch-when="2">
+                    <div>
+                        <input type="text" name="title" class="input-control" ng-model="vm.dataBase.title" cb-string-range value-max="20" placeholder="您的建议，例如：希望增强反馈功能" ng-required="true">
+                    </div>
+                </div>
+                <div class="form-group" ng-switch-when="2">
+                  <textarea text-editor="" data-value-max="150" style="resize: vertical;" class="input-control" rows="5" cb-placeholder ng-model="vm.dataBase.context" name="content" placeholder="详细描述，例如：希望增加反馈功能，这样可以提一些建议给车边平台" cb-placeholder  ng-required="true"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="u-btn u-btn-primary u-btn-sm f-fr" ng-disabled="feedback.$invalid">提交</button>
+            </div>
+
+        </form>
+    </div>
+</div>

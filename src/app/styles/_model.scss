@@ -1,0 +1,26 @@
+/*
+ * cbStringRange 模块样式
+ */
+
+.m-string-range {
+  line-height: 34px;
+
+
+
+  .m-string-clear {
+    cursor: pointer;
+
+    &:hover {
+      color: #D7292A;
+    }
+  }
+}
+
+.input-group .input-control + .input-addon.m-string-item {
+  right: 8px;
+  color: #CCCCCC;
+
+  &.m-string-icon {
+    top: -1px;
+  }
+}

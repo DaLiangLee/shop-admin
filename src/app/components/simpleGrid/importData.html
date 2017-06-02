@@ -1,0 +1,9 @@
+<div>
+    <span class="u-btn u-btn-sm" ng-click="toggleItems()">导　入</span>
+    <ul ng-show="isItemsShow">
+        <li><a ng-href="{{download()}}" class="import-item" target="_blank">下载模版</a></li>
+        <li>
+            <div simple-file="excel" upload-type="excel" data-value-max="1" upload-item="upload.handler(data)"><a class="import-item" data-upload-type="{{config.uploadtype}}">上传文件</a></div>
+        </li>
+    </ul>
+</div>

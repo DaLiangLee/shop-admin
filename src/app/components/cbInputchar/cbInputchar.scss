@@ -1,0 +1,39 @@
+.w-inputchar {
+  position: relative;
+
+  input {
+    padding-right: 40px;
+  }
+}
+
+.w-input-item {
+  position: absolute;
+}
+
+.w-input-choose {
+  right: 15px;
+  font-size: 14px;
+  line-height: 34px;
+  font-weight: 500;
+
+  &.is-hide {
+    display: none;
+  }
+}
+
+
+.w-input-num {
+  letter-spacing: -2px;
+}
+
+.w-input-clear {
+
+  font-weight: 500;
+  cursor: pointer;
+  color: #CCCCCC;
+  padding: 0 4px;
+
+  &:hover {
+    color: #a94442;
+  }
+}

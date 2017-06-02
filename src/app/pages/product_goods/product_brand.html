@@ -1,0 +1,33 @@
+<div class="m-product-brand">
+  <div ng-if="folded">
+    <p bindonce=""><span class="brand-active" bo-text="brand.brandname"></span> <a class="f-curp brand-edit" ng-click="toggle()">编辑</a></p>
+  </div>
+  <div ng-if="!folded" class="brand">
+    <div class="brand-input">
+      <div class="b-w-5">
+        <input type="text" class="input-control" name="" ng-model="brand.brandname" ng-change="search()" ng-blur="getBrandname()" placeholder="请输入商品品牌名称" cb-placeholder cb-string-range value-max="20">
+      </div>
+     <!-- <span class="cancel" ng-if="brand.brandname && step == 2" ng-click="toggle()">取消编辑</span>-->
+    </div>
+    <div class="brand-filter">
+      <div class="initials" dg-click="filterIn($event, item)" selector="a" bindonce="initials">
+        <a ng-repeat="item in initials" bo-text="item.text" ng-class="{'active': item.active}"></a>
+      </div>
+    </div>
+    <div class="brand-list">
+      <ul class="f-cb" dg-click="select($event, item)" selector="li" bindonce="initials">
+        <li ng-repeat="item in store | filter: params" ng-class="{'active': item.$active}" bo-title="item.cnname">
+          <span bo-text="item.cnname"></span>
+        </li>
+      </ul>
+      <div>
+
+      </div>
+    </div>
+  </div>
+  <div class="put-away" ng-if="!folded && pcateid.catename">
+    <span ng-click="toggle()"><i ng-class="{false:'icon-arrow_up', true: 'icon-arrow_down'}[folded]"></i> 收起</span>
+  </div>
+</div>
+
+

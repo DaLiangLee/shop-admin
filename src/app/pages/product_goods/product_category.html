@@ -1,0 +1,22 @@
+<div class="m-product-category">
+  <div ng-if="folded">
+    <p bindonce=""><span bo-text="pcateid.catename" class="u-fw-600"></span> <span class="f-st">&gt;</span> <a class="u-item active" bo-text="pcateid.items[0].catename"></a> <a class="f-curp cate-edit" ng-click="toggle(true)">编辑</a></p>
+  </div>
+  <div ng-if="!folded">
+    <dl class="list f-cb" ng-repeat="item in store track by $index" bindonce="">
+      <dt class="f-fl name"><span bo-text="item.catename" class="u-fw-600"></span> <span class="f-st f-fr">&gt;</span></dt>
+      <dd class="f-fr more">
+        <span class="down">更多 <i class="icon-arrow_down"></i></span>
+        <span class="up">收起 <i class="icon-arrow_up"></i></span>
+      </dd>
+      <dd class="tags" dg-click="select($event, subItem, item)" selector="a">
+        <p>
+          <a class="u-item f-curp" ng-class="{'active': subItem.$active}" ng-repeat="subItem in item.items track by $index" bo-text="subItem.catename"></a>
+        </p>
+      </dd>
+    </dl>
+  </div>
+  <div class="put-away" ng-if="!folded && pcateid.catename">
+    <span ng-click="toggle(false)"><i ng-class="{false:'icon-arrow_up', true: 'icon-arrow_down'}[folded]"></i> 取消编辑</span>
+  </div>
+</div>

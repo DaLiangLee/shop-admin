@@ -1,0 +1,71 @@
+<div class="service-list">
+  <div class="action">
+    <span class="toggle f-curp" ng-class="{true:'icon-arrow_up', false: 'icon-arrow_down'}[item.$folded]" ng-click="toggleServiceList(item)"></span>
+  </div>
+  <div class="header f-cb">
+    <h4 class="f-fl" bo-if="item.itemname">服务：<span bo-text="item.itemname"></span></h4>
+    <h4 class="f-fl" bo-if="!item.itemname">商品</h4>
+    <span class="f-fr total-price"><span>
+      合计：<strong>&yen;<i ng-bind="item.$totalPrice | number : '2'"></i></strong></span>
+      <span></span>
+    </span>
+    <span class="icon-remove f-curp remove-item" ng-click="removeServiceList(item)"></span>
+  </div>
+  <div class="main" ng-show="item.$folded">
+    <dl class="products form-group" dg-click="removeServiceProduct($event, subitem, item)" selector=".close">
+      <dt bo-if="item.itemname" class="f-cb">
+        <h5>规格：</h5>
+        <p><span bo-text="item.manualskuvalues"></span></p>
+        <div>
+          <div class="f-fl input-group item-price">
+            <span class="input-addon">工时单价：&yen;</span>
+            <input class="input-control" type="text" ng-model="item.price" number-range=""
+                   data-value-min="0" name="servicePrice" data-value-max="999999.99" data-value-step="0.01" data-range-enabled placeholder="工时单价"
+                   ng-blur="updateServiceprice(item)" cb-placeholder maxlength="9">
+            <span class="input-addon">&nbsp;&nbsp;&times;&nbsp;工时：</span>
+          </div>
+          <div class="f-fl item-num" cb-amount base="item.num"
+               get-base="updateServicenumber(data, item)" max-num="1000" min-num="0" factor="0.1" precision="1"></div>
+          <span class="text-danger f-cb" ng-if="list.servicePrice.$error.numberRange">工时单价超出上限</span>
+        </div>
+      </dt>
+      <dd class="product-item f-cb" ng-form="sublist" ng-repeat="subitem in item.products">
+        <p>
+          <span bo-text="subitem.brandname"></span>
+          <span bo-text="subitem.productname"></span>
+          <span bo-text="subitem.manualskuvalues"></span>
+        </p>
+        <div>
+          <input type="hidden" name="producttotalPrice" >
+          <div class="f-fl input-group item-price">
+            <span class="input-addon">零售单价：&yen;</span>
+            <input class="input-control" type="text" name="productPrice" ng-model="subitem.price" number-range=""
+                   data-value-min="0" data-value-max="999999.99" data-value-step="0.01" data-range-enabled placeholder="零售单价"
+                   ng-blur="updateProductprice(subitem, item)" cb-placeholder maxlength="9">
+            <span class="input-addon">&nbsp;&nbsp;&times;&nbsp;数量：</span>
+          </div>
+          <div class="f-fl item-num" cb-amount base="subitem.num"
+               get-base="updateProductnumber(data, subitem, item)" max-num="1000" min-num="1"></div>
+          <span class="text-danger f-cb" ng-if="sublist.productPrice.$error.numberRange">零售单价超出上限</span>
+        </div>
+        <span class="close">&times;</span>
+      </dd>
+    </dl>
+    <div class="form-group item-add-products">
+      <button class="u-btn u-btn-default u-btn-sm" order-product-dialog items="item.products" handler="addServiceProduct(data, item)">+ 商品
+      </button>
+    </div>
+    <div class="form-group f-cb">
+      <label class="control-label">施工人员：</label>
+      <div class="control-content" simple-select="guid,realname" store="employee.store"
+           select="item.servicer" select-handler="employee.handler(data, item)" style="width: 150px;"></div>
+    </div>
+    <div class="form-group f-cb">
+      <label class="control-label">备注：</label>
+      <div class="control-content">
+        <input type="text" class="input-control" name="remark" ng-model="item.remark" placeholder="请输入长度20字符以内的备注"
+               cb-placeholder cb-string-range value-max="20">
+      </div>
+    </div>
+  </div>
+</div>
