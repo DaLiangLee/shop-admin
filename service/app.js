@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const router = express.Router();
 
 // 中间件
 // parse application/x-www-form-urlencoded
@@ -17,17 +18,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // 处理跨域问题
 app.all('*',function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With');
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 
-    if (req.method == 'OPTIONS') {
+    if (req.method === 'OPTIONS') {
         res.sendStatus(200); //让options请求快速返回
-    }
-    else {
+    } else {
         next();
     }
 });
-
+// 设置api
+app.use('/shopservice/admin', router);
 
 // 车辆选择通用api
 app.use('/shopservice/admin', require('./api/motor'));

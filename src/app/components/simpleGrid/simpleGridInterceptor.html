@@ -3,13 +3,14 @@
         <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
         <h5 class="modal-title" ng-bind="config.title"></h5>
     </div>
-    <div class="modal-body form-horizontal">
+    <div class="modal-body form-horizontal text-cont">
+        <div class="icon confirm"></div>
         <div class="{{config.messageClass}}" ng-bind-html="config.message"></div>
     </div>
     <div class="modal-footer">
-        <div class="inline-block margin-right">
-            <button class="btn btn-warning" ng-click="confirm()" ng-bind="config.confirmText"></button>
-            <button class="btn btn-default" ng-click="close(false)" ng-bind="config.closeText"></button>
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-bind="config.confirmText"></button>　　
+            <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)" ng-bind="config.closeText"></button>
         </div>
     </div>
 </div>

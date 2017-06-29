@@ -4,28 +4,62 @@
 /**
 表格公共颜色
  */
+$table-thead-bg:#e8f5fe;
 $table-bg-default: #ffffff;
-$table-bg-accent: #f7f7f7;
-$table-bg-hover: #dffdf6;
+$table-bg-accent: #f5f5f5;
+$table-bg-hover: #dceffc;
 
 /**
 全局按钮颜色
  */
-$btn-default-bg: #f7f7f7;
-$btn-default-color: #f7f7f7;
-$btn-default-border: #f7f7f7;
+$btn-default-color:              #333;
+$btn-default-bg:                 #fff;
+$btn-default-border:             #ccc;
+$btn-default-hover-color:        #c1c1c1;
+$btn-default-hover-border:       #ccc;
+$btn-warning-bg: #ff5000;
+$btn-warning-color: #f7f7f7;
+$btn-warning-hover-bg: #e44903;
+$btn-danger-bg: #e71e28;
+$btn-danger-color: #fff;
+$btn-danger-border: #e71e28;
+$btn-danger-hover-bg: #C00000;
+$btn-link-color: #1d9ed7;
+$btn-disabled-bg: #bcbcbc;
+$btn-disabled-color: #fff;
+$btn-disabled-border: #bcbcbc;
+$btn-disabled-hover-bg: #A3A3A3;
+
+$btn-success-color: #fff;
+$btn-success-border: #5cb85c;
+$btn-success-bg: #5cb85c;
+
 $btn-primary-bg: #038ae3;
 $btn-primary-color: #ffffff;
 $btn-primary-border: transparent;
-$btn-primary-hover-bg: #337ab7;
-$btn-warning-bg: #f7f7f7;
+$btn-primary-hover-bg: #026ad0;
+/*$btn-warning-bg: #ff5000;
 $btn-warning-color: #f7f7f7;
-$btn-warning-border: #f7f7f7;
-$btn-danger-bg: #d7292a;
-$btn-danger-color: #f7f7f7;
-$btn-danger-border: #f7f7f7;
-$btn-danger-hover-bg: #c61717;
+$btn-warning-hover-bg: #e44903;*/
+$btn-warning-bg: #f69a18;
+$btn-warning-color: #f7f7f7;
+$btn-warning-hover-bg: #df8505;
+$btn-danger-bg: #e71e28;
+$btn-danger-color: #fff;
+$btn-danger-border: #e71e28;
+$btn-danger-hover-bg: #C00000;
 $btn-link-color: #1d9ed7;
-$btn-disabled-bg: #f7f7f7;
-$btn-disabled-color: #f7f7f7;
-$btn-disabled-border: #f7f7f7;
+/*$btn-disabled-color: #fff;
+$btn-disabled-bg: #bcbcbc;
+$btn-disabled-border: #bcbcbc;
+$btn-disabled-hover-bg: #A3A3A3;*/
+$btn-disabled-color: #808080;
+$btn-disabled-bg: #fff;
+$btn-disabled-border: #808080;
+$btn-disabled-hover-color: #026ab0;
+$btn-disabled-hover-bg: #026ab0;
+$btn-info-bg: #ffff;
+$btn-info-color: #A3A3A3;
+$btn-info-border: #A3A3A3;
+$btn-info-hover-bg: #333;
+

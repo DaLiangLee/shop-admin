@@ -1,37 +1,40 @@
 <div>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="closed()" aria-hidden="true">&times;</button>
     <h5 class="modal-title">开单确认</h5>
   </div>
   <div class="modal-body">
     <form class="form-horizontal" autocomplete="off" name="offers" role="form" novalidate>
-      <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">商品/材料合计：</label>
-        <div class="col-sm-8">
-          <div class="text-border">
-            <span ng-bind="item.psalepriceAll | number : 2"></span> 元
+      <div class="form-group f-cb">
+        <label class="control-label">工时费：</label>
+        <div class="b-w-8">
+          <div class="order-money">
+            <span class="order-money-icon">&yen;</span>
+            <span ng-bind="item.ssalepriceAll | number : 2"></span>
           </div>
         </div>
       </div>
-      <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">工时费合计：</label>
-        <div class="col-sm-8">
-          <div class="text-border">
-            <span ng-bind="item.ssalepriceAll | number : 2"></span> 元
+      <div class="form-group f-cb">
+        <label class="control-label">商品材料费：</label>
+        <div class="b-w-8">
+          <div class="order-money">
+            <span class="order-money-icon">&yen;</span>
+            <span ng-bind="item.psalepriceAll | number : 2"></span>
           </div>
         </div>
       </div>
-      <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">总计：</label>
-        <div class="col-sm-8">
-          <div class="text-border">
-            <span ng-bind="item.totalprice | number : 2"></span> 元
+      <div class="form-group f-cb">
+        <label class="control-label">总费用：</label>
+        <div class="b-w-8">
+          <div class="order-money">
+            <span class="order-money-icon">&yen;</span>
+            <span ng-bind="item.totalprice | number : 2"></span>
           </div>
         </div>
       </div>
-      <div class="form-group clearfix">
-        <label class="col-sm-3 control-label">优惠方式：</label>
-        <div class="col-sm-8">
+      <div class="form-group f-cb" ng-if="orderstype != 2">
+        <label class="control-label">优惠方式：</label>
+        <div class="b-w-8" style="margin-left: -10px;">
           <div class="radio-inline" ng-repeat="list in item.list" ng-mouseenter="item.preloaded(list.id)">
             <label>
               <input type="radio" name="discounttype" ng-change="item.handler()" ng-model="item.discounttype" ng-value="list.id">
@@ -40,42 +43,56 @@
           </div>
         </div>
       </div>
-      <div class="form-group clearfix" ng-if="item.discounttype == 1">
-        <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate3.html" popover-animation="false" class="icon-exclamation"></i> 会员折扣：</label>
-        <div class="col-sm-8">
-          <div class="text-border h3">
+      <div class="form-group f-cb" ng-if="item.discounttype == 1 && orderstype != 2">
+        <label class="control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate3.html" popover-animation="false" class="icon-exclamation"></i> 会员折扣：</label>
+        <div class="b-w-8">
+          <div class="text-border">
             <span ng-bind="item.discount"></span> %
           </div>
         </div>
       </div>
-      <div class="form-group clearfix" ng-if="item.discounttype == 2">
-        <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false" class="icon-exclamation"></i> 优惠金额：</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" ng-model="item.preferentialprice" cb-money-range=""
-                 data-value-min="0"
-                 range-enabled="true"
-                 data-value-max="{{item.totalprice-1}}">
-        </div>元
+      <div class="form-group f-cb" ng-if="item.discounttype == 2 && orderstype != 2">
+        <label class="control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false" class="icon-exclamation"></i> 优惠金额：</label>
+        <div class="b-w-8">
+          <div style="position: relative;">
+            <span style="position: absolute; padding: 7px; left: 4px; color: #949191;">&yen;</span>
+            <input type="text" style="display: inline-block; padding-left: 30px;" class="input-control" ng-model="item.preferentialprice"
+                   name="preferentialprice"
+                   cb-money-range=""
+                   data-value-min="0"
+                   range-enabled="true"
+                   data-value-max="{{item.totalprice-1}}">
+          </div>
+        </div>
       </div>
-      <div class="form-group clearfix">
-        <label class="col-sm-3 control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false" class="icon-exclamation"></i> 应收金额：</label>
-        <div class="col-sm-8">
-          <span class="h2 text-danger"><span ng-bind="item.paid() | number : 2"></span>元</span>
+      <div class="form-group f-cb" ng-if="orderstype == 2">
+        <label class="control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false" class="icon-exclamation"></i> 优惠金额：</label>
+        <div class="b-w-8">
+          <div class="order-money">
+            <span class="order-money-icon">&yen;</span>
+            <span ng-bind="item.preferentialprice | number : 2"></span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group f-cb">
+        <label class="control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate2.html" popover-animation="false" class="icon-exclamation"></i> 应收金额：</label>
+        <div class="b-w-8">
+          <span class="h2" ng-class="{'text-danger': orderstype != 2, 'text-warning': orderstype == 2}"><span class="h4">&yen;</span> <span ng-bind="item.paid() | number : 2"></span></span>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
     <div class="alert alert-danger" ng-if="interceptor">
-      <p>您确认接车吗？</p>
+      <p>您的优惠金额没有填写，默认是0，你确定继续吗？</p>
     </div>
-    <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">我想想</button>
+    <div class="inline-block f-tac" ng-if="interceptor">
+      <button class="u-btn u-btn-primary" ng-click="interceptorConfirm()">确　定</button>　　
+      <button class="u-btn u-btn-disabled" ng-click="close(false)">我想想</button>
     </div>
-    <div class="inline-block margin-right" ng-if="!interceptor">
-      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="offers.$invalid">确定</button>
-      <button class="btn btn-default" ng-click="closed()">取消</button>
+    <div class="inline-block f-tac" ng-if="!interceptor">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="offers.$invalid">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="closed()">取　消</button>
     </div>
   </div>
 </div>

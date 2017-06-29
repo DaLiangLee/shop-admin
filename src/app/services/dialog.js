@@ -3,6 +3,7 @@
  */
 (function () {
   'use strict';
+
   angular
     .module('shopApp')
     .provider('cbDialogConfig', cbDialogConfig)

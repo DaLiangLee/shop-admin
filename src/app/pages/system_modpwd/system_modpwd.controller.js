@@ -23,7 +23,7 @@
         vm.submitBtn = function () {
           memberEmployee.changepwd(vm.form).then(function (results) {
             if (results.data.status == 0) {
-              cbAlert.tips("修改密码成功");
+              cbAlert.tips("操作成功");
               vm.form = {};
               vm.$change1 = false;
               vm.$change2 = false;
@@ -32,7 +32,7 @@
               cbAlert.error("错误提示", results.data.data);
             }
           });
-        }
+        };
     }
 
 })();

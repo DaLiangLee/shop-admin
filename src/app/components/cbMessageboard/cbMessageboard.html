@@ -8,25 +8,25 @@
       <p class="text-border" style="height: auto;" ng-bind="editor.content"></p>
     </div>
     <div ng-if="type == 'editor'">
-      <div text-editor placeholder="{{editor.placeholder}}" data-max-length="{{editor.maxLength}}" editor="editor.content"></div>
+      <textarea text-editor="" data-value-max="{{editor.maxLength}}" style="resize: vertical;" class="input-control" rows="5" cb-placeholder ng-model="editor.content" name="content" placeholder="{{editor.placeholder}}" cb-placeholder></textarea>
     </div>
   </div>
   <div class="modal-footer" ng-if="type == 'editor'">
     <div class="alert alert-warning" ng-if="interceptor.show">
       <p ng-bind="interceptor.text"></p>
     </div>
-    <div class="inline-block margin-right" ng-if="interceptor.show">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()" ng-bind="interceptor.confirmText"></button>
-      <button class="btn btn-default" ng-click="close(false)"  ng-bind="interceptor.closeText"></button>
+    <div class="inline-block f-tac" ng-if="interceptor.show">
+      <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()" ng-bind="interceptor.confirmText"></button>
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="cancel()"  ng-bind="interceptor.closeText"></button>
     </div>
-    <div class="inline-block margin-right" ng-if="!interceptor.show">
-      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!editor.content.length">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    <div class="inline-block f-tac" ng-if="!interceptor.show">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!editor.content.length">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
   <div class="modal-footer" ng-if="type == 'review'">
-    <div class="inline-block margin-right">
-      <button class="btn btn-primary" ng-click="close(false)">返回</button>
+    <div class="inline-block f-tac">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="close(false)">关　闭</button>
     </div>
   </div>
 </div>

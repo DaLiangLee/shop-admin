@@ -18,76 +18,59 @@
    * moneyformatFilter 金额过滤
    * js精度问题，保证整个长度小于17，在做其他操作
    * @param money 允许字符串数字，数字（正或负数）
-   * @param num   保留小数位
+   * @param num   保留2位小数位
    * return {string}
    */
 
   angular
     .module('shopApp')
-    .constant('moneyRegular', /^(\-|\+)?([\d]+(\.[\d]+)?|Infinity)$/)
-    .filter('moneyformatFilter', moneyformatFilter);
+    .filter('moneyformatFilter', moneyformatFilter)
+    .filter('moneySubtotalFilter', moneySubtotalFilter)
+    .filter('moneyTotalFilter', moneyTotalFilter);
 
   /** @ngInject */
-  function moneyformatFilter(moneyRegular) {
-    return function (money, num) {
+  function moneyformatFilter(numberFilter, computeService) {
+    return function (money) {
       // 最大溢出长度
-      var iMaximum = 17,flNum = 0;
-      if ((""+money).length > iMaximum) {
+      if ((""+money).length > 17) {
         throw Error(money + " 长度溢出");
       }
-      // 默认保留2位小数
-      num = num || 2;
-      if(typeof money === 'number'){
-        flNum = money;
-      }else{
-        // 先把money转换成数字
-        flNum = parseFloat(money);
-        // 如果为NaN都直接返回空
-        if (!isNaN(flNum)) {
-          return "";
-        }
-      }
-      if(flNum === 0){
-        return "0";
-      }
-
-      // 求最大小数位，num值
-      var sNum = "" + flNum;
-      var iMax = 0;
-      // 点的占位符
-      var placeholder = 1;
-      // 如果有负号，给占位符+1
-      if(/^\-/){
-        placeholder = 1;
-      }
-      if (moneyRegular.test(sNum)) {
-        sNum = sNum.split('.');
-        switch (sNum.length) {
-          case 1:
-            // 小数点占一位
-            iMax = iMaximum - placeholder - sNum[0].length;
-            break;
-          case 2:
-            iMax = iMaximum - placeholder - sNum[0].length - sNum[1].length;
-            break;
-        }
-      }
-      if(num > iMax){
-        num = iMax;
-      }
-
-      if(sNum[1]){
-        if(sNum[1].length > num){
-          return [sNum[0], sNum[1].substring(0, num)].join('.')
-        }else if(sNum[1].length < num){
-          return flNum.toFixed(num);
-        }else{
-          return sNum.join('.');
-        }
-      }else{
-        return flNum.toFixed(num);
-      }
+      // 金额保留2位小数带千分位
+      return numberFilter(computeService.pullMoney(money), 2);
     }
   }
 
+  /** @ngInject */
+  function moneySubtotalFilter($filter, computeService) {
+    return function (money) {
+      if(!_.isArray(money) || !money.length){
+        throw Error(money + " 不是一个数组或没有值");
+      }
+      if(money.length < 2){
+        return $filter('moneyformatFilter')(money[0]);
+      }
+      var num = _.reduce(money, function (result, value) {
+        return computeService.multiply(result, value);
+      }, 1);
+      // 金额保留2位小数带分位 小数位大于分全部干掉
+      return computeService.pullMoney(parseInt(computeService.pushMoney(num), 10));
+    }
+  }
+
+  /** @ngInject */
+  function moneyTotalFilter($filter, computeService) {
+    return function (money) {
+      if(!_.isArray(money) || !money.length){
+        throw Error(money + " 不是一个数组或没有值");
+      }
+      if(money.length < 2){
+        return money[0];
+      }
+      var num = _.reduce(money, function (result, value) {
+        return computeService.add(result, value);
+      }, 0);
+      // 金额保留2位小数带千分位
+      return $filter('moneyformatFilter')(num);
+    }
+  }
 })();

@@ -1,0 +1,50 @@
+.simple-select-vehicle{
+  .list{
+    float: left;
+    width: 19%;
+    margin-right: 1%;
+    cursor: pointer;
+    .input-addon{
+      top: 5px;
+    }
+  }
+  .items{
+    height: 200px;
+    overflow-y: auto;
+    .group-list {
+      &:hover {
+        background-color: #ccc;
+      }
+    }
+    .open{
+      .text{
+        color: #038ae3;
+      }
+      .group-list:hover{
+        background-color: #fff;
+      }
+    }
+  }
+  .tags{
+    display: inline-block;
+    vertical-align: middle;
+    background-color: #ccc;
+    margin:0 10px 10px 0;
+    white-space:nowrap;
+    padding: 5px 10px;
+    .close{
+      margin-left: 10px;
+    }
+  }
+  .results{
+    .title{
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 30px;
+    }
+    .model{
+      line-height: 26px;
+    }
+  }
+}

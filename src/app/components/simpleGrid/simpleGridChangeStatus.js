@@ -72,11 +72,11 @@
          */
         function handler(childScope){
           childScope.config = {
-            title: "状态修改提示",
+            title: "",
             message: iAttrs.message || "修改此项状态后，会影响该账号使用，您确定要修改吗？",
             messageClass: "text-danger",
-            confirmText: "确定修改",
-            closeText: "暂不修改"
+            confirmText: "确定",
+            closeText: "取消"
           };
           childScope.confirm = function () {
             remove();

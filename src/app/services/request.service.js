@@ -29,7 +29,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        data: method == "POST" ? data : undefined
+        data: method === "POST" ? data : undefined
       });
     };
     this.request = function(parent, current){

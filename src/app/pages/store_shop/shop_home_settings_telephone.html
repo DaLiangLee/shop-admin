@@ -9,9 +9,9 @@
     <div>
       <form class="form-horizontal" novalidate name="tel">
         <div class="form-group">
-          <label for="telephone" class="col-sm-3 control-label">客服电话：</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" name="phone" id="telephone" autocomplete="off"
+          <label for="telephone" class="b-w-3 control-label">客服电话：</label>
+          <div class="b-w-8">
+            <input type="text" class="input-control" name="phone" id="telephone" autocomplete="off"
                    ng-model="telephone"
                    ng-required="true"
                    cb-telephone-range>
@@ -32,13 +32,13 @@
     <div class="alert alert-danger" ng-if="interceptor">
       <p>修改客服电话，会影响用户查看，您确定要修改吗？</p>
     </div>
-    <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定设置</button>
-      <button class="btn btn-default" ng-click="close(false)">暂不设置</button>
+    <div class="inline-block f-tac" ng-if="interceptor">
+      <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()">确定设置</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">暂不设置</button>
     </div>
-    <div class="inline-block margin-right" ng-if="!interceptor">
-      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="tel.phone.$invalid">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    <div class="inline-block f-tac" ng-if="!interceptor">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="tel.phone.$invalid">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

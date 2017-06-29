@@ -140,7 +140,9 @@
           childScope.telephone = angular.copy(scope.telephone);
           var currentParams = {
             page: 1,
-            pageSize: 5
+            pageSize: 5,
+            inService: 1,
+            excludeOwner: 1 // 是否显示店主, 可以为任意值
           };
           childScope.gridModel = {
             "columns": [
@@ -159,12 +161,12 @@
               {
                 "id": 2,
                 "cssProperty": "state-column",
-                "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.sguid})"></a>',
+                "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.guid})"></a>',
                 "name": '姓名',
                 "width": 150
               },
               {
-                "id": 5,
+                "id": 3,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.posname"></span>',
                 "name": '岗位'
@@ -177,17 +179,10 @@
                 "width": 100
               },
               {
-                "id": 6,
+                "id": 5,
                 "cssProperty": "state-column",
                 "fieldDirective": '<span class="state-unread" bo-text="item.description"></span>',
                 "name": '员工简介'
-              },
-              {
-                "id": 8,
-                "cssProperty": "state-column",
-                "fieldDirective": '<div cb-switch="forbidden" checked="item.status"></div>',
-                "name": '状态',
-                "width": 80
               }
             ],
             "config": {
@@ -298,21 +293,9 @@
             return angular.equals(storageData, childScope.gridModel.itemList)
           }
 
-
           childScope.interceptorConfirm = function () {
-
-            if(isChange()){
-              scope.settingItem({data: {"status": "1", "data": ""}});
-              childScope.close();
-            }else{
-              memberEmployee.changeshow(getSubmitData(childScope.gridModel.itemList)).then(function (results) {
-                if(results.data.status == "0"){
-                  scope.settingItem({data: {"status": "0", "data": results.data.data}});
-                }
-                childScope.close();
-              });
-            }
-
+            scope.settingItem({data: {"status": "0", "data": isChange() ? null : getSubmitData(childScope.gridModel.itemList)}});
+            childScope.close();
           }
         }
 

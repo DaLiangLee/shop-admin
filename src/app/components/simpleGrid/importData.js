@@ -19,7 +19,8 @@
         return configuration.getAPIConfig() + params.url;
     }
 
-    function importData($timeout, webSiteApi, configuration) {
+    /** @ngInject */
+    function importData(configuration) {
 
         return {
             restrict: 'A',
@@ -28,7 +29,7 @@
                 uploadExcel: "&"
             },
             templateUrl: 'app/components/simpleGrid/importData.html',
-            controller: function($scope, $element, $attrs) {
+            controller: function($scope) {
                 this.importData = $scope.params;
                 this.uploadExcel = function(data){
                     $scope.uploadExcel(data);
@@ -38,7 +39,7 @@
                 }
                 // console.log('$attrs', $attrs);
             },
-            link: function(scope, iElement, iAttrs) {
+            link: function(scope) {
                 // scope.hintText = "请选择EXCEL文件上传";
 
                 scope.isItemsShow = false;
@@ -57,6 +58,7 @@
         };
     }
 
+    /** @ngInject */
     function simpleFile($timeout, $log, cbDialog, configuration, webSiteApi, webSiteVerification) {
 
         var DEFAULT_DATA = {

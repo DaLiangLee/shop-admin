@@ -53,6 +53,9 @@
           childScope.confirm = function () {
             childScope.interceptor.show = true;
           };
+          childScope.cancel = function () {
+              childScope.interceptor.show = false;
+          };
 
           /**
            * 拦截器

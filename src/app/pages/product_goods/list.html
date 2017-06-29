@@ -1,57 +1,57 @@
+<ol class="k-breadcrumb">
+  <li><a ui-sref="product.goods.list({page:1})">商品与服务</a></li>
+  <li class="active">商品管理</li>
+</ol>
+<div class="w-tabs">
+  <ul class="tabs-nav f-cb">
+    <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted">在售商品库</a></li>
+    <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted">已下架</a></li>
+  </ul>
+</div>
+<br>
 <div class="g-view">
-  <div class="container-fluid">
-    <ul class="nav nav-tabs">
-      <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 0})" class="text-muted">在售商品库</a></li>
-      <li ui-sref-active="active"><a ui-sref="product.goods.list({page: 1, remove: 1})" class="text-muted">已下架</a></li>
-    </ul>
-    <br>
-    <div cb-access-control="chebian:store:product:goods:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+  <div class="container-fluid" style="min-width:1148px;">
+    <div cb-access-control="chebian:store:product:goods:view" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
-         pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
-         config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
-         page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div style="margin-bottom: 100px; width: 100%; overflow-x: auto;" ng-if="vm.gridModel.itemList">
-      <table class="table" style="min-width:1800px;">
-        <thead>
-          <tr>
-            <th style="min-width:100px;">类目</th>
-            <th style="min-width:120px;">编码/图片</th>
-            <th style="min-width:150px;">名称</th>
-            <th style="min-width:150px;">品牌</th>
-            <th style="min-width:100px;">保质期（天）</th>
-            <th style="min-width:50px;">序号</th>
-            <th style="min-width:150px;">属性</th>
-            <th style="min-width:150px;">零售单价（元）</th>
-            <th style="min-width:100px;">销量</th>
-            <th style="min-width:150px;">库存</th>
-            <th style="min-width:150px;">零件码</th>
-            <th style="min-width:150px;">条形码</th>
-            <th style="min-width:200px;">适用车型</th>
-            <th style="min-width:80px;">启用状态</th>
-            <th style="min-width:150px;">描述</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="item in vm.items.items">
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span ng-bind="vm.items.catename"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><div><p ng-bind="vm.items.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{vm.items.mainphoto}}" ng-if="vm.items.mainphoto"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" ng-if="!vm.items.mainphoto"></span></div></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.productname}}" text-length="8"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.cnname}}" text-length="8"></span></td>
-            <td style="vertical-align: middle;" rowspan="{{vm.items.items.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
-            <td><span ng-bind="$index+1"></span></td>
-            <td><span class="state-unread" cb-truncate-text="{{item.skuvalues | skuvaluesFilter}}" text-length="8"></span></td>
-            <td><div style="position: relative;"><span class="state-unread" ng-bind="item.saleprice | number : '2'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice', vm.items.guid)"></span></div></td>
-            <td><span class="state-unread"><span ng-bind="item.salenums | number : '0'"></span>件</span></td>
-            <td><div style="position: relative;"><span class="state-unread"><span ng-bind="item.$$stockShow" ng-if="item.$$stockShow == '无限'"></span><span ng-bind="item.$$stockShow | number : '0'" ng-if="item.$$stockShow != '无限'"></span>件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="int" editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.items.guid)"></span></div></td>
-            <td><span ng-bind="item.partscode"></span></td>
-            <td><span class="state-unread" ng-bind="item.skucode"></span></td>
-            <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
-            <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
-                     ng-click="vm.statusItem(item, vm.items.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
-            <td><span class="state-unread" cb-truncate-text="{{item.skudescription}}" text-length="8"></span></td>
-          </tr>
-        </tbody>
-      </table>
+           pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
+           config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
+           page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
+    <div>
+
     </div>
+    <br>
+    <br>
+    <div style="margin-bottom:60px; width: 100%;" ng-if="vm.gridModel.itemList">
+        <table class="w-table">
+          <thead>
+            <tr>
+              <th style="min-width:120px;">属性</th>
+              <th style="min-width:100px;">零售单价</th>
+              <th style="min-width:78px;">销量</th>
+              <th style="min-width:90px;">库存</th>
+              <th style="min-width:180px;">适用车型</th>
+              <th style="min-width:100px;">零件码</th>
+              <th style="min-width:100px;">条形码</th>
+              <th style="min-width:80px;">启用</th>
+              <th style="min-width:130px;">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in vm.items.items">
+              <td><span ng-if="item.skuvalues" class="state-unread" cb-truncate-text="{{item.skuvalues | skuvaluesFilter}}" text-length="8"></span><span class="state-unread" ng-if="item.manualskuvalues" cb-truncate-text="{{item.manualskuvalues}}" text-length="8"></span></td>
+              <td><div style="position: relative;"><span class="state-unread" ng-bind="item.saleprice | number : '2'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice', vm.items.guid)" data-max="1000000" data-min="-1" data-step="0.01" data-placeholder="输入0~999999单价"></span></div></td>
+              <td><span class="state-unread"><span ng-bind="item.salenums | number : '0'"></span> 件</span></td>
+              <td><div style="position: relative;"><span class="state-unread"><span ng-bind="item.$$stockShow" ng-if="item.$$stockShow == '无限'"></span><span ng-bind="item.$$stockShow | number : '0'" ng-if="item.$$stockShow != '无限'"></span> 件</span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.items.guid)" data-max="1000000000" data-min="-1" data-step="1"></span></div></td>
+              <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
+              <td><span ng-bind="item.partscode"></span></td>
+              <td><span class="state-unread" ng-bind="item.skucode"></span></td>
+              <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
+                       ng-click="vm.statusItem(item, vm.items.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
+              <td><span class="state-unread" cb-truncate-text="{{item.skudescription}}" text-length="8"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </div>
 </div>

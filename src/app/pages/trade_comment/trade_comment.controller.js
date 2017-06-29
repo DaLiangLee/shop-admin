@@ -81,27 +81,27 @@
       var commenttime = [
         {
           "label": "今日",
-          id: 0,
-          start: 0,
-          end: 0
+          id: "0",
+          start: "0",
+          end: "0"
         },
         {
           "label": "本周",
-          id: 1,
-          start: 1,
-          end: 1
+          id:"1",
+          start: "1",
+          end: "1"
         },
         {
           "label": "本月",
-          id: 2,
-          start: 2,
-          end: 2
+          id: "2",
+          start: "2",
+          end: "2"
         },
         {
           "label": "本年度",
-          id: 3,
-          start: 3,
-          end: 3
+          id: "3",
+          start: "3",
+          end: "3"
         }
       ];
 
@@ -157,6 +157,12 @@
       vm.searchModel = {
         'config': {
           other: currentParams,
+          keyword: {
+            placeholder: "请输入订单编号、会员信息、评价内容等",
+            model: currentParams.keyword,
+            name: "keyword",
+            isShow: true
+          },
           searchDirective: [
             {
               label: "评价时间",
@@ -235,13 +241,19 @@
             $state.go(currentStateName, currentParams);
           }else{
             var items = _.find(commenttime, function(item){
-              return item.id == data.commenttime0;
+              return item.id === data.commenttime0;
             });
             if(angular.isDefined(items)){
               data.commenttime1 = undefined;
             }
             var search = angular.extend({}, currentParams, data);
-            $state.go(currentStateName, search);
+            search.page = '1';
+            // 如果路由一样需要刷新一下
+            if (angular.equals(currentParams, search)) {
+              $state.reload();
+            } else {
+              $state.go(currentStateName, search);
+            }
           }
         }
       };
@@ -256,7 +268,12 @@
           return;
         }
         tradeComment.list(params).then(function (results) {
-          if (results.data.status == 0) {
+          if (results.data.status === 0) {
+            _.forEach(results.data.data, function (item) {
+              if(!item.content){
+                item.content = "商品销售";
+              }
+            });
             vm.gridModel.itemList = results.data.data;
             vm.gridModel.paginationinfo = {
               pageSize: params.pageSize,

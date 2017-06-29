@@ -6,7 +6,7 @@
 
   angular
     .module('shopApp')
-    .factory('userMotorConfig', userMotorConfig);
+    .constant('userMotorConfig', userMotorConfig);
 
 
   /** @ngInject */
@@ -15,48 +15,37 @@
       DEFAULT_GRID: {
         "columns": [
           {
-            "id": 0,
-            "name": "序号",
-            "none": true
-          },
-          {
-            "id": 1,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.licence">',
-            "name": '车牌',
-            "width": 150
-          },
-          {
             "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<div><img class="pull-left" width="60px" bo-src-i="{{item.logo}}" alt=""><div class="pull-left"><p><span bo-text="item.model"></span></p><p bo-if="item.vin || item.engine"><span bo-if="item.vin">VIN码：<span bo-text="item.vin"></span></span><span bo-if="item.engine">发动机号：<span bo-text="item.engine"></span></span> 前轮：<span bo-text="item.frontwheel"></span>后轮：<span bo-text="item.rearwheel"></span></p><p bo-if="item.buydate">购车日期：<span bo-bind="item.buydate"></span></p></div></div>',
+            "fieldDirective": '<div><div class="f-fl" style="width: 80px"><img width="60px" bo-src-i="{{item.logo}}" alt=""><p class="state-unread" bo-text="item.licence"></p></div><div class="f-fl"><p><span bo-text="item.model"></span></p><p bo-if="item.vin || item.engine"><span bo-if="item.vin">VIN码：<span bo-text="item.vin"></span></span><span bo-if="item.engine">发动机号：<span bo-text="item.engine"></span></span> 前轮：<span bo-text="item.frontwheel"></span>后轮：<span bo-text="item.rearwheel"></span></p><p bo-if="item.buydate">购车日期：<span bo-bind="item.buydate"></span></p></div><a class="f-fl" target="_blank" ng-href="{{item.baoyang}}"><i class="icon-book"></i></a></div>',
             "name": '车辆信息',
-            "width": 500
+            "width": 400
           },
           {
             "id": 3,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.totalmile"></span>',
-            "name": '当前里程'
+            "name": '当前里程(km)',
+            "width": 100
           },
           {
             "id": 4,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.countdownmiles"></span>',
-            "name": '剩余保养里程',
-            "width": 150
+            "name": '距下次保养(km)',
+            "width": 100
           },
           {
             "id": 5,
             "cssProperty": "state-column",
-            "fieldDirective": '<div><span bo-bind="item.errorcode ? item.errorcode : \'正常\'" bo-class="{\'text-danger\': item.errorcode , \'text-success\': !item.errorcode}"></span><br><a target="_blank" ng-href="{{item.baoyang}}"><i class="icon-book"></i></a></div>',
-            "name": '车辆健康状况',
+            "fieldDirective": '<div><span bo-bind="item.errorcode ? item.errorcode : \'无\'" bo-class="{\'text-danger\': item.errorcode , \'text-success\': !item.errorcode}"></span></div>',
+            "name": '故障码',
             "width": 150
           },
           {
             "id": 6,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.gradename"></span>',
+            "fieldDirective": '<a ui-sref="trade.order.list({page:1, motorid: item.guid})">历史订单</a>',
             "name": '历史订单'
           },
           {
@@ -68,11 +57,8 @@
         ],
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
-          'checkboxSupport': true,  // 是否有复选框
           'sortSupport': true,
           'paginationSupport': true,  // 是否有分页
-          'selectedProperty': "selected",  // 数据列表项复选框
-          'selectedScopeProperty': "selectedItems",
           'exportDataSupport': true,
           'useBindOnce': true,  // 是否单向绑定
           "paginationInfo": {   // 分页配置信息
@@ -82,28 +68,103 @@
         }
       },
       DEFAULT_SEARCH: {
-        "config": {
-          "searchID": 'member-employee',
-          "searchDirective": [
-            {
-              'label': "员工姓名",
-              'type': 'text',
-              'searchText': "name",
-              'placeholder': '员工姓名'
+        countdownMile: [
+          {
+            "label": "0-100km",
+            id: 100,
+            start: 0,
+            end: 100
+          },
+          {
+            "label": "0-300km",
+            id: 300,
+            start: 0,
+            end: 300
+          },
+          {
+            "label": "0-500km",
+            id: 500,
+            start: 0,
+            end: 500
+          }
+        ],
+        config: function (params) {
+          return {
+            other: params,
+            keyword: {
+              placeholder: "请输入会员姓名、手机号、车牌号、车辆品牌",
+                model: params.keyword,
+                name: "keyword",
+                isShow: true
             },
-            {
-              'label': "账号",
-              'searchText': "account",
-              'placeholder': '账号名称'
-            },
-            {
-              'label': "角色名称",
-              'type': 'select',
-              'searchText': "role",
-              'placeholder': '角色名称',
-              'list': []
-            }
-          ]
+            searchDirective: [
+              {
+                label: "剩余保养里程",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "CountdownMile",
+                start: {
+                  name: "startCountdownMile",
+                  model: params.startCountdownMile,
+                  config: {
+
+                  }
+                },
+                end: {
+                  name: "endCountdownMile",
+                  model: params.endCountdownMile,
+                  config: {
+
+                  }
+                }
+              },
+              {
+                label: "当前里程",
+                name: "TotalMile",
+                all: true,
+                custom: true,
+                type: "integer",
+                start: {
+                  name: "startTotalMile",
+                  model: params.startTotalMile,
+                  config: {
+
+                  }
+                },
+                end: {
+                  name: "endTotalMile",
+                  model: params.endTotalMile,
+                  config: {
+
+                  }
+                }
+              },
+              {
+                label: "购车时间",
+                name: "BuyDate",
+                all: true,
+                custom: true,
+                type: "date",
+                model: _.isUndefined(params.startBuyDate) ? '-1': '-2',
+                start: {
+                  name: "startBuyDate",
+                  model: params.startBuyDate,
+                  config: {
+                    minDate: new Date("2010/01/01 00:00:00")
+                  }
+                },
+                end: {
+                  name: "endBuyDate",
+                  model: params.endBuyDate,
+                  config: {
+                    minDate: new Date("2010/01/01 00:00:00")
+                  }
+                }
+              }
+            ]
+          }
         }
       }
     }

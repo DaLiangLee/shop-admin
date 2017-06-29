@@ -21,12 +21,11 @@
         scope.cbswitch = {
           checkstatus: true,
           setStatus: function(value){
-            this.checkstatus = value == 1;
+            this.checkstatus = value === 1;
           }
         };
         var status = scope.$watch('checkstatus', function (value) {
-
-          angular.isDefined(value) && scope.cbswitch.setStatus(value);
+          angular.isDefined(value) && scope.cbswitch.setStatus(value*1);
         });
 
         // 确保工具提示被销毁和删除。

@@ -3,16 +3,16 @@
   <li class="active">修改密码</li>
 </ol>
 <div class="g-view">
-    <div class="container-fluid">
-      <div class="alert alert-warning">
+    <div class="container-fluid" style="width:60%;margin:50px auto 0">
+      <div class="alert alert-warning col-sm-8 col-sm-offset-1">
         为了您的账号安全，请定期修改密码，并确保密码仅由自己使用。
       </div>
       <form name="passwordForm" class="form-horizontal" ng-submit="vm.submitBtn()" novalidate>
         <div class="form-group">
-          <label for="inputPassword1" class="col-sm-2 control-label"><span class="text-danger">*</span> 当前密码：</label>
-          <div class="col-sm-10">
+          <label for="inputPassword1" class="b-w-3 control-label"><span class="text-red"><i class="icon-required"></i></span>当前密码：</label>
+          <div class="b-w-6">
             <input type="password"
-                   class="form-control"
+                   class="input-control"
                    name="oldPassword"
                    ng-blur="vm.$change1 = true"
                    id="inputPassword1"
@@ -27,10 +27,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="inputPassword2" class="col-sm-2 control-label"><span class="text-danger">*</span> 新密码：</label>
-          <div class="col-sm-10">
+          <label for="inputPassword2" class="b-w-3 control-label"><span class="text-red"><i class="icon-required"></i></span>新密码：</label>
+          <div class="b-w-6">
             <input type="password"
-                   class="form-control"
+                   class="input-control"
                    id="inputPassword2"
                    ng-model="vm.form.newPassword"
                    placeholder="新密码"
@@ -45,10 +45,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="inputPassword3" class="col-sm-2 control-label"><span class="text-danger">*</span> 确认密码：</label>
-          <div class="col-sm-10">
+          <label for="inputPassword3" class="b-w-3 control-label"><span class="text-red"><i class="icon-required"></i></span>确认密码：</label>
+          <div class="b-w-6">
             <input type="password"
-                   class="form-control"
+                   class="input-control"
                    name="password2"
                    id="inputPassword3"
                    ng-blur="vm.$change3 = true"
@@ -57,18 +57,16 @@
                    ng-pattern="/^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,30}$/"
                    cb-assert-same-as="vm.form.newPassword"
                    placeholder="确认密码">
-            <div class="alert alert-danger" ng-if="vm.$change3 && passwordForm.password2.$dirty && passwordForm.password2.$invalid">
+            <div class="alert alert-danger" ng-if="!(passwordForm.password.$invalid) && vm.$change3 && passwordForm.password2.$dirty && passwordForm.password2.$invalid">
               <p ng-if="passwordForm.password2.$error.required">不能为空</p>
               <p ng-if="!passwordForm.password2.$error.required && passwordForm.password2.$error.same">确认密码和新密码不一致</p>
             </div>
           </div>
         </div>
-
-        <div class="form-group">
-          <div class="col-sm-10 col-sm-offset-2">
-            <button type="submit" class="btn btn-default" ng-disabled="passwordForm.$invalid">保存</button>
-          </div>
+        <div class="form-group f-tac">
+            <button type="submit" class="u-btn u-btn-primary u-btn-lg" ng-disabled="passwordForm.$invalid" style="width:300px;margin:20px auto">保　存</button>
         </div>
       </form>
     </div>
 </div>
+

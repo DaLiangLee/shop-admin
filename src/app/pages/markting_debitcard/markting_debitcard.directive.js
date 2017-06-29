@@ -9,7 +9,7 @@
     .directive('settingDebitcardDialog', settingDebitcardDialog);
 
   /** @ngInject */
-  function settingDebitcardDialog(cbDialog, configuration) {
+  function settingDebitcardDialog(cbDialog, configuration, shophomeService) {
     var DEfAULT_COVERS = [
       {
         sClass: 'cover1',
@@ -45,8 +45,22 @@
       },
       link: function (scope, iElement, iAttrs) {
         function handler(childScope) {
+          childScope.isReadonly = iAttrs.settingDebitcardDialog === 'edit';
           childScope.dataBase = {};
           childScope.covers = DEfAULT_COVERS;
+          shophomeService.getInfo().then(function(results) {
+            childScope.manager = results.data.store.storename;
+            console.log('yyyyy');
+          });
+
+          childScope.checkRechargeamount = function (item) {
+            if((item.giveamount - item.rechargeamount) > 0){
+              item.isPrevent=true;
+            }else{
+              item.isPrevent=false;
+            }
+          };
+
           _.map(childScope.covers, function(key){
             key.images = configuration.getStatic() + key.cover;
           });
@@ -64,7 +78,6 @@
             index === -1 ? setActive(0) : setActive(index);
             index = null;
           }
-          console.log(childScope.dataBase, childScope.covers);
           /**
            * 设置背景选择按钮当前状态
            * @param i
@@ -104,7 +117,6 @@
             childScope.close();
           };
         }
-
         /**
          * 点击按钮
          */
@@ -115,7 +127,17 @@
           cbDialog.showDialogByUrl("app/pages/markting_debitcard/setting_debitcard_dialog.html", handler, {
             windowClass: "viewFramework-setting-debitcard-dialog"
           });
-        })
+          /*shopHome.manager().then(function (results) {
+            if (results.data.status == '0') {
+              manager = results.data.data;
+              cbDialog.showDialogByUrl("app/pages/markting_debitcard/setting_debitcard_dialog.html", handler, {
+                windowClass: "viewFramework-setting-debitcard-dialog"
+              });
+            } else {
+              cbAlert.error(results.data.data);
+            }
+          });*/
+        });
       }
     }
   }

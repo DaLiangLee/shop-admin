@@ -1,0 +1,162 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title">办理套餐卡</h5>
+  </div>
+  <div class="modal-body">
+    <div ng-show="!interception">
+      <form class="form-horizontal" autocomplete="off" role="form" novalidate name="received">
+        <h2 class="h3 f-tac"><span ng-bind="item.realname"></span> （<span ng-bind="item.mobile | numberFormatFilter"></span>）</h2>
+        <br>
+        <div class="form-group f-cb">
+          <label class="control-label"><span class="icon-required text-red"></span>套餐卡：</label>
+          <div class="b-w-8">
+            <div simple-select="id,name" store="selectModel.store" select="selectModel.select" select-handler="selectModel.handler(data)" class="package-card-select"></div>
+          </div>
+        </div>
+        <div class="form-group f-cb">
+          <label class="control-label">原价：</label>
+          <div class="b-w-8">
+            <div>
+              <span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>
+              <span ng-if="selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none; padding-left: 0;" >￥<span ng-bind="item.originprice | moneyformatFilter"></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group f-cb">
+          <label class="control-label">套餐价：</label>
+          <div class="b-w-8">
+            <div>
+              <span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>
+              <span ng-if="selectRequired.selectModel" class="input-control readonly package-price" style="border: none; background: none; box-shadow: none; padding-left: 0;">￥ <span ng-bind="item.price | moneyformatFilter"></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group f-cb">
+          <label class="control-label"><span class="icon-required text-red"></span>有效天数：</label>
+          <div class="b-w-8">
+            <span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>
+            <div ng-if="selectRequired.selectModel">
+              <input type="text" class="input-control recharge-input" name="rechargeamount"
+                     ng-disabled="baseData.$permanent"
+                     ng-model="baseData.expireDay"
+                     number-range
+                     ng-change="setExpireDate(baseData.expireDay, false)" maxlength="5"> 天
+              <label style="margin-left: 10px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="permanent" ng-change="setExpireDate('', true)" ng-model="baseData.$permanent" ng-disabled="baseData.expireDay"> 永久有效</label>
+            </div>
+            <p ng-if="expireDate" class="text-muted">至 <span ng-bind="expireDate | date: 'yyyy-MM-dd'"></span></p>
+          </div>
+        </div>
+
+        <!--<div class="form-group f-cb">-->
+          <!--<label class="control-label">是否再次优惠：</label>-->
+          <!--<div class="control-content input-group" ng-class="{'has-error': received.preferentialprice.$error.cbMoneyRange}" cb-field-error field-error-status="received.preferentialprice.$error.cbMoneyRange" field-error-msg="优惠金额不能比套餐卡金额大" style="position: relative; height: 34px;line-height: 34px;">-->
+            <!--<span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>-->
+            <!--<div ng-if="selectRequired.selectModel">-->
+              <!--<div class="radio-line">-->
+                <!--<input type="radio" name="offer" ng-model="$offer" ng-value="1" ng-click="selectOffer($offer)"> 无-->
+              <!--</div>-->
+              <!--<div class="radio-line">-->
+                <!--<input type="radio" name="offer" ng-model="$offer" ng-value="2" ng-click="selectOffer($offer)"> 优惠&nbsp;-->
+                <!--<div ng-show="$offer == 2" style="display: inline-block;">-->
+                  <!--<span class="input-addon order-money-icon" style="height: 34px;width: 16px;text-align: center;line-height: 34px;left: 114px;">￥</span>-->
+                  <!--<input type="text"-->
+                         <!--cb-money-range-->
+                         <!--name="preferentialprice"-->
+                         <!--ng-change="setPreferentialprice()"-->
+                         <!--class="input-control package-offer"-->
+                         <!--ng-model="baseData.preferentialprice"-->
+                         <!--data-value-min="0"-->
+                         <!--range-enabled="true"-->
+                         <!--data-value-max="{{baseData.$maxPrice}}"-->
+                         <!--maxlength="11">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
+
+        <div class="form-group f-cb">
+          <label class="control-label">支付方式：</label>
+          <div class="control-content">
+            <button class="u-btn active u-btn-sm u-btn-default btn-paytype" ng-class="{'order-paytype-active': type.current}" ng-disabled="!type.isBalance" style="margin-right: 10px;" ng-repeat="type in paytype" ng-click="setPaytype(type)"><span ng-bind="type.label"></span></button>
+          </div>
+        </div>
+
+        <div class="form-group f-cb">
+          <label class="control-label">备注：</label>
+          <div class="b-w-8">
+            <input type="text" class="input-control" ng-model="baseData.bak" cb-string-range value-max="20">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div  ng-show="interception">
+      <form class="form-horizontal" autocomplete="off" role="form" novalidate>
+        <h2 class="h3 f-tac"><span ng-bind="item.realname"></span> （<span ng-bind="item.mobile | numberFormatFilter"></span>）</h2>
+        <br>
+        <!--<div class="form-group f-cb">
+          <label class="control-label">套餐卡金额</label>
+          <div class="b-w-8">
+            <div>
+              <span class="input-control readonly" style="border: none; background: none; box-shadow: none;" ng-bind="item.price | moneyformatFilter"></span>
+            </div>
+          </div>
+        </div>-->
+        <!--<div class="form-group f-cb">
+          <label class="control-label"><i cb-popover="" popover-placement="left" popover-template-id="orderProductTemplate.html" popover-animation="false" class="icon-exclamation"></i> 优惠金额：</label>
+          <div class="control-content input-group" ng-class="{'has-error': received.preferentialprice.$error.cbMoneyRange}" cb-field-error field-error-status="received.preferentialprice.$error.cbMoneyRange" field-error-msg="优惠金额不能比套餐卡金额大" style="position: relative;">
+            <span class="input-addon order-money-icon" style="height: 34px;width: 16px;text-align: center;line-height: 34px;">￥</span>
+            <input type="text"
+                   style="display: inline-block; padding-left: 30px; width: 87%;"
+                   cb-money-range
+                   name="preferentialprice"
+                   ng-change="setPreferentialprice()"
+                   class="input-control"
+                   ng-model="baseData.preferentialprice"
+                   data-value-min="0"
+                   range-enabled="true"
+                   data-value-max="{{baseData.$maxPrice}}"
+                   maxlength="11">
+          </div>
+        </div>-->
+        <!--<div class="form-group f-cb">
+          <label class="control-label">应收金额</label>
+          <div class="b-w-8">
+            <div>
+              <span class="input-control readonly" style="border: none; background: none; box-shadow: none;" ng-bind="baseData.$chargeprice | number: 2"></span>
+            </div>
+          </div>
+        </div>-->
+
+        <div class="form-group f-cb f-tac">
+          <span class="final-price-icon">￥</span><span class="final-price" ng-bind="baseData.$chargeprice | number: 2"></span>
+        </div>
+
+        <div><p class="f-tac text-red confirm-info">您确定收款吗？</p></div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="inline-block f-tac" ng-if="!interception">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="interceptionConfirm()" ng-disabled="selectRequired.isPechargeamount() || received.$invalid">确　定</button>　　
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+    </div>
+    <div class="inline-block f-tac" ng-if="interception">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>　　
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+    </div>
+  </div>
+</div>
+
+<!--<script type="text/ng-template" id="orderProductTemplate.html">-->
+  <!--<div>-->
+    <!--开单时，优惠金额的计算公式为：<br>-->
+    <!--优惠金额 = 总计 X 折扣 - 优惠金额 <br>-->
+    <!--当您选择无优惠时：<br>-->
+    <!--折扣为100%，既无折扣<br>-->
+    <!--优惠金额为0-->
+  <!--</div>-->
+<!--</script>-->

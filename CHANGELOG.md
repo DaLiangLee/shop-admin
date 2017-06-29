@@ -8,14 +8,12 @@
 ## versions[1.0.0-rc0]（Date[yyyy-mm-dd]）
 ### Features（新功能）
 ### Bug Fixes（修复bug）
-### Notes（添加新的文件）
+### Notes（说明）
 ```
 
 ## 1.0.0beta1 （2017-05-05）
 
 ### Features
-
-1.
 
 ### Bug Fixes
 

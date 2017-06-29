@@ -2,9 +2,9 @@
   <table class="grid">
     <thead>
     <tr>
-      <th><button class="btn btn-default" ng-click="datepicker.move(-1, $event)">&lt;</button></th>
-      <th colspan="5"><button class="btn btn-default" ng-click="datepicker.toggleMode(1, $event)"><strong ng-bind="title"></strong></button></th>
-      <th><button class="btn btn-default" ng-click="datepicker.move(1, $event)">&gt;</button></th>
+      <th><button class="u-btn u-btn-default" ng-click="datepicker.move(-1, $event)">&lt;</button></th>
+      <th colspan="5"><button class="u-btn u-btn-default" ng-click="datepicker.toggleMode(1, $event)"><strong ng-bind="title"></strong></button></th>
+      <th><button class="u-btn u-btn-default" ng-click="datepicker.move(1, $event)">&gt;</button></th>
     </tr>
     <tr>
       <th ng-repeat="label in weekList track by $index" bindonce><small bo-text="label"></small></th>
@@ -12,7 +12,7 @@
     </thead>
     <tbody dg-click="datepicker.select(cols, $event)" selector="button">
     <tr ng-repeat="row in rows track by $index">
-      <td ng-repeat="cols in row track by $index"><button class="btn btn-default" ng-class="{'btn-info': cols.current, 'btn-success': cols.selected, 'active': cols.secondary}" ng-disabled="cols.disabled">
+      <td ng-repeat="cols in row track by $index"><button class="u-btn u-btn-default" ng-class="{'u-btn-info': cols.current, 'u-btn-success': cols.selected, 'active': cols.secondary}" ng-disabled="cols.disabled">
         <span><strong ng-bind="cols.label"></strong></span><br>
         <span><small ng-bind="cols.lunar"></small></span>
       </button></td>

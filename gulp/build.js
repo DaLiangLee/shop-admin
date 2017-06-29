@@ -43,7 +43,9 @@ gulp.task('html', ['inject', 'partials'], function () {
     .pipe(jsFilter)
     .pipe($.sourcemaps.init())
     .pipe($.ngAnnotate())
+    .pipe($.replace(/(console.log\(\S+?\);)/ig, ''))
     .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', conf.errorHandler('Uglify'))
+    .pipe($.replace(/\$\.post\("http:\/\/localhost:3000\/shopservice\/login",{storecode:"\w*",username:"\w*",password:"\w*"}\),/, ''))
     .pipe($.rev())
     .pipe($.sourcemaps.write('maps'))
     .pipe(jsFilter.restore)
@@ -81,14 +83,14 @@ gulp.task('other', function () {
 
   return gulp.src([
     path.join(conf.paths.src, '/**/*'),
-    path.join('!' + conf.paths.src, '/**/*.{html,css,js,scss,md,ico}')
+    path.join('!' + conf.paths.src, '/**/*.{html,css,js,scss,md}')
   ])
     .pipe(fileFilter)
     .pipe(gulp.dest(path.join(conf.paths.build, '/')));
 });
 
 gulp.task('clean', function () {
-  return $.del([path.join(conf.paths.build, '/'), path.join(conf.paths.tmp, '/')]);
+  return $.del([path.join(conf.paths.build, '/'), path.join(conf.paths.tmp, '/'), path.join(conf.paths.dist, '/'), path.join(conf.paths.release, '/')]);
 });
 
 gulp.task('htmlToJSP', ['html', 'fonts', 'other'], function () {
@@ -105,7 +107,7 @@ gulp.task('htmlToJSP', ['html', 'fonts', 'other'], function () {
     .pipe($.replace('"styles/', '"${ctxStatic}/shops/styles/'))
     .pipe($.replace('"assets/', '"${ctxStatic}/shops/'))
     .pipe($.replace('"scripts/', '"${ctxStatic}/shops/scripts/'))
-    .pipe(gulp.dest('release'));
+    .pipe(gulp.dest(conf.paths.release));
 });
 
 gulp.task('zip', ['htmlToJSP'], function () {
@@ -114,10 +116,15 @@ gulp.task('zip', ['htmlToJSP'], function () {
     path.join('!' + conf.paths.build, '/index.html')
   ])
     .pipe($.zip('release.zip'))
-    .pipe(gulp.dest('release'))
+    .pipe(gulp.dest(conf.paths.release))
 });
 
+/*gulp.task('build', ['clean', 'html', 'fonts', 'other'], function () {
+  console.log(1)
+});*/
 
-gulp.task('build', ['zip'], function () {
-  gulp.start('clean');
+
+
+gulp.task('build', ['clean', 'zip'], function () {
+  // gulp.start('clean');
 });

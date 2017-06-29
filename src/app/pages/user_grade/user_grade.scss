@@ -19,7 +19,7 @@
       border-bottom: 1px solid #ddd;
     }
     tr.even{
-      background-color: #f9f9f9;
+      background-color: #ccc;
     }
     .add{
       border: none;
@@ -29,4 +29,21 @@
       color: #4f9fcf;
     }
   }
+}
+.form-text{
+   width:50%;
+  height:30px;
+  border:1px solid #c0c0c0;
+  padding-left:4px;
+}
+.has-warning{
+  .form-text{
+    border-color: #a94442;
+  }
+}
+.adduser{
+  color: #0d8fe4;
+  font-size:16px;
+  padding:4px;
+  cursor: pointer;
 }

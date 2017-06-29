@@ -3,15 +3,15 @@
   z-index: 100;
   clear: both;
   height: 100%;
-  background: #1a1a1a;
+  background: #fff;
   font-size: 12px;
   min-width: 990px;
 }
 .m-logo{
-  width: 243px;
+  width: 276px;
   height: 100%;
-  margin: 0 25px 0 35px;
-  background: url(../assets/images/logo_white.png) 0 center no-repeat;
+  margin: 0 25px 0 65px;
+  background: url(../assets/images/logo-new.png) 0 center no-repeat;
 }
 .cb-top-bar a {
   text-decoration: none;
@@ -91,10 +91,16 @@
 }
 
 .cb-top-bar .topbar-head {
-  background: #1a1a1a;
   height: 100%;
   position: relative;
   z-index: 3;
+
+  &-storename {
+    color: #000000;
+    font-size: 16px;
+    padding-top: 50px;
+    padding-right: 45px;
+  }
 }
 
 .cb-top-bar .topbar-nav {
@@ -1277,4 +1283,26 @@
 
 .console-topbar-new.console-topbar-new-en .dropdown.open .console-topbar-btn.console-topbar-btn-workorder {
   width: 146px;
+}
+
+.topBar-info{
+  width:100%;
+  height:30px;
+  background:#2787ca;
+  overflow:hidden;
+  padding-right:34px;
+  position: relative;
+  z-index: 5;
+}
+.topBar-info a{
+  color:#fff;
+  font-size: 14px;
+  float: right;
+  display: block;
+  height:30px;
+  line-height:30px;
+  padding-right: 12px;
+}
+.cb-top-bar .topbar-wrap,.cb-top-bar .topbar-info{
+  height:80px;
 }

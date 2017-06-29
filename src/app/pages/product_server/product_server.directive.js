@@ -6,7 +6,124 @@
 
   angular
     .module('shopApp')
+    .directive('serverCategory', serverCategory)
+    .directive('dragItem', dragItem)
     .directive('productServerQuoteDialog', productServerQuoteDialog);
+
+  /** @ngInject */
+  function serverCategory(cbAlert) {
+    return {
+      restrict: "A",
+      replace: true,
+      templateUrl: "app/pages/product_server/server_category.html",
+      scope: {
+        store: "=",
+        step: "=",
+        servername: "=",
+        handler: "&"
+      },
+      link: function(scope){
+        scope.folded = false;
+        scope.category = _.pick(scope.servername, ['servername', 'scateid2']);
+        _.forEach(scope.store, function (subItem) {
+          subItem.$active = subItem.id*1 === scope.category.scateid2*1;
+        });
+        scope.select = function ($event, item) {
+          _.forEach(scope.store, function (subItem) {
+            subItem.$active = false;
+          });
+          item.$active = true;
+          scope.category = {
+            servername: item.catename,
+            scateid2: item.id
+          };
+          scope.folded = true;
+          scope.handler({data: scope.category});
+        };
+        scope.folded = false;
+        scope.params = {
+          catename: ""
+        };
+
+        scope.input = {
+          search: function () {
+            scope.params = {
+              catename: scope.input.name
+            }
+          }
+        };
+        scope.process = {
+          toggle: function () {
+            scope.folded = !scope.folded;
+          }
+        };
+        scope.getServername = function () {
+          if(!_.isEmpty(scope.category.servername)){
+            scope.process.toggle();
+            scope.handler({data: scope.category});
+          }
+        };
+
+        scope.getServername();
+      }
+    }
+  }
+
+  /** @ngInject */
+  function dragItem() {
+    return {
+      restrict: "A",
+      scope: {
+        dragEnd: "&"
+      },
+      link: function(scope, iElement, iAttrs){
+        var parent = iElement.parent();
+        var dragSrcEl = null;
+        var lastDrag = null;
+        iElement.on('dragstart', function (event) {
+          console.log('拖动开始 dragstart');
+          /*拖拽开始*/
+          event.originalEvent.dataTransfer.effectAllowed = "move";
+          event.originalEvent.dataTransfer.setData("index", angular.element(iElement).index());
+          event.originalEvent.dataTransfer.setDragImage(event.target, 0, 0);
+          dragSrcEl = event.target;
+          return true;
+        });
+        iElement.on('dragenter', function (event) {
+          console.log('拖动过程中进入 dragenter')
+          if(dragSrcEl != this){
+            angular.element(this).addClass('drag');
+          }
+          return true;
+        });
+        iElement.on('dragover', function (event) {
+          //console.log('拖动过程中 dragover')
+          /*拖拽元素在目标元素头上移动的时候*/
+          event.preventDefault();
+          event.originalEvent.dataTransfer.dropEffect = 'move';
+          return false;
+        });
+        iElement.on('dragleave', function (event) {
+          console.log('拖动过程中离开 dragleave')
+          /*拖拽元素进入目标元素头上的时候*/
+          angular.element(this).removeClass('drag');
+          return true;
+        });
+        iElement.on('drop', function (event) {
+          console.log('拖动结束 drop')
+          scope.dragEnd({data: {targetIndex: angular.element(this).index(), currentIndex:  event.originalEvent.dataTransfer.getData('index') * 1}});
+          scope.$apply();
+        });
+        iElement.on('dragend', function () {
+          /*拖拽结束*/
+          dragSrcEl = null;
+          lastDrag = null;
+          parent.children().removeClass('drag');
+          return false
+        });
+      }
+    }
+  }
 
   /** @ngInject */
   function productServerQuoteDialog(cbDialog) {

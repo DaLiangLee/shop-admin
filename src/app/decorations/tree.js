@@ -19,17 +19,17 @@
             if (parent) {
                 item.$parent = parent;
                 item.$siblings = function () {
-                  if(!_.isArray(item.$parent.items)){
+                  if(!angular.isArray(item.$parent.items)){
                     return [];
                   }
                   return _.filter(item.$parent.items, function (key) {
-                    return key.$$hashKey != item.$$hashKey;
+                    return key['$$hashKey'] !== item['$$hashKey'];
                   });
                 };
             }
             item.$hasChildren = function () {
                 var subItems = this.$children();
-                return _.isArray(subItems) && subItems.length;
+                return angular.isArray(subItems) && subItems.length;
             };
 
             item.$children = function () {
@@ -37,7 +37,7 @@
             };
             var getFlattenData = function (items) {
                 var result = items || [];
-                _.forEach(items, function (item) {
+                angular.forEach(items, function (item) {
                     result = result.concat(getFlattenData(item.items));
                 });
                 return result;
@@ -76,7 +76,7 @@
             var setCheckState = function (node, checked) {
                 node.$checked = checked;
                 if (node.$hasChildren()) {
-                    _.forEach(node.$children(), function (subNode) {
+                    angular.forEach(node.$children(), function (subNode) {
                         setCheckState(subNode, checked);
                     });
                 }
@@ -105,7 +105,7 @@
             item.$isIndeterminate = function () {
                 return this.$indeterminate;
             };
-            _.forEach(item.$children(), function (subItem) {
+            angular.forEach(item.$children(), function (subItem) {
                 enhanceItem(subItem, childrenName, item);
             });
         };
@@ -120,10 +120,10 @@
          * @returns {*}
          */
         this.enhance = function (items, childrenName) {
-            if (_.isUndefined(childrenName)) {
+            if (angular.isUndefined(childrenName)) {
                 childrenName = 'items';
             }
-            _.forEach(items, function (item) {
+            angular.forEach(items, function (item) {
                 enhanceItem(item, childrenName);
             });
             return items;
@@ -137,7 +137,7 @@
          */
         var setCheckItem = function (item, findItems, findName) {
             item.$setCheckState(_.indexOf(findItems, item[findName]) >= 0);
-            _.forEach(item.$children(), function (subItem) {
+            angular.forEach(item.$children(), function (subItem) {
                 setCheckItem(subItem, findItems, findName);
             });
         };
@@ -153,10 +153,19 @@
             if(!findItems.length){
                 return ;
             }
-            _.forEach(items, function (item) {
+            angular.forEach(items, function (item) {
                 setCheckItem(item, findItems, findName);
             });
         };
+        /**
+         * 获取选中状态的结果
+         * @param items   树形菜单
+         * @param type    id或者item 默认id
+         * @param form    linear或者tree  默认linear
+         */
+        /*this.getCheckState = function (items, type, form) {
+
+        }*/
     }
     /** @ngInject */
     function treeFilter(treeService) {
@@ -175,9 +184,10 @@
                         return scope.$eval(attrs.bfCheckIndeterminate);
                     },
                     function (value) {
-                        _.forEach(element, function (DOM) {
+                        angular.forEach(element, function (DOM) {
                             DOM.indeterminate = value;
                         });
+
                     }
                 );
             }

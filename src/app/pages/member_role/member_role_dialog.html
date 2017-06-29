@@ -7,10 +7,10 @@
         <div alert type="warning" ng-if="alertWarning">
             <p ng-bind="alertWarning"></p>
         </div>
-        <div class="form-group clearfix">
-            <label for="inputEmail3" class="col-sm-3 control-label"><i class="text-danger"><i class="icon-required"></i></i> 角色名称：</label>
-            <div class="col-sm-8">
-                <input type="text" autocomplete="off" id="inputEmail3" class="form-control" ng-model="item.rolename">
+        <div class="form-group f-cb">
+            <label for="inputEmail3" class="b-w-3 control-label"><span class="text-red"><i class="icon-required"></i></span>角色名称：</label>
+            <div class="b-w-8">
+                <input type="text" autocomplete="off" id="inputEmail3" class="input-control" ng-model="item.rolename">
             </div>
         </div>
         <!--<div class="form-group clearfix">
@@ -24,9 +24,7 @@
                 </select>
             </div>
         </div>-->
-        <hr>
-        <h5 class="header"><i class="text-danger"><i class="icon-required"></i></i> 设置权限（至少选择一项）</h5>
-        <hr>
+        <h5 class="header" style="line-height: 40px;border-bottom: 1px solid #efefef;border-top: 1px solid #efefef;"><span class="text-red"><i class="icon-required"></i></span>设置权限（至少选择一项）</h5>
         <div class="w-role">
             <ul class="list">
                 <li bf-template="item.items" ng-repeat="node in $dataSource">
@@ -58,12 +56,12 @@
             <p>编辑此项后，会影响其他账号权限，您确定要编辑吗？</p>
         </div>
         <div class="inline-block margin-right" ng-if="interceptor">
-            <button class="btn btn-warning" ng-click="interceptorConfirm()">确定编辑</button>
-            <button class="btn btn-default" ng-click="close(false)">暂不编辑</button>
+            <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()">确定编辑</button>
+            <button class="u-btn u-btn-default u-btn-sm" ng-click="close(false)">暂不编辑</button>
         </div>
-        <div class="inline-block margin-right" ng-if="!interceptor">
-            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="!item.rolename">确定</button>
-            <button class="btn btn-default" ng-click="close(false)">取消</button>
+        <div class="inline-block f-tac" ng-if="!interceptor">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!item.rolename">确　定</button>　　
+          　<button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
         </div>
     </div>
 </div>

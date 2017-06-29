@@ -1,0 +1,16 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="user.package.list({page:1})">会员中心</a></li>
+    <li class="active">套餐卡账单</li>
+</ol>
+<div class="g-view w-panel user-package-part">
+    <div class="container-fluid">
+        <div cb-access-control="chebian:store:user:package:view" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="panel-header"></div>
+        <div class="panel-body" ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" page-changed="vm.gridModel.pageChanged(page)"></div>
+    </div>
+</div>
+
+<!--
+<span class="state-unread">
+    <a bo-text="item.orderid" ui-sref="user.journal.list({page:1, keyword: item.orderid})"></a>
+    <a bo-text="item.orderid" bo-if="item.tradetype == 0" ui-sref="trade.order.list({page:1, keyword: item.orderid})"></a>
+</span>-->

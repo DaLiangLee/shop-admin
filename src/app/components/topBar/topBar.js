@@ -6,11 +6,20 @@
 
     angular
         .module('shopApp')
-        .directive('cbShopTopbar', cbShopTopbar)
-        .directive('cbShopTopbarSearch', cbShopTopbarSearch);
+        .directive('cbShopTopbar', cbShopTopbar);
+        //.directive('cbShopTopbarSearch', cbShopTopbarSearch);
 
     /** @ngInject */
-    function cbShopTopbar($timeout, $rootScope, viewFrameworkConfigData, configuration){
+    function cbShopTopbar(shopHome, viewFrameworkConfigData, configuration, shophomeService){
+
+        // // 获取sessionStorage中的缓存
+        // function getSessionStorage(item) {
+        //     if (!window.sessionStorage || !sessionStorage.getItem(item)) {
+        //         return;
+        //     }
+        //     return JSON.parse(sessionStorage.getItem(item));
+        // }
+
         /**
          * 默认数据
          * @type {any}
@@ -26,8 +35,14 @@
             },
             templateUrl: "app/components/topBar/topBar.html",
             link: function(scope) {
+
+                shophomeService.getInfo().then(function(results) {
+                    scope.navLinks.storeName = results.data.store.storename;
+                });
+
                 scope.navLinks = DEFAULT_DATA.TOPBAR_DEFAULT_CONS.navLinks;
                 scope.navLinks.user.account = configuration.getUserConfig();
+
                 angular.forEach(scope.navLinks.user.links, function (item) {
                     item.href = configuration.getAPIConfig(true)+item.href;
                 });
@@ -43,7 +58,7 @@
     }
 
     /** @ngInject */
-    function cbShopTopbarSearch($timeout, $window){
+    /*function cbShopTopbarSearch($timeout, $window){
         return {
             restrict: "A",
             scope: {
@@ -91,5 +106,5 @@
                 })
             }
         }
-    }
+    }*/
 })();

@@ -44,7 +44,7 @@
        * bank 16或19位银行卡   格式：16格式为4个（4） 19位格式4个（4）1个（3）
        */
       if(type === 'tel' && regular[type](number)){
-        return number.replace(format, '$1-$2-$3');
+        return number.replace(format, '$1 $2 $3');
       }
       if(type === 'bank' && regular[type](number)){
         return number.length === 16 ? number.replace(format, '$1-$2-$3-$4') : number.replace(format, '$1-$2-$3-$4-$5');

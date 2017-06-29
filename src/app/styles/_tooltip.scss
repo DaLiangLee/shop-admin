@@ -2,7 +2,24 @@
 // Tooltips
 // --------------------------------------------------
 
+//== Tooltips
+//
+//##
+$zindex-tooltip:           1070 !default;
+//** Tooltip max width
+$tooltip-max-width:           200px !default;
+//** Tooltip text color
+$tooltip-color:               #fff !default;
+//** Tooltip background color
+$tooltip-bg:                  #000 !default;
+$tooltip-opacity:             .9 !default;
 
+//** Tooltip arrow width
+$tooltip-arrow-width:         5px !default;
+//** Tooltip arrow color
+$tooltip-arrow-color:         $tooltip-bg !default;
+$font-size-small:  12px !default;
+$border-radius-base:        4px !default;
 // Base class
 .tooltip {
   position: absolute;
@@ -10,12 +27,12 @@
   display: block;
   // Our parent element can be arbitrary since tooltips are by default inserted as a sibling of their target element.
   // So reset our font and text properties to avoid inheriting weird values.
-  @include reset-text;
   font-size: $font-size-small;
 
-  @include opacity(0);
+  opacity: 0;
+  filter: alpha(opacity=0);
 
-  &.in     { @include opacity($tooltip-opacity); }
+  &.in     { opacity: .9;  filter: alpha(opacity=90); }
   &.top    { margin-top:  -3px; padding: $tooltip-arrow-width 0; }
   &.right  { margin-left:  3px; padding: 0 $tooltip-arrow-width; }
   &.bottom { margin-top:   3px; padding: $tooltip-arrow-width 0; }
@@ -62,6 +79,13 @@
     bottom: 0;
     left: $tooltip-arrow-width;
     margin-bottom: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width $tooltip-arrow-width 0;
+    border-top-color: $tooltip-arrow-color;
+  }
+  &.right-top .tooltip-arrow {
+    top: 50%;
+    right: 0;
+    margin-bottom: $tooltip-arrow-width;
     border-width: $tooltip-arrow-width $tooltip-arrow-width 0;
     border-top-color: $tooltip-arrow-color;
   }

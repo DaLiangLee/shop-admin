@@ -1,0 +1,12 @@
+<div class="w-remark">
+    <div class="w-remark-note"><i class="w-icon-note" ng-click="config.toggleRemark()" ng-class="{true: 'icon-doc_empty' , false: 'icon-doc_fill'}[config.emptyRemark]"></i></div>
+    <div class="w-remark-content f-cb" ng-show="config.isRemarkShow">
+        <div class="w-remark-input f-fl">
+            <input type="text" class="input-control" ng-model="config.remarkContent" cb-string-range value-max="20" placeholder="请输入备注">
+        </div>
+        <!--<button class="w-remark-btn w-remark-confirm f-fl" ng-click="config.confirm(config.remarkContent)">确 定</button>-->
+        <!--<button class="w-remark-btn w-remark-cancel f-fl" ng-click="config.cancel()">取 消</button>-->
+        <i class="w-remark-btn w-remark-confirm icon-confirm f-fl" ng-click="config.confirm(config.remarkContent)"></i>
+        <i class="w-remark-btn w-remark-cancel icon-cancel f-fl" ng-click="config.cancel()"></i>
+    </div>
+</div>

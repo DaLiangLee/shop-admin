@@ -15,7 +15,12 @@
     </div>-->
     <div class="clearfix">
       <div class="list brands">
-        <input type="text" placeholder="搜索大写首字母或品牌名称" ng-model="searchText" ng-change="firsthandle(searchText)">
+        <div class="input-group">
+          <input type="text" class="input-control" placeholder="输入品牌/首字母" ng-model="searchText" ng-change="firsthandle(searchText)">
+          <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+        </div>
         <div class="items">
           <ul class="list-unstyled">
             <li ng-repeat="item in brandList track by $index" ng-class="{'open': item.$open}">
@@ -98,7 +103,6 @@
                      ng-model="item.$checked"
                      ng-checked="item.$checked"
                      ng-change="item.$setCheckState(item.$checked)" style="vertical-align:middle; margin-top:0;">
-
               <span ng-bind="item.model"></span>
             </li>
           </ul>
@@ -115,7 +119,4 @@
         </div>
       </div>
     </div>
-    <!--<div>-->
-      <!--<button ng-click="save()">保存</button>-->
-    <!--</div>-->
 </div>

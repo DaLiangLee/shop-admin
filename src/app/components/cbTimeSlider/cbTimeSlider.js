@@ -22,7 +22,6 @@
       },
       templateUrl: "app/components/cbTimeSlider/cbTimeSlider.html",
       link: function(scope, iElement, iAttrs){
-        console.log(iElement);
         var min = iAttrs.min * 1,
             max = iAttrs.max * 1,
             pWdith = iElement.width(),
@@ -50,7 +49,6 @@
          * @type {number}
          */
         minWidth = min === 0 ? 0 : Math.ceil(min/max*maxWidth);
-        console.log(minWidth, scope.value/max*maxWidth);
 
         /**
          * 当前位置
@@ -76,8 +74,6 @@
             // 当前位置
             var position = event.pageX - disX;
 
-            console.log('left', position, minWidth,maxWidth);
-
             // 不能小于最小移动距离 不能大于最大移动距离
             if(position < minWidth){
               position = minWidth;
@@ -93,7 +89,6 @@
              *
              * 当前值 = 当前位置/最大移动距离*最大值
              */
-            console.log(Math.ceil(position/maxWidth*max));
 
             _this.css({left: position});
             scope.$apply(function(){
@@ -101,7 +96,7 @@
               scope.move({data: {value: Math.ceil(position/maxWidth*max),type: "move"}});
             });
           });
-          $document.on('mouseup.slider', function(event){
+          $document.on('mouseup.slider', function(){
             $document.off('.slider');
             scope.$apply(function(){
               scope.down({data: 3,type: "up"});

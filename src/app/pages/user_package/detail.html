@@ -1,0 +1,65 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="user.package.list({page:1})">会员中心</a></li>
+    <li><a ui-sref="user.package.list({page:1})">套餐卡账单</a></li>
+    <li class="active">套餐卡消费明细</li>
+</ol>
+<div class="g-view w-panel user-package-part">
+    <div class="container-fluid ">
+        <div class="panel-header" cb-access-control="chebian:store:user:package:view" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+        <div class="m-user-package f-cb">
+            <div class="user-info f-fl">
+                <div class="f-fl user-images">
+                    <img ng-src="{{vm.userModel.avatar}}" alt="">
+                </div>
+                <div class="f-fl user-account">
+
+                    <p class="user-name" ng-bind="vm.userModel.realname"></p>
+                    <p class="tel-number" ng-bind="vm.userModel.mobile"></p>
+
+                </div>
+            </div>
+            <div class="package-info f-fl">
+                <div class="detail-text f-cb">
+                    <h4 class="f-fl" ng-bind="vm.userpackage.packagename"></h4>
+                    <span class="package-status f-fl" ng-bind="vm.userpackage.$packageState | formatStatusFilter : 'packageState'" ng-class="{'vaild':vm.userpackage.$packageState==0,'finished':vm.userpackage.$packageState ==1,'expired':vm.userpackage.$packageState==2}"></span>
+                </div>
+                <div class="detail-time">
+                    <p class="f-fl">剩余时间&nbsp;<span class="time-left" ng-bind="vm.userpackage.expireDay | timeState : 'time'"></span></p>
+                    <p class="end-time f-fl" ng-if="vm.userpackage.expire">至&nbsp;<span ng-bind="vm.userpackage.expire | timeState : 'date'" ng-class="{'warning':vm.userpackage.$packageState==2}"></span></p>
+                </div>
+                <div class="detail-event f-fl">
+                    <a ng-if="vm.userpackage.expire && vm.userpackage.$packageState != 1" class="u-btn-link" user-package-dialog item="vm.userpackage" item-handler="vm.userpackageHandler(data)" style="cursor: pointer">延长时间</a>
+                </div>
+            </div>
+            <div class="package-detail f-fl">
+                <table>
+                    <thead>
+                    <tr>
+                        <td>类型</td>
+                        <td>名称</td>
+                        <td>包含数量</td>
+                        <td>剩余数量</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in vm.packageDetail" bindonce="">
+                        <td bo-bind="item.type | formatStatusFilter : 'packageType'"></td>
+                        <td bo-bind="item.name"></td>
+                        <td bo-bind="item.oldnum"></td>
+                        <td bo-bind="item.num"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <br>
+        <div class="panel-body" ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" request-params="vm.gridModel.requestParams" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
+        <!--<div class="f-tac">
+            <button type="button" class="u-btn u-btn-disabled u-btn-sm" cb-back-button="{'name':'user.debitcard.list','params':{'page': 1}}" data-router="user.debitcard.detail">返　回</button>
+        </div>-->
+    </div>
+    <div class="package-dialog-box" ng-if="vm.extendTime.isShowDialog" package-dialog hide-dialog="vm.extendTime.hideDialog()" extend-date="{{vm.extendTime.extendDate}}" extend-time="{{vm.extendTime.timeLeft}}" change-data="vm.extendTime.changeData(data)">
+        {{vm.extendTime.packageName}}
+    </div>
+</div>

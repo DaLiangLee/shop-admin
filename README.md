@@ -45,11 +45,11 @@ $ npm e2e
    
 ## 技术栈
 
- 1. angular v1.2.29
-  1.1 angular-cookies v1.2.29
-  1.2 angular-animate v1.2.29
-  1.3 angular-sanitize v1.2.29
-  1.4 angular-ui-router v0.2.15
+ 1. angular v1.2.29 
+ 1.1 angular-cookies v1.2.29
+ 1.2 angular-animate v1.2.29
+ 1.3 angular-sanitize v1.2.29
+ 1.4 angular-ui-router v0.2.15
  2. jquery v1.11.3
  3. gulp 
  4. bower

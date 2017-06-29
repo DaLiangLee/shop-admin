@@ -13,6 +13,8 @@
 .f-tal{text-align: left;}
 .f-tac{text-align: center;}
 .f-tar{text-align: right;}
+.f-fwb{font-weight: bold;}
+.f-curp{cursor: pointer;}
 .f-st{font-family:\5b8b\4f53,"SimSun", "宋体";}
 .f-fz16{font-size: 16px;}
 .f-fz18{font-size: 18px;}
@@ -21,3 +23,14 @@
 .f-fz30{font-size: 30px;}
 .f-show{display: block !important;}
 .f-hide{display: none !important;}
+.close {
+  float: right;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  cursor: pointer;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .2;
+  filter: alpha(opacity=20);
+}

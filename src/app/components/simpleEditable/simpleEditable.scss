@@ -7,15 +7,17 @@
   }
   .editable-panel{
     display: none;
-    .form-control{
-
+    .input-control{
+      position: relative;
+      min-width: 150px;
     }
   }
   .editable-group{
     width: 100%;
     text-align: right;
     height: 20px;
-    span{
+    margin-top: -1px;
+    button{
       display: inline-block;
       vertical-align: top;
       width: 30px;
@@ -23,6 +25,7 @@
       border: 1px solid #ccc;
       cursor: pointer;
       color: #e71e28;
+      background-color: #fff;
       i{
         font-size: 14px;
       }
@@ -30,10 +33,16 @@
         border-right: 0;
         color: #337ab7;
       }
+      &[disabled]{
+        opacity: .7;
+        filter: alpha(opacity=70);
+        cursor: not-allowed;
+      }
     }
   }
   &.open{
     position: absolute;
+    z-index: 999;
     .editable-panel{
       display: block;
     }

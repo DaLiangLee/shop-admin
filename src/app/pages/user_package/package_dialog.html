@@ -1,0 +1,49 @@
+<div class="m-package-dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+      <h5 class="modal-title">延长时间</h5>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" name="package" novalidate autocomplete="off"  role="form">
+          <h5 class="package-name f-tac" ng-bind="item.packagename"></h5>
+          <!--<div class="form-group f-cb">-->
+            <!--<label class="control-label">剩余天数:</label>-->
+            <!--<div class="b-w-8">-->
+              <!--<p  class="input-control readonly" style="border: none; background: none; box-shadow: none;"><span ng-bind="item.$expireDay"></span> 天（包括今天）</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <div class="form-group f-cb">
+            <!--<label class="control-label">延长天数:</label>-->
+            <!--<div class="b-w-8">-->
+              <!--<div class="input-group">-->
+                  <!--延长天数:-->
+                <!--<input type="text" class="input-control" name="time" ng-model="config.time" ng-change="config.changetime()" placeholder="请输入天数" ng-required="true" cb-number-range maxlength="5">-->
+                <!--<span class="input-addon" style="right: -20px; top: 8px;">天</span>-->
+              <!--</div>-->
+              <!--<p ng-if="config.time">-->
+                <!--至&nbsp;<span ng-bind="config.extendDate"></span>-->
+              <!--</p>-->
+            <!--</div>-->
+          <!--</div>-->
+              <div>
+                  <div class="f-tac">
+                      <span>延长天数：</span>
+                      <input type="text" class="input-control" name="time" ng-model="config.time" ng-change="config.changetime()" ng-required="true" cb-number-range maxlength="5">
+                      <span>&nbsp;天</span>
+                  </div>
+                  <div class="package-extend">
+                      <p ng-show="config.time" class="f-tac">
+                          至&nbsp;<span ng-bind="config.extendDate"></span>
+                      </p>
+                  </div>
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm confirm" ng-click="confirm()" ng-disabled="package.$invalid">确　定</button>　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+        </div>
+    </div>
+</div>

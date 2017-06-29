@@ -1,14 +1,13 @@
 <div class="viewFramework-select-license">
   <div class="clearfix">
-    <div class="pull-left">
+    <div class="f-fl">
       <div simple-select="name,name" store="selectModel1.store" select="selectModel1.select" select-handler="selectModel1.handler(data)"></div>
     </div>
-    <div class="pull-left">
+    <div class="f-fl">
       <div simple-select="name,name" store="selectModel2.store" select="selectModel2.select" select-handler="selectModel2.handler(data)"></div>
     </div>
-    <div class="pull-left">
-      <input type="text" class="form-control" ng-model="selectModel3.text" cb-input-license="has-error" name="stock" placeholder="请输入车牌号码" cb-placeholder="" ng-blur="selectModel3.handler()" autocomplete="off">
+    <div class="f-fl">
+      <input type="text" class="input-control" ng-model="selectModel3.text" cb-input-license="has-error" name="stock" placeholder="请输入车牌号码" cb-placeholder="" ng-blur="selectModel3.handler()" autocomplete="off">
     </div>
   </div>
 </div>
-

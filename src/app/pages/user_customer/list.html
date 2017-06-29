@@ -2,18 +2,35 @@
   <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
   <li class="active">会员管理</li>
 </ol>
+<div class="w-tabs">
+  <ul class="tabs-nav f-cb">
+    <li class="active"><a href="javascript:;" class="text-muted text-success">按会员</a></li>
+    <li><a ui-sref="user.motor.list({page:1})" class="text-muted">按车辆</a></li>
+  </ul>
+</div>
+<br>
 <div class="g-view">
-  <div class="container-fluid">
-    <div class="w-tabs">
-      <ul class="tabs-nav f-cb">
-        <li class="active"><a href="javascript:;" class="text-muted text-success">按会员</a></li>
-        <li><a ui-sref="user.motor.list({page:1})" class="text-muted">按车辆</a></li>
-      </ul>
-    </div>
-    <br>
-    <div cb-access-control="chebian:store:user:customer:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
-    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)" request-params="vm.gridModel.requestParams"></div>
+  <div class="container-fluid" style="min-width:1030px;">
+    <div cb-access-control="chebian:store:user:customer:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"  class="b-tab-bor"></div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)" request-params="vm.gridModel.requestParams" import-params="vm.gridModel.importParams"></div>
 
     <div ng-if="vm.gridModel2.columns.length && vm.gridModel.itemList" simple-grid columns="vm.gridModel2.columns" store="vm.gridModel2.itemList" loading-state="vm.gridModel2.loadingState" config="vm.gridModel2.config"></div>
   </div>
 </div>
+
+<script type="text/ng-template" id="marktingPackageInfo.html">
+    <div class="package-info-detail">
+        <table>
+            <tr>
+                <th class="info-header">套餐卡名称</th>
+                <th class="info-header"></th>
+            </tr>
+            <tr ng-repeat="item in templateData" bindonce="templateData" ng-if="templateData.length" class="info-body">
+                <td bo-bind="item.packagename" class="info-item"></td>
+                <td class="info-item">
+                    <a ui-sref="user.package.detail({userpackageid: item.id, mobile: item.mobile,timeleft:item.timeleft,expirationtime:item.expire,packagestate:item.status})" class="u-btn-link">查看详情</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</script>

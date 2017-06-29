@@ -22,8 +22,8 @@
       <p>您确定要修改价格吗？</p>
     </div>
     <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定修改</button>
-      <button class="btn btn-default" ng-click="close(false)">暂不修改</button>
+      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定</button>
+      <button class="btn btn-default" ng-click="close(false)">取消</button>
     </div>
     <div class="inline-block margin-right" ng-if="!interceptor">
       <button class="btn btn-primary" ng-click="confirm()" ng-disabled="price.$invalid">确定</button>

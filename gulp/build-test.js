@@ -6,7 +6,7 @@ var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
 var conf = require('./conf');
-//var pngquant = require('imagemin-pngquant');
+// var pngquant = require('imagemin-pngquant');
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
@@ -88,9 +88,9 @@ gulp.task('cleanTest', function () {
   return $.del([path.join(conf.paths.dist, '/')]);
 });
 
-/*
+
 gulp.task('images', function () {
-  return gulp.src([path.join(conf.paths.src, '/assets/images/!*.+(png|jpg|gif|svg)*')])
+  return gulp.src([path.join(conf.paths.src, '/assets/images/*.+(png|jpg|gif|svg)*')])
     .pipe($.imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
@@ -98,6 +98,6 @@ gulp.task('images', function () {
     }))
     .pipe(gulp.dest('images'));
 });
-*/
+
 
 gulp.task('buildTest', ['htmlTest', 'fontsTest', 'otherTest']);

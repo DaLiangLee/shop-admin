@@ -1,0 +1,94 @@
+.w-remark {
+  &-note {
+    i {
+      cursor: pointer;
+      &:hover {
+        color: #555;
+      }
+    }
+  }
+
+  .icon-doc_fill {
+    color: #6491fe;
+  }
+
+  &-content {
+    padding: 5px;
+    border: 1px solid #dadada;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.15), 1px 0 6px rgba(0,0,0,0.1);
+    position: relative;
+
+    &:before {
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      top: 14px;
+      left: 100%;
+      border-top: 8px solid transparent;
+      border-left: 9px solid #a9a9a9;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+
+    &:after {
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      top: 14px;
+      left: 100%;
+      border-top: 8px solid transparent;
+      border-left: 8px solid #FFFFFF;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+  }
+
+  &-input {
+    width: 337px;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #000000;
+
+    .input-control {
+      border-color: transparent;
+      border-radius: 0;
+      border-bottom-color: #68b9ee;
+      border-bottom-width: 2px;
+      padding-left: 1px;
+      box-shadow: none;
+    }
+
+    & input.input-control:focus {
+      box-shadow: none;
+      border-bottom-color: darken(#68b9ee, 10%);
+    }
+  }
+
+  ::placeholder {
+    color: #cccccc;
+  }
+
+  &-btn {
+    padding: 7px 5px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  &-confirm {
+    color: #68b9ee;
+
+    &:hover {
+      color: darken(#3aa3ff, 10%);
+    }
+  }
+  &-cancel {
+    color: #999;;
+    &:hover {
+      color: darken(#555, 10%);
+    }
+  }
+}

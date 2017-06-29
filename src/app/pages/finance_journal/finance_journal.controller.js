@@ -9,7 +9,7 @@
     .controller('FinanceJournalListController', FinanceJournalListController);
 
   /** @ngInject */
-  function FinanceJournalListController($state, cbAlert, financeJournal, financeJournalConfig, computeService, configuration) {
+  function FinanceJournalListController($state, cbAlert, financeJournal, financeJournalConfig, computeService) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -20,31 +20,7 @@
      *
      */
     var propsParams = {
-      statusItem: function (item) {
-        var tips = item.status === "0" ? '是否确认启用该活动？' : '是否确认禁用该活动？';
-        cbAlert.ajax(tips, function (isConfirm) {
-          if (isConfirm) {
-            item.status = item.status === "0" ? "1" : "0";
-            var items = _.pick(item, ['guid', 'status']);
-            marktingDebitcard.saveorupdate(items).then(function (results) {
-              if (results.data.status == '0') {
-                cbAlert.success('修改成功');
-                getList(params);
-                var statusTime = $timeout(function () {
-                  cbAlert.close();
-                  $timeout.cancel(statusTime);
-                  statusTime = null;
-                }, 1200, false);
-                getList(currentParams);
-              } else {
-                cbAlert.error(results.data.data);
-              }
-            });
-          } else {
-            cbAlert.close();
-          }
-        }, "", 'warning');
-      }
+
     };
 
     /**
@@ -52,11 +28,67 @@
      *
      */
     vm.gridModel = {
-      columns: _.clone(financeJournalConfig.DEFAULT_GRID.columns),
+      columns: _.clone(financeJournalConfig().DEFAULT_GRID.columns),
       itemList: [],
-      config: _.merge(financeJournalConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
-      loadingState: true      // 加载数据
+      config: _.merge(financeJournalConfig().DEFAULT_GRID.config, {propsParams: propsParams}),
+      loadingState: true,      // 加载数据
+      pageChanged: function (data) {    // 监听分页
+        var page = angular.extend({}, currentParams, {page: data});
+        $state.go(currentStateName, page);
+      },
+      sortChanged: function (data) {
+        var orders = [];
+        angular.forEach(data.data, function (item, key) {
+          orders.push({
+            "field": key,
+            "direction": item
+          });
+        });
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        getList(order);
+      }
     };
+
+    var DEFAULT_SEARCH = _.cloneDeep(financeJournalConfig().DEFAULT_SEARCH);
+    var searchModel = _.chain(_.clone(currentParams)).tap(function (value) {
+      _.forEach(_.pick(value, ['journalmoney0', 'journalmoney1']), function (item, key) {
+        !_.isUndefined(item) && (value[key] = computeService.pullMoney(item));
+      });
+    }).value();
+
+    /**
+     * 搜索操作
+     */
+    vm.searchModel = {
+      'config': DEFAULT_SEARCH.config(searchModel),
+      'handler': function (data) {
+        var items = _.find(DEFAULT_SEARCH.journaltime, function (item) {
+          return item.id === data.journaltime0*1;
+        });
+        if (angular.isDefined(items)) {
+          data.journaltime1 = undefined;
+        }
+        var search = _.chain(data).tap(function (value) {
+          _.forEach(_.pick(value, ['journalmoney0', 'journalmoney1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] = computeService.pushMoney(item));
+          });
+        }).value();
+
+        _.chain(currentParams).tap(function (value) {
+          _.forEach(_.pick(value, ['journalmoney0', 'journalmoney1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] *= 1);
+          });
+        }).value();
+        // 如果路由一样需要刷新一下
+        if(angular.equals(currentParams, search)){
+          $state.reload();
+        }else{
+          search.page = '1';
+          $state.go(currentStateName, search);
+        }
+      }
+    };
+
 
     /**
      * 获取列表
@@ -72,9 +104,6 @@
       financeJournal.search(params).then(function (results) {
         var result = results.data;
         if (result.status == 0) {
-          _.forEach(result.data, function (item) {
-            item.journalmoney = computeService.pullMoney(item.journalmoney);
-          });
           vm.gridModel.itemList = result.data;
           vm.gridModel.loadingState = false;
           vm.gridModel.paginationinfo = {
@@ -82,12 +111,6 @@
             pageSize: params.pageSize,
             total: result.totalCount
           };
-          _.forEach(result.message, function (value, key, obj) {
-            console.log(arguments);
-            if(value > 0){
-              obj[key] = computeService.pullMoney(value);
-            }
-          });
           vm.gridModel.config.propsParams.message = _.merge(result.message, {totalCount: result.totalCount});
         } else {
           cbAlert.error("错误提示", result.data);

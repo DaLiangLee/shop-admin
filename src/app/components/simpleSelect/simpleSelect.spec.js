@@ -39,22 +39,30 @@ describe('Unit: Directive Test', function () {
       {"id":"23","group":"B","name":"比亚迪","logo":"/motor/logo/B_BiYaDi.png"},
       {"id":"24","group":"B","name":"标致","logo":"/motor/logo/B_BiaoZhi.png"}
     ];
+    element = $compile('<div simple-select="id,name" store="list" select="select"></div>')($rootScope);
+    $rootScope.$digest();
   }));
 
   /**
    * 测试代码
    */
 
-  // a single test example, check the produced DOM
-  it('should produce 2 buttons and a div', function() {
-
-    $rootScope.select = "2";
-    // inject allows you to use AngularJS dependency injection
-    // to retrieve and use other services
-    element = $compile('<div simple-select="id,name" store="list" select="select"></div>')($rootScope);
-    // $digest is necessary to finalize the directive generation
-    //$digest 方法对于生成指令是必要的。
+  // 获取li长度
+  it('init 获取li长度', function() {
+    expect(element.find('li').length).toEqual(24);
+  });
+  // 设置正确的值 预期：取到id为2的name是Arash
+  it('set select correctly', function() {
+    $rootScope.select = '2';  // 注意值要和数据里面值对应，全等
     $rootScope.$digest();
-    expect(element.find('.text span').text()).toEqual("AC Schnitzer");
+    expect(element.find('li.active span').text()).toEqual("Arash");
+  });
+  // 设置错误的值 预期：什么都没有
+  it('sets select error', function() {
+    $rootScope.select = '0';
+    $rootScope.$digest();
+    expect(element.find('li.active span').text()).toEqual("");
+    expect(element.find('li.active').length).toEqual(0);
+
   });
 });

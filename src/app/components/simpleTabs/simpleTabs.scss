@@ -1,4 +1,5 @@
 .w-tabs{
+  padding-left: 14px;
   .tabs-nav{
     li{
       position: relative;
@@ -13,12 +14,14 @@
       }
     }
     a{
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 18px;
+      //font-weight: bold;
+      font-family: 'Arial', 'Microsoft YaHei';
       color: #333;
       position: relative;
+      text-decoration: none;
       display: block;
-      padding: 10px 15px;
+      padding: 12px 15px;
       margin-right: 2px;
       line-height: 1.42857143;
       border-bottom: 2px solid transparent;

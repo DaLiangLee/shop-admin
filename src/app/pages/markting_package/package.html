@@ -1,0 +1,40 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="user.package.list({page:1})">营销中心</a></li>
+    <li class="active">套餐卡管理</li>
+</ol>
+<!--<div class="w-tabs">-->
+    <!--<ul class="tabs-nav f-cb">-->
+        <!--<li ui-sref-active="active"><a ui-sref="markting.package.list({page: 1, status: 1})" class="text-muted">在售</a></li>-->
+        <!--<li ui-sref-active="active"><a ui-sref="markting.package.list({page: 1, status: 0})" class="text-muted">停售</a></li>-->
+    <!--</ul>-->
+<!--</div>-->
+<!--<br>-->
+
+<div class="g-view markting-package-part">
+    <div class="container-fluid" style="min-width:1148px;">
+
+        <div class="panel-body" ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
+             pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
+             config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
+
+    </div>
+    <br>
+    <br>
+</div>
+
+<script type="text/ng-template" id="marktingPackageInfo.html">
+    <div id="package-info">
+        <table>
+            <tr>
+                <th class="info-header">类型</th>
+                <th class="info-header">名称</th>
+                <th class="info-header">包含数量</th>
+            </tr>
+            <tr ng-repeat="item in templateData" bindonce="templateData" ng-if="templateData.length" class="info-body">
+               <td bo-bind="item.type" class="info-item"></td>
+               <td bo-bind="item.name" class="info-item"></td>
+               <td bo-bind="item.num" class="info-item"></td>
+            </tr>
+        </table>
+    </div>
+</script>

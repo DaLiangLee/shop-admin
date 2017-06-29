@@ -50,3 +50,54 @@
     }
   }
 }
+
+.total{ overflow:hidden;padding:20px 0;}
+.total li{float:left;overflow:hidden; font-size:14px; line-height:30px; color:#333;list-style: none;padding-right:20px;}
+.total p label,.total p strong{float:left;}
+.total p{overflow:hidden;}
+.total p label{font-weight:normal;color:#000;font-size: 16px;}
+.total p strong{text-align: right; min-width:80px;font-weight:normal;}
+.total p label{width:148px; border-bottom:1px solid #ccc;}
+.total .sum strong{font-weight:bold;}
+.total .sum label{font-size:20px;font-weight:bold;}
+.total .col-red{color:red;}
+
+
+.journaltype{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 18px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  &.journaltype0{
+    color: #038ae3;
+    border-color: #038ae3;
+  }
+  &.journaltype1{
+    color: #ff0000;
+    border-color: #ff0000;
+  }
+  &.journaltype2{
+    color: #32ad38;
+    border-color: #32ad38;
+  }
+  &.trade-icon {
+    position: absolute;
+    top: 0;
+  }
+}
+
+
+.finance-details {
+  margin-left: 25px;
+
+  &-wrapper {
+    min-width: 150px;
+    position: relative;
+    max-width: 90%;
+  }
+}

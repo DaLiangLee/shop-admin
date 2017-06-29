@@ -20,7 +20,6 @@
   function simpleSelectVehicle($filter, $timeout, $window, vehicleSelection) {
     function getSeriesTitle(collection, target){
       var regular = new RegExp('^'+target);
-      console.log(regular.test(collection));
       return regular.test(collection) ? collection : target + " " + collection;
     }
     /**
@@ -30,18 +29,17 @@
      * @param item
      */
     var setFormatData = function(level, data, item){
-      console.log('setFormatData', level, data, item);
       _.forEach(data, function(value){
-        value.$$level = level;
-        if(!value.$$title && value.$$level == 1){
+        value.$level = level;
+        if(!value.$$title && isCompareId(value.$level, 1)){
           value.$$title = value.brand;
-        }else if(!value.$$title && value.$$level == 2){
+        }else if(!value.$$title && isCompareId(value.$level, 2)){
           value.$$title = getSeriesTitle(value.series, item.brand);
-        }else if(!value.$$title && value.$$level == 3){
+        }else if(!value.$$title && isCompareId(value.$level, 3)){
           value.$$title = item.$$title +" "+ value.year;
-        }else if(!value.$$title && value.$$level == 4){
+        }else if(!value.$$title && isCompareId(value.$level, 4)){
           value.$$title = item.$$title +" "+ value.output;
-        }else if(!value.$$title && value.$$level == 5){
+        }else if(!value.$$title && isCompareId(value.$level, 5)){
           value.$$title = value.model;
         }
         if(angular.isUndefined(value.logo)){
@@ -53,35 +51,38 @@
         if(angular.isUndefined(value.brand)){
           value.brand = item.brand;
         }
-        if(angular.isUndefined(value.brandid) && value.$$level == 1){
+        if(angular.isUndefined(value.brandid) && isCompareId(value.$level, 1)){
           value.brandid = value.id;
         }else{
           value.brandid = item.brandid;
         }
-        if(angular.isUndefined(value.seriesid) && value.$$level > 1){
+        if(isCompareId(value.$level,2)){
+          value.seriesid = value.id;
+        }
+        if(angular.isUndefined(value.seriesid) && value.$level > 2){
           if(item && item.seriesid){
             value.seriesid = item.seriesid
           }else{
             value.seriesid = value.id;
           }
         }
-        if(angular.isUndefined(value.series) && value.$$level > 1){
+        if(angular.isUndefined(value.series) && value.$level > 1){
           value.series = item.series;
         }
-        if(angular.isUndefined(value.yearid) && value.$$level > 2){
+        if(angular.isUndefined(value.yearid) && value.$level > 2){
           if(item && item.yearid){
             value.yearid = item.yearid
           }else{
             value.yearid = value.id;
           }
         }
-        if(angular.isUndefined(value.year) && value.$$level > 2){
+        if(angular.isUndefined(value.year) && value.$level > 2){
           value.year = item.year;
         }
-        if(angular.isUndefined(value.output) && value.$$level > 3){
+        if(angular.isUndefined(value.output) && value.$level > 3){
           value.output = item.output;
         }
-        if(angular.isUndefined(value.outputid) && value.$$level > 3){
+        if(angular.isUndefined(value.outputid) && value.$level > 3){
           if(item && item.outputid){
             value.outputid = item.outputid
           }else{
@@ -92,15 +93,22 @@
       return data;
     };
 
+    /**
+     * 比较id
+     * @param comparator
+     * @param compared
+     * @returns {boolean}
+     */
+    function isCompareId(comparator, compared){
+      return comparator*1 === compared*1
+    }
     return {
       restrict: "A",
       scope: {
         select: "="
       },
       templateUrl: "app/components/simpleSelectVehicle/simpleSelectVehicle.html",
-      link: function (scope, iElement, iAttrs) {
-        console.log(1);
-
+      link: function (scope) {
         /**
          * 缓存数组
          * @type {Array}
@@ -117,24 +125,56 @@
           scope.select && getSelect(scope.select);
         });
 
-
         /**
          * 设置数据
          */
-        function getSelect() {
-
+        function getSelect(data) {
+          scope.selectitle = data.$$title;
+          selecthandle(2, data, 'series', 'seriesList', function () {
+            _.forEach(scope.seriesList, function (item) {
+              if(isCompareId(item.id, data.seriesid)){
+                item.$$open = true;
+                item.items = undefined;
+                return false;
+              }
+            });
+          });
+          selecthandle(3, data, 'year', 'yearList', function () {
+            _.forEach(scope.yearList, function (item) {
+              if(isCompareId(item.id, data.yearid)){
+                item.$$open = true;
+                item.items = undefined;
+                return false;
+              }
+            });
+          });
+          selecthandle(4, data, 'output', 'outputList', function () {
+            _.forEach(scope.outputList, function (item) {
+              if(isCompareId(item.id, data.outputid)){
+                item.$$open = true;
+                item.items = undefined;
+                return false;
+              }
+            });
+          });
+          selecthandle(5, data, 'model', 'modelList', function () {
+            _.forEach(scope.modelList, function (item) {
+              if(isCompareId(item.modelid, data.modelid)){
+                item.$$open = true;
+                item.items = undefined;
+                scope.selectitle = item.$$title;
+                return false;
+              }
+            });
+          });
+          _.forEach(scope.brandList, function (item) {
+            if(isCompareId(item.id, data.brandid)){
+              item.$$open = true;
+              item.items = undefined;
+              return false;
+            }
+          });
         }
-
-        /**
-         * 设置列表
-         * 自动去重排序返回一个新列表
-         * @param list
-         */
-        function setList(list) {
-          scope.list.push(list);
-          scope.list = _.sortBy(_.uniq(scope.list), 'brandid');
-        }
-
 
         var clearSubkeys = {
           'series': function () {
@@ -189,27 +229,30 @@
           }
         };
         scope.selectitle = "";
-        scope.selecthandle = function (level, item, type, listType) {
+        scope.selecthandle = function (level, item, type, listType, callback) {
+          selecthandle(level, item, type, listType, callback);
+          scope.selectitle = item.$$title;
+          item.$$open = !item.$$open;
+        };
+
+        function selecthandle(level, item, type, listType, callback) {
           if(level === 6){
             _.forEach(scope.modelList, function (key) {
               key.$$open = false;
             });
-            console.log(6,item);
             scope.select = item;
           }else{
+            scope.select = undefined;
             _.forEach(clearSubkeys[type](), function (key) {
               key.$$open = false;
             });
-
             if (angular.isArray(item.items)) {
               scope[listType] = item.items;
             } else {
-              loadingSubData(level, item, type, listType);
+              loadingSubData(level, item, type, listType, callback);
             }
           }
-          scope.selectitle = item.$$title;
-          item.$$open = !item.$$open;
-        };
+        }
 
         /**
          * 加载子数据
@@ -245,21 +288,52 @@
           searchData: {}
         };
 
-        /**
-         * 获取结果数据
-         * @param data
-         */
-        function getResults(data) {
-          var result = angular.copy(data);
-          /*_.forEach(data, function (item) {
-            if (!brand[item.brandid]) {
-              brand[item.brandid] = [];
+        // 车型选择组件中输入车型的首字母或汉字无法查询
+        scope.searchSeries = {
+          searchText: "",
+          firsthandle: function(){
+            this.searchData = {
+              series: this.searchText
             }
-            brand[item.brandid].push(item);
-          });*/
-          console.log(result);
-          return result;
-        }
+          },
+          searchData: {}
+        };
+
+
+
+        // 车型选择组件中输入车型的首字母或汉字无法查询
+        scope.searchYear = {
+          searchText: "",
+          firsthandle: function(){
+            this.searchData = {
+              year: this.searchText
+            }
+          },
+          searchData: {}
+        };
+
+
+        // 车型选择组件中输入车型的首字母或汉字无法查询
+        scope.searchOutput = {
+          searchText: "",
+          firsthandle: function(){
+            this.searchData = {
+              output: this.searchText
+            }
+          },
+          searchData: {}
+        };
+
+        // 车型选择组件中输入车型的首字母或汉字无法查询
+        scope.searchModel = {
+          searchText: "",
+          firsthandle: function(){
+            this.searchData = {
+              model: this.searchText
+            }
+          },
+          searchData: {}
+        };
       }
     }
   }

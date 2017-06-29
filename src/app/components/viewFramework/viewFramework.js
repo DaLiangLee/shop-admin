@@ -9,13 +9,24 @@
     .directive('viewFramework', viewFramework);
 
   /** @ngInject */
-  function viewFramework($window) {
+  function viewFramework($window, $document) {
     return {
       restrict: "A",
       replace: true,
       scope: true,
       transclude: true,
       templateUrl: "app/components/viewFramework/viewFramework.html",
+      link: function(scope, element) {
+        $window.onscroll = function () {
+          var top = $document[0].documentElement.scrollTop || $document[0].body.scrollTop;
+          if(top > 100 && !element.hasClass('less-top-bar')) {
+              element.addClass('less-top-bar');
+          }
+          if(top <= 100 && element.hasClass('less-top-bar')){
+              element.removeClass('less-top-bar');
+          }
+        };
+      },
       controller: ["$scope", "$rootScope", "$timeout", "viewFrameworkSetting", "viewFrameworkConfigData", "viewFrameworkHelper", function ($scope, $rootScope, $timeout, viewFrameworkSetting, viewFrameworkConfigData, viewFrameworkHelper) {
         var vm = this;
         /**
@@ -43,7 +54,7 @@
         });
         $scope.$on("$destroy", function () {
           viewContentLoaded();
-        })
+        });
       }],
       controllerAs: "view"
     }

@@ -37,6 +37,7 @@
       isSecond: false,
       showWeeks: true,
       placeholder: "请点击选择时间",
+      readonly: false,   // 是否可以编辑
       startingDay: 0,
       yearRange: 20,
       minDate: null,
@@ -51,9 +52,6 @@
     .directive('cbDatepickerDay', cbDatepickerDay)
     .directive('cbDatepickerTime', cbDatepickerTime)
     .directive('cbDatepickerPopup', cbDatepickerPopup);
-  function zeroFill(num) {
-    return num < 10 ? '0' + num : '' + num;
-  }
 
   var PatternsDict = /^\d{4}[\-\/\s]?((((0[13578])|(1[02]))[\-\/\s]?(([0-2][0-9])|(3[01])))|(((0[469])|(11))[\-\/\s]?(([0-2][0-9])|(30)))|(02[\-\/\s]?[0-2][0-9]))$/;
 
@@ -72,7 +70,7 @@
     };
     return {
       config: function (param) {
-        angular.isObject(param) && angular.extend(options, param);
+        angular.isObject(param) && (options = angular.extend(options, param));
       },
       $get: function () {
         return options;
@@ -166,23 +164,6 @@
             }
           }
         };
-        if ( $scope.datepickerModel ) {
-          var datepicker = $scope.datepickerModel;
-          console.log(datepicker);
-          if(!/(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}:\d{2}:\d{2})/.test(datepicker)){
-            $scope.datepicker.model = "";
-            console.log(1);
-          }else{
-            var date = new Date( datepicker.replace(/\-/, '/') );
-            var isValid = !isNaN(date);
-            console.log(dateFilter(date, _this.format));
-            if ( isValid ) {
-              $scope.datepicker.model = dateFilter(date, _this.format);
-            } else {
-              $scope.datepicker.model = "";
-            }
-          }
-        }
 
         function setConfig(){
           configAttr = angular.extend(angular.copy(cbDatepickerDefault), ($scope.datepickerOptions || {}));
@@ -193,6 +174,22 @@
           datepickerModel = $scope.datepicker.model;
         }
 
+        $scope.$watch('datepickerModel', function (value) {
+          datepickerModel = value;
+          var datepicker = value;
+          if(!/(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}-\d{2}\d{2}:\d{2}:\d{2})|(\d{2}:\d{2}:\d{2})/.test(datepicker)){
+            $scope.datepicker.model = "";
+          }else{
+            var date = new Date( datepicker.replace(/\-/, '/') );
+            var isValid = !isNaN(date);
+            if ( isValid ) {
+              $scope.datepicker.model = dateFilter(date, _this.format);
+            } else {
+              $scope.datepicker.model = "";
+            }
+          }
+          _this.render();
+        });
 
         $scope.datepickerMode = 'day';
         // 当前的时间

@@ -26,27 +26,27 @@
           },
           {
             "id": 1,
-            "name": "类目",
+            "name": "商品类目",
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-bind="item.catename"></span>',
             "field": "catename",
-            "width": 100
+            "width": 90
           },
           {
             "id": 2,
-            "name": "编码/图片",
+            "name": "商品编码",
             "cssProperty": "state-column",
-            "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-product-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+            "fieldDirective": '<p bo-text="item.code"></p>',
             "field": "code",
-            "width": 120
+            "width": 100
           },
           {
             "id": 2,
             "name": "商品名称",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="8"></span>',
+            "fieldDirective": '<div class="img-wrap"><span class="state-unread" style="width: 24px; height: 20px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-product-image" style="width: 24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><a ui-sref="product.goods.edit({pskuid: item.guid})" class="state-unread" cb-truncate-text="{{item.productname}}" text-length="6" bo-if="propsParams.currentStatus == 1"></a><span class="state-unread" cb-truncate-text="{{item.productname}}" text-length="6" bo-if="propsParams.currentStatus == 0"></span></div>',
             "field": "productname",
-            "width": 150
+            "width": 160
           },
           {
             "id": 4,
@@ -57,31 +57,38 @@
           },
           {
             "id": 8,
-            "name": "零售价（元）",
+            "name": "零售单价",
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.salepriceText"></span>',
-            "width": 250
+            "width": 170
           },
           {
             "id": 8,
             "name": "销量",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span>件</span>',
-            "width": 100
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.skusalenum"></span> 件</span>',
+            "width": 78
           },
           {
             "id": 9,
             "name": "库存",
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><span bo-text="item.$$stockShow"></span>件</span>',
-            "width": 120
+            "fieldDirective": '<span class="state-unread"><span bo-text="item.$$stockShow"></span> 件</span>',
+            "width": 78
           },
           {
             "id": 9,
-            "name": "保质期（天）",
+            "name": "保质期(天)",
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>',
-            "width": 100
+            "width": 102
+          },
+          {
+            "id": 10,
+            "name": "创建时间",
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.createtime"></span>',
+            "width": 140
           }
 
         ],
@@ -112,10 +119,10 @@
             showPageGoto: true
           },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0">新增商品</a> ',
-            '<button class="btn btn-warning" cb-access-control="chebian:store:product:goods:putdown" simple-grid-change-status="removeProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品下架" ng-if="propsParams.currentStatus == 0">批量下架</button> ',
-            '<button class="btn btn-success" cb-access-control="chebian:store:product:goods:putup" simple-grid-change-status="resetRemoveProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的商品上架" ng-if="propsParams.currentStatus == 1">批量上架</button> ',
-            '<button class="btn btn-danger" cb-access-control="chebian:store:product:goods:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">批量删除</button> '
+            '<a class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()" ng-if="propsParams.currentStatus == 0">新增商品</a> ',
+            '<button class="u-btn u-btn-warning u-btn-sm" cb-access-control="chebian:store:product:goods:putdown" simple-grid-change-status="removeProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="确定将所选商品下架？" ng-if="propsParams.currentStatus == 0">下架商品</button> ',
+            '<button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:product:goods:putup" simple-grid-change-status="resetRemoveProduct" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="确定将所选商品上架？" ng-if="propsParams.currentStatus == 1">上架商品</button> ',
+            '<button class="u-btn u-btn-danger u-btn-sm" cb-access-control="chebian:store:product:goods:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="确定将所选商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">删除商品</button> '
           ]
         }
       },

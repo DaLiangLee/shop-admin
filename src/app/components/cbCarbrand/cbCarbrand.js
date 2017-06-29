@@ -15,7 +15,7 @@
     .directive('cbCarbrand', cbCarbrand);
 
   /** @ngInject */
-  function cbCarbrand($timeout, $document, $window){
+  function cbCarbrand(){
     return {
       restrict: "A",
       scope: {
@@ -63,7 +63,6 @@
             iCount--;
           }
           next.removeClass('disabled');
-          console.log(iCount);
           oLists.stop().animate({left: -oneWidth*iCount});
 
         });
@@ -78,7 +77,6 @@
             iCount++;
           }
           prev.removeClass('disabled');
-          console.log(iCount);
           oLists.stop().animate({left: -oneWidth*iCount})
         });
         /**

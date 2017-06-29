@@ -1,12 +1,18 @@
-<div class="g-view">
+<ol class="k-breadcrumb">
+  <li><a ui-sref="#/store/shop">店铺管理</a></li>
+  <li class="active">店铺管理</li>
+</ol>
+<div class="w-tabs">
+  <ul class="tabs-nav f-cb">
+    <li ui-sref-active="active"><a ui-sref="store.shop.home.info" class="text-muted">店铺信息</a></li>
+    <li ui-sref-active="active"><a ui-sref="store.shop.home.aptitude" class="text-muted">店铺资质</a></li>
+    <li ui-sref-active="active"><a ui-sref="store.shop.home.contact" class="text-muted">联系方式</a></li>
+    <li ui-sref-active="active"><a ui-sref="store.shop.home.bank" class="text-muted">银行账号</a></li>
+  </ul>
+</div>
+<br />
+<div class="g-view" style="padding-bottom:60px">
     <div class="container-fluid">
-      <ul class="nav nav-tabs">
-        <li ui-sref-active="active"><a ui-sref="store.shop.home.info" class="text-muted">店铺信息</a></li>
-        <li ui-sref-active="active"><a ui-sref="store.shop.home.aptitude" class="text-muted">店铺资质</a></li>
-        <li ui-sref-active="active"><a ui-sref="store.shop.home.contact" class="text-muted">联系方式</a></li>
-        <li ui-sref-active="active"><a ui-sref="store.shop.home.bank" class="text-muted">银行账号</a></li>
-      </ul>
-      <br />
       <div class="" ui-view=""></div>
     </div>
 </div>

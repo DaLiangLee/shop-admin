@@ -115,7 +115,7 @@
     return {
       restrict: 'A',
       require: '^simpleTab',
-      link: function (scope, elm, attrs, simpleTabCtrl) {
+      link: function (scope, elm) {
         scope.$watch('headingElement', function updateHeadingElement(heading) {
           if (heading) {
             elm.html('');
@@ -154,3 +154,6 @@
     }
   }
 })();
+
+
+

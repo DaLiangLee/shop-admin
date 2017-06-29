@@ -11,7 +11,7 @@
 
 
   /** @ngInject */
-  function FinanceDebitcardLsitController($state, cbAlert, financeDebitcard, financeDebitcardConfig, computeService, configuration) {
+  function FinanceDebitcardLsitController($state, cbAlert, financeDebitcard, financeDebitcardConfig, computeService, utils) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -30,30 +30,66 @@
      *
      */
     vm.gridModel = {
-      columns: _.clone(financeDebitcardConfig.DEFAULT_GRID.columns),
+      columns: _.clone(financeDebitcardConfig().DEFAULT_GRID.columns),
       financeDebitcard: [],
-      config: _.merge(financeDebitcardConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
-      loadingState: true      // 加载数据
+      config: _.merge(financeDebitcardConfig().DEFAULT_GRID.config, {propsParams: propsParams}),
+      loadingState: true,      // 加载数据
+      pageChanged: function (data) {    // 监听分页
+        var page = angular.extend({}, currentParams, {page: data});
+        $state.go(currentStateName, page);
+      },
+      sortChanged: function (data) {
+        var orders = [];
+        angular.forEach(data.data, function (item, key) {
+          orders.push({
+            "field": key.replace("map.", ""),
+            "direction": item
+          });
+        });
+        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        getList(order);
+      }
     };
 
-    var DEFAULT_SEARCH = _.clone(financeDebitcardConfig.DEFAULT_SEARCH);
+    var DEFAULT_SEARCH = _.clone(financeDebitcardConfig().DEFAULT_SEARCH);
+    var searchModel = _.chain(_.clone(currentParams)).tap(function (value) {
+      _.forEach(_.pick(value, ['recharge0', 'recharge1', 'cost0', 'cost1', 'userbalance0', 'userbalance1']), function (item, key) {
+        !_.isUndefined(item) && (value[key] = computeService.pullMoney(item));
+      });
+    }).value();
+
     /**
      * 搜索操作
      *
      */
     vm.searchModel = {
-      config: DEFAULT_SEARCH.config(currentParams),
+      config: DEFAULT_SEARCH.config(searchModel),
       'handler': function (data) {
-        console.log(data);
+        var search = _.chain(data).tap(function (value) {
+          _.forEach(_.pick(value, ['recharge0', 'recharge1', 'cost0', 'cost1', 'userbalance0', 'userbalance1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] = computeService.pushMoney(item));
+          });
+        }).value();
 
+        _.chain(currentParams).tap(function (value) {
+          _.forEach(_.pick(value, ['recharge0', 'recharge1', 'cost0', 'cost1', 'userbalance0', 'userbalance1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] *= 1);
+          });
+        }).value();
         // 如果路由一样需要刷新一下
-        if(angular.equals(currentParams, data)){
+        if(angular.equals(currentParams, search)){
           $state.reload();
         }else{
-          $state.go(currentStateName, data);
+          search.page = '1';
+          $state.go(currentStateName, search);
         }
       }
     };
+
+
+
+
+
 
     /**
      * 获取列表
@@ -66,16 +102,13 @@
       if (!params.page) {
         return;
       }
+
       financeDebitcard.search(params).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status*1 === 0) {
           _.forEach(result.data, function (item) {
-            item.map.balance = computeService.pullMoney(item.map.balance);
-            item.map.cost = computeService.pullMoney(item.map.cost);
-            item.map.gift = computeService.pullMoney(item.map.gift);
-            item.map.recharge = computeService.pullMoney(item.map.recharge);
+            item.map.avatar=utils.getImageSrc(item.map.avatar,"user")
           });
-          console.log(result.data);
 
           vm.gridModel.itemList = result.data;
           vm.gridModel.loadingState = false;
@@ -84,11 +117,6 @@
             pageSize: params.pageSize,
             total: result.totalCount
           };
-          _.forEach(result.message, function (value, key, obj) {
-            if(value > 0){
-              obj[key] = computeService.pullMoney(value);
-            }
-          });
           vm.gridModel.config.propsParams.message = result.message;
         } else {
           cbAlert.error("错误提示", result.data);
@@ -100,57 +128,35 @@
   }
 
   /** @ngInject */
-  function FinanceDebitcardDetailController($state, cbAlert, financeDebitcard, financeDebitcardConfig, computeService, userCustomer, configuration) {
+  function FinanceDebitcardDetailController($state, cbAlert, financeDebitcard, financeDebitcardConfig, userCustomer, utils) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params, {pageSize: 10});
+    var currentParams = angular.extend({}, $state.params, {page: 1, pageSize: 10});
+
+    /**
+     * 需要返回操作
+     * @type {boolean}
+     */
+    $state.current.backspace = true;
 
     userCustomer.getUser({mobile: currentParams.mobile}).then(function(results){
       var result = results.data;
-      if (result.status == 0) {
+      if (result.status*1 === 0) {
         vm.userModel = result.data;
+        vm.userModel.avatar=utils.getImageSrc(vm.userModel.avatar,"user")
+
       } else {
         cbAlert.error("错误提示", result.data);
       }
     });
 
 
-
-
-
-    console.log(currentParams);
-
     /**
      * 组件数据交互
      *
      */
     var propsParams = {
-      statusItem: function(item){
-        var tips = item.status === "0" ? '是否确认启用该活动？' : '是否确认禁用该活动？';
-        cbAlert.ajax(tips, function (isConfirm) {
-          if (isConfirm) {
-            item.status = item.status === "0" ? "1" : "0";
-            var items = _.pick(item, ['guid', 'status']);
-            financeDebitcard.saveorupdate(items).then(function (results) {
-              if (results.data.status == '0') {
-                cbAlert.success('修改成功');
-                getList(params);
-                var statusTime = $timeout(function () {
-                  cbAlert.close();
-                  $timeout.cancel(statusTime);
-                  statusTime = null;
-                }, 1200, false);
-                getList(currentParams);
-              } else {
-                cbAlert.error(results.data.data);
-              }
-            });
-          } else {
-            cbAlert.close();
-          }
-        }, "", 'warning');
-      }
     };
 
     /**
@@ -158,24 +164,57 @@
      *
      */
     vm.gridModel = {
-      columns: _.clone(financeDebitcardConfig.DEFAULT_GRID_DETAIL.columns),
+      columns: _.clone(financeDebitcardConfig().DEFAULT_GRID_DETAIL.columns),
       itemList: [],
-      config: _.merge(financeDebitcardConfig.DEFAULT_GRID_DETAIL.config, {propsParams: propsParams}),
-      loadingState: true      // 加载数据
+      requestParams: {
+        params: currentParams,
+        request: "finance,debitcard,exceldebitcardDetail",
+        permission: "chebian:store:finance:debitcard:view"
+      },
+      config: _.merge(financeDebitcardConfig().DEFAULT_GRID_DETAIL.config, {propsParams: propsParams}),
+      loadingState: true,      // 加载数据
+      pageChanged: function (data) {    // 监听分页
+        var page = angular.extend({}, currentParams, {page: data});
+        vm.gridModel.requestParams.params = page;
+        getList(page);
+      }
+    };
+
+
+    var DEFAULT_SEARCH_DETAIL = _.clone(financeDebitcardConfig().DEFAULT_SEARCH_DETAIL);
+    /**
+     * 搜索操作
+     *
+     */
+    vm.searchModel = {
+      config: DEFAULT_SEARCH_DETAIL.config(currentParams),
+      'handler': function (data) {
+        var items = _.find(DEFAULT_SEARCH_DETAIL.journaltime, function (item) {
+          return item.id === data.journaltime0*1;
+        });
+        if (angular.isDefined(items)) {
+          data.journaltime1 = undefined;
+        }
+        // 如果路由一样需要刷新一下
+        if(angular.equals(currentParams, data)){
+          $state.reload();
+        }else{
+          data.page = '1';
+          $state.go(currentStateName, data);
+        }
+      }
     };
 
     /**
-     * 获取员工列表
+     * 获取某个会员储值卡详情列表
      */
     function getList(params) {
       financeDebitcard.detail(params).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status*1 === 0) {
           _.forEach(result.data, function (item) {
-            item.map.balance = computeService.pullMoney(item.map.balance);
-            item.map.cost = computeService.pullMoney(item.map.cost);
-            item.map.gift = computeService.pullMoney(item.map.gift);
-            item.map.recharge = computeService.pullMoney(item.map.recharge);
+            item.map.balance = item.userbalance;
+            item.map.recharge = item.map.charge;
           });
           vm.gridModel.itemList = result.data;
           vm.gridModel.loadingState = false;
@@ -184,11 +223,6 @@
             pageSize: params.pageSize,
             total: result.totalCount
           };
-          _.forEach(result.message, function (value, key, obj) {
-            if(value > 0){
-              obj[key] = computeService.pullMoney(value);
-            }
-          });
           vm.gridModel.config.propsParams.message = result.message;
         } else {
           cbAlert.error("错误提示", result.data);

@@ -1,138 +1,230 @@
-<div class="g-view">
+<ol class="k-breadcrumb">
+  <li><a ui-sref="product.goods.list({page:1})">商品与服务</a></li>
+  <li><a ui-sref="product.server.list({page:1})">服务管理</a></li>
+  <li class="active">新增服务</li>
+</ol>
+<div class="g-view goods-add">
   <div class="container-fluid">
-    <h2>添加编辑服务</h2>
-    <hr>
     <form class="form-horizontal" autocomplete="off" name="server" role="form" novalidate ng-if="vm.isLoadData">
-      <h3>基本信息</h3>
-      <hr>
-      <div class="form-group" ng-if="vm.isChange">
-        <label class="col-lg-1 control-label">项目ID：</label>
-        <div class="col-lg-11">
-          <p class="text-border" ng-bind="vm.dataBase.serverid"></p>
-        </div>
-      </div>
       <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 类目：</label>
-        <div class="col-lg-11">
+        <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>服务类目：</label>
+        <div class="control-content">
           <div ng-if="!vm.isChange">
             <input type="hidden" name="scateid1" ng-required="true" ng-model="vm.dataBase.scateid1">
-            <div simple-select="id,catename" store="vm.selectModel.store" select="vm.dataBase.scateid1"
-                 select-handler="vm.selectModel.handler(data)"></div>
-          </div>
-          <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename1"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-lg-1 control-label">编码：</label>
-        <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="code" ng-model="vm.dataBase.code"
-                 placeholder="请输入长度40字符以内的服务编码" cb-placeholder ng-maxlength="40">
-          <div class="alert alert-danger" ng-if="server.code.$dirty && server.code.$error.maxlength">
-            请输入长度40字符以内的服务编码
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 名称：</label>
-        <div class="col-lg-11">
-          <div ng-if="!vm.isChange">
-            <div ng-if="!vm.dataBase.scateid1">
-              <p class="text-border text-border-warning">请先选择服务类目</p>
+            <div ng-if="!vm.category.falg">
+              <div class="radio-inline" ng-repeat="list in vm.category.store">
+                <label>
+                  <input type="radio" ng-change="vm.category.handler(vm.dataBase.scateid1)"
+                         ng-model="vm.dataBase.scateid1" ng-value="list.id" style="top: 0;">
+                  <span ng-bind="list.catename"></span>
+                </label>
+              </div>
+              <a class="cancel f-curp" ng-if="vm.category.name && vm.stepState == 0"
+                 ng-click="vm.category.toggle(false)">取消编辑</a>
             </div>
-            <div ng-if="vm.dataBase.scateid1">
-              <input type="hidden" name="scateid2" ng-required="true" ng-model="vm.dataBase.scateid2">
-              <div simple-select="id,catename" store="vm.selectModel2.store" select="vm.dataBase.scateid2"
-                   select-handler="vm.selectModel2.handler(data)"></div>
-              <p class="text-warning" ng-if="!vm.dataBase.scateid2">服务名称是必选的</p>
+            <div class="m-product-category" ng-if="vm.category.name && vm.category.falg">
+              <p bindonce=""><span ng-bind="vm.category.name"></span> <a class="f-curp"
+                                                                         ng-click="vm.category.toggle(true)">编辑</a></p>
             </div>
           </div>
-          <p ng-if="vm.isChange" class="text-border" ng-bind="vm.dataBase.scatename2"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-lg-1 control-label">简介：</label>
-        <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="seodescription"
-                 ng-model="vm.dataBase.seodescription"
-                 ng-maxlength="40" placeholder="请输入长度40字符以内的服务简介" cb-placeholder>
-          <div class="alert alert-danger" ng-if="server.seodescription.$dirty && server.seodescription.$error.maxlength">
-            请输入长度40字符以内的服务简介
+          <div ng-if="vm.isChange">
+            <span ng-bind="vm.dataBase.scatename1"></span>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-lg-1 control-label"><span class="text-danger">*</span> 车辆属性：</label>
-        <div class="col-lg-11">
-          <div ng-if="!vm.isScateid2">
-            <p class="text-border text-border-warning">请先选择服务名称</p>
+        <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>服务名称：</label>
+        <div class="control-content">
+          <div ng-if="vm.stepState == 0">
+            请先选择类目
           </div>
-          <div ng-if="vm.isScateid2">
-            <table class="table">
-              <thead>
-              <tr>
-                <th><span class="text-danger">*</span> 如 车辆类型 等</th>
-                <th><span class="text-danger">*</span> 工时</th>
-                <th style="min-width:200px;"><span class="text-danger">*</span> 单价（元）</th>
-                <th>工时费（元）</th>
-                <th>适用车型</th>
-                <th>描述</th>
-                <th style="min-width:80px;">启用状态</th>
-                <th style="min-width:80px;">操作</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="item in vm.dataBase.serverskus" ng-form="list">
-                <td>
-                  <div class="text-border" ng-if="!item.$$add"><span ng-bind="item.$$skuname"></span></div>
-                  <input ng-if="item.$$add" class="form-control" type="text" name="manualskuvalues" ng-model="item.manualskuvalues" placeholder="请输入车辆属性">
-                </td>
-                <td ng-class="{'has-error': list.servertime.$error.cbMoneyRange}"><input class="form-control" type="text" name="servertime"
-                           ng-model="item.servertime" cb-money-range="1"
-                           data-value-min="0" data-value-max="999" range-enabled="true"
-                           placeholder="请输入0～999范围工时" ng-blur="vm.servertimeprice(item)"></td>
-                <td ng-class="{'has-error': list.serverprice.$error.cbMoneyRange}"><input class="form-control" type="text" name="serverprice" ng-model="item.serverprice" cb-money-range
-                           data-value-min="0" data-value-max="999999" range-enabled="true"
-                           placeholder="请输入0～999999范围单价" ng-blur="vm.servertimeprice(item)"></td>
-                <td><p class="text-border" ng-bind="item.$$servertimeprice" ng-required="true"></p></td>
-                <td><div style="width: 200px;" class="text-border ng-scope ng-isolate-scope" ng-if="!item.motobrandids.length" cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型<i class="icon-search" style="float: right;cursor: pointer"></i></div><div  ng-if="item.motobrandids.length" cb-vehicle-show="edit"  store="item.motobrandids" handler="vm.vehicleShow(data, item)"></div></td>
-                <td><input class="form-control" type="text" name="" ng-model="item.skudescription" placeholder="请输入描述"></td>
-                <td>
+          <div ng-if="vm.stepState > 0">
+            <input type="hidden" name="scateid1" ng-required="true" ng-model="vm.dataBase.servername">
+            <div server-category store="vm.serverName.store" servername="vm.dataBase" step="vm.stepState"
+                 handler="vm.serverName.handler(data)"></div>
+          </div>
+          <div ng-if="vm.isServername && vm.stepState > 0">
+            <span class="text-danger"><span ng-bind="vm.isServername.msg"></span>, 是否前往 </span><a class="f-curp" ng-click="vm.goServerEdit()">编辑</a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">服务编码：</label>
+        <div class="control-content">
+          <div class="b-w-5">
+            <input type="text" class="input-control " name="code" ng-model="vm.dataBase.code"
+                   placeholder="请输入服务编码" cb-placeholder cb-string-range value-max="20">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">服务简介：</label>
+        <div class="control-content">
+          <div class="b-w-5">
+            <input type="text" id="goods_add_name" class="input-control" name="seodescription"
+                   ng-model="vm.dataBase.abstracts" placeholder="请输入服务简介" cb-placeholder cb-string-range value-max="20">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">服务规格：</label>
+        <div class="control-content">
+          <div ng-if="vm.stepState < 2">
+            <span>请先选择服务名称</span>
+          </div>
+          <div class="form-group" ng-if="vm.stepState > 1">
+            <div class="m-product-attrs">
+              <div class="product-items" draggable="true" drag-item="" drag-end="vm.dragItem(data)" ng-form="list" ng-repeat="item in vm.dataBase.serverSkus track by $index" bindonce="">
+                <div class="product-item-sort">
+                  <span class="toggle f-curp icon-arrow_up" ng-click="vm.sortItem(item, $index, -1)"></span>
+                  <span class="toggle f-curp icon-arrow_down" ng-click="vm.sortItem(item, $index, 1)"></span>
+                </div>
+                <div class="product-item-action">
+                  <div class="often"><label class="f-curp"><input type="checkbox" name="" ng-model="item.commonlyused"> 标记常用</label></div>
                   <div cb-switch checkstatus="item.status" ng-click="vm.statusItem(item)"></div>
-                </td>
-                <td>
-                  <a class="text-danger" href="javascript:;" ng-click="vm.removeItem(item, $index)">删除</a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <button class="btn btn-primary" ng-click="vm.addSkuvalues()">添加属性</button>
+                  <span class="icon-remove f-curp" style="color: red; margin: 0 10px;" ng-click="vm.removeItem(item, $index)"></span>
+                  <span class="toggle f-curp" ng-class="{true:'icon-arrow_up', false: 'icon-arrow_down'}[item.$folded]"
+                        ng-click="vm.togglItem(item)"></span>
+                </div>
+                <div class="product-item-mini f-cb" ng-if="!item.$folded">
+                  <h4 class="sku-name f-fl">规格： <strong ng-bind="item.manualskuvalues"></strong></h4>
+                  <div class="stock-price f-fr">工时费： <span class="price"
+                                                           ng-bind="item.$servertimeprice | currency:'¥ '"></span>
+                  </div>
+                </div>
+                <div class="product-item-full" ng-if="item.$folded">
+                  <div class="form-group">
+                    <label class="control-label"><span class="text-label-wrapper f-fr f-bc"><span class="text-red"><i class="icon-required"></i></span>规格：</span></label>
+                    <div class="control-content">
+                      <div class="b-w-5">
+                        <input class="input-control" type="text" name="manualskuvalues"
+                               ng-model="item.manualskuvalues" placeholder="请输入服务类型、方式、适用对象等" cb-string-range
+                               value-max="20"
+                               ng-required="true">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group f-cb">
+                    <div class="form-group f-fl" style="width: 33%;">
+                      <label class="control-label">工时：</label>
+                      <div class="control-content">
+                        <div ng-class="{'has-error': list.servertime.$error.numberRange}">
+                          <input class="input-control" type="text" name="servertime"
+                                 ng-model="item.servertime" number-range=""
+                                 data-value-min="0"
+                                 data-value-max="999.9"
+                                 data-value-step="0.1"
+                                 data-range-enabled
+                                 maxlength="5"
+                                 placeholder="请输入0～999范围工时" cb-placeholder ng-keyup="vm.servertimeprice(item)" ng-required="true">
+                          <span class="text-danger" ng-if="list.servertime.$error.numberRange">工时超出上限</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group f-fl" style="width: 33%;">
+                      <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>单价：</label>
+                      <div class="control-content">
+                        <div ng-class="{'has-error': list.serverprice.$error.numberRange}">
+                          <input class="input-control" type="text" name="serverprice" ng-model="item.serverprice"
+                                 number-range=""
+                                 data-value-min="0"
+                                 data-value-max="999999.99"
+                                 data-value-step="0.01"
+                                 maxlength="9"
+                                 data-range-enabled
+                                 placeholder="请输入0～999999范围单价"
+                                 cb-placeholder
+                                 ng-keyup="vm.servertimeprice(item)"
+                                 ng-required="true">
+                          <span class="text-danger" ng-if="list.serverprice.$error.numberRange">单价超出上限</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group f-fl" style="width: 33%;">
+                      <label class="control-label">工时费</label>
+                      <div class="control-content">
+                        <div>
+                          <p class="text-border" ng-bind="item.$servertimeprice | currency:'¥ '"></p>
+                          <span class="text-danger" ng-if="vm.exceedlimit">工时费超过100万将不会被添加</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label">适用车型</label>
+                    <div class="control-content">
+                      <div>
+                        <div style="width: 200px;position: relative;" class="text-border" ng-if="!item.motobrandids.length"
+                             cb-vehicle-select="add" handler="vm.vehicleSelect(data, item)">添加适用车型<i class="icon-search"
+                                                                                                     style="float: right;cursor: pointer"></i>
+                        </div>
+                        <div ng-if="item.motobrandids.length" cb-vehicle-show="edit" store="item.motobrandids"
+                             handler="vm.vehicleShow(data, item)"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="control-label">备注：</label>
+                      <div class="control-content">
+                        <div class="b-w-5 f-cb">
+                          <input class="input-control" type="text" name="skudescription"
+                                 ng-model="item.skudescription" placeholder="请输入备注" cb-string-range value-max="20">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <!--<label class="control-label">&nbsp;</label>-->
+                <div class="control-content">
+                  <button class="u-btn u-btn-primary u-btn-sm" ng-click="vm.addItem()"
+                          ng-disabled="server.list.$invalid || vm.exceedlimit">
+                    + 新增规格
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-lg-1 control-label">图片：</label>
-        <div class="col-lg-11">
-          <div simple-image config="vm.uploadModel.config" image="vm.dataBase.mainphoto" upload-handler="vm.uploadModel.handler(data)"></div>
+        <label class="control-label">图片：</label>
+        <div class="control-content">
+          <div simple-image config="vm.uploadModel.config" image="vm.dataBase.mainphoto"
+               upload-handler="vm.uploadModel.handler(data)"></div>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-lg-1 control-label">保质期（天）：</label>
-        <div class="col-lg-11">
-          <input type="text" id="goods_add_name" class="form-control" name="shelflife"
-                 cb-number-range="" data-value-min="-1" data-value-max="1000" placeholder="请输入服务保质期范围0～999天" cb-placeholder
-                 ng-model="vm.dataBase.shelflife">
-          <div class="alert alert-danger" ng-if="vm.dataBase.shelflife.length && server.shelflife.$dirty && server.shelflife.$error.cbNumberRange">
-            请输入0～999以内的整数
+        <label class="control-label">保修期(天)：</label>
+        <div class="control-content">
+          <div class="b-w-5">
+            <input type="text" class="input-control" name="shelflife"
+                   number-range="" maxlength="4" placeholder="请输入服务保修期范围0~9999天"
+                   cb-placeholder
+                   ng-model="vm.dataBase.shelflife">
+            <div class="alert alert-danger"
+                 ng-if="vm.dataBase.shelflife.length && server.shelflife.$dirty && server.shelflife.$error.cbNumberRange">
+              请输入0～9999以内的整数
+            </div>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <div class="text-center">
-          <button type="button" class="btn btn-primary" ng-click="vm.submitBack()" ng-disabled="server.$invalid">&emsp;&emsp;&emsp;&emsp;保存并返回&emsp;&emsp;&emsp;&emsp;
+        <div class="f-tac">
+          <button type="button" class="u-btn u-btn-primary u-btn-lg" ng-click="vm.submitBack()"
+                  ng-disabled="server.$invalid || vm.exceedlimit">保存并返回
           </button>
-          <button type="button" class="btn btn-primary" ng-click="vm.submitNewCopy()" ng-disabled="server.$invalid">&emsp;&emsp;&emsp;&emsp;保存并复制新建&emsp;&emsp;&emsp;&emsp;
+          　　
+          <button type="button" class="u-btn u-btn-primary u-btn-lg" ng-click="vm.submitNewCopy()"
+                  ng-disabled="server.$invalid || vm.exceedlimit">保存并新建
           </button>
-          <button type="button" class="btn btn-default" cb-back-button="{'name':'product.server.list','params':{'page': 1}}" data-router="product.goods.edit">返回
+          　　
+          <button type="button" class="u-btn u-btn-disabled u-btn-lg"
+                  cb-back-button="{'name':'product.server.list','params':{'page': 1}}"
+                  data-router="product.goods.edit">
+            返　回
           </button>
         </div>
       </div>

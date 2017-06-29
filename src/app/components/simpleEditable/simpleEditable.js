@@ -24,8 +24,7 @@
 
 
   /** @ngInject */
-  function simpleEditable(cbAlert) {
-
+  function simpleEditable() {
     return {
       restrict: "A",
       replace: true,
@@ -37,59 +36,24 @@
       link: function(scope, iElement, iAttrs){
         // 获取提示显示
         scope.placeholder = iAttrs.placeholder || "请输入内容";
-        // 是否可以为空不填
-        var isEmpty = (iAttrs.required || "true") === "false";
-        // 输入类型检查
-        var type = iAttrs.simpleEditable || 'other';
-        // 根据类型正则检查
-        var check = {
-          'int': function(value){
-            return /^(0|[1-9][0-9]*)$/.test(value);
-          },
-          'float': function(value){
-            return /^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$/.test(value);
-          },
-          'money': function(value){
-            return /(^[1-9]([0-9]){0,7}?(\.[0-9]{1,2})?$)|(^0$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value);
-          },
-          'other': function(value){
-            return !!value.length;
-          }
-        };
-        // 根据类型提示错误消息
-        var message = {
-          'int': "请输入整数",
-          'float': "请输入小数",
-          'money': "请输入保留2位小数金额",
-          'other': "请输入内容"
-        };
-        var $input = iElement.find('.editable-input');
-        iElement.on('click', '.editable', function(){
-          $input.val(scope.editor);
+        scope.min = iAttrs.min;
+        scope.max = iAttrs.max;
+        scope.step = iAttrs.step;
+        scope.open = function () {
+          scope.newEditor = scope.editor;
           iElement.addClass('open').css({
             'width': iElement.width(),
             'left': 0,
             'top': -6
           });
-        });
-
-        iElement.on('click', '.confirm', function(ev){
-          if(isEmpty && !$input.val()){
-          }else{
-            if(!check[type]($input.val())){
-              cbAlert.alert(message[type]);
-              return ;
-            }
-          }
-          scope.$apply(function(){
-            scope.editorHandler({data: $input.val()});
-          });
+        };
+        scope.confirm = function () {
+          scope.editorHandler({data: scope.newEditor});
           hide();
-        });
-        iElement.on('click', '.cancel', function(){
+        };
+        scope.cancel = function () {
           hide();
-        });
-
+        };
         function hide(){
           iElement.css({
             'width': '',
@@ -97,7 +61,7 @@
             'top': ''
           });
           iElement.removeClass('open');
-          $input.val('');
+          scope.newEditor = "";
         }
       }
     }

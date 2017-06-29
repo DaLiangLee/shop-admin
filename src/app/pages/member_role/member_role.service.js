@@ -37,13 +37,6 @@
                         "fieldDirective": '<span class="state-unread"><span ng-repeat="role in item.items"><i bo-text="role.menuname"></i>    </span><span bo-if="!item.items.length">无</span></span>',
                         "name": '权限范围',
                         "width": 300
-                    },
-                    {
-                      "id": 3,
-                      "cssProperty": "state-column",
-                      "fieldDirective": '<span class="w-issue-actions-trigger">...</span>',
-                      "name": '权限范围',
-                      "width": 300
                     }
                 ],
                 "config": {
@@ -59,8 +52,8 @@
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                        '<button class="btn btn-primary" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="添加新角色" role-item="propsParams.roleItem(data)">添加角色</button> ',
-                      '<button class="btn btn-danger" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
+                        '<button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:member:role:view" member-role-dialog="add" title="新增权限" role-item="propsParams.roleItem(data)">新增权限</button> ',
+                      '<button class="u-btn u-btn-danger u-btn-sm" cb-access-control="chebian:store:member:role:view" simple-grid-remove-item item="store" data-message="确定删除该权限？" remove-item="propsParams.removeItem(data)">删除权限</button> '
                     ]
                 }
             }

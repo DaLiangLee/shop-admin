@@ -7,8 +7,10 @@
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
+    text-align: center;
     img{
       vertical-align: middle;
+      height:100%;
     }
     .close{
       position: absolute;
@@ -37,6 +39,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     cursor: pointer;
+    text-align: center;
     .add-icon{
       position: absolute;
       top: 50%;

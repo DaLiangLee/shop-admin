@@ -6,16 +6,16 @@
     </div>
     <div class="text list" ng-if="config.multiple">
       <span ng-bind="choose.text" ng-if="!choose.list.length"></span>
-      <ul dg-click="remove($event, item)" selector=".close" ng-if="choose.list.length" class="clearfix"><li ng-repeat="item in choose.list track by $index" class="item"><strong ng-bind="item[config.name]"></strong><span class="close">&times;</span></li></ul>
+      <ul dg-click="remove($event, item)" selector=".close" ng-if="choose.list.length" class="f-cb"><li ng-repeat="item in choose.list track by $index" class="item"><strong ng-bind="item[config.name]"></strong><span class="close">&times;</span></li></ul>
       <span class="caret"></span>
     </div>
   </div>
   <div class="select" ng-click="$event.stopPropagation()">
     <input type="text" class="form-control" ng-model="search.params" ng-change="search.handler(search.params)" ng-if="search.prefer" placeholder="请输入搜索内容" cb-placeholder>
     <ul class="list-unstyled" ng-if="items.length" dg-click="options($event, item)" selector="li">
-      <li ng-repeat="item in items" ng-class="{'active': setClass(item)}">
-        <img width="24px" ng-src="{{item[config.image]}}" alt="{{item[config.name]}}" ng-if="config.image" class="images">
-        <span ng-bind="item[config.name]"></span>
+      <li ng-repeat="item in items" ng-class="{'active': setClass(item)}" bindonce="">
+        <img width="24px" bo-src-i="{{item[config.image]}}" alt="{{item[config.name]}}" bo-if="config.image" class="images">
+        <span bo-text="item[config.name]"></span>
       </li>
     </ul>
     <div class="none-info" ng-if="!items.length && !search.params">暂无数据</div>

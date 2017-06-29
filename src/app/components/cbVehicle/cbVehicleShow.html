@@ -13,9 +13,9 @@
   <div>
     <dl>
       <dt><span>适用品牌：</span><span ng-bind="templateData.brand.brand"></span></dt>
-      <dd >
-        <span class="pull-left">适用车系：</span><span class="pull-left" ng-if="!templateData.series">全系通用</span>
-        <ul class="pull-left list-unstyled" ng-if="templateData.series">
+      <dd>
+        <span class="f-fl">适用车系：</span><span class="f-fl" ng-if="!templateData.series">全系通用</span>
+        <ul class="f-fl list-unstyled" style="margin: 0;padding: 0;" ng-if="templateData.series">
           <li ng-repeat="keys in templateData.series">
             <span ng-bind="keys.series"></span>
           </li>

@@ -1,7 +1,7 @@
-<div class="k-simple-editable">
-  <span class="editable"><i class="icon-pen"></i></span>
-  <div class="editable-panel">
-    <input type="text" class="form-control editable-input" placeholder="{{placeholder}}" cb-placeholder>
-    <div class="editable-group"><span class="confirm"><i class="icon-ok"></i></span><span class="cancel"><i class="icon-remove"></i></span></div>
+<div class="k-simple-editable" ng-form="" name="simpleEditable">
+  <span class="editable" ng-click="open()"><i class="icon-pen"></i></span>
+  <div class="editable-panel" ng-class="{'has-error': simpleEditable.editable.$error.numberRange}">
+    <input type="text" class="input-control editable-input" placeholder="{{placeholder}}" cb-placeholder number-range="" value-min="{{min}}" value-max="{{max}}" value-step="{{step}}" name="editable" ng-model="newEditor"  data-range-enabled>
+    <div class="editable-group"><button class="confirm" ng-click="confirm()" ng-disabled="simpleEditable.editable.$error.numberRange"><i class="icon-ok"></i></button><button class="cancel" ng-click="cancel()"><i class="icon-remove"></i></button></div>
   </div>
 </div>

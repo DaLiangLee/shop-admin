@@ -71,8 +71,8 @@
             title: "操作提示",
             message: iAttrs.message || "您确定要删除吗？",
             messageClass: "text-danger",
-            confirmText: "确定",
-            closeText: "取消"
+            confirmText: "确　定",
+            closeText: "取　消"
           };
           childScope.confirm = function () {
             remove();

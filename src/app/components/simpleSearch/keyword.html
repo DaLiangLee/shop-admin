@@ -1,11 +1,23 @@
 <div class="form-group">
-  <div class="col-lg-6" style="width: 400px;">
-    <input type="text" name="keyword" class="form-control" ng-model="keyword" ng-blur="handler()" placeholder="{{placeholder}}">
-    <span><i></i></span>
+
+  <!--<div class="col-lg-6" style="width: 400px;padding:0;">-->
+  <!--<input type="text" name="keyword" class="form-control" ng-model="keyword" ng-blur="handler()" placeholder="{{placeholder}}">-->
+  <!--<span><i></i></span>-->
+  <!--</div>-->
+  <!--<div class="col-lg-2" style="width: 200px; margin-left: 10px;" ng-if="isMore">-->
+  <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="toggle()">-->
+  <!--更多 <span class="caret"></span>-->
+  <!--</button>-->
+  <!--</div>-->
+  <div class="search-wrap input-group">
+    <input type="text" name="keyword" class="search-text input-control" ng-model="keyword" ng-blur="handler()" placeholder="{{placeholder}}">
+    <div class="input-addon" ng-if="!isShowmore">
+      <button class="u-btn u-btn-primary" ng-click="setSearch($event)">搜索</button>
+    </div>
   </div>
-  <div class="col-lg-2" style="width: 200px; margin-left: 10px;" ng-if="isMore">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="toggle()">
+  <div class="f-fl"  ng-if="isMore">
+    <span class="click-more" ng-class="{'dropup': isShowmore}" ng-click="toggle()">
       更多 <span class="caret"></span>
-    </button>
+    </span>
   </div>
 </div>

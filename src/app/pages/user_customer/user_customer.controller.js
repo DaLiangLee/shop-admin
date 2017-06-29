@@ -5,17 +5,18 @@
   'use strict';
 
   angular
-    .module('shopApp')
-    .controller('UserCustomerListController', UserCustomerListController)
-    .controller('UserCustomerChangeController', UserCustomerChangeController)
-    .controller('UserCustomerAddController', UserCustomerAddController);
+      .module('shopApp')
+      .controller('UserCustomerListController', UserCustomerListController)
+      .controller('UserCustomerChangeController', UserCustomerChangeController)
+      .controller('UserCustomerAddController', UserCustomerAddController);
 
   /** @ngInject */
-  function UserCustomerListController($state, cbAlert, userCustomer, userCustomerConfig, userMotorConfig, configuration) {
+  function UserCustomerListController($scope, $state, $document, cbAlert, userCustomer, userCustomerConfig, userMotorConfig, computeService, configuration, cbDialog, marktingPackage,utils) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params, {pageSize: 5});
+    var currentParams = angular.extend({}, $state.params, { pageSize: 5 });
+    var uploadResult = {};
     /**
      * 表格配置
      *
@@ -28,10 +29,36 @@
         request: "users,customer,export",
         permission: "chebian:store:user:customer:export"
       },
+      importParams: {
+        download: "users,customer,download",
+        import: "users,customer,import",
+        permission: "chebian:store:user:customer:import",
+        uploadExcel: function (result) {
+          var data = result.data.data;
+          if (result.status == 0) {
+            uploadResult = {
+              totalCount: data.count,
+              successCount: data.success,
+              errorCount: data.error,
+              hasError: !!data.error,
+              downloadPath: data.path ? data.path : ''
+            };
+            uploadResult.downloadUrl = configuration.getAPIConfig() +'/file/get_result?path=' + uploadResult.downloadPath;
+
+            cbDialog.showDialogByUrl("app/pages/user_customer/user-upload-result-dialog.html", handler, {
+              windowClass: "viewFramework-upload-result-dialog"
+            });
+
+            if (uploadResult.successCount > 0) {
+              $state.reload();
+            }
+          }
+        }
+      },
       config: angular.copy(userCustomerConfig.DEFAULT_GRID.config),
       loadingState: true,      // 加载数据
       pageChanged: function (data) {    // 监听分页
-        var page = angular.extend({}, currentParams, {page: data});
+        var page = angular.extend({}, currentParams, { page: data });
         $state.go(currentStateName, page);
       },
       sortChanged: function (data) {
@@ -42,7 +69,7 @@
             "direction": item
           });
         });
-        var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+        var order = angular.extend({}, currentParams, { orders: angular.toJson(orders) });
         vm.gridModel.requestParams.params = order;
         getList(order);
       },
@@ -52,26 +79,100 @@
       }
     };
 
+    function handler(childScope) {
+      childScope.config = uploadResult;
+    }
+
+    vm.gridModel.config.propsParams = {
+      balanceItem: function (data) {
+        if (data.status === '0') {
+          data.data.rechargeamount = computeService.pushMoney(data.data.rechargeamount);
+          data.data.giveamount = computeService.pushMoney(data.data.giveamount);
+          userCustomer.chargeBalance(data.data).then(function (results) {
+            var result = results.data;
+            if (result.status === 0) {
+              cbAlert.tips('充值成功');
+              getList(currentParams);
+            } else {
+              cbAlert.error("错误提示", result.data);
+            }
+          });
+        }
+      },
+      packageItem: function (data) {
+        if (data.status === '0') {
+
+          data.data.preferentialprice = computeService.pushMoney(data.data.preferentialprice);
+
+          if(_.isEmpty(data.data.expireDay)){
+            data.data.expireDay = null;
+          }
+          marktingPackage.saleapackage(data.data).then(function (results) {
+            var result = results.data;
+            if (result.status === 0) {
+              cbAlert.tips('办理成功');
+              getList(currentParams);
+            } else {
+              cbAlert.error("错误提示", result.data);
+            }
+          });
+        }
+      },
+      nextshow: function (item, $event) {
+        close();
+        item.$show = !item.$show;
+        // // item.$active =item.$show;
+        item.$on = item.$show;
+        $event.stopPropagation();
+
+      },
+      templateData:[],
+      hasCheck:false,
+      getPackageInfo: function(item) { // 悬浮信息框
+        this.templateData = [];
+        if (angular.isUndefined(item) || item.packagenum === "0") {
+          return;
+        }
+        var _this = this;
+        marktingPackage.getalluserpackagebyuserid({userid: item.guid}).then(utils.requestHandler).then(function (results) {
+          _.forEach(results.data, function (item) {
+            item.expireDay = utils.getComputeDay(new Date(), item.expire);
+          });
+          _this.templateData = results.data;
+          _this.hasCheck = true;
+        });
+      }
+    };
+
+    function close() {
+      _.map(vm.gridModel.itemList, function (item) {
+        item.$show = false;
+        item.$on = false;
+      });
+    }
+
+    $document.click(function () {
+      $scope.$apply(function () {
+        close();
+      });
+    });
 
     vm.gridModel2 = {
-      columns: angular.copy(userMotorConfig.DEFAULT_GRID.columns),
+      columns: angular.copy(userMotorConfig().DEFAULT_GRID.columns),
       itemList: [],
       config: {
         'settingColumnsSupport': false,   // 设置表格列表项
-        'checkboxSupport': true,  // 是否有复选框
         'sortSupport': true,
         'paginationSupport': false,  // 是否有分页
-        'selectedProperty': "selected",  // 数据列表项复选框
-        'selectedScopeProperty': "selectedItems",
         'useBindOnce': true  // 是否单向绑定
       },
       loadingState: true      // 加载数据
     };
     function getMotor(mobile) {
       vm.gridModel2.loadingState = true;
-      userCustomer.getMotors({mobile: mobile}).then(function (results) {
+      userCustomer.getMotors({ mobile: mobile }).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status === 0) {
           return result.data;
         } else {
           cbAlert.error("错误提示", result.data);
@@ -100,11 +201,13 @@
       }
       userCustomer.userList(params).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
-          if (!result.data.length && params.page != 1) {
-            $state.go(currentStateName, {page: 1});
+        if (result.status === 0) {
+          if (!result.data.length && params.page * 1 !== 1) {
+            $state.go(currentStateName, { page: 1 });
           }
+
           vm.gridModel.itemList = result.data;
+          // console.log(vm.gridModel.itemList);
           vm.gridModel.paginationinfo = {
             page: params.page * 1,
             pageSize: params.pageSize,
@@ -112,7 +215,7 @@
           };
 
           !result.totalCount && (vm.gridModel2.itemList = [], vm.gridModel2.loadingState = false);
-          vm.gridModel.itemList[0] && getMotor(vm.gridModel.itemList[0].mobile);
+          vm.gridModel.itemList[ 0 ] && getMotor(vm.gridModel.itemList[ 0 ].mobile);
           vm.gridModel.loadingState = false;
         } else {
           cbAlert.error("错误提示", result.data);
@@ -131,20 +234,20 @@
       'handler': function (data) {
         var search = angular.extend({}, currentParams, data);
         // 如果路由一样需要刷新一下
-        if(angular.equals(currentParams, search)){
+        if (angular.equals(currentParams, search)) {
           $state.reload();
-        }else{
+        } else {
           $state.go(currentStateName, search);
         }
       }
     };
     userCustomer.grades().then(function (results) {
       var result = results.data;
-      if (result.status == 0) {
+      if (result.status === 0) {
         vm.searchModel.config = {
           other: currentParams,
           keyword: {
-            placeholder: "请输入会员名称、手机号、车牌号、品牌",
+            placeholder: "请输入会员姓名、手机号、车牌号、车辆品牌",
             model: currentParams.keyword,
             name: "keyword",
             isShow: true
@@ -164,6 +267,7 @@
               all: true,
               custom: true,
               type: "date",
+              model: _.isUndefined(currentParams.startDate) ? '-1' : '-2',
               start: {
                 name: "startDate",
                 model: currentParams.startDate,
@@ -215,13 +319,13 @@
      * 点击获取验证码
      */
     vm.setCountdown = function () {
-      if(!vm.isCountdown){
-        return ;
+      if (!vm.isCountdown) {
+        return;
       }
       vm.isCountdown = false;
       userCustomer.verifyCode(vm.form.mobile).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status === 0) {
           getCount(60);
         } else {
           cbAlert.error("错误提示", result.data);
@@ -241,9 +345,9 @@
           vm.countdown = "获取验证码";
           $interval.cancel(timer);
           vm.isCountdown = true;
-        }else{
+        } else {
           count--;
-          vm.countdown = count + "秒";
+          vm.countdown = count + "秒后再次获取";
         }
       }, 1000);
     }
@@ -254,14 +358,18 @@
      */
     vm.myUsers = -1;
     vm.existMobile = function (valid) {
-      valid && userCustomer.exist({mobile: vm.form.mobile}).then(function (results) {
-        var result = results.data;
-        if (result.status == 0) {
-          vm.myUsers = result.data ? 1 : 0;
-        } else {
-          cbAlert.error("错误提示", result.data);
-        }
-      });
+      if (valid) {
+        userCustomer.exist({ mobile: vm.form.mobile }).then(function (results) {
+          var result = results.data;
+          if (result.status === 0) {
+            vm.myUsers = result.data ? 1 : 0;
+          } else {
+            cbAlert.error("错误提示", result.data);
+          }
+        });
+      } else {
+        vm.myUsers = -1;
+      }
     };
     /**
      * 提交数据给后台
@@ -271,7 +379,7 @@
        * 设置默认-1和验证1都会直接去下一步
        */
       if (vm.myUsers) {
-        $state.go('user.customer.add2', {mobile: vm.form.mobile});
+        $state.go('user.customer.add2', { mobile: vm.form.mobile });
         return;
       }
       /**
@@ -279,13 +387,13 @@
        */
       userCustomer.verifyCodeCheck(vm.form).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status === 0) {
           /**
            * 1，如果返回数据为空，表示可以正常通过，可以进行下一步
            * 2，如果不为空表示有错误提示阻止下一步操作
            */
           if (result.data === "") {
-            $state.go('user.customer.add2', {mobile: vm.form.mobile});
+            $state.go('user.customer.add2', { mobile: vm.form.mobile });
           } else {
             cbAlert.warning("错误提示", result.data);
           }
@@ -298,7 +406,7 @@
 
 
   /** @ngInject */
-  function UserCustomerChangeController($state, $q, cbAlert, userCustomer, vehicleSelection) {
+  function UserCustomerChangeController($state, $q, cbAlert, userCustomer, vehicleSelection, configuration) {
     var vm = this;
     var currentParams = $state.params;
     vm.isLoadData = false;
@@ -307,38 +415,35 @@
 
     vm.insuranceModel = {};
 
-    $q.all([userCustomer.grades(), userCustomer.getUser(currentParams), userCustomer.getMotors(currentParams)]).then(function (results) {
-      var grades = results[0].data || [],
-        getUser = results[1].data || {},
-        getMotors = results[2].data || [];
+    $q.all([ userCustomer.grades(), userCustomer.getUser(currentParams), userCustomer.getMotors(currentParams) ]).then(function (results) {
+      var grades = results[ 0 ].data || [],
+          getUser = results[ 1 ].data || {},
+          getMotors = results[ 2 ].data || [];
 
-      if (getUser.status == 0 && grades.status == 0) {
+      if (getUser.status === 0 && grades.status === 0) {
         if (!getUser.data) {
           vm.dataBase.username = currentParams.mobile;
           vm.dataBase.mobile = currentParams.mobile;
+
         } else {
           vm.dataBase = getUser.data;
-          if(grades.data.length){
-            var items = _.find(grades.data, function (item) {
-              return item.guid === vm.dataBase.storegrade;
-            });
-            vm.dataBase.$gradename = items && items.gradename;
-          }
+          vm.storegrade = grades.data;
         }
         vm.isLoadData = true;
       } else {
-        if (grades.status != 0) {
+        if (grades.status !== 0) {
           cbAlert.error("错误提示", grades.data);
         }
-        if (getUser.status != 0) {
+        if (getUser.status !== 0) {
           cbAlert.error("错误提示", getUser.data);
         }
       }
 
-      if (getMotors.status == 0) {
+      if (getMotors.status === 0) {
         vm.dataLists = angular.copy(getMotors.data);
-        vm.dataLists[0] && (vm.dataLists[0].current = true);
-        showMotor(vm.dataLists[0]);
+        setDataListsStatus();
+        vm.dataLists[ 0 ] && (vm.dataLists[ 0 ].$current = true);
+        showMotor(vm.dataLists[ 0 ]);
       } else {
         cbAlert.error("错误提示", results.data.data);
       }
@@ -347,7 +452,7 @@
 
     vehicleSelection.insurances().then(function (results) {
       var result = results.data;
-      if (result.status == 0) {
+      if (result.status === 0) {
         vm.insuranceModel.store = angular.copy(result.data);
       } else {
         cbAlert.error("错误提示", result.data);
@@ -356,11 +461,11 @@
 
     vm.currentSelect = function ($event, item) {
       // 如果
-      if(item.current){
+      if (item.$current) {
         return;
       }
       setDataListsStatus();
-      item.current = true;
+      item.$current = true;
       vm.item = undefined;
       showMotor(item);
     };
@@ -368,12 +473,13 @@
     /**
      * 设置dataLists选中状态
      */
-    function setDataListsStatus(){
-      _.map(vm.dataLists, function(key){
-        key.current = false;
+    function setDataListsStatus() {
+      _.map(vm.dataLists, function (key, index) {
+        key.$current = false;
+        key.$index = index;
+        key.$logo = configuration.getStatic() + key.logo;
       });
     }
-
 
 
     vm.addMotor = function () {
@@ -436,26 +542,55 @@
       }
     };
 
-
+    /**
+     * 添加编辑车型
+     * @param data
+     */
     vm.vehicleHandler = function (data) {
       if (data.type === 'add') {
-        vm.dataLists.push(data.data);
-        setDataListsStatus();
-        var length = vm.dataLists.length - 1;
-        vm.dataLists[length].current = true;
-
-
-        showMotor(vm.dataLists[length]);
+        _.forEach(vm.dataLists, function (key) {
+          key.$current = false;
+        });
+        var items = _.assign({}, data.data, {
+          $current: true,
+          $logo: configuration.getStatic() + data.data.logo,
+          $index: vm.dataLists.length
+        });
+        vm.dataLists.push(items);
+        showMotor(items);
+      } else if (data.type === "edit") {
+        setCurrentItem(_.assign({}, data.data, { $current: true, $logo: configuration.getStatic() + data.data.logo }));
       }
     };
+
+    /**
+     * 更新车牌
+     * @param data
+     */
+    vm.updateLicence = function (data) {
+      setCurrentItem(_.assign({}, data.data, { licence: data }));
+    };
+
+    /**
+     * 设置当前显示的数据
+     * @param data
+     */
+    function setCurrentItem(data) {
+      vm.item = _.assign({}, vm.item, data);
+      var index = _.findIndex(vm.dataLists, function (item) {
+        return item[ '$index' ] === vm.item[ '$index' ];
+      });
+      vm.dataLists[ index ] = vm.item;
+    }
 
     vm.submitBtn = function () {
       userCustomer.add(vm.dataBase).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
-          var motors = _.filter(vm.dataLists, function (item) {
-            return angular.isUndefined(item.guid);
-          });
+        if (result.status === 0) {
+          /* var motors = _.filter(vm.dataLists, function (item) {
+           return angular.isUndefined(item.guid);
+           });*/
+          var motors = vm.dataLists;
           _.forEach(motors, function (item) {
             item.userId = result.data;
           });
@@ -465,12 +600,12 @@
         }
       }).then(function (results) {
         if (!results.length) {
-          $state.go('user.customer.list', {'page': 1});
+          $state.go('user.customer.list', { 'page': 1 });
         }
         userCustomer.addMotors(results).then(function (results) {
           var result = results.data;
-          if (result.status == 0) {
-            $state.go('user.customer.list', {'page': 1})
+          if (result.status === 0) {
+            $state.go('user.customer.list', { 'page': 1 })
           } else {
             cbAlert.error("错误提示", result.data);
           }

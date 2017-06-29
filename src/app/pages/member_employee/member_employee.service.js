@@ -29,14 +29,14 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.worknum"></span>',
             "name": '工号',
-            "width": 150
+            "width": 70
           },
           {
             "id": 2,
             "cssProperty": "state-column",
             "fieldDirective": '<a cb-access-control="chebian:store:member:employee:edit" class="state-unread" bo-text="item.realname" ui-sref="member.employee.edit({id: item.guid})"></a><span cb-access-control="chebian:store:member:employee:edit:forbidden" class="state-unread" bo-text="item.realname"></span>',
-            "name": '员工姓名',
-            "width": 150
+            "name": '姓名',
+            "width": 80
           },
           {
             "id": 3,
@@ -48,65 +48,66 @@
           {
             "id": 4,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.mobile"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.mobile | numberFormatFilter"></span>',
             "name": '手机号',
-            "width": 100
+            "width": 120
           },
           {
             "id": 4,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.allusername"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.username"></span>',
             "name": '登录账号',
-            "width": 110
+            "width": 160
           },
           {
             "id": 5,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.posname"></span>',
             "name": '岗位',
-            "width": 200
+            "width": 100
           },
           {
             "id": 6,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"></span>',
-            "name": '评价',
-            "width": 200
-          },
-          {
-            "id": 6,
-            "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.description"></span>',
-            "name": '员工简介',
-            "width": 200
+            "fieldDirective": '<span class="state-unread" bo-text="item.score"></span>',
+            "name": '评分',
+            "width": 60
           },
           {
             "id": 6,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
             "name": '权限',
-            "width": 200
+            "width": 120
           },
+          {
+            "id": 6,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.description"></span>',
+            "name": '员工简介',
+            "width": 160
+          },
+
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.status" ng-click="propsParams.statusItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.status"></div>',
-            "name": '是否允许登录店铺后台',
-            "width": 160
+            "fieldDirective": '<div ng-hide="item.isStorekeeper"><div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.status" ng-click="propsParams.statusItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.status"></div></div>',
+            "name": '登录后台',
+            "width": 80
           },
           {
             "id": 8,
             "cssProperty": "state-column",
-            "fieldDirective": '<div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.inservice" ng-click="propsParams.inserviceItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.status"></div>',
-            "name": '在职状态',
+            "fieldDirective": '<div ng-hide="item.isStorekeeper"><div cb-access-control="chebian:store:member:employee:edit" cb-switch checkstatus="item.inservice" ng-click="propsParams.inserviceItem(item)"></div><div cb-access-control="chebian:store:member:employee:edit:forbidden" cb-switch="forbidden" checkstatus="item.inservice"></div></div>',
+            "name": '在离职',
             "width": 80
           },
           {
             "id": 9,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-bind="item.onboarddate | date : \'yyyy年MM月dd日\'"></span>',
+            "fieldDirective": '<span class="state-unread" bo-bind="item.onboarddate | date : \'yyyy-MM-dd\'"></span>',
             "name": '入职时间',
-            "width": 140
+            "width": 82
           }
         ],
         "config": {
@@ -122,10 +123,10 @@
             maxSize: 5,
             showPageGoto: true
           },
+          'columnsClass': { "checkbox-hide": "isStorekeeper" },
           'addColumnsBarDirective': [
-            '<a class="btn btn-primary" cb-access-control="chebian:store:member:employee:add" ui-sref="member.employee.add()">添加员工</a> ',
-            '<button class="btn btn-danger" cb-access-control="chebian:store:member:employee:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> ',
-            '<button class="btn btn-warning" cb-access-control="chebian:store:member:employee:reset" ng-click="propsParams.resetItem()">重置密码</button> '
+            '<a class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:member:employee:add" ui-sref="member.employee.add()">新增员工</a> ',
+            '<button class="u-btn u-btn-danger u-btn-sm" cb-access-control="chebian:store:member:employee:remove" simple-grid-remove-item="guid" item="store" data-message="确定删除该员工？" remove-item="propsParams.removeItem(data)">员工删除</button> '
           ]
         }
       },

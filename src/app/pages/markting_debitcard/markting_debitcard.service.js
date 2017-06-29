@@ -30,26 +30,26 @@
           {
             "id": 3,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.rechargeamount | number : 2"></span>',
+            "fieldDirective": '<span class="state-unread" bo-bind="item.rechargeamount | number : 2"></span>',
             "name": '充值金额'
           },
           {
             "id": 4,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.giveamount | number : 2"></span>',
+            "fieldDirective": '<span class="state-unread" bo-bind="item.giveamount | number : 2"></span>',
             "name": '赠送金额',
             "width": 150
           },
           {
             "id": 6,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.quantity | number : 0"></span>',
+            "fieldDirective": '<span class="state-unread" bo-bind="item.quantity | number : 0"></span>',
             "name": '发卡数量'
           },
           {
             "id": 7,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.alequantity | number : 0"></span>',
+            "fieldDirective": '<span class="state-unread" bo-bind="item.salequantity | number : 0"></span>',
             "name": '已售'
           },
           {
@@ -61,7 +61,7 @@
           {
             "id": 9,
             "cssProperty": "state-column",
-            "fieldDirective": '<a href="javascript:;" class="u-btn-link" setting-debitcard-dialog="" item="item" item-handler="propsParams.saveorupdate(data)">编辑</a>',
+            "fieldDirective": '<a href="javascript:;" class="u-btn-link" setting-debitcard-dialog="edit" item="item" item-handler="propsParams.saveorupdate(data)">编辑</a>',
             "name": '操作'
           }
         ],
@@ -70,7 +70,7 @@
           'sortSupport': true,
           'useBindOnce': true,  // 是否单向绑定
           'addColumnsBarDirective': [
-            '<button class="u-btn u-btn-primary" setting-debitcard-dialog="" item-handler="propsParams.saveorupdate(data)" ng-if="propsParams.currentStatus == 1">添加</button> '
+            '<button class="u-btn u-btn-primary u-btn-sm" setting-debitcard-dialog="add" item-handler="propsParams.saveorupdate(data)" ng-if="propsParams.currentStatus == 1">添　加</button> '
           ]
         }
       },

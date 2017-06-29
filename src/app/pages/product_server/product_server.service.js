@@ -48,27 +48,27 @@
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.scatename1"></span>',
                       "field": "scatename1",
-                      "width": 150
+                      "width": 100
                     },
                     {
                       "id": 2,
-                      "name": "服务编码/图片",
+                      "name": "服务编码",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>',
+                      "fieldDirective": '<div><p bo-text="item.code"></p></div>',
                       "field": "code",
-                      "width": 120
+                      "width": 100
                     },
                     {
                       "id": 3,
                       "name": "服务名称",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.servername}}" text-length="10"></span>',
+                      "fieldDirective": '<div class="img-wrap"><span class="state-unread" style="width: 24px; height: 20px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><a ui-sref="product.server.edit({serverid: item.guid})" class="state-unread" cb-truncate-text="{{item.servername}}" text-length="10" bo-if="propsParams.currentStatus == 0"></a><span class="state-unread" cb-truncate-text="{{item.servername}}" text-length="10" bo-if="propsParams.currentStatus == 1"></span></div>',
                       "field": "servername",
                       "width": 150
                     },
                     {
                       "id": 4,
-                      "name": "工时费（元）",
+                      "name": "工时费",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.serverprice"></span>',
                       "width": 150
@@ -77,12 +77,12 @@
                       "id": 5,
                       "name": "销量",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span>笔</span>',
+                      "fieldDirective": '<span class="state-unread"><span bo-text="item.countso"></span> 笔</span>',
                       "width": 100
                     },
                     {
                       "id": 6,
-                      "name": "保修期（天）",
+                      "name": "保修期(天)",
                       "cssProperty": "state-column",
                       "fieldDirective": '<span class="state-unread" bo-text="item.shelflife"></span>',
                       "width": 100
@@ -91,7 +91,14 @@
                       "id": 7,
                       "name": "描述",
                       "cssProperty": "state-column",
-                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.seodescription}}" text-length="10"></span>',
+                      "fieldDirective": '<span class="state-unread" cb-truncate-text="{{item.abstracts}}" text-length="10"></span>',
+                      "width": 150
+                    },
+                    {
+                      "id": 8,
+                      "name": "创建时间",
+                      "cssProperty": "state-column",
+                      "fieldDirective": '<span class="state-unread" bo-text="item.createtime"></span>',
                       "width": 150
                     }
                 ],
@@ -110,10 +117,10 @@
                         showPageGoto: true
                     },
                     'addColumnsBarDirective': [
-                      '<button class="btn btn-primary" cb-access-control="chebian:store:product:server:edit" ui-sref="product.server.add()" ng-if="propsParams.currentStatus == 1">新增服务</button> ',
-                      '<button class="btn btn-warning" cb-access-control="chebian:store:product:server:putdown" simple-grid-change-status="removeServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务下架" ng-if="propsParams.currentStatus == 1">批量下架</button> ',
-                      '<button class="btn btn-success" cb-access-control="chebian:store:product:server:putup" simple-grid-change-status="resetRemoveServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="是否将所选的服务上架" ng-if="propsParams.currentStatus == 0">批量上架</button> ',
-                      '<button class="btn btn-danger" cb-access-control="chebian:store:product:server:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的服务删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 0">批量删除</button> '
+                      '<button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:product:server:edit" ui-sref="product.server.add()" ng-if="propsParams.currentStatus == 1">新增服务</button> ',
+                      '<button class="u-btn u-btn-warning u-btn-sm" cb-access-control="chebian:store:product:server:putdown" simple-grid-change-status="removeServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="确定将所选服务下架？" ng-if="propsParams.currentStatus == 1">下架服务</button> ',
+                      '<button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:product:server:putup" simple-grid-change-status="resetRemoveServers" item="store" status-item="propsParams.statusItem(data)" data-status-id="guid" data-message="确定将所选服务上架？" ng-if="propsParams.currentStatus == 0">上架服务</button> ',
+                      '<button class="u-btn u-btn-danger u-btn-sm" cb-access-control="chebian:store:product:server:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="是否将所选的服务删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 0">删除服务</button> '
                     ]
                 }
             },

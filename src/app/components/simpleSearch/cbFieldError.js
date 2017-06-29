@@ -22,16 +22,21 @@
           iElement.css({'position': 'relative'});
         // 监听属性触发器
         var error = scope.$watch("fieldErrorStatus", function (val) {
-          console.log('cbFieldError',arguments);
           if(angular.isDefined(val)){
-            console.log('cbFieldError', val);
             if(val){
               create();
+              if(!_.isUndefined(iAttrs.fieldErrorMsg)){
+                show(iAttrs.fieldErrorMsg);
+              }
             }else{
               hide();
             }
           }
         });
+
+        if(iAttrs.fieldErrorMsg){
+          show(iAttrs.fieldErrorMsg);
+        }
 
         // 监听属性触发器
         var message = scope.$watch("fieldErrorMessage", function (val) {

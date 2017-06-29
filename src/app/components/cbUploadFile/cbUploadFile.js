@@ -25,7 +25,7 @@
     var DEFAULT_DATA = {
       uid: 0,
       fileNumLimit: 1,
-      fileSizeLimit: 3 + "mb"
+      fileSizeLimit: 2 + "mb"
     };
     return {
       restrict: "A",
@@ -61,7 +61,6 @@
               runtimes : 'html5,flash,silverlight,html4',
               browse_button : 'addFiles',
               multiple_queues: true,
-              chunk_size: '1mb',
               filters: {
                 max_file_size : config.fileSizeLimit,
                 // Specify what files to browse for
@@ -144,7 +143,10 @@
               if(isClear && !isError){
                 console.log(results);
                 scope.uploadItem({data: {"status":"0", "data": results, type: uploadType}});
-                childScope.close();
+                // childScope.close();
+                $timeout(function () {
+                  childScope.close();
+                }, 2000);
               }
               start.addClass('upload-disabled');
               scope.$apply();
@@ -152,6 +154,7 @@
             upload.bind('Error', function (up, err) {
               console.log('Error', err);
               console.log('Error', err.message);
+              console.log(err.status);
               if(err.code == -600){
                 childScope.danger = "文件超过"+config.fileSizeLimit+"，请重新选择上传";
               }

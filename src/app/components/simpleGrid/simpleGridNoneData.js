@@ -15,9 +15,9 @@
       scope: {
         infoMsg : "@"
       },
-      template: '<div class="row-padding row-margin text-center">\
-                    <span class="text-size-16 text-success icon-info-1" style="vertical-align: middle">？</span>\
-                    <div class="text-size-16 tip-text inline-block" ng-bind-html="infoMsg"></div>\
+      template: '<div class="f-tac">\
+                    <span class="icon-not_data"></span>\
+                    <div class="tip-text" ng-bind-html="infoMsg"></div>\
                   </div>'
     }
   }

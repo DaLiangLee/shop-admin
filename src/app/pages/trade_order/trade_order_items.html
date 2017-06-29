@@ -1,7 +1,151 @@
 <div>
-  <div ng-form="list" trade-order-item item="item" ng-repeat="item in details" bindonce=""></div>
-  <div class="service-add">
-    <button class="u-btn u-btn-primary u-btn-lg" order-service-dialog items="details" handler="addService(data)">+ 服务单</button>
-    <button class="u-btn u-btn-primary u-btn-lg" order-product-dialog handler="addProduct(data)">+ 商品单</button>
-  </div>
+    <div class="add-order-item f-tar">
+        <div class="package" style="margin-right: 10px;">
+          <div ng-if="!isSelectedPackage && package">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="togglePackage()"  ng-disabled="isService">套餐卡(<span ng-bind="package.length"></span>)  </button>
+            <ul bindonce="package" ng-if="packageShow">
+              <li ng-repeat="item in package" orader-package-dialog items="item" handler="addPackage(data, item)">
+                <span bo-text="item.packagename"></span>
+              </li>
+            </ul>
+          </div>
+          <div ng-if="isSelectedPackage">
+            <span class="u-btn u-btn-default u-btn-sm" ng-bind="currentPackage.packagename" orader-package-dialog items="currentPackage" change="details" handler="addPackage(data, currentPackage)"></span>
+            <span class="icon-remove_circle f-curp" style="font-size: 20px;" ng-click="clearedPackage()"></span>
+          </div>
+        </div>
+        <button class="u-btn u-btn-primary u-btn-sm" order-service-dialog items="details" handler="addService(data)" ng-disabled="isPackage">选择服务</button>
+        <button class="u-btn u-btn-primary u-btn-sm" order-product-dialog items="details" handler="addProduct(data)" ng-disabled="isPackage">选择商品</button>
+    </div>
+    <div>
+      <div class="trade-order-item">
+        <div class="thead f-cb" style="width: 100%;">
+          <div class="td td1">&nbsp;</div>
+          <div class="td td2"><span style="margin-left: 50px;">名称</span></div>
+          <div class="td td3 f-tar"><span>原价</span></div>
+          <div class="td td4 f-tar"><span>数量</span></div>
+          <div class="td td5 f-tar"><span>优惠</span></div>
+          <div class="td td6 f-tar"><span>合计</span></div>
+          <div class="td td7 f-tac"><span>施工员</span></div>
+          <div class="td td8 f-tac"><span>备注</span></div>
+          <div class="td td9 f-tac"><span>设为常用</span></div>
+        </div>
+        <div class="tbody f-cb" ng-if="isPackage">
+          <dl ng-repeat="item in details" bindonce="" ng-class="{'striped': $odd}">
+            <dt>
+            <div class="td td1 f-tac"><span class="icon-minus text-danger f-curp" ng-click="removeItem(item)"></span></div>
+            <div class="td td2">
+              <div class="item-name">
+                <span class="tags tags-service" bo-if="item.itemtype == 0">服务</span>
+                <span class="tags tags-product" bo-if="item.itemtype == 1">商品</span>
+                <span class="text" bo-title="item.itemname" bo-text="item.itemname"></span>
+              </div>
+            </div>
+            <div class="td td3 f-tar">
+              <span class="output-price" bo-bind="item.originprice | number : '2'"></span>
+            </div>
+            <div class="td td4 f-tar">
+              <span class="output-price" bo-bind="item.num"></span>
+            </div>
+            <div class="td td5 f-tar">
+              <span class="output-price text-red" bo-if="item.preferential">-<span bo-bind="item.preferential | number : '2'"></span></span>
+            </div>
+            <div class="td td6 f-tar">
+              <span class="output-price" bo-bind="item.$allprice"></span>
+            </div>
+            <div class="td td7 f-tac">
+              <span class="tags">张三</span>
+            </div>
+            <div class="td td8 f-tac">
+              <div cb-remark remark-content="item.remark" handle-remark="updateItemRemark(data, item)"></div>
+            </div>
+            <div class="td td9 f-tac">
+              <input type="checkbox" ng-model="item.commonlyused" ng-change="setCommonlyused(item)" class="f-curp">
+            </div>
+            </dt>
+          </dl>
+        </div>
+        <div class="tbody f-cb" ng-if="isService">
+          <dl ng-form="list" ng-repeat="item in details" bindonce="" ng-class="{'striped': $odd}">
+            <dt>
+              <div class="td td1 f-tac"><span class="icon-minus text-danger f-curp" ng-click="removeItem(item)"></span></div>
+              <div class="td td2">
+                <div class="item-name">
+                  <span class="tags tags-service" bo-if="item.itemtype == 0">服务</span>
+                  <span class="tags tags-product" bo-if="item.itemtype == 1">商品</span>
+                  <span class="text" bo-title="item.itemname" bo-text="item.itemname"></span>
+                  <span class="link" bo-if="item.itemtype == 0" order-product-dialog items="item.products" handler="addServiceProduct(data, item)">+材料</span>
+                </div>
+              </div>
+              <div class="td td3 f-tar">
+                <div class="input-price">
+                  <input class="input-control" type="text" ng-model="item.price" number-range=""
+                         data-value-min="0" name="servicePrice" data-value-max="999999.99" data-value-step="0.01" data-range-enabled placeholder="单价"
+                         ng-blur="updateItemPrice(item)" cb-placeholder maxlength="9">
+                </div>
+              </div>
+              <div class="td td4 f-tar">
+                <div class="input-price">
+                  <input class="input-control" type="text" ng-model="item.num" number-range=""
+                         data-value-min="1" name="servicePrice" data-value-max="999" data-value-step="1" data-range-enabled placeholder="数量"
+                         ng-blur="updateItemNum(item)" cb-placeholder maxlength="3">
+                </div>
+              </div>
+              <div class="td td5 f-tar">
+                <span class="output-price">0</span>
+              </div>
+              <div class="td td6 f-tar">
+                <span class="output-price" ng-bind="item.$allprice | number : '2'"></span>
+              </div>
+              <div class="td td7 f-tac">
+                zhangsan
+              </div>
+              <div class="td td8 f-tac">
+                <div cb-remark remark-content="item.remark" handle-remark="updateItemRemark(data, item)"></div>
+              </div>
+              <div class="td td9 f-tac">
+                <input bo-if="!item.isSystem" type="checkbox" ng-model="item.commonlyused" ng-change="setCommonlyused(item)" class="f-curp">
+              </div>
+            </dt>
+            <dd class="products" ng-if="item.products && item.products.length" ng-repeat="subitem in item.products">
+              <div class="td td1 f-tac"><span class="icon-minus text-danger f-curp" ng-click="removeItem(item, subitem)"></span></div>
+              <div class="td td2">
+                <div class="item-name">
+                  <span class="tags">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span class="text" bo-title="subitem.itemname" bo-text="subitem.itemname"></span>
+                </div>
+              </div>
+              <div class="td td3 f-tar">
+                <div class="input-price">
+                  <input class="input-control" type="text" ng-model="subitem.price" number-range=""
+                         data-value-min="0" name="servicePrice" data-value-max="999999.99" data-value-step="0.01" data-range-enabled placeholder="单价"
+                         ng-blur="updateItemPrice(item, subitem)" cb-placeholder maxlength="9">
+                </div>
+              </div>
+              <div class="td td4 f-tar">
+                <div class="input-price">
+                  <input class="input-control" type="text" ng-model="subitem.num" number-range=""
+                         data-value-min="1" name="servicePrice" data-value-max="999" data-value-step="1" data-range-enabled placeholder="数量"
+                         ng-blur="updateItemNum(item, subitem)" cb-placeholder maxlength="3">
+                </div>
+              </div>
+              <div class="td td5 f-tar">
+                <span class="price">0</span>
+              </div>
+              <div class="td td6 f-tar">
+                <span class="price" ng-bind="subitem.$allprice"></span>
+              </div>
+              <div class="td td7 f-tac"></div>
+              <div class="td td8 f-tac"></div>
+              <div class="td td9 f-tac">
+                <input bo-if="!subitem.isSystem" type="checkbox" ng-model="subitem.commonlyused" ng-change="setCommonlyused(item, subitem)" class="f-curp">
+              </div>
+            </dd>
+          </dl>
+        </div>
+        <div class="f-tac" style="margin: 200px 0; color:#999;" ng-if="!details.length">
+          <h2 class="h1 f-fwb">请选择服务或商品，或使用套餐卡</h2>
+        </div>
+      </div>
+    </div>
 </div>

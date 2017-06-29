@@ -6,6 +6,7 @@
   angular
     .module('shopApp')
     .factory('vehicleSelection', vehicleSelection)
+    .factory('requestBrandData', requestBrandData)
     .directive('cbVehicleSelect', cbVehicleSelect)
     .directive('cbVehicleShow', cbVehicleShow);
 
@@ -15,6 +16,27 @@
     return requestService.request('vehicle', 'motor');
   }
 
+  /** @ngInject */
+  function requestBrandData(vehicleSelection, cbAlert) {
+    var BRAND_DATA = null;
+    return {
+      get: function (callback) {
+        if (BRAND_DATA === null) {
+          vehicleSelection['brand']().then(function (results) {
+            if (results.data.status === 0) {
+              BRAND_DATA = results.data.data;
+              callback && callback(results.data.data);
+            } else {
+              cbAlert.error("错误提示", results.data.data);
+            }
+          });
+        } else {
+          callback && callback(_.cloneDeep(BRAND_DATA));
+        }
+      }
+    };
+  }
+
   /**
    * data         获取交互数据
    * config       配置信息
@@ -22,7 +44,7 @@
    */
 
   /** @ngInject */
-  function cbVehicleSelect($filter, $timeout, $window, cbDialog, cbAlert, vehicleSelection, treeService) {
+  function cbVehicleSelect($timeout, cbDialog, requestBrandData, vehicleSelection, treeService) {
 
     function getSeriesTitle(collection, target) {
       var regular = new RegExp('^' + target);
@@ -37,13 +59,20 @@
      */
     var setFormatData = function (level, data, item) {
       console.log('setFormatData', level, data, item);
-
       _.forEach(data, function (value) {
+        //console.log('setFormatData', value, level, data, item);
         value.level = level;
-        if (!value.title && value.level == 1) {
+        if (!value.title && value.level === 1) {
           value.title = value.brand;
-        } else if (!value.title && value.level == 2) {
+          value.brandid = value.id;
+        } else if (!value.title && value.level === 2) {
           value.title = getSeriesTitle(value.series, item.brand);
+        } else if (!value.title && value.level === 3) {
+          value.title = item.title + " " + value.year;
+        } else if (!value.title && value.level === 4) {
+          value.title = item.title + " " + value.output;
+        } else if (!value.title && value.level === 5) {
+          value.title = value.model;
         }
         if (angular.isUndefined(value.logo)) {
           value.logo = item.logo;
@@ -54,9 +83,7 @@
         if (angular.isUndefined(value.brand)) {
           value.brand = item.brand;
         }
-        if (angular.isUndefined(value.brandid) && value.level == 1) {
-          value.brandid = value.id;
-        } else {
+        if (angular.isUndefined(value.brandid) && value.level > 1) {
           value.brandid = item.brandid;
         }
         if (angular.isUndefined(value.seriesid) && value.level > 1) {
@@ -68,6 +95,26 @@
         }
         if (angular.isUndefined(value.series) && value.level > 1) {
           value.series = item.series;
+        }
+        if (angular.isUndefined(value.yearid) && value.level > 2) {
+          if (item && item.yearid) {
+            value.yearid = item.yearid
+          } else {
+            value.yearid = value.id;
+          }
+          if (angular.isUndefined(value.year)) {
+            value.year = item.year;
+          }
+        }
+        if (angular.isUndefined(value.outputid) && value.level > 3) {
+          if (item && item.outputid) {
+            value.outputid = item.outputid
+          } else {
+            value.outputid = value.id;
+          }
+          if (angular.isUndefined(value.output)) {
+            value.output = item.output;
+          }
         }
       });
       return data;
@@ -105,6 +152,35 @@
         5: key.brandid == item.brandid && key.seriesid == item.seriesid && key.year == item.year && key.outputid == item.outputid
       }[level];
     };
+
+    var getSubmitData = {
+      'series': function (item) {
+        return {
+          brandid: item.brandid
+        };
+      },
+      'year': function (item) {
+        return {
+          brandid: item.brandid,
+          seriesid: item.seriesid
+        };
+      },
+      'output': function (item) {
+        return {
+          brandid: item.brandid,
+          seriesid: item.seriesid,
+          year: item.year
+        };
+      },
+      'model': function (item) {
+        return {
+          brandid: item.brandid,
+          seriesid: item.seriesid,
+          year: item.year,
+          outputid: item.outputid
+        };
+      }
+    };
     return {
       restrict: "A",
       scope: {
@@ -112,21 +188,10 @@
         handler: "&"
       },
       link: function (scope, iElement, iAttrs) {
-        var getSubmitData = {
-          'series': function (item) {
-            return {
-              brandid: item.brandid
-            };
-          }
-        };
+
         var brandList = [];
 
         function handler(childScope) {
-          /**
-           * 结果数组
-           * @type {Array}
-           */
-          console.log(angular.toJson(scope.select));
           /**
            * 加载子数据
            * @param level    当前等级
@@ -145,10 +210,49 @@
             });
           }
 
+
           var clearSubkeys = {
             'series': function () {
               childScope.seriesList = [];
+              childScope.yearList = [];
+              childScope.outputList = [];
+              childScope.modelList = [];
+              childScope.searchSeries.searchText = "";
+              childScope.searchYear.searchText = "";
+              childScope.searchOutput.searchText = "";
+              childScope.searchModel.searchText = "";
+              childScope.searchSeries.searchData = {};
+              childScope.searchYear.searchData = {};
+              childScope.searchOutput.searchData = {};
+              childScope.searchModel.searchData = {};
               return childScope.brandList;
+            },
+            'year': function () {
+              childScope.yearList = [];
+              childScope.outputList = [];
+              childScope.modelList = [];
+              childScope.searchYear.searchText = "";
+              childScope.searchOutput.searchText = "";
+              childScope.searchModel.searchText = "";
+              childScope.searchYear.searchData = {};
+              childScope.searchOutput.searchData = {};
+              childScope.searchModel.searchData = {};
+              return childScope.seriesList;
+            },
+            'output': function () {
+              childScope.outputList = [];
+              childScope.modelList = [];
+              childScope.searchOutput.searchText = "";
+              childScope.searchModel.searchText = "";
+              childScope.searchOutput.searchData = {};
+              childScope.searchModel.searchData = {};
+              return childScope.yearList;
+            },
+            'model': function () {
+              childScope.modelList = [];
+              childScope.searchModel.searchText = "";
+              childScope.searchModel.searchData = {};
+              return childScope.outputList;
             }
           };
 
@@ -157,25 +261,52 @@
            * @param item
            */
           var getState = function (item) {
-            var items = _.find(childScope.brandList, function (key) {
+            var items = _.find(childScope.brandList, function(key){
               return key.brandid == item.brandid;
             });
-            if (_.isUndefined(items.items)) {
+
+            if(_.isUndefined(items.items)){
               return items;
             }
-            var items2 = _.find(items.items, function (key) {
+            console.log(items.items);
+            var items2 = _.find(items.items, function(key){
+              console.log(key.seriesid , item)
               return key.seriesid == item.seriesid;
             });
-            if (_.isUndefined(items2.items)) {
+            console.log(items2);
+            if(_.isUndefined(items2.items)){
               return items2;
             }
+            console.log(items2.items);
+            var items3 = _.find(items2.items, function(key){
+              return key.year == item.year;
+            });
+            console.log(items3);
+            if(_.isUndefined(items3.items)){
+              return items3;
+            }
+            console.log(items3.items);
+            var items4 = _.find(items3.items, function(key){
+              return key.outputid == item.outputid;
+            });
+            console.log(items4);
+            if(_.isUndefined(items4.items)){
+              return items4;
+            }
+            console.log(items4.items);
+            return _.find(items4.items, function(key){
+              return key.modelid == item.modelid;
+            });
           };
-
 
           /**
            * 获取车辆品牌列表
            */
           childScope.brandList = setFormatData(1, treeService.enhance(brandList));
+
+          /**
+           * 判断
+           */
           if (angular.isDefined(scope.select)) {
             childScope.dataLists = [];
             if (angular.isArray(scope.select)) {
@@ -183,8 +314,7 @@
             } else {
               getSelect(angular.fromJson(scope.select));
             }
-            console.log(childScope.dataLists);
-          }else{
+          } else {
             childScope.dataLists = [];
           }
 
@@ -196,7 +326,7 @@
 
           /**
            * 获取对应的列表，来设置状态
-           * @param item
+           * @param arr
            */
           function getSelect(arr) {
             if (angular.isUndefined(arr) || !arr.length) {
@@ -220,7 +350,26 @@
                   results.push(value);
                 });
               }
+              if (_.isArray(item.year) && item.year.length) {
+                _.forEach(item.year, function (value) {
+                  value.level = 3;
+                  results.push(value);
+                });
+              }
+              if (_.isArray(item.output) && item.output.length) {
+                _.forEach(item.output, function (value) {
+                  value.level = 4;
+                  results.push(value);
+                });
+              }
+              if (_.isArray(item.model) && item.model.length) {
+                _.forEach(item.model, function (value) {
+                  value.level = 5;
+                  results.push(value);
+                });
+              }
             });
+            console.log('getSelect', results);
             getSubKeysData(results);
             return results;
           }
@@ -234,24 +383,138 @@
               result[item.level].push(item);
             });
 
-
             result[2] && _.forEach(_.uniq(result[2], 'brandid'), function (value) {
-              var items = _.filter(result[2], function (n) {
+              var items = _.filter(result[2], function(n){
                 return n.brandid == value.brandid && !n.isChecked;
               });
               var parent = getState(value);
-
               loadingSubData(2, parent, 'series', 'seriesList', function () {
                 var currentArray = _.filter(result[2], function (n) {
                   return n.brandid == value.brandid;
                 });
                 _.forEach(currentArray, function (value2) {
-                  getState(value2).$setCheckState(true);
+                  if(value2.isChecked){
+                    getState(value2).$setCheckState(true);
+                  }
                 });
+                result[3] && setYear(items);
               });
             });
+            function setYear(list){
+              _.forEach(_.uniq(list, 'seriesid'), function (value) {
+                var items = _.filter(result[3], function(n){
+                  return n.brandid == value.brandid && n.seriesid == value.seriesid && !n.isChecked;
+                });
+                var parent = getState(value);
+                loadingSubData(3, parent, 'year', 'yearList', function () {
+                  var currentArray = _.filter(result[3], function (n) {
+                    return n.seriesid == value.seriesid;
+                  });
+                  _.forEach(currentArray, function (value2) {
+                    if(value2.isChecked){
+                      getState(value2).$setCheckState(true);
+                    }
+                  });
+                  result[4] && setOutput(items);
+                });
+              });
+            }
+            function setOutput(list){
+              _.forEach(_.uniq(list, 'year'), function (value) {
+                var items = _.filter(result[4], function(n){
+                  return n.brandid == value.brandid && n.seriesid == value.seriesid && n.year == value.year && !n.isChecked;
+                });
+                var parent = getState(value);
+                loadingSubData(4, parent, 'output', 'outputList', function () {
+                  var currentArray = _.filter(result[4], function (n) {
+                    return n.year == value.year;
+                  });
+                  _.forEach(currentArray, function (value2) {
+                    if(value2.isChecked){
+                      getState(value2).$setCheckState(true);
+                    }
+                  });
+                  result[5] && setModel(items);
+                });
+              });
+            }
+            function setModel(list){
+              _.forEach(_.uniq(list, 'outputid'), function (value) {
+                var parent = getState(value);
+                loadingSubData(5, parent, 'model', 'modelList', function () {
+                  var currentArray = _.filter(result[5], function (n) {
+                    return n.outputid == value.outputid;
+                  });
+                  _.forEach(currentArray, function (value2) {
+                    getState(value2).$setCheckState(true);
+                  });
+                });
+              });
+            }
           }
 
+          // 车型选择组件中输入车型的首字母或汉字无法查询
+          childScope.searchBrand = {
+            searchText: "",
+            firsthandle: function () {
+              if (/^[A-Z]$/.test(this.searchText)) {
+                this.searchData = {
+                  firstletter: this.searchText
+                }
+              } else {
+                this.searchData = {
+                  brand: this.searchText
+                }
+              }
+            },
+            searchData: {}
+          };
+
+          // 车型选择组件中输入车型的首字母或汉字无法查询
+          childScope.searchSeries = {
+            searchText: "",
+            firsthandle: function () {
+              this.searchData = {
+                series: this.searchText
+              }
+            },
+            searchData: {}
+          };
+
+          // 车型选择组件中输入车型的首字母或汉字无法查询
+          childScope.searchYear = {
+            searchText: "",
+            firsthandle: function () {
+              this.searchData = {
+                year: this.searchText
+              }
+            },
+            searchData: {}
+          };
+
+
+          // 车型选择组件中输入车型的首字母或汉字无法查询
+          childScope.searchOutput = {
+            searchText: "",
+            firsthandle: function () {
+              this.searchData = {
+                output: this.searchText
+              }
+            },
+            searchData: {}
+          };
+
+
+          // 车型选择组件中输入车型的首字母或汉字无法查询
+          childScope.searchModel = {
+            searchText: "",
+            firsthandle: function () {
+              this.searchData = {
+                model: this.searchText
+              }
+            },
+            searchData: {}
+          };
 
 
           /**
@@ -297,7 +560,6 @@
           function setList(list) {
             childScope.dataLists.push(list);
             childScope.dataLists = _.sortBy(_.uniq(childScope.dataLists), 'brandid');
-            console.log('setList', childScope.dataLists);
           }
 
           /**
@@ -338,7 +600,7 @@
              *  如果以上条件都满足，就把所有子级全部在list删除
              *  添加当前的项
              */
-            if (item.$checked && item.level != 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))) {
+            if (item.$checked && item.level !== 5 && !(item.$parent && _.every(item.$parent.items, '$checked'))) {
               _.remove(childScope.dataLists, function (key) {
                 return isRemoveChecked(item, key, item.level);
               });
@@ -468,12 +730,11 @@
                 "isChecked": item.length === 1 && item[0].$checked
               }
             }
-
-            function getSeries(item) {
+            function getSeries(item){
               if (!item.length) {
-                return;
+                return ;
               }
-              var results = [];
+              var result = [];
               var items = _.filter(item, function (key) {
                 return key.brandid && key.seriesid;
               });
@@ -481,20 +742,97 @@
                 return;
               }
               _.forEach(items, function (value) {
-                results.push({
+                result.push({
                   "id": value.seriesid,
                   "brandid": value.brandid,
                   "series": value.series,
-                  "seriesid": value.seriesid
+                  "seriesid": value.seriesid,
+                  "isChecked": angular.isUndefined(value.year)
                 });
               });
-              return _.uniq(results, 'id');
+              return result;
             }
-
+            function getYear(item){
+              if (!item.length) {
+                return;
+              }
+              var result = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                result.push({
+                  "id": value.yearid,
+                  "brandid": value.brandid,
+                  "seriesid": value.seriesid,
+                  "year": value.year,
+                  "isChecked": angular.isUndefined(value.outputid)
+                });
+              });
+              return result;
+            }
+            function getOutput(item){
+              if (!item.length) {
+                return;
+              }
+              var result = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year && key.outputid;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                result.push({
+                  "id": value.outputid,
+                  "brandid": value.brandid,
+                  "seriesid": value.seriesid,
+                  "year": value.year,
+                  "output": value.output,
+                  "outputid": value.outputid,
+                  "isChecked": angular.isUndefined(value.modelid)
+                });
+              });
+              return result;
+            }
+            function getModel(item){
+              if (!item.length) {
+                return;
+              }
+              var result = [];
+              var items = _.filter(item, function (key) {
+                return key.brandid && key.seriesid && key.year && key.outputid && key.model;
+              });
+              if (!items.length) {
+                return;
+              }
+              _.forEach(items, function (value) {
+                result.push({
+                  "id": value.modelid,
+                  "modelid": value.modelid,
+                  "brandid": value.brandid,
+                  "firstletter": value.firstletter,
+                  "gearid": value.gearid,
+                  "logo": value.logo,
+                  "model": value.model,
+                  "outputid": value.outputid,
+                  "seriesid": value.seriesid,
+                  "structid": value.structid,
+                  "year": value.year
+                });
+              });
+              return result;
+            }
             _.forEach(brand, function (item) {
               results.push({
                 brand: getBrand(item),
-                series: getSeries(item)
+                series: getSeries(item),
+                year: getYear(item),
+                output: getOutput(item),
+                model: getModel(item)
               });
             });
             return results;
@@ -517,18 +855,12 @@
           /**
            * 获取车辆品牌列表
            */
-          vehicleSelection['brand']().then(function (results) {
-            if (results.data.status == 0) {
-              brandList = results.data.data;
-              cbDialog.showDialogByUrl("app/components/cbVehicle/cbVehicleSelect.html", handler, {
-                windowClass: "viewFramework-cb-vehicle-select-dialog"
-              });
-            } else {
-              cbAlert.error("错误提示", results.data.data);
-            }
-          });
-
-
+          requestBrandData.get(function (results) {
+            brandList = _.clone(results);
+            cbDialog.showDialogByUrl("app/components/cbVehicle/cbVehicleSelect.html", handler, {
+              windowClass: "viewFramework-cb-vehicle-select-dialog"
+            });
+          })
         });
       }
     }
@@ -548,7 +880,7 @@
         // 显示个数
         var size = 4;
 
-        if(iAttrs.cbVehicleShow !== "edit"){
+        if (iAttrs.cbVehicleShow !== "edit") {
           iElement.find('.vehicle-edit').remove();
         }
 
@@ -559,7 +891,7 @@
         /**
          * 根据列表长度显示 设置更多class，做一些其他处理
          */
-        function addMoreClass(){
+        function addMoreClass() {
           iElement.find('.brand-box').toggleClass('more', listLength > size);
         }
 
@@ -568,9 +900,9 @@
          * 拼合logo地址
          * 获取列表长度
          */
-        function setLsit(){
+        function setLsit() {
           scope.list = [];
-          if(angular.isDefined(scope.store)){
+          if (angular.isDefined(scope.store)) {
             scope.list = angular.fromJson(scope.store);
           }
           listLength = scope.list.length;
@@ -588,14 +920,13 @@
 
         scope.vehicleShow = function (data) {
           if (data.status == 0) {
-            console.log('vehicleShow', data);
             scope.store = data.data;
             setLsit();
             addMoreClass();
-            $timeout(function(){
-              scope.length = listLength;
-              scope.isOpen = true;
-            },100);
+            $timeout(function () {
+              scope.length = size;
+              scope.isOpen = false;
+            }, 100);
             scope.handler({data: {"status": "0", "data": scope.store}});
           }
         };
@@ -605,8 +936,8 @@
         iElement.on('click', function (event) {
           event.stopPropagation();
         });
-        $document.on('click', function(){
-          scope.$apply(function(){
+        $document.on('click', function () {
+          scope.$apply(function () {
             scope.isOpen = false;
             scope.length = size;
           });
@@ -615,3 +946,6 @@
     }
   }
 })();
+
+
+

@@ -12,21 +12,29 @@
     .controller('StoreShopHomeAptitudeController', StoreShopHomeAptitudeController);
 
   /** @ngInject */
-  function StoreShopHomeController(shopHome, cbAlert) {
+  function StoreShopHomeController(shopHome, cbAlert, memberEmployee, shophomeService) {
     var vm = this;
     vm.dataBase = {};
+    vm.description = {
+        maxLength: 200,
+        placeholder: "写点什么吧!",
+        interceptor: {
+            show: false,
+            text: '确定就这些吗？',
+            confirmText: '确 定',
+            closeText: '取 消'
+        }
+    };
 
     /**
      * 获取商铺所有数据
      */
-    shopHome.manager().then(function (results) {
-      if (results.data.status == '0') {
-        vm.dataBase = results.data.data;
-        vm.dataBase.store.countIsshow = results.data.countIsshow;
-      } else {
-        cbAlert.error(results.data.data);
-      }
+    shophomeService.getInfo().then(function(results) {
+        vm.dataBase = results.data;
+        vm.dataBase.store.countIsshow = results.countIsshow || 0;
+      // _.remove(vm.dataBase.allonelevel, {'catename': '其他'});
     });
+
     vm.getScopeStatus = function (item, list) {
       return angular.isDefined(_.find(list, function (key) {
         return key.id == item.id;
@@ -41,9 +49,10 @@
         shopHome.saveDescription({
           description: data.content
         }).then(function (results) {
-          if (results.data.status == '0') {
+          if (results.data.status === 0) {
             cbAlert.tips("修改商户介绍成功");
             vm.dataBase.store.description = data.content;
+            shophomeService.setInfo(vm.dataBase);
           } else {
             cbAlert.error(results.data.data);
           }
@@ -70,6 +79,8 @@
           }).then(function (results) {
             if (results.data.status == '0') {
               cbAlert.tips("修改店招图片成功");
+              vm.dataBase.store.photos = results.config.data.photos;
+              shophomeService.setInfo(vm.dataBase);
             } else {
               cbAlert.error(results.data.data);
             }
@@ -99,6 +110,7 @@
         if (results.data.status == '0') {
           cbAlert.tips("修改店招图片成功");
           vm.dataBase.store.photos.splice(index, 1);
+          shophomeService.setInfo(vm.dataBase);
         } else {
           cbAlert.error(results.data.data);
         }
@@ -115,6 +127,7 @@
             cbAlert.tips("修改营业时间成功");
             vm.dataBase.store.opentime = data.data.opentime;
             vm.dataBase.store.closetime = data.data.closetime;
+            shophomeService.setInfo(vm.dataBase);
           } else {
             cbAlert.error(results.data.data);
           }
@@ -131,22 +144,36 @@
           if (results.data.status == '0') {
             cbAlert.tips("修改客服电话成功");
             vm.dataBase.store.telephone = data.data;
+            shophomeService.setInfo(vm.dataBase);
           } else {
             cbAlert.error(results.data.data);
           }
         });
       }
-    }
+    };
 
     /**
      * 修改员工风采
      * @param data
      */
     vm.memberHandler = function (data) {
-      if (data.status == '0') {
-        vm.dataBase.store.countIsshow = data.data;
+      if (data.status === '0') {
+        if(data.data !== null){
+          memberEmployee.changeshow(data.data).then(function (results) {
+            if(results.data.status == "0"){
+              cbAlert.tips("修改成功！");
+              vm.dataBase.store.countIsshow = results.data.data;
+              vm.dataBase.$countIsshow = results.data.data;
+              shophomeService.setInfo(vm.dataBase);
+            }else{
+              cbAlert.error(results.data.data);
+            }
+          });
+
+        }
+
       }
-    }
+    };
   }
 
   /** @ngInject */
@@ -160,6 +187,10 @@
     shopHome.getStoreAptitude().then(function (results) {
       if (results.data.status == '0') {
         vm.dataBase = results.data.data;
+        if (vm.dataBase.createtime && vm.dataBase.createtime.indexOf("-") > -1) {
+          vm.dataBase.createtime = vm.dataBase.createtime.replace(/\-/gi, "/");
+        }
+        vm.dataBase.createtime && (vm.dataBase.createtime = new Date(vm.dataBase.createtime));
       } else {
         cbAlert.error(results.data.data);
       }

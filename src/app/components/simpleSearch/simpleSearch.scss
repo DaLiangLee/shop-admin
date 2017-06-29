@@ -1,16 +1,27 @@
 .search-wrap{
-  width:400px;
+  width: 453px;
   padding: 1px;
   //border:1px solid #93c3e4;
   border-radius:6px;
   position: relative;
   overflow: hidden;
   float: left;
+  .input-control{
+    width: 100%;
+  }
+  .u-btn{
+    height: 34px;
+    line-height: 34px;
+    width: 88px;
+  }
 }
 .search-text{
   height: 30px;
   width: 397px;
   padding:0 30px 0 14px;
+  &.input-control {
+    border-radius: 4px 0 0 4px;
+  }
 }
 .icon-search{
   position: absolute;
@@ -18,24 +29,41 @@
   height: 20px;
   right:10px;
   top:6px;
-}
-.icon-search:before{
-  content: "\e918";
-  color:#2787ca;
-  font-weight: bold;
+  &:before{
+    content: "\e91e";
+    color:#2787ca;
+    font-weight: bold;
+  }
 }
 .click-more{
   float: left;
   width:82px;
   padding-left:20px;
   line-height:32px;
-  border: 1px solid #088ae3;
+  //border: 1px solid #088ae3;
   border-radius:4px;
   background:none;
   color:#2787ca;
+  margin-left: 16px;
   font-size:14px;
   cursor: pointer;
   margin-top: 1px;
+}
+.caret{
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+.dropup .caret{
+  border-top: none;
+  border-bottom: 4px dashed;
+  border-bottom: 4px solid\9;
 }
 .lineH3{
   line-height:34px;
@@ -50,5 +78,7 @@
 .isshowmore {
   .control-label{
     width: auto;
+    padding-right:10px;
+
   }
 }

@@ -62,12 +62,7 @@
         var forceEllipses = angular.isDefined($attrs.forceEllipses) ? $scope.$parent.$eval($attrs.forceEllipses) : simpleGridPageConfig.forceEllipses;
 
         var rotate = angular.isDefined($attrs.rotate) ? $scope.$parent.$eval($attrs.rotate) : simpleGridPageConfig.rotate;
-        // 一页多少条数据
-        if(angular.isDefined($scope.paginationInfo)){
-          var maxSize = angular.isDefined($scope.paginationInfo.pageSize) ? $scope.paginationInfo.pageSize : simpleGridPageConfig.itemsPerPage;
-        }else{
-          var maxSize = simpleGridPageConfig.itemsPerPage;
-        }
+        var maxSize = 0;
 
         // 格式化内容
         var pageLabel = function(num){
@@ -80,26 +75,38 @@
           return $scope[key + 'Text'] || simpleGridPageConfig[key + 'Text'];
         };
 
-        // 当前页面
-        $scope.page = $scope.paginationInfo.page;
-
-        // 计算总页数
-        $scope.totalPages = Math.ceil($scope.paginationInfo.total/$scope.paginationInfo.pageSize);
-
-        // 禁止上一页
-        $scope.noPrevious = function(){
-          return $scope.page === 1;
-        };
-
-        // 禁止下一页
-        $scope.noNext = function(){
-          return $scope.page === $scope.totalPages;
-        };
 
 
 
-        // 分页显示列表按钮
-        $scope.pages = getPages($scope.page, $scope.totalPages);
+        $scope.$watch("paginationInfo", function (newValue) {
+          if (newValue) {
+            // 一页多少条数据
+            if(angular.isDefined($scope.paginationInfo)){
+              maxSize = angular.isDefined($scope.paginationInfo.pageSize) ? $scope.paginationInfo.pageSize : simpleGridPageConfig.itemsPerPage;
+            }else{
+              maxSize = simpleGridPageConfig.itemsPerPage;
+            }
+            // 当前页面
+            $scope.page = $scope.paginationInfo.page;
+
+            // 计算总页数
+            $scope.totalPages = Math.ceil($scope.paginationInfo.total/$scope.paginationInfo.pageSize);
+
+            // 禁止上一页
+            $scope.noPrevious = function(){
+              return $scope.page === 1;
+            };
+
+            // 禁止下一页
+            $scope.noNext = function(){
+              return $scope.page === $scope.totalPages;
+            };
+            // 分页显示列表按钮
+            $scope.pages = getPages($scope.page, $scope.totalPages);
+          }
+        });
+
+
 
         // 创建页面对象模板中使用
         function makePage(number, text, isActive) {
@@ -190,23 +197,18 @@
           return pages;
         }
 
-
-
         // 分页跳转
         $scope.selectPage = function(page, event){
           if (event) {
             event.preventDefault();
           }
-          console.log($scope.page !== page , page > 0 , page <= $scope.totalPages);
           var clickAllowed = true;//!$scope.paginationInfo.disabled || !event;
           if (clickAllowed && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
             $scope.page = page;
             $scope.pages = getPages($scope.page, $scope.totalPages);
-            console.log($scope.page);
             $scope.onSelectPage({page: page});
           }
         };
-
       }],
       link: function(scope, iElement, iAttrs){
         // 是否配置跳转分页

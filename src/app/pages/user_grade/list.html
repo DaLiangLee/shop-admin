@@ -1,19 +1,19 @@
 <ol class="k-breadcrumb">
   <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
-  <li class="active">会员等级</li>
+  <li class="active">等级设置</li>
 </ol>
 <div class="g-view">
   <div class="container-fluid">
     <div class="alert alert-warning">
       温馨提醒：<br>
       1, 会员等级或交易达成条件金额不能重复 <br>
-      2, 会员等级最多添加10项
+      2, 会员等级和交易达成条件金额必填，折扣默认100% <br>
+      3, 会员等级最多添加10项
     </div>
     <div class="user-grade" style="min-width: 930px;">
       <table class="w-table table-striped table-hover">
         <thead>
           <tr>
-            <th>序号</th>
             <th>会员等级</th>
             <th>条件</th>
             <th>折扣</th>
@@ -21,30 +21,45 @@
         </thead>
         <tbody>
           <tr ng-repeat="(index,item) in vm.dataLists track by $index" ng-class="{'even': $odd}">
-            <td ng-bind="index+1"></td>
             <td>
-              <span ng-if="item.isdefault == 1" ng-bind="item.gradename"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradename}"><input type="text" name="" class="form-control" ng-model="item.gradename" ng-blur="vm.blurGradesName(item.gradename, index)"></span>
+              <div ng-if="item.isdefault == 1">
+                <span ng-bind="item.gradename"></span>
+              </div>
+              <div ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradename}" cb-field-error field-error-status="item.$samegradename"
+                   field-error-message="item.$samegradenamemessage">
+                <input type="text" maxlength="10" class="form-text" ng-model="item.gradename" ng-change="vm.blurGradesName(item.gradename, index)">
+              </div>
             </td>
             <td>
-              <span ng-if="item.isdefault == 1" ng-bind="item.tradeamount | formatStatusFilter : 'gradeTradeamount'"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$sametradeamount}">交易额达 <input type="text" name="" class="form-control" ng-model="item.tradeamount" ng-blur="vm.blurTradeamount(item.tradeamount, index)" placeholder="请输入0-99999999" cb-number-range="" data-value-min="-1" data-value-max="1000000000"> 元</span>
+              <div ng-if="item.isdefault == 1">
+                <span ng-bind="item.tradeamount | formatStatusFilter : 'gradeTradeamount'"></span>
+              </div>
+              <div ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$sametradeamount}" cb-field-error field-error-status="item.$sametradeamount"
+                   field-error-message="item.$sametradeamountmessage">
+                交易额达 <input type="text" class="form-text" ng-model="item.tradeamount" ng-change="vm.blurTradeamount(item.tradeamount, index)" placeholder="请输入1-99999999" number-range="" maxlength="8"> 元
+              </div>
             </td>
             <td>
-              <span ng-if="item.isdefault == 1" ng-bind="item.discount | formatStatusFilter : 'gradeDiscount'"></span>
-              <span ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradediscount}"><input type="text" name="" class="form-control" placeholder="请输入0-100" ng-model="item.discount" cb-number-range="" data-value-min="-1" data-value-max="101" ng-blur="vm.blurDiscount(item.discount, index)"> %</span>
+              <div ng-if="item.isdefault == 1">
+                <span ng-bind="item.discount | formatStatusFilter : 'gradeDiscount'"></span>
+              </div>
+              <div ng-if="item.isdefault == 0" ng-class="{'has-warning': item.$samegradediscount}" cb-field-error field-error-status="item.$samegradediscount"
+                   field-error-message="item.$samegradediscountmessage">
+                <input type="text" name="" class="form-text" placeholder="请输入0-100" ng-model="item.discount" maxlength="3" cb-number-range="" ng-change="vm.blurDiscount(item.discount, index)"> %
+              </div>
             </td>
           </tr>
         </tbody>
         <tfoot ng-if="vm.dataLists.length < 10">
           <tr class="even">
-            <td colspan="4"><button ng-click="vm.addGrade()" class="add">添加会员等级</button></td>
+            <td colspan="4" class="f-tac"><span ng-click="vm.addGrade()" class="add adduser">+ 添加</span></td>
           </tr>
         </tfoot>
       </table>
     </div>
-    <div class="text-center">
-      <button class="btn btn-primary" style="width: 300px;" ng-click="vm.saveGrade()" ng-disabled="vm.isDisabled()">保存</button>
+    <br />
+    <div class="f-tac">
+      <button class="u-btn u-btn-primary u-btn-lg" style="width: 300px;" ng-click="vm.saveGrade()" ng-disabled="vm.isDisabled()">保存</button>
     </div>
   </div>
 </div>

@@ -4,10 +4,12 @@
 (function () {
   'use strict';
 
+
+
   angular
     .module('shopApp')
     .factory('financeDebitcard', financeDebitcard)
-    .factory('financeDebitcardConfig', financeDebitcardConfig);
+    .constant('financeDebitcardConfig', financeDebitcardConfig);
 
   /** @ngInject */
   function financeDebitcard(requestService) {
@@ -17,31 +19,30 @@
 
   /** @ngInject */
   function financeDebitcardConfig() {
-    var GRID = [
+    var createtime = [
       {
-        "id": 3,
-        "cssProperty": "state-column",
-        "fieldDirective": '<span class="state-unread" bo-bind="item.map.recharge | number : 2"></span>',
-        "name": '充值',
-        "width": 150
+        "label": "今日",
+        id: 0,
+        start: "0",
+        end: "0"
       },
       {
-        "id": 4,
-        "cssProperty": "state-column",
-        "fieldDirective": '<span class="state-unread" bo-bind="item.map.gift | number : 2"></span>',
-        "name": '赠送'
+        "label": "本周",
+        id: 1,
+        start: "1",
+        end: "1"
       },
       {
-        "id": 5,
-        "cssProperty": "state-column",
-        "fieldDirective": '<span class="state-unread" bo-bind="item.map.cost | number : 2"></span>',
-        "name": '消费'
+        "label": "本月",
+        id: 2,
+        start: "2",
+        end: "2"
       },
       {
-        "id": 6,
-        "cssProperty": "state-column",
-        "fieldDirective": '<span class="state-unread" bo-bind="item.map.balance | number : 2"></span>',
-        "name": '余额'
+        "label": "本年度",
+        id: 3,
+        start: "3",
+        end: "3"
       }
     ];
     return {
@@ -50,26 +51,58 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread"><img bo-src-i="{{item.map.avatar}}" alt=""><span bo-text="item.map.realname"></span></span>',
+            "fieldDirective": '<div class="state-unread orderUser"><span class="state-unread"  cb-image-hover="{{item.map.avatar}}" bo-if="item.map.avatar"><img bo-src-i="{{item.map.avatar}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-product-image"  bo-if="!item.map.avatar"></span><span class="state-unread" bo-text="item.map.realname"></span></div>',
             "name": '姓名',
+            "field": "map.realname",
             "width": 150
           },
           {
             "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.map.mobile"></span>',
+            "fieldDirective": '<span class="state-unread" bo-text="item.map.mobile | numberFormatFilter"></span>',
+            "field": "map.mobile",
             "name": '手机号'
-          }
-        ].concat(GRID).concat([
+          },
+          {
+            "id": 3,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.recharge | moneyformatFilter"></span>',
+            "name": '充值',
+            "field": "map.recharge",
+            "width": 150
+          },
+          {
+            "id": 4,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.gift | moneyformatFilter"></span>',
+            "field": "map.gift",
+            "name": '赠送'
+          },
+          {
+            "id": 5,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.cost | moneyformatFilter"></span>',
+            "field": "map.cost",
+            "name": '消费'
+          },
+          {
+            "id": 6,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.balance | moneyformatFilter"></span>',
+            "field": "map.balance",
+            "name": '余额'
+          },
           {
             "id": 8,
             "cssProperty": "state-column",
             "fieldDirective": '<a ui-sref="finance.debitcard.detail({userid: item.map.userid, balance: item.map.balance, mobile: item.map.mobile})" class="u-btn-link">查看详情</a>',
             "name": '操作'
-          }]),
+          }
+        ],
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
-          'sortSupport': true,
+          'sortSupport': true,    // 排序支持
+          'sortPrefer': true,     //  服务端排序
           'useBindOnce': true,  // 是否单向绑定
           'paginationSupport': true,  // 是否有分页
           "paginationInfo": {   // 分页配置信息
@@ -77,7 +110,7 @@
             showPageGoto: true
           },
           'batchOperationBarDirective': [
-            '<p><strong>充值：</strong> <span ng-bind="propsParams.message.charge | number : 2"></span> <strong>赠送：</strong> <span ng-bind="propsParams.message.gift | number : 2"></span> <strong>消费：</strong> <span ng-bind="propsParams.message.cost | number : 2"></span> <strong>余额：</strong> <span ng-bind="propsParams.message.balance | number : 2"></span> </p>'
+            '<ul class="total"><li><p><strong>充值：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.charge | moneyformatFilter"></span></label></p><p><strong>消费：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.cost | moneyformatFilter"></span></label></p></li><li><p><strong>赠送：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.gift | moneyformatFilter"></span> </label></p><p> <strong>余额：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.balance | moneyformatFilter"></span></label></p></li></ul>'
           ]
         }
       },
@@ -93,57 +126,60 @@
           {
             "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread">订单编号：<span bo-text="item.credentialsid"></span></span>',
+            "fieldDirective": '<span class="state-unread">订单编号：<a bo-text="item.credentialsid" bo-if="item.tradetype != 0" ui-sref="finance.journal.list({page:1, keyword: item.credentialsid})"></a><a bo-text="item.credentialsid" bo-if="item.tradetype == 0" ui-sref="trade.order.list({page:1, keyword: item.credentialsid})"></a></span>',
             "name": '交易内容'
           }
-        ].concat(GRID).concat([
+          ,
+          {
+            "id": 3,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.recharge | moneyformatFilter"></span>',
+            "name": '充值',
+            "width": 150
+          },
+          {
+            "id": 4,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.gift | moneyformatFilter"></span>',
+            "name": '赠送'
+          },
+          {
+            "id": 5,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.cost | moneyformatFilter"></span>',
+            "name": '消费'
+          },
+          {
+            "id": 6,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-bind="item.map.balance | moneyformatFilter"></span>',
+            "name": '余额'
+          },
           {
             "id": 7,
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.memberinfo"></span>',
             "name": '制单人'
-          }]),
+          }
+        ],
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
-          'sortSupport': true,
+          'sortSupport': true,    // 排序支持
+          'sortPrefer': true,     //  服务端排序
           'useBindOnce': true,  // 是否单向绑定
           'paginationSupport': true,  // 是否有分页
+          'exportDataSupport': true,
           "paginationInfo": {   // 分页配置信息
             maxSize: 5,
             showPageGoto: true
           },
           'batchOperationBarDirective': [
-            '<p><strong>充值：</strong> <span ng-bind="propsParams.message.charge | number : 2"></span> <strong>赠送：</strong> <span ng-bind="propsParams.message.gift | number : 2"></span> <strong>消费：</strong> <span ng-bind="propsParams.message.cost | number : 2"></span> <strong>余额：</strong> <span ng-bind="propsParams.message.balance | number : 2"></span> </p>'
+            '<ul class="total"><li><p><strong>充值：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.charge | moneyformatFilter"></span></label></p><p><strong>消费：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.cost | moneyformatFilter"></span></label></p></li><li><p><strong>赠送：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.gift | moneyformatFilter"></span> </label></p><p> <strong>余额：</strong><label>&yen;&nbsp;<span ng-bind="propsParams.message.balance | moneyformatFilter"></span></label></p></li></ul>'
           ]
         }
       },
       DEFAULT_SEARCH: {
-        createtime: [
-          {
-            "label": "今日",
-            id: 0,
-            start: 0,
-            end: 0
-          },
-          {
-            "label": "本周",
-            id: 1,
-            start: 1,
-            end: 1
-          },
-          {
-            "label": "本月",
-            id: 2,
-            start: 2,
-            end: 2
-          },
-          {
-            "label": "本年度",
-            id: 3,
-            start: 3,
-            end: 3
-          }
-        ],
+        createtime: createtime,
         config: function(params){
           return {
             other: params,
@@ -207,7 +243,40 @@
         }
       },
       DEFAULT_SEARCH_DETAIL: {
-
+        journaltime: createtime,
+        config: function(params){
+          return {
+            other: params,
+            searchDirective: [
+              {
+                label: "时间",
+                all: true,
+                custom: true,
+                region: true,
+                type: "date",
+                name: "journaltime",
+                model: "",
+                list: this.journaltime,
+                start: {
+                  name: "journaltime0",
+                  model: params.journaltime0,
+                  config: {
+                    minDate: new Date("2017/01/01 00:00:00"),
+                    maxDate: new Date()
+                  }
+                },
+                end: {
+                  name: "journaltime1",
+                  model: params.journaltime1,
+                  config: {
+                    minDate: new Date("2017/01/05 00:00:00"),
+                    maxDate: new Date()
+                  }
+                }
+              }
+            ]
+          }
+        }
       }
     }
   }

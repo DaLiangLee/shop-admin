@@ -8,12 +8,12 @@
 
   <div class="showButtonBar">
       <span class="btn-group pull-left">
-      <button type="button" class="btn btn-sm btn-info uib-datepicker-current ng-binding"
+      <button type="button" class="u-btn u-btn-sm u-btn-primary u-btn-w uib-datepicker-current ng-binding"
               ng-click="datepicker.select('today', $event)" ng-disabled="isDisabled('today')" ng-bind="currentText"></button>
-      <button type="button" class="btn btn-sm btn-danger uib-clear ng-binding" ng-click="datepicker.select(null, $event)"
+      <button type="button" class="u-btn u-btn-sm u-btn-danger u-btn-w uib-clear ng-binding" ng-click="datepicker.select(null, $event)"
               ng-bind="clearText"></button>
       </span>
-    <button type="button" class="btn btn-sm btn-success pull-right uib-close ng-binding" ng-click="datepicker.close($event)"
+    <button type="button" class="u-btn u-btn-sm u-btn-disabled u-btn-w f-fr uib-close ng-binding" ng-click="datepicker.close($event)"
             ng-bind="closeText"></button>
   </div>
 </div>

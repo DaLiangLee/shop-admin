@@ -1,9 +1,9 @@
-<div class="k-simple-image" dg-click="remove($event, item)" selector="span.close">
-  <div class="list pull-left" style="width: {{item.width}}px; height: {{item.height}}px;" ng-repeat="item in imageArr">
+<div class="k-simple-image f-cb" dg-click="remove($event, item)" selector="span.close">
+  <div class="list f-fl" style="width: {{item.width}}px; height: {{item.height}}px;" ng-repeat="item in imageArr">
     <img ng-src="{{item.src}}" alt="">
     <span class="close"><span>&times;</span></span>
   </div>
-  <div class="add pull-left" ng-style="addStyle" ng-if="config.limit > imageArr.length" cb-upload-file="images" title="{{config.title}}" data-upload-type="{{config.uploadtype}}" data-value-max="1" upload-item="upload.handler(data)">
+  <div class="add f-fl" ng-style="addStyle" ng-if="config.limit > imageArr.length" cb-upload-file="images" title="{{config.title}}" data-upload-type="{{config.uploadtype}}" data-value-max="1" upload-item="upload.handler(data)">
     <span class="add-icon"></span>
     <p class="message" ng-bind="config.message"></p>
   </div>

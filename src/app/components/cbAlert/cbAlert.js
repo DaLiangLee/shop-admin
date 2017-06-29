@@ -60,8 +60,8 @@
       showCancelButton: false,    //显示取消按钮
       closeOnConfirm: true,       //关闭确认
       closeOnCancel: true,        //关闭取消
-      confirmButtonText: '确定',    //确认按钮文字
-      cancelButtonText: '取消', //取消按钮文字
+      confirmButtonText: '确　定',    //确认按钮文字
+      cancelButtonText: '取　消', //取消按钮文字
       doneFunctionExists: false,   //是否有回调函数
       imageUrl: null,   //图片url
       delay: null,     //延迟时间
@@ -197,6 +197,12 @@
              */
             icon = '<div class="icon success"><span class="line tip"></span><span class="line long"></span><div class="placeholder"></div><div class="fix"></div></div>';
             break;
+          case 'confirm':
+            /**
+             * 确认
+             */
+            icon = '<div class="icon confirm"></div>';
+            break;
           case 'custom':
             /**
              * 自定义
@@ -223,16 +229,16 @@
          */
         var loaderBallFall = _this.option.showLoaderOnConfirm ? '<div class="loader-ball-fall"><div></div><div></div><div></div></div>' : "";
         if(_this.option.showConfirmButton && _this.option.showCancelButton){
-          buttonBox = '<div class="button-container"><button class="confirm" tabindex="1">'+_this.option.confirmButtonText+'</button><button class="cancel" tabindex="2">'+_this.option.cancelButtonText+'</button>'+loaderBallFall+'</div>';
+          buttonBox = '<div class="button-container"><button class="confirm u-btn u-btn-primary u-btn-sm" tabindex="1">'+_this.option.confirmButtonText+'</button>　　<button class="cancel u-btn u-btn-sm" tabindex="2">'+_this.option.cancelButtonText+'</button>'+loaderBallFall+'</div>';
         }else if(!_this.option.showConfirmButton && !_this.option.showCancelButton){
           buttonBox = "";
         }else{
           buttonBox = '<div class="button-container">';
           if(_this.option.showConfirmButton){
-            buttonBox += '<button class="confirm" tabindex="1">'+_this.option.confirmButtonText+'</button>';
+            buttonBox += '<button class="confirm u-btn u-btn-primary u-btn-sm" tabindex="1">'+_this.option.confirmButtonText+'</button>';
           }
           if(_this.option.showCancelButton){
-            buttonBox += '<button class="cancel" tabindex="2">'+_this.option.cancelButtonText+'</button>';
+            buttonBox += '<button class="cancel u-btn u-btn-sm" tabindex="2">'+_this.option.cancelButtonText+'</button>';
           }
           buttonBox += loaderBallFall +"</div>";
         }
@@ -398,7 +404,7 @@
           temporary = new AlertDialog({
             title: title,       //标题
             text: message || "",        //提示文字
-            type: type || "none",
+            type: type || "confirm",
             showConfirmButton: true,    //显示确认按钮
             showCancelButton: true    //显示取消按钮
           }, function(isConfirm){
@@ -408,7 +414,7 @@
           });
         });
       },
-      determine: function(title, message, callback,type){
+      determine: function(title, message, callback, type){
         $rootScope.$evalAsync(function(){
           if(!angular.isFunction(callback)){
             callback = function(){};

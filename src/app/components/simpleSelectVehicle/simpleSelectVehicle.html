@@ -1,4 +1,4 @@
-<div class="viewFramework-vehicle-selection">
+<div class="simple-select-vehicle">
   <!--<div>
     车款：<input type="text" name="" id="" ng-model="search.text"> <button ng-click="search.handler()">查找</button>
   </div>-->
@@ -13,79 +13,105 @@
       <li><input type="checkbox" name="">客车</li>
     </ul>
   </div>-->
-  <div class="clearfix">
+  <div class="f-cb">
     <div class="list brands">
-      <input type="text" placeholder="搜索大写首字母或品牌名称" ng-model="searchBrand.searchText" ng-change="searchBrand.firsthandle()">
+      <div class="input-group">
+        <input type="text" class="input-control" placeholder="输入品牌/首字母" ng-model="searchBrand.searchText" ng-change="searchBrand.firsthandle()">
+        <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+      </div>
       <div class="items">
         <ul class="list-unstyled">
           <li ng-repeat="item in brandList | filter: searchBrand.searchData" ng-class="{'open': item.$$open}">
-            <div ng-if="item.group">
+            <div class="group-name" ng-if="item.group">
               <span ng-bind="item.group"></span>
             </div>
-            <div ng-if="!item.group">
-              <span ng-bind="item.brand"></span>
-              <span ng-click="selecthandle(2, item, 'series', 'seriesList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
+            <div class="group-list" ng-if="!item.group" ng-click="selecthandle(2, item, 'series', 'seriesList')">
+              <span class="text" ng-bind="item.brand"></span>
+              <span class="arrow f-fr">
+                <i class="icon-arrow_right"></i>
+              </span>
             </div>
           </li>
         </ul>
       </div>
     </div>
-    {{series}}
     <div class="list series" ng-if="seriesList.length">
-      <input type="text" placeholder="搜索关键词" ng-model="seriesText">
+      <div class="input-group">
+        <input type="text" class="input-control" placeholder="输入车系" ng-model="searchSeries.searchText" ng-change="searchSeries.firsthandle()">
+        <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+      </div>
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in seriesList | filter: {series: seriesText}"  ng-class="{'open': item.$$open}">
-            <span ng-bind="item.series"></span>
-
-            <span ng-click="selecthandle(3, item, 'year', 'yearList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
+          <li ng-repeat="item in seriesList | filter: searchSeries.searchData"  ng-class="{'open': item.$$open}" ng-click="selecthandle(3, item, 'year', 'yearList')">
+            <span class="text" ng-bind="item.series"></span>
+            <span class="arrow f-fr">
+                <i class="icon-arrow_right"></i>
+              </span>
           </li>
         </ul>
       </div>
     </div>
     <div class="list years" ng-if="yearList.length">
-      <input type="text" placeholder="搜索关键词" ng-model="yearText">
+      <div class="input-group">
+        <input type="text" class="input-control" placeholder="输入年款" ng-model="searchYear.searchText" ng-change="searchYear.firsthandle()">
+        <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+      </div>
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in yearList | filter: {year: yearText}"  ng-class="{'open': item.$$open}">
-
-            <span ng-bind="item.year"></span>
-
-            <span ng-click="selecthandle(4, item, 'output', 'outputList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span>
+          <li ng-repeat="item in yearList | filter: searchYear.searchData"  ng-class="{'open': item.$$open}" ng-click="selecthandle(4, item, 'output', 'outputList')" >
+            <span class="text" ng-bind="item.year"></span>
+            <span class="arrow f-fr">
+                <i class="icon-arrow_right"></i>
+              </span>
+          </li>
         </ul>
       </div>
     </div>
     <div class="list outputs" ng-if="outputList.length">
-      <input type="text" placeholder="搜索关键词" ng-model="outputText">
+      <div class="input-group">
+        <input type="text" class="input-control" placeholder="输入排量" ng-model="searchOutput.searchText" ng-change="searchOutput.firsthandle()">
+        <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+      </div>
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in outputList | filter: {output: outputText}"  ng-class="{'open': item.$$open}">
-
-            <span ng-bind="item.output"></span>
-
-            <span ng-click="selecthandle(5, item, 'model', 'modelList')" style="cursor: pointer;">{{item.$$open ? '收起': '展开'}}</span></li>
+          <li ng-repeat="item in outputList | filter: searchOutput.searchData"  ng-class="{'open': item.$$open}" ng-click="selecthandle(5, item, 'model', 'modelList')">
+            <span class="text" ng-bind="item.output"></span>
+            <span class="arrow f-fr">
+                <i class="icon-arrow_right"></i>
+              </span>
+            </li>
         </ul>
       </div>
     </div>
     <div class="list models" ng-if="modelList.length">
-      <input type="text" placeholder="搜索关键词" ng-model="modelText">
+      <div class="input-group">
+        <input type="text" class="input-control" placeholder="输入车型" ng-model="searchModel.searchText" ng-change="searchModel.firsthandle()">
+        <span class="input-addon">
+            <i class="icon-search"></i>
+          </span>
+      </div>
       <div class="items">
         <ul class="list-unstyled">
-          <li ng-repeat="item in modelList | filter: {model: modelText}" ng-click="selecthandle(6, item, 'model')"  ng-class="{'open': item.$$open}"   style="cursor: pointer;">
-            <span ng-bind="item.model"></span>
+          <li ng-repeat="item in modelList | filter: searchModel.searchData" ng-click="selecthandle(6, item, 'model')"  ng-class="{'open': item.$$open}"   style="cursor: pointer;">
+            <span class="text" ng-bind="item.model"></span>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <div>
-    <h2>已选车型：</h2>
+  <div class="results">
+    <h2 class="title">已选车型：</h2>
     <hr>
-    <div>
+    <div class="model">
       <span ng-bind="selectitle"></span>
     </div>
   </div>
-  <!--<div>-->
-  <!--<button ng-click="save()">保存</button>-->
-  <!--</div>-->
 </div>

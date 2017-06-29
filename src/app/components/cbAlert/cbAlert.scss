@@ -41,6 +41,12 @@
             display: none;
           }
         }
+        &.confirm {
+          background-position: 0 -320px;
+          span, div, &:before, &:after {
+            display: none;
+          }
+        }
       }
     }
   }
@@ -101,6 +107,7 @@
       $orange2: #F8D486;
       $blue: #C9DAE1;
       $green: #A5DC86;
+      $gray: #b3b3b3;
       $white: #ffffff;
       position: relative;
       width: 80px;
@@ -254,6 +261,15 @@
           margin-left: -3px;
           top: 19px;
           background-color: $blue;
+        }
+      }
+      &.confirm {
+        border-color: $gray;
+        &:before {
+          content: "?";
+          font-family: 'Microsoft YaHei', 'Arial';
+          font-size: 4.4em;
+          color: $gray;
         }
       }
       &.success {
@@ -537,17 +553,18 @@
     }
     .button-container button {
       $btnBlue: #8CD4F5;
-      $btnGray: #C1C1C1;
+      //$btnGray: #C1C1C1;
+      $btnGray: #808080;
 
-      background-color: $btnBlue;
+      //background-color: $btnBlue;
       color: white;
       border: none;
       box-shadow: none;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 500;
       -webkit-border-radius: 4px;
       border-radius: 5px;
-      padding: 10px 32px;
+      //padding: 10px 32px;
       margin: 26px 5px 0 5px;
       cursor: pointer;
       &:focus {
@@ -555,18 +572,18 @@
         box-shadow: 0 0 2px rgba(128, 179, 235, 0.5), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
       }
       &:hover {
-        background-color: darken($btnBlue, 3%);
+        //background-color: darken($btnBlue, 3%);
       }
       &:active {
-        background-color: darken($btnBlue, 10%);
+        //background-color: darken($btnBlue, 10%);
       }
       &.cancel {
         background-color: $btnGray;
         &:hover {
-          background-color: darken($btnGray, 3%);
+          //background-color: darken($btnGray, 3%);
         }
         &:active {
-          background-color: darken($btnGray, 10%);
+          //background-color: darken($btnGray, 10%);
         }
         // Cancel button should keep the same style
         &:focus {

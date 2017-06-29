@@ -75,7 +75,7 @@
         searchHandler: "&"
       },
       templateUrl: "app/components/simpleSearch/simpleSearch.html",
-      controller: ["$scope", function ($scope) {
+      controller: ["$scope", "utils", function ($scope, utils) {
         var _this = this;
         // 禁用对象
         var disabledMap = {};
@@ -138,6 +138,10 @@
             item.custom && (item.name = "$$" + item.name);
             // 设置所有项数据
             disabledMap[item.name] = false;
+
+            if(item.region){
+              item.model = utils.getCustomModel(item.list, item.start.model, item.end.model);
+            }
             if (angular.isUndefined(item.model) || item.model == -1) {
               _this.searchParams[item.name] = -1;
             } else {
@@ -149,8 +153,8 @@
               angular.isDefined(item.start.model) && (isModel++);
               _this.searchParams[item.start.name] = item.start.model;
               disabledMap[item.start.name] = false;
-              if (!_.isUndefined(item.start.model)) {
-                _this.searchParams[item.name] = -2;
+              if(item.model !== -2){
+                item.start.model = undefined;
               }
             }
             // 设置结束数据
@@ -178,7 +182,8 @@
             // 添加到筛选列表
             $scope.search.directive.push(item);
           });
-          $scope.isShowmore = isModel > 0;
+          // TODO 老板要直接显示更多，如果不需要可以不需要调用
+          //$scope.isShowmore = isModel > 0;
         }
         // 给子指令用 显示隐藏更多筛选条件
         this.showMore = function () {
@@ -243,11 +248,17 @@
             }
             isCustomData(value) && !/^\$\$/.test(value) && (searchParams[value] = key);
           });
-          console.log(searchParams, params);
-
-          return searchParams;
+          return removeKays(searchParams);
         }
 
+        function removeKays(value) {
+          var arr = [];
+          _.forEach(value, function(value, key) {
+            /^\$\$/.test(key) && arr.push(key);
+          });
+          _.omit(value, arr);
+          return value;
+        }
 
         // 确保监听被销毁。
         $scope.$on('$destroy', function () {
@@ -263,7 +274,7 @@
     return {
       restrict: "A",
       replace: true,
-      require: '^simpleSearch',
+      require: '?^simpleSearch',
       templateUrl: "app/components/simpleSearch/keyword.html",
       link: function (scope, iElement, iAttrs, iCtrl) {
         scope.keyword = iCtrl.keyword.model;
@@ -284,7 +295,7 @@
     return {
       restrict: "A",
       replace: true,
-      require: '^simpleSearch',
+      require: '?^simpleSearch',
       scope: {
         items: "="
       },
@@ -303,15 +314,13 @@
     return {
       restrict: "A",
       replace: true,
-      require: '^simpleSearch',
+      require: '?^simpleSearch',
       scope: {
         items: "="
       },
       templateUrl: "app/components/simpleSearch/date.html",
       link: function (scope, iElement, iAttrs, iCtrl) {
         scope.searchParams = iCtrl.searchParams;
-        console.log(scope);
-
         scope.handler = function () {
           iCtrl.searchParams[scope.items.name] = scope.searchParams[scope.items.name];
           if (scope.searchParams[scope.items.name] == -1 || scope.searchParams[scope.items.name] == -2) {
@@ -384,11 +393,11 @@
   }
 
   /** @ngInject */
-  function simpleSearchInteger(cbAlert) {
+  function simpleSearchInteger() {
     return {
       restrict: "A",
       replace: true,
-      require: '^simpleSearch',
+      require: '?^simpleSearch',
       scope: {
         items: "="
       },

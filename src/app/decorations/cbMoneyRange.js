@@ -47,6 +47,9 @@
           if (angular.isString(value)) {
             // 把点开头去掉
             filtration = value.replace(/[^\d.]/g,"");
+            if(/^0[0-9]/.test(filtration)){
+              filtration = "0";
+            }
             filtration = filtration.replace(/^\./g,"");
             filtration = filtration.replace(/\.{2,}/g,".");
             filtration = filtration.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
@@ -67,6 +70,10 @@
           } else {
             flag = REGULAR.test(filtration);
           }
+          if(_.trim(filtration) === ""){
+            flag = true;
+          }
+
           ngModelCtrl.$setValidity('cbMoneyRange', flag);
           return flag ? filtration : undefined;
         });

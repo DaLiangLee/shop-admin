@@ -1,17 +1,4 @@
 
-/**
- *  If you want to override some bootstrap variables, you have to change values here.
- *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
- */
-$navbar-inverse-link-color: #5AADBB;
-
-/**
- *  Do not remove the comments below. It's the markers used by wiredep to inject
- *  sass dependencies when defined in the bower.json of your dependencies
- */
-// bower:scss
-// endbower
-
 /* 皮肤 skin********************************************************/
 /**
  * 如果你需要把皮肤型的样式抽离出来，通常为文字色、背景色（图）、边框色等，
@@ -104,10 +91,9 @@ $navbar-inverse-link-color: #5AADBB;
 
 /* (selected)    选中 */
 
-@import 'styles/_icon.scss';
 
 body {
-  min-width: 1000px;
+  min-width: 1280px;
 }
 
 .browsehappy {
@@ -150,30 +136,52 @@ body {
     border-color: #db2822;
   }
 }
-
 .default-product-image {
   display: inline-block;
   width: 300px;
   height: 300px;
   background: url(../assets/images/default_product_image.png) 0 0 no-repeat;
   background-size: cover;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../assets/images/default_product_image.png',  sizingMethod='scale');
 }
-
+:root .default-product-image{
+  filter: none;
+}
 .default-service-image {
   display: inline-block;
   width: 300px;
   height: 300px;
   background: url(../assets/images/default_service_image.png) 0 0 no-repeat;
   background-size: cover;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../assets/images/default_service_image.png',  sizingMethod='scale');
 }
-
-/**
- *  Do not remove the comments below. It's the markers used by gulp-inject to inject
- *  all your sass files automatically
- */
-// injector
-// endinjector
-
+:root .default-product-image{
+  filter: none;
+}
+.default-car-image {
+  display: inline-block;
+  width: 160px;
+  height: 112px;
+  background: url(../assets/images/default_car_image.png) 0 0 no-repeat;
+  background-size: cover;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../assets/images/default_car_image.png',  sizingMethod='scale');
+}
+:root .default-product-image{
+  filter: none;
+}
+.default-user-image {
+  display: inline-block;
+  vertical-align: middle;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: url(../assets/images/default_user_image.png) 0 0 no-repeat;
+  background-size: cover;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../assets/images/default_user_image.png',  sizingMethod='scale');
+}
+:root .default-product-image{
+  filter: none;
+}
 .k-breadcrumb {
   height: 40px;
   line-height: 40px;
@@ -186,6 +194,27 @@ body {
     padding: 0 5px;
     color: #ccc;
     font-family: 'icomoon';
-    content: "\e902";
+    content: "\e908";
   }
 }
+
+.viewFramework-main,div[ui-view]>div[ui-view],.g-view{
+  height: 100%;
+}
+
+//全局边距
+.container-fluid{
+  padding-right:26px;
+  padding-left: 14px;
+}
+.b-tab-bor{
+  border-bottom:1px solid #ccc;
+  padding-bottom:20px;
+  margin-bottom:24px;
+}
+/**
+ *  Do not remove the comments below. It's the markers used by gulp-inject to inject
+ *  all your sass files automatically
+ */
+// injector
+// endinjector

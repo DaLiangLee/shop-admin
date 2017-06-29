@@ -10,12 +10,13 @@
     .controller('MemberEmployeeChangeController', MemberEmployeeChangeController);
 
   /** @ngInject */
-  function MemberEmployeeListController($q, $timeout, $state, $log, cbAlert, permissions, memberEmployee, memberEmployeeConfig) {
+  function MemberEmployeeListController($q, $timeout, $state, cbAlert, permissions, memberEmployee, memberEmployeeConfig) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params, {pageSize: 10});
+    var currentParams = angular.extend({}, $state.params, {pageSize: 10}, {isOwner: false});
     var total = 0;
+    var storeKeeper;
     /**
      * 表格配置
      *
@@ -45,6 +46,12 @@
     vm.gridModel.config.propsParams = {
       removeItem: function (data) {
         if (data.status == 0) {
+          data.transmit = _.filter(data.transmit, function(item) {
+            return item !==  storeKeeper.guid;
+          });
+          if (data.transmit.length === 0) {
+            return;
+          }
           memberEmployee.remove(data.transmit).then(function (results) {
             if (results.data.status == 0) {
               cbAlert.tips("删除成功");
@@ -56,39 +63,37 @@
         }
       },
       statusItem: function (data) {
-        $log.debug('statusItem', data);
         if (data.status === '1') {
-          cbAlert.confirm("是否关闭允许登录店铺后台", function (isConfirm) {
+          cbAlert.confirm("确定禁用登录权限？", function (isConfirm) {
             if (isConfirm) {
               setStatus('enable', {'memberId': data.guid, 'status': '0'});
             }
             cbAlert.close();
-          }, '关闭以后不允许登录店铺后台', 'warning');
+          }, '', 'confirm');
         } else {
-          cbAlert.confirm("是否允许该员工登录店铺后台", function (isConfirm) {
+          cbAlert.confirm("确定启用登录权限？", function (isConfirm) {
             if (isConfirm) {
               setStatus('enable', {'memberId': data.guid, 'status': '1'});
             }
             cbAlert.close();
-          }, '开启以后就可以登录后台，是否继续？', 'warning');
+          }, '', 'confirm');
         }
       },
       inserviceItem: function (data) {
-        $log.debug('inserviceItem', data);
         if (data.inservice === '1') {
-          cbAlert.confirm("是否关闭在职状态", function (isConfirm) {
+          cbAlert.confirm("确定离职？", function (isConfirm) {
             if (isConfirm) {
               setStatus('inservice', {'memberId': data.guid, 'inservice': '0'});
             }
             cbAlert.close();
-          }, '关闭以后不允许登录店铺后台', 'warning');
+          }, '确定后，将不允许登录。', 'confirm');
         } else {
-          cbAlert.confirm("是否开启在职状态", function (isConfirm) {
+          cbAlert.confirm("确定在职？", function (isConfirm) {
             if (isConfirm) {
               setStatus('inservice', {'memberId': data.guid, 'inservice': '1'});
             }
             cbAlert.close();
-          }, '', 'warning');
+          }, '确定后，将允许登录。', 'confirm');
         }
       },
       resetItem: function () {
@@ -143,7 +148,7 @@
     function setStatus(api, data) {
       memberEmployee[api](data).then(function (results) {
         var result = results.data;
-        if (result.status == 0) {
+        if (result.status === 0) {
           cbAlert.tips("修改成功");
           getList(currentParams);
         }
@@ -169,13 +174,51 @@
           }
           total = result.totalCount;
           vm.gridModel.itemList = [];
-          angular.forEach(result.data, function (item) {
-            if (item.onboarddate && item.onboarddate.indexOf("-") > -1) {
-              item.onboarddate.replace(/\-/gi, "/");
-            }
-            item.onboarddate && (item.onboarddate = new Date(item.onboarddate));
-            vm.gridModel.itemList.push(item);
+          _.map(result.data, function (item, idx, arr) {
+              // ',2,' 表示的是店主roleid
+              if (item.roleid === ',2,') {
+                  // 始终将店主放在第一位
+                  if (idx !== 0) {
+                    arr.unshift(item);
+                    arr.splice(idx + 1, 1);
+                  }
+                  storeKeeper = item;
+                  angular.extend(item, { isStorekeeper: true });
+              }
+
+              if (item.onboarddate && item.onboarddate.indexOf("-") > -1) {
+                  item.onboarddate = item.onboarddate.replace(/\-/gi, "/");
+              }
+              item.onboarddate && (item.onboarddate = new Date(item.onboarddate));
+              angular.extend({}, vm.gridModel.config, { checkboxSupport: !item.isStorekeeper });
+              vm.gridModel.itemList.push(item);
           });
+          // angular.forEach(result.data, function (item, idx, arr) {
+          //   console.log('item ', item)
+          //
+          //   // ',2,' 表示的是店主roleid
+          //   if (item.roleid === ',2,') {
+          //     console.log('yest')
+          //       console.log('index ', idx)
+          //       params.isOwner = true;
+          //       console.log('params ', params)
+          //       console.log('arr', arr)
+          //       // arr.splice(idx, 1);
+          //       // arr.unshift(item);
+          //
+          //       angular.extend(item, { isStorekeeper: true })
+          //
+          //       console.log('inner', vm.gridModel.config)
+          //       console.log('isStorekeeper', item)
+          //   }
+          //
+          //   if (item.onboarddate && item.onboarddate.indexOf("-") > -1) {
+          //     item.onboarddate = item.onboarddate.replace(/\-/gi, "/");
+          //   }
+          //   item.onboarddate && (item.onboarddate = new Date(item.onboarddate));
+          //   angular.extend({}, vm.gridModel.config, { checkboxSupport: !item.isStorekeeper });
+          //   vm.gridModel.itemList.push(item);
+          // });
           vm.gridModel.paginationinfo = {
             page: params.page * 1,
             pageSize: params.pageSize,
@@ -209,7 +252,7 @@
         vm.searchModel.config = {
           other: currentParams,
           keyword: {
-            placeholder: "请输入员工姓名、账号、手机、岗位",
+            placeholder: "请输入员工姓名、工号、手机号、岗位",
             model: currentParams.keyword,
             name: "keyword",
             isShow: true
@@ -238,6 +281,7 @@
               all: true,
               custom: true,
               type: "date",
+              model: _.isUndefined(currentParams.startDate) ? "-1" : "-2",
               start: {
                 name: "startDate",
                 model: currentParams.startDate,
@@ -301,7 +345,7 @@
      * 绑定数据
      * @type {{}}
      */
-    vm.dataBase = {}
+    vm.dataBase = {};
 
     /**
      * 获取店铺id
@@ -316,7 +360,7 @@
      */
     vm.selectModel = {};
     memberEmployee.all().then(function (results) {
-      if (results.data.status == 0) {
+      if (results.data.status === 0) {
         vm.selectModel.store = results.data.data;
       } else {
         cbAlert.error("错误提示", results.data.error);
@@ -332,6 +376,7 @@
         startingDay: 1,
         showLunar: true,
         placeholder: "请选择员工生日",
+        readonly:"readonly",
         minDate: new Date("1950/01/01 00:00:00"),
         maxDate: new Date()
       },
@@ -432,7 +477,7 @@
     vm.setGenderAndBirthday = function (code) {
       var info = getIDCardInfo(code);
       if (info.birthday && !vm.dataBase.birthday) {
-        info.birthday.replace(/\-/, '/');
+        info.birthday = info.birthday.replace(/\-/, '/');
         vm.dataBase.birthday = new Date(info.birthday + ' 00:00:00');
       }
       if (info.gender && !vm.dataBase.gender) {
@@ -468,7 +513,7 @@
       });
     } else {
       memberEmployee.positions().then(function (results) {
-        if (results.data.status == 0) {
+        if (results.data.status === 0) {
           vm.position = results.data.data.concat([]);
         } else {
           cbAlert.error("错误提示", results.data.data);
@@ -486,14 +531,13 @@
      * 2，关闭时候需要提示，如果是修改时候，就需要提交api来
      */
     vm.statusItem = function () {
-      var title = vm.dataBase.status === "1" ? "是否关闭允许登录店铺后台" : "是否开启允许登录店铺后台";
-      var message = vm.dataBase.status === "1" ? "关闭以后不允许登录店铺后台，您确定？" : "开启以后就允许登录店铺后台，您确定？";
+      var title = vm.dataBase.status === "1" ? "确定禁用登录权限？" : "确定启用登录权限？";
       cbAlert.confirm(title, function (isConfirm) {
         if (isConfirm) {
           vm.dataBase.status = vm.dataBase.status === "1" ? "0" : "1";
         }
         cbAlert.close();
-      }, message, 'warning');
+      }, '', 'confirm');
     };
 
 
@@ -561,9 +605,9 @@
         return "";
       }
       if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/.test(time)) {
-        return dateFilter(new Date(time), 'yyyy-MM-dd HH:mm:ss');
+        return time;
       }
-      time.replace(/\-/, '/');
+      time = time.replace(/\-/g, '/');
       return dateFilter(new Date(time + " 00:00:00"), 'yyyy-MM-dd HH:mm:ss');
     }
 
@@ -573,7 +617,7 @@
     vm.submit = function () {
       if (vm.isChange) {
         memberEmployee.update(getDataBase(vm.dataBase)).then(function (results) {
-          if (results.data.status == 0) {
+          if (results.data.status === 0) {
             goto();
           } else {
             cbAlert.error("错误提示", results.data.data);
@@ -581,7 +625,7 @@
         });
       } else {
         memberEmployee.add(getDataBase(vm.dataBase)).then(function (results) {
-          if (results.data.status == 0) {
+          if (results.data.status === 0) {
             goto();
           } else {
             cbAlert.error("错误提示", results.data.data);

@@ -12,13 +12,13 @@
     <div class="alert alert-danger" ng-if="interceptor">
       <p>修改员工风采，会影响用户查看店铺展示内容，您确定要修改吗？</p>
     </div>
-    <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定设置</button>
-      <button class="btn btn-default" ng-click="close(false)">暂不设置</button>
+    <div class="inline-block f-tac" ng-if="interceptor">
+      <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()">确定设置</button>
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">暂不设置</button>
     </div>
-    <div class="inline-block margin-right" ng-if="!interceptor">
-      <button class="btn btn-primary" ng-click="confirm()">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    <div class="inline-block f-tac" ng-if="!interceptor">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

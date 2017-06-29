@@ -80,7 +80,6 @@
             }else{
               scope.skuDataLength = value.length - scope.skuQueue.length;
             }
-            console.log(value , scope.skuQueue);
             scope.selectHandler({data: {data: scope.select || [], every: _.every(scope.skuQueue, 'skuid')}});
           }
         });

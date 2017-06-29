@@ -70,6 +70,8 @@ var goods = generateJSON({
  * 获取商品管理列表
  */
 router.get('/product/goods', function (req, res, next) {
+  console.log(req.query)
+
   var data = goods.data.concat([]);
   var page = req.query.page || 1;
   var total = data ? data.length : 0;

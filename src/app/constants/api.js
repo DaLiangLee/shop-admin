@@ -133,11 +133,27 @@
             "resetProductSku": {
               "url": "/product/goods/resetProductSku",
               "type": "POST"
+            },
+            "checkProduct": {
+              "url": "/product/goods/checkProduct",
+              "type": "POST"
+            },
+            "getStencilProduct": {
+              "url": "/product/goods/getStencilProduct",
+              "type": "GET"
             }
           },
           "server": {
             "list": {   // 服务列表
               "url": "/product/server/list",
+              "type": "GET"
+            },
+            "getStencilServer": {  // 获取车边服务列表
+              "url": "/product/server/getStencilServer",
+              "type": "GET"
+            },
+            "getStencilServerSkus": {  // 获取车边服务sku
+              "url": "/product/server/getStencilServerSkus",
               "type": "GET"
             },
             "checkServer": {  // 检查服务名称有没有重名
@@ -235,6 +251,10 @@
             "search": {   //搜索服务
               "url": "/product/server/search",
               "type": "POST"
+            },
+            "selectedonelevel": {   //商铺服务类目
+              "url": "/product/server/selectedonelevel",
+              "type": "GET"
             }
           }
         },
@@ -260,6 +280,10 @@
               "url": "/trade/order/saveOrder",
               "type": "POST"
             },
+            "saveOrderAndPay": {
+               "url": "/trade/order/saveOrderAndPay",
+              "type": "POST"
+            },
             "getOrderServer": {
               "url": "/product/server/getOrderServer",
               "type": "GET"
@@ -274,6 +298,14 @@
             },
             "excelorders": {
               "url": "/trade/order/excelorders",
+              "type": "GET"
+            },
+            "carnocode": {
+              "url": "/trade/order/carnocode",
+              "type": "GET"
+            },
+            "printOrder": {
+              "url": "/trade/order/print",
               "type": "GET"
             }
           },
@@ -342,9 +374,61 @@
               "url": "/users/export",
               "type": "GET"
             },
+            "import": {
+              "url": "/file/add_user",
+              "type": "POST"
+            },
             "getDiscount": {
               "url": "/users/getDiscount",
               "type": "POST"
+            },
+            "chargeBalance": {
+              "url": "/users/chargeBalance",
+              "type": "POST"
+            },
+            "customer": {
+              "url": "/users/customer",
+              "type": "GET"
+            },
+            "download": {
+              "url": "/static/user.xls",
+              "type": "GET"
+            }
+          },
+          "debitcard": {
+            "search": {
+              "url": "/finance/journal/debitcard",
+              "type": "GET"
+            },
+            "detail": {
+              "url": "/finance/journal/debitcardDetail",
+              "type": "GET"
+            },
+            "exceldebitcardDetail": {
+              "url": "/finance/journal/exceldebitcardDetail",
+              "type": "GET"
+            }
+          },
+          "package": {
+            "getuserpackage": {
+              "url": "/package/getuserpackage",
+              "type": "GET"
+            },
+            "getuserpackageitem": {
+              "url": "/package/getuserpackageitem",
+              "type": "POST"
+            },
+            "incexpire":{
+              "url":"/package/incexpire",
+              "type":"post"
+            }
+          }
+        },
+        "motors": {
+          "customer": {
+            "suggestCarNo": {
+              "url": "/motors/suggestCarNo",
+              "type": "GET"
             }
           }
         },
@@ -440,6 +524,12 @@
               "url": "/system/modpwd",
               "type": "POST"
             }
+          },
+          "feedback": {
+            "save": {
+              "url": "/feedback/save",
+              "type": "POST"
+            }
           }
         },
         "markting": {
@@ -452,23 +542,51 @@
               "url": "/markting/storedebitcard/saveorupdate",
               "type": "POST"
             }
+          },
+          "package": {
+            "availabalepackage": {   // 给会员办理套餐卡
+              "url": "/package/availabalepackage",
+              "type": "GET"
+            },
+            "getuserpackagebyuserid": { // 开单获取某个会员购买单套餐卡列表
+              "url": "/package/getuserpackagebyuserid",
+              "type": "GET"
+            },
+            "getalluserpackagebyuserid": { // 会员列表获取某个会员购买单套餐卡列表
+              "url": "/package/getalluserpackagebyuserid",
+              "type": "GET"
+            },
+            "getuserpackageitembyuserid": { // 获取某个会员购买单套餐卡服务商品项
+              "url": "/package/getuserpackageitembyuserid",
+              "type": "GET"
+            },
+            "search": {   // 查询当前店铺套餐卡活动列表
+              "url": "/package/search",
+              "type": "GET"
+            },
+            "getuserpackage": {     // 获取店铺套餐卡所有消费列表
+              "url": "/package/getuserpackage",
+              "type": "GET"
+            },
+            "getuserpackageitem": {     // 获取某个用户套餐卡消费详情
+              "url": "/package/getuserpackageitemlog",
+              "type": "GET"
+            },
+            "save_package": {     // 给店铺添加一个套餐卡活动
+              "url": "/package/save_package",
+              "type": "POST"
+            },
+            "saleapackage": {    // 给会员添加一个套餐卡
+              "url": "/package/saleapackage",
+              "type": "POST"
+            },
+            "incexpire": {
+              "url": "/package/incexpire", // 增加过期时间
+              "type": "POST"
+            }
           }
         },
         "finance": {
-          "debitcard": {
-            "search": {
-              "url": "/finance/journal/debitcard",
-              "type": "GET"
-            },
-            "detail": {
-              "url": "/finance/journal/debitcardDetail",
-              "type": "GET"
-            },
-            "exceldebitcardDetail": {
-              "url": "/finance/journal/exceldebitcardDetail",
-              "type": "GET"
-            }
-          },
           "journal": {
             "search": {
               "url": "/finance/journal/search",
@@ -594,10 +712,10 @@
     })
     .constant('webDefaultConfig', {
       WEB_DEFAULT_IMAGE: {
-        "logo": "",
-        "user": "",
-        "product": "",
-        "server": ""
+        "logo": "/assets/images/default_car_image.png",
+        "user": "/assets/images/default_user_image.png",
+        "product": "/assets/images/default_product_image.png",
+        "server": "/assets/images/default_service_image.png"
       }
     })
 

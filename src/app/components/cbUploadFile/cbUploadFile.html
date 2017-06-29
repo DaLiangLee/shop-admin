@@ -9,7 +9,7 @@
       <div class="init">正在初始化上传控件</div>
     </div>
     <div class="upload-list" ng-if="!items.length && postInit">
-      <div class="none">请选择图片上传</div>
+      <div class="none">请选择上传文件</div>
     </div>
     <div class="upload-list" ng-if="items.length">
       <div class="item" ng-repeat="item in items" id="{{item.id}}">
@@ -24,7 +24,7 @@
     <div class="alert alert-danger" ng-if="danger" ng-bind="danger">1212</div>
   </div>
   <div class="modal-footer" id="j-upload-container">
-    <button class="upload-btn upload-start upload-disabled btn btn-primary" style="visibility:hidden" id="startUpload" disabled>选择文件</button>
-    <button class="upload-btn upload-add btn btn-primary" id="addFiles">选择文件</button>
+    <button class="upload-btn upload-start upload-disabled u-btn u-btn-primary u-btn-sm" style="visibility:hidden" id="startUpload" disabled>选择文件</button>
+    <button class="upload-btn upload-add u-btn u-btn-primary u-btn-sm" id="addFiles">选择文件</button>
   </div>
 </div>

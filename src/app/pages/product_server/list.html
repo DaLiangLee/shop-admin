@@ -1,43 +1,41 @@
+<ol class="k-breadcrumb">
+  <li><a ui-sref="product.server.list({page:1})">商品与服务</a></li>
+  <li class="active">服务管理</li>
+</ol>
+<div class="w-tabs">
+  <ul class="tabs-nav f-cb">
+    <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 1})" class="text-muted">在售服务库</a></li>
+    <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 0})" class="text-muted">已下架</a></li>
+  </ul>
+</div>
+<br>
 <div class="g-view">
-  <div class="container-fluid">
-    <ul class="nav nav-tabs">
-      <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 1})" class="text-muted">在售服务库</a></li>
-      <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 0})" class="text-muted">已下架</a></li>
-    </ul>
-    <br>
-    <div cb-access-control="chebian:store:product:server:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+  <div class="container-fluid" style="min-width:1087px;">
+    <div cb-access-control="chebian:store:product:server:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
 
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div style="margin-bottom: 100px; width: 100%; overflow-x: auto;" ng-if="vm.gridModel.itemList">
-      <table class="w-table" style="min-width: 1650px;">
+    <br>
+    <br>
+    <div style="margin-bottom:60px; width: 100%; height: 400px;" ng-if="vm.gridModel.itemList">
+      <table class="w-table">
         <thead>
         <tr>
-          <th style="min-width:100px;">类目</th>
-          <th style="min-width:120px;">编码/图片</th>
-          <th style="min-width:150px;">名称</th>
-          <th style="min-width:100px;">保质期（天）</th>
-          <th style="min-width:50px;">序号</th>
           <th style="min-width:150px;">属性</th>
-          <th style="min-width:150px;">工时</th>
-          <th style="min-width:150px;">单价（元）</th>
-          <th style="min-width:150px;">工时费（元）</th>
+          <th style="min-width:100px;">工时</th>
+          <th style="min-width:100px;">单价</th>
+          <th style="min-width:102px;">工时费</th>
           <th style="min-width:100px;">销量</th>
           <th style="min-width:200px;">适用车型</th>
-          <th style="min-width:80px;">启用状态</th>
-          <th style="min-width:150px;">描述</th>
+          <th style="min-width:80px;">启用</th>
+          <th style="min-width:120px;">描述</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="item in vm.items.serverSkus">
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span ng-bind="vm.items.scatename1"></span></td>
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><div><p ng-bind="vm.items.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{vm.items.mainphoto}}" ng-if="vm.items.mainphoto"><img ng-src="{{vm.items.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" ng-if="!vm.items.mainphoto"></span></div></td>
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" cb-truncate-text="{{vm.items.scatename2}}" text-length="8"></span></td>
-          <td style="vertical-align: middle;" rowspan="{{vm.items.serverSkus.length}}" ng-if="$first"><span class="state-unread" ng-bind="vm.items.shelflife"></span></td>
-          <td><span ng-bind="$index+1"></span></td>
           <td><span class="state-unread" ng-bind="item.$skuvalues"></span></td>
-          <td><div style="position: relative;"><span class="state-unread" ng-bind="item.servertime | number : '0'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable="money" editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)"></span></div></td>
-          <td><span class="state-unread" ng-bind="item.serverprice | number : '2'"></span></span></td>
-          <td><span class="state-unread" ng-bind="item.$servertimeprice | number : '2'"></span></span></td>
+          <td><div style="position: relative;"><span class="state-unread" ng-bind="item.servertime | number : '1'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)" data-max="1000" data-min="0" data-step="0.1" data-placeholder="输入1-999工时"></span></div></td>
+          <td><span class="state-unread" ng-bind="item.serverprice | moneyformatFilter"></span></td>
+          <td><span class="state-unread" ng-bind="item.$servertimeprice | number : '2'"></span></td>
           <td><span><span class="state-unread" ng-bind="item.countorder | number : '0'"></span> 笔</span></td>
           <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
           <td><div cb-switch checkstatus="item.status"

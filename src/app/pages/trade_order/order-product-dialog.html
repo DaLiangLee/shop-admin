@@ -1,57 +1,122 @@
 <div>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="closed()"
             aria-hidden="true">&times;</button>
-    <h5 class="modal-title">选择商品/材料</h5>
+    <h5 class="modal-title">选择商品</h5>
   </div>
   <div class="modal-body">
-    <div cb-access-control="chebian:store:user:customer:search" simple-search config="searchModel.config"
-         search-handler="searchModel.handler(data)"></div>
-    <div style="height: 200px; overflow-y: auto; position: relative;">
-      <div cb-thead-fixed></div>
-      <table class="table" cb-infinite-scroll="" infinite-scroll="gridModel.nextPage()" infinite-scroll-disabled="gridModel.loadingState">
-        <thead>
-        <tr>
-          <th>序号</th>
-          <th>操作</th>
-          <th>商品编码/图片</th>
-          <th>商品名称</th>
-          <th>品牌</th>
-          <th>属性</th>
-          <th>零售单价（元）</th>
-          <th>库存数量</th>
-          <th>条形码</th>
-          <th>零件码</th>
-          <th>备注</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="item in gridModel.itemList" bindonce="">
-          <td>{{$index+1}}</td>
-          <td><button class="btn btn-primary" ng-click="gridModel.selectItem(item)" ng-disabled="gridModel2.itemList.length >= 5">选择</button></td>
-          <td>
-            <div><p bo-text="item.code"></p><span class="state-unread" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" bo-if="item.mainphoto"><img bo-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-service-image" style="width: 100px; height: 80px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span></div>
-          </td>
-          <td><span class="state-unread" bo-text="item.productname"></span></td>
-          <td><span class="state-unread" bo-text="item.cnname"></span></td>
-          <td><span class="state-unread" bo-text="item.skuname"></span></td>
-          <td><span class="state-unread" bo-text="item.price"></span></td>
-          <td><span class="state-unread" bo-text="item.$$stock"></span></td>
-          <td><span class="state-unread" bo-text="item.skucode"></span></td>
-          <td><span class="state-unread" bo-text="item.partscode"></span></td>
-          <td><span class="state-unread" bo-text="item.skudescription"></span></td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="list-btns f-cb">
+      <div class="btn-group f-fl">
+        <button class="u-btn u-btn-default transparent u-btn-sm" ng-click="toggleTab(0)" ng-class="{'active': tabindex == 0}">常用
+        </button>
+        <button class="u-btn u-btn-default transparent u-btn-sm" ng-click="toggleTab(1)" ng-class="{'active': tabindex == 1}">商品库
+        </button>
+      </div>
+      <span class="tips f-fl">商品库无对应商品？去右侧【车边库】找找看</span>
+      <button class="u-btn u-btn-default transparent u-btn-sm f-fr" ng-click="toggleTab(2)" ng-class="{'active': tabindex == 2}">车边库
+      </button>
     </div>
-    <h6>已选（最多可选5项）</h6>
-    <br>
-    <div ng-if="gridModel2.columns.length" simple-grid columns="gridModel2.columns" store="gridModel2.itemList" loading-state="gridModel2.loadingState" config="gridModel2.config"></div>
+    <div class="list-wrap f-cb" ng-if="tabindex == 0">
+      <div class="list productcommonlyused">
+        <ul class="content" dg-click="productcommonlyusedHandler($event, item)" selector="li">
+          <li class="f-cb" ng-repeat="item in productcommonlyused track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
+            <span class="text f-fl" bo-text="item.itemname" bo-title="item.itemname"></span>
+            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="list-wrap f-cb" ng-if="tabindex == 1">
+      <div class="f-fl list parentclass">
+        <h3 class="title">商品一级类目</h3>
+        <ul class="content" dg-click="parentclassHandler($event, item)" selector="li">
+          <li ng-repeat="item in parentclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+            <span bo-text="item.catename"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list subclass">
+        <h3 class="title">商品二级类目</h3>
+        <ul class="content" dg-click="subclassHandler($event, item)" selector="li">
+          <li ng-repeat="item in subclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+            <span bo-text="item.catename"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list productname">
+        <h3 class="title">商品名称</h3>
+        <ul class="content" dg-click="productnameHandler($event, item)" selector="li">
+          <li ng-repeat="item in productname track by item.guid" bindonce ng-class="{'active': item.$folded}">
+            <p class="text" bo-title="item.cnname+' '+item.productname">
+              <span bo-text="item.cnname"></span>
+              <span bo-text="item.productname"></span>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list productspec">
+        <h3 class="title">商品规格</h3>
+        <ul class="content" dg-click="productspecHandler($event, item)" selector="li">
+          <li ng-repeat="item in productspec track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
+            <span class="text f-fl" bo-text="item.manualskuvalues" bo-title="item.manualskuvalues"></span>
+            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="list-wrap f-cb" ng-if="tabindex == 2">
+      <div class="f-fl list parentclass">
+        <h3 class="title">商品一级类目</h3>
+        <ul class="content" dg-click="parentclassHandler($event, item)" selector="li">
+          <li ng-repeat="item in parentclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+            <span bo-text="item.catename"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list subclass">
+        <h3 class="title">商品二级类目</h3>
+        <ul class="content" dg-click="subclassHandler($event, item)" selector="li">
+          <li ng-repeat="item in subclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+            <span bo-text="item.catename"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list productname">
+        <h3 class="title">商品名称</h3>
+        <ul class="content" dg-click="productnameHandler($event, item)" selector="li">
+          <li ng-repeat="item in productname track by item.guid" bindonce ng-class="{'active': item.$folded}">
+            <p class="text" bo-title="item.cnname+' '+item.productname">
+              <span bo-text="item.cnname"></span>
+              <span bo-text="item.productname"></span>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="f-fl list productspec">
+        <h3 class="title">商品规格</h3>
+        <ul class="content" dg-click="productspecHandler($event, item)" selector="li">
+          <li ng-repeat="item in productspec track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
+            <span class="text f-fl" bo-text="item.manualskuvalues" bo-title="item.manualskuvalues"></span>
+            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="results">
+      <h3 class="title">已选择商品：</h3>
+      <ul class="content" class="f-cb" bindonce="" dg-click="removeItem($event, item)" selector=".remove">
+        <li ng-repeat="item in dataSources track by item.guid">
+          <span bo-text="item.itemname"></span>
+          <span>&yen; <span bo-bind="item.price | number : 2"></span></span>
+          <span class="icon-remove_circle remove"></span>
+        </li>
+      </ul>
+    </div>
   </div>
   <div class="modal-footer">
-    <div class="inline-block margin-right">
-      <button class="btn btn-primary" ng-click="confirm()" ng-disabled="gridModel2.itemList.length < 1 && gridModel2.itemList.length > 6">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    <div class="inline-block f-tac">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!dataSources.length">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="closed()">取　消</button>
     </div>
   </div>
 </div>

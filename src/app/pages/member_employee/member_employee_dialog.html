@@ -43,13 +43,13 @@
         <div class="alert alert-danger" ng-if="interceptor">
             <p>编辑此项后，会影响该账号权限，您确定要编辑吗？</p>
         </div>
-        <div class="inline-block margin-right" ng-if="interceptor">
-            <button class="btn btn-warning" ng-click="interceptorConfirm()">确定编辑</button>
-            <button class="btn btn-default" ng-click="close(false)">暂不编辑</button>
+        <div class="inline-block f-tac" ng-if="interceptor">
+            <button class="u-btn u-btn-warning" ng-click="interceptorConfirm()">确定编辑</button>　　
+            <button class="u-btn u-btn-default" ng-click="close(false)">暂不编辑</button>
         </div>
-        <div class="inline-block margin-right" ng-if="!interceptor">
-            <button class="btn btn-primary" ng-click="confirm()" ng-disabled="employee.$invalid">确定</button>
-            <button class="btn btn-default" ng-click="close(false)">取消</button>
+        <div class="inline-block f-tac" ng-if="!interceptor">
+            <button class="u-btn u-btn-primary" ng-click="confirm()" ng-disabled="employee.$invalid">确　定</button>　　
+            <button class="u-btn u-btn-default" ng-click="close(false)">取　消</button>
         </div>
     </div>
 </div>

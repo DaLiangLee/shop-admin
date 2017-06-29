@@ -21,7 +21,6 @@
         }
         function init(scope, iElement, type) {
             scope.$watch("templateId", function (value) {
-
                 if (value) {
                   getUrl(value).then(function (data) {
                     data = setTrim.apply(data);
@@ -32,7 +31,7 @@
             });
             scope.$watch("templateData", function (value) {
                 value && $compile(iElement.find("." + type + "-content"))(scope);
-            })
+            });
         }
 
         var setTrim = String.prototype.trim || function () {
@@ -95,7 +94,7 @@
 
                 var startSym = $interpolate.startSymbol();
                 var endSym = $interpolate.endSymbol();
-                var template = "<div " + directiveName + "-popup " + 'title="' + startSym + "tt_title" + endSym + '" ' + 'content="' + startSym + "tt_content" + endSym + '" ' + 'placement="' + startSym + "tt_placement" + endSym + '" ' + 'animation="' + startSym + "tt_animation" + endSym + '" ' + 'is-open="' + startSym + "tt_isOpen" + endSym + '"' + 'template-id="' + startSym + "tt_templateId" + endSym + '" ' + 'content-html="' + startSym + "tt_contentHtml" + endSym + '" ' + 'template-data="tt_templateData" ' + ">" + "</div>";
+                var template = "<div " + directiveName + "-popup " + 'title="' + startSym + "tt_title" + endSym + '" ' + '  content="' + startSym + "tt_content" + endSym + '" ' + 'placement="' + startSym + "tt_placement" + endSym + '" ' + 'content-class="' + startSym + "tt_contentClass" + endSym + '" ' + 'animation="' + startSym + "tt_animation" + endSym + '" ' + 'is-open="' + startSym + "tt_isOpen" + endSym + '"' + 'template-id="' + startSym + "tt_templateId" + endSym + '" ' + 'content-html="' + startSym + "tt_contentHtml" + endSym + '" ' + 'template-data="tt_templateData" ' + ">" + "</div>";
 
                 return {
                     restrict: "EA",
@@ -117,7 +116,8 @@
                             scope.tt_isOpen = false;
 
                             // 根据状态来切换显示还是隐藏
-                            function toggleTooltipBind () {
+                            function toggleTooltipBind (event) {
+                              event.stopPropagation();
                                 if ( !scope.tt_isOpen ) {
                                     showTooltipBind();
                                 } else {
@@ -125,10 +125,9 @@
                                 }
                             }
 
-
                             // 如果指定，显示带有延迟的工具提示，否则立即显示
                             function showTooltipBind() {
-                                $timeout.cancel(tooltipTimeout);
+                              $timeout.cancel(tooltipTimeout);
                                 tooltipTimeout = null;
                                 if(hasEnableExp && !scope.$eval(iAttrs[prefix+'Enable'])) {
                                     return;
@@ -219,19 +218,25 @@
                                     offsetWidth = tooltip.prop("offsetWidth"),
                                     offsetHeight = tooltip.prop("offsetHeight"),
                                     css = {};
-                                switch (scope.tt_placement) {
-                                    case"right":
-                                        css = {top: position.top + position.height / 2 - offsetHeight / 2, left: position.left + position.width};
-                                        break;
-                                    case"bottom":
-                                        css = {top: position.top + position.height, left: position.left + position.width / 2 - offsetWidth / 2};
-                                        break;
-                                    case"left":
-                                        css = {top: position.top + position.height / 2 - offsetHeight / 2, left: position.left - offsetWidth};
-                                        break;
-                                    default:
-                                        css = {top: position.top - offsetHeight, left: position.left + position.width / 2 - offsetWidth / 2}
-                                }
+                              switch (scope.tt_placement) {
+                                case"right":
+                                  css = {top: position.top + position.height / 2 - offsetHeight / 2, left: position.left + position.width};
+                                  break;
+                                case"bottom":
+                                  css = {top: position.top + position.height, left: position.left + position.width / 2 - offsetWidth / 2};
+                                  break;
+                                case"left":
+                                  css = {top: position.top + position.height / 2 - offsetHeight / 2, left: position.left - offsetWidth};
+                                  break;
+                                case"top-left":
+                                  css = {top: position.top + position.height, left: position.left + position.width / 2 - 20};
+                                  break;
+                                case"right-top":
+                                  css = {top: position.top + position.height / 2 - 20, left: position.left - offsetWidth};
+                                  break;
+                                default:
+                                  css = {top: position.top - offsetHeight, left: position.left + position.width / 2 - offsetWidth / 2}
+                              }
                                 css.top += "px";
                                 css.left += "px";
                                 tooltip.css(css);
@@ -244,6 +249,9 @@
                             });
                             iAttrs.$observe(prefix + "Title", function (value) {
                                 scope.tt_title = value;
+                            });
+                            iAttrs.$observe("contentClass", function (value) {
+                              value && (scope.tt_contentClass = value);
                             });
                             iAttrs.$observe(prefix + "Placement", function (value) {
                                 scope.tt_placement = angular.isDefined(value) ? value : options.placement;
@@ -272,16 +280,22 @@
                             iAttrs.$observe(prefix + "Trigger", function (val) {
                                 unregisterTriggers();
                                 triggers = getTriggers( val );
-
                                 if ( triggers.show === triggers.hide ) {
                                     iElement.bind( triggers.show, toggleTooltipBind );
-                                    triggers.show != "mouseenter" && (E = false);
+                                    $document.bind(triggers.show, closeTooltipBind);
+                                    triggers.show !== "mouseenter" && (E = false);
                                 } else {
                                     iElement.bind( triggers.show, showTooltipBind );
                                     iElement.bind( triggers.hide, hideTooltipBind );
                                 }
                                 y = true;
                             });
+
+                            function closeTooltipBind(event) {
+                              if(!angular.element('div['+ directiveName +'-popup]').has(angular.element(event.target)).length && scope.tt_isOpen){
+                                hideTooltipBind();
+                              }
+                            }
 
                             // 监听属性是否有动画效果
                             var animation = scope.$eval(iAttrs[prefix + 'Animation']);
@@ -319,6 +333,7 @@
                 placement: "@",
                 templateId: "@",
                 templateData: "=",
+                contentClass: "@",
                 contentHtml: "@"
             },
             templateUrl: "app/components/cbTooltip/cbTooltip.html",
@@ -349,6 +364,7 @@
                 placement: "@",
                 templateId: "@",
                 templateData: "=",
+                contentClass: "@",
                 contentHtml: "@"
             },
             templateUrl: "app/components/cbTooltip/cbPopover.html",

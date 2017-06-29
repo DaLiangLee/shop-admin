@@ -33,7 +33,7 @@
  * config    全局配置参数
  *    hoverSupport      是否支持鼠标移入效果
  *    stripedSupport    是否支持隔行变色
- *    columnsClass       tr上面加class     {'classname' : true添加，false不添加}
+ *    columnsClass       tr上面加class     {'classname' : 判断字段 布尔值 true添加 false不添加}
  *    sortSupport        是否开启排序       默认false
  *    sortPrefer      排序形式（客户端false还是服务端true）       默认false客户端
  *    settingPrefer   自定义列表项配置
@@ -54,6 +54,7 @@
  *    selectedProperty         // 数据列表项复选框value值    默认selected
  *    selectedScopeProperty     // 复选框的作用域    默认selectedItems
  *    exportDataSupport         //是否开启导出       默认false
+ *    importDataSupport         //是否开启导入       默认false
  *    addColumnsBarDirective          //新增按钮指令       数组形式，每项都是一个操作指令
  *    batchOperationBarDirective     //批量操作栏指令        数组形式，每项都是一个操作指令
  *
@@ -87,29 +88,38 @@
 
     function initAddButton(scope) {
       var botton = "";
-      if (scope.config.addColumnsBarDirective.length == 0) {
+      if (!scope.config.addColumnsBarDirective.length) {
         return "";
       }
       angular.forEach(scope.config.addColumnsBarDirective, function (item) {
         botton += item;
       });
-      return '<div class="pull-left">' + botton + '</div>';
+      return '<div class="f-fl">' + botton + '</div>';
     }
 
     function initSettings(scope) {
       var setting = "";
+      if (scope.config.importDataSupport) {
+        setting += '<div class="import f-fl">' + importDataConfig(scope) + '</div>';
+      }
       if (scope.config.exportDataSupport) {
-        setting += '<div class="export pull-left">' + exportDataConfig(scope) + '</div>';
+        setting += '<div class="export f-fl">' + exportDataConfig(scope) + '</div>';
       }
       if (scope.config.settingColumnsSupport) {
-        setting += '<div class="setting pull-left">' + settingColumnsConfig(scope) + '</div>';
+        setting += '<div class="setting f-fl">' + settingColumnsConfig(scope) + '</div>';
       }
-      return '<div class="pull-right">' + setting + '</div>';
+      return '<div class="f-fr">' + setting + '</div>';
+    }
+
+    // 导入数据
+    function importDataConfig() {
+      // return '<a class="u-btn u-btn-default u-btn-sm">hello</a>'
+      return '<div class="dropdown" cb-access-control="{{importParams.permission}}" import-data params="importParams" upload-excel="importParams.uploadExcel(data)"></div>';
     }
 
     // 导出数据
     function exportDataConfig() {
-      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="btn btn-default list-tool-bar-button"  target="_blank"><span>导出</span></a>'
+      return '<a cb-access-control="{{requestParams.permission}}" export-data="{{requestParams.request}}" params="requestParams.params" class="u-btn u-btn-sm"  target="_blank"><span>导　出</span></a>'
     }
 
     // 自定义列表项
@@ -119,9 +129,10 @@
 
     function checkboxConfig(checked) {
       var cell = checked ? "th" : "th",
-        text = checked ? "序号" : "全选",
+        // text = checked ? "序号" : "全选",
+        text = checked ? "序号" : " ",
         checkbox = checked ? "" : '<input style="vertical-align:middle; margin-top:0;" type="checkbox" ng-model="tableState.selectAll" ng-change="changeSelectionAll()" />',
-        label = checkbox ? "<label>" + checkbox + "</label>" : text;
+        label = checkbox ? "<label style='font-size:12px; font-family:Tahoma;cursor: pointer;'>" + checkbox + text + "</label>" : text;
       return "<" + cell + ' style="width:20px;min-width:20px;">' + label + '</' + cell + ">";
     }
 
@@ -162,17 +173,22 @@
           node += '<td>' + item.fieldDirective + '</td>';
         }
       });
-
-      var statusShowClass = scope.config.isActiveClass ? ' ng-class="{' + scope.config.activeClass + ': item.$active, \'striped\': $odd}" ' : "";
-      var columnsClass = scope.config.columnsClass ? ' class="' + scope.config.columnsClass + '" ' : "";
-      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + columnsClass + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
+      if(scope.config.isActiveClass){
+        scope.config.columnsClass[scope.config.activeClass] = '$active';
+      }
+      var statusShowClass = ' ng-class="{';
+      angular.forEach(scope.config.columnsClass, function (key, value) {
+        statusShowClass += "\'"+value+"\':"+rowItemName+"."+key+",";
+      });
+      statusShowClass += '\'striped\': $odd}" ';
+      return '<tbody ng-if="!loadingState"><tr ng-click="selectItem(item)" ' + statusShowClass + ' ' + bindonce + ' ' + ' ng-repeat="' + rowItemName + " in " + itemList + '">' + node + "</tr></tbody>"
     }
 
     function tFootConfig(scope) {
       var node = "", btn = "", page = "", config = scope.config;
 
       if (config.batchOperationBarDirective.length > 0) {    // 添加批量操作按钮
-        btn = '<div class="simple-grid-tfoot-batch-warp pull-left">';
+        btn = '<div class="simple-grid-tfoot-batch-warp f-fl">';
         angular.forEach(config.batchOperationBarDirective, function (item) {
           btn += item;
         });
@@ -180,12 +196,12 @@
       }
 
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {
-        page = '<div class="simple-grid-page-warp pull-right cb-pagination" simple-grid-page="" previous-text="&#xe901;" next-text="&#xe902;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'
+        page = '<div class="simple-grid-page-warp f-fr cb-pagination" simple-grid-page="" previous-text="&#xe907;" next-text="&#xe908;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'
       }
 
       node += btn;
       node += page;
-      return '<div ng-if="!showNoneDataInfoTip && !loadingState">' + node + '</div>';
+      return '<div ng-if="!showNoneDataInfoTip && !loadingState" class="f-cb">' + node + '</div>';
     }
 
     function noData(scope) {
@@ -205,7 +221,7 @@
      * @type {{columnsClass: null, sortSupport: boolean, sortPrefer: boolean, settingPrefer: {necessarySettings: Array, remixCustomSettings: Array, currentCustomSettings: Array}, settingColumnsSupport: boolean, checkboxSupport: boolean, paginationSupport: boolean, paginationInfo: {maxSize: number, showPageGoto: boolean}, propsParams: {}, noneDataInfoDirective: string, noneDataInfoMessage: string, selectedProperty: string, selectedScopeProperty: string, exportDataSupport: boolean, addColumnsBarDirective: Array, batchOperationBarDirective: Array}}
      */
     var DEFAULT_CONFIG = {
-      columnsClass: null,       //tr上面加class     {'classname' : true添加，false不添加}
+      columnsClass: {},       //tr上面加class     {'classname' : 判断字段 布尔值 true添加 false不添加}
       sortSupport: false,        //是否开启排序
       sortPrefer: false,      //排序形式（客户端false还是服务端true）
       settingPrefer: {        //自定义列表项配置    必填项
@@ -228,6 +244,7 @@
       selectedProperty: 'selected',         // 数据列表项复选框value值
       selectedScopeProperty: 'selectedItems',     // 复选框的作用域
       exportDataSupport: false,           //是否开启导出
+      importDataSupport: false,           //是否开启导入
       addColumnsBarDirective: [],         //新增按钮指令       每项都是一个操作指令
       batchOperationBarDirective: []      //批量操作栏指令        每项都是一个操作指令
     };
@@ -263,6 +280,7 @@
         store: "=",        // 数据
         config: "=",       // 配置
         requestParams: "=",   // 导出配置
+        importParams: "=",   // 导入配置
         loadingState: "=",  // 数据加载
         paginationInfo: "=",  // 分页配置
         selectionChange: "&",  // 多选单选回调
@@ -289,16 +307,15 @@
 
         // 服务端排序
         $scope.serverSortHandler = function (name, data) {
-          data[name] = !data[name];
           var result = {};
-
           result[name] = data[name] ? "ASC" : "DESC";
           $scope.sortChanged({
             data: {
               name: name,
               data: result
             }
-          })
+          });
+          data[name] = !data[name];
         };
 
         // 自定义设置

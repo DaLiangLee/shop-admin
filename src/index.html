@@ -32,94 +32,158 @@
   <script id="BUILD_FLAG">
       var userPermissionList = {
         "message": [],
-        "guid": "836541896838361088",
-        "username": "B1213886022473",
-        "storeid": "836541898691969024",
+        "guid": "864052671424786432",
+        "username": "B315871812355",
+        "storeid": "864052671890587648",
         "menu": {
           "category": "all",
           "display": "1",
           "id": 1,
           "items": [
             {
-              "category": "store",
+              "category": "trade",
               "display": "1",
-              "id": 3,
+              "id": 5,
               "items": [
                 {
-                  "category": "store",
+                  "category": "trade",
                   "display": "1",
-                  "href": "/store/shop",
-                  "id": 30000,
+                  "href": "/trade/order",
+                  "id": 50000,
                   "items": [
                     {
-                      "category": "store",
+                      "category": "trade",
                       "display": "1",
-                      "href": "/store/shop/index",
-                      "id": 30001,
+                      "href": "/trade/order/add",
+                      "id": 50001,
                       "items": [],
-                      "menuname": "店铺首页",
-                      "permission": "chebian:store:store:shop:index"
+                      "menuname": "新增订单",
+                      "permission": "chebian:store:trade:porder:add"
                     },
                     {
-                      "category": "store",
+                      "category": "trade",
                       "display": "1",
-                      "href": "/store/shop/list",
-                      "id": 30002,
+                      "href": "/trade/order/detail",
+                      "id": 50002,
                       "items": [],
-                      "menuname": "店铺列表",
-                      "permission": "chebian:store:store:shop:list"
+                      "menuname": "订单详情",
+                      "permission": "chebian:store:trade:porder:detail"
                     },
                     {
-                      "category": "store",
+                      "category": "trade",
                       "display": "1",
-                      "href": "/store/shop/edit",
-                      "id": 30003,
+                      "href": "/trade/order/cancel",
+                      "id": 50003,
                       "items": [],
-                      "menuname": "编辑店铺",
-                      "permission": "chebian:store:store:shop:edit"
+                      "menuname": "取消订单",
+                      "permission": "chebian:store:trade:porder:cancel"
                     },
                     {
-                      "category": "store",
-                      "display": "1",
-                      "href": "/store/shop/search",
-                      "id": 30004,
+                      "category": "trade",
+                      "display": "0",
+                      "href": "/trade/order/combin",
+                      "id": 50004,
                       "items": [],
-                      "menuname": "查询店铺",
-                      "permission": "chebian:store:store:shop:search"
+                      "menuname": "合并订单",
+                      "permission": "chebian:store:trade:porder:combin"
                     },
                     {
-                      "category": "store",
-                      "display": "1",
-                      "href": "/store/shop/register",
-                      "id": 30005,
+                      "category": "trade",
+                      "display": "0",
+                      "href": "/trade/order/split",
+                      "id": 50005,
                       "items": [],
-                      "menuname": "注册店铺",
-                      "permission": "chebian:store:store:shop:register"
+                      "menuname": "拆分订单",
+                      "permission": "chebian:store:trade:porder:split"
                     },
                     {
-                      "category": "store",
+                      "category": "trade",
                       "display": "1",
-                      "href": "/store/shop/belong",
-                      "id": 30006,
+                      "href": "/trade/order/export",
+                      "id": 50006,
                       "items": [],
-                      "menuname": "店铺转让",
-                      "permission": "chebian:store:store:shop:belong"
+                      "menuname": "导出订单",
+                      "permission": "chebian:store:trade:porder:export"
                     },
                     {
-                      "category": "store",
+                      "category": "trade",
                       "display": "1",
-                      "href": "/store/shop/close",
-                      "id": 30007,
+                      "href": "/trade/order/search",
+                      "id": 50007,
                       "items": [],
-                      "menuname": "注销店铺",
-                      "permission": "chebian:store:store:shop:close"
+                      "menuname": "查找订单",
+                      "permission": "chebian:store:trade:porder:search"
+                    },
+                    {
+                      "category": "trade",
+                      "display": "0",
+                      "href": "/trade/order/addsub",
+                      "id": 50008,
+                      "items": [],
+                      "menuname": "新增子订单",
+                      "permission": "chebian:store:trade:porder:addsub"
+                    },
+                    {
+                      "category": "trade",
+                      "display": "0",
+                      "href": "/trade/order/delsub",
+                      "id": 50009,
+                      "items": [],
+                      "menuname": "删除子订单",
+                      "permission": "chebian:store:trade:porder:delsub"
                     }
                   ],
-                  "menuname": "店铺管理",
-                  "permission": "chebian:store:store:shop:view"
+                  "menuname": "订单管理",
+                  "permission": "chebian:store:trade:porder:view"
+                },
+                {
+                  "category": "trade",
+                  "display": "1",
+                  "href": "/trade/comment",
+                  "id": 70100,
+                  "items": [
+                    {
+                      "category": "trade",
+                      "display": "1",
+                      "href": "/trade/comment/reply",
+                      "id": 70101,
+                      "items": [],
+                      "menuname": "回复评价",
+                      "permission": "chebian:store:trade:comment:reply"
+                    },
+                    {
+                      "category": "trade",
+                      "display": "1",
+                      "href": "/trade/comment/details",
+                      "id": 70102,
+                      "items": [],
+                      "menuname": "评价详情",
+                      "permission": "chebian:store:trade:comment:details"
+                    },
+                    {
+                      "category": "trade",
+                      "display": "1",
+                      "href": "/trade/comment/export",
+                      "id": 70104,
+                      "items": [],
+                      "menuname": "导出评价",
+                      "permission": "chebian:store:trade:comment:export"
+                    },
+                    {
+                      "category": "trade",
+                      "display": "1",
+                      "href": "/trade/comment/search",
+                      "id": 70105,
+                      "items": [],
+                      "menuname": "查找评价",
+                      "permission": "chebian:store:trade:comment:search"
+                    }
+                  ],
+                  "menuname": "评价管理",
+                  "permission": "chebian:store:trade:comment:view"
                 }
               ],
-              "menuname": "店铺管理"
+              "menuname": "交易管理"
             },
             {
               "category": "product",
@@ -430,175 +494,30 @@
               "menuname": "商品与服务"
             },
             {
-              "category": "trade",
+              "category": "markting",
               "display": "1",
-              "id": 5,
+              "id": 11,
               "items": [
                 {
-                  "category": "trade",
+                  "category": "markting",
                   "display": "1",
-                  "href": "/trade/order",
-                  "id": 50000,
-                  "items": [
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/order/add",
-                      "id": 50001,
-                      "items": [],
-                      "menuname": "新增订单",
-                      "permission": "chebian:store:trade:porder:add"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/order/detail",
-                      "id": 50002,
-                      "items": [],
-                      "menuname": "订单详情",
-                      "permission": "chebian:store:trade:porder:detail"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/order/cancel",
-                      "id": 50003,
-                      "items": [],
-                      "menuname": "取消订单",
-                      "permission": "chebian:store:trade:porder:cancel"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "0",
-                      "href": "/trade/order/combin",
-                      "id": 50004,
-                      "items": [],
-                      "menuname": "合并订单",
-                      "permission": "chebian:store:trade:porder:combin"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "0",
-                      "href": "/trade/order/split",
-                      "id": 50005,
-                      "items": [],
-                      "menuname": "拆分订单",
-                      "permission": "chebian:store:trade:porder:split"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/order/export",
-                      "id": 50006,
-                      "items": [],
-                      "menuname": "导出订单",
-                      "permission": "chebian:store:trade:porder:export"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/order/search",
-                      "id": 50007,
-                      "items": [],
-                      "menuname": "查找订单",
-                      "permission": "chebian:store:trade:porder:search"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "0",
-                      "href": "/trade/order/addsub",
-                      "id": 50008,
-                      "items": [],
-                      "menuname": "新增子订单",
-                      "permission": "chebian:store:trade:porder:addsub"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "0",
-                      "href": "/trade/order/delsub",
-                      "id": 50009,
-                      "items": [],
-                      "menuname": "删除子订单",
-                      "permission": "chebian:store:trade:porder:delsub"
-                    }
-                  ],
-                  "menuname": "订单管理",
-                  "permission": "chebian:store:trade:porder:view"
+                  "href": "/markting/debitcard",
+                  "id": 120000,
+                  "items": [],
+                  "menuname": "充值活动",
+                  "permission": "chebian:store:markting:debitcard:view"
                 },
                 {
-                  "category": "trade",
+                  "category": "markting",
                   "display": "1",
-                  "href": "/trade/comment",
-                  "id": 70100,
-                  "items": [
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/comment/reply",
-                      "id": 70101,
-                      "items": [],
-                      "menuname": "回复评价",
-                      "permission": "chebian:store:trade:comment:reply"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/comment/details",
-                      "id": 70102,
-                      "items": [],
-                      "menuname": "评价详情",
-                      "permission": "chebian:store:trade:comment:details"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/comment/export",
-                      "id": 70104,
-                      "items": [],
-                      "menuname": "导出评价",
-                      "permission": "chebian:store:trade:comment:export"
-                    },
-                    {
-                      "category": "trade",
-                      "display": "1",
-                      "href": "/trade/comment/search",
-                      "id": 70105,
-                      "items": [],
-                      "menuname": "查找评价",
-                      "permission": "chebian:store:trade:comment:search"
-                    }
-                  ],
-                  "menuname": "评价管理",
-                  "permission": "chebian:store:trade:comment:view"
+                  "href": "/markting/package",
+                  "id": 121000,
+                  "items": [],
+                  "menuname": "套餐卡活动",
+                  "permission": "chebian:store:markting:package:view"
                 }
               ],
-              "menuname": "交易管理"
-            },
-            {
-              "category": "finance",
-              "display": "1",
-              "id": 6,
-              "items": [
-                {
-                  "category": "finance",
-                  "display": "1",
-                  "href": "/finance/journal",
-                  "id": 60300,
-                  "items": [],
-                  "menuname": "收支明细",
-                  "permission": "chebian:store:finance:journal:view"
-                },
-                {
-                  "category": "finance",
-                  "display": "1",
-                  "href": "/finance/debitcard",
-                  "id": 60400,
-                  "items": [],
-                  "menuname": "储存卡账单",
-                  "permission": "chebian:store:finance:debitcard:view"
-                }
-              ],
-              "menuname": "财务管理"
+              "menuname": "营销中心"
             },
             {
               "category": "user",
@@ -726,14 +645,49 @@
                 {
                   "category": "user",
                   "display": "1",
+                  "href": "/user/package",
+                  "id": 70200,
+                  "items": [],
+                  "menuname": "套餐卡账单",
+                  "permission": "chebian:store:user:package:view"
+                },
+                {
+                  "category": "user",
+                  "display": "1",
+                  "href": "/user/debitcard",
+                  "id": 60400,
+                  "items": [],
+                  "menuname": "储值卡账单",
+                  "permission": "chebian:store:user:debitcard:view"
+                },
+                {
+                  "category": "user",
+                  "display": "1",
                   "href": "/user/grades",
                   "id": 110000,
                   "items": [],
-                  "menuname": "会员等级",
+                  "menuname": "等级设置",
                   "permission": "chebian:store:user:customer:grades:view"
                 }
               ],
               "menuname": "会员中心"
+            },
+            {
+              "category": "finance",
+              "display": "1",
+              "id": 6,
+              "items": [
+                {
+                  "category": "finance",
+                  "display": "1",
+                  "href": "/finance/journal",
+                  "id": 60300,
+                  "items": [],
+                  "menuname": "收支明细",
+                  "permission": "chebian:store:finance:journal:view"
+                }
+              ],
+              "menuname": "财务管理"
             },
             {
               "category": "member",
@@ -828,7 +782,7 @@
                       "permission": "chebian:store:member:employee:search"
                     }
                   ],
-                  "menuname": "员工管理",
+                  "menuname": "员工管理/账号",
                   "permission": "chebian:store:member:employee:view"
                 },
                 {
@@ -878,7 +832,88 @@
                   "permission": "chebian:store:member:role:view"
                 }
               ],
-              "menuname": "人事管理"
+              "menuname": "人员管理"
+            },
+            {
+              "category": "store",
+              "display": "1",
+              "id": 3,
+              "items": [
+                {
+                  "category": "store",
+                  "display": "1",
+                  "href": "/store/shop",
+                  "id": 30000,
+                  "items": [
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/index",
+                      "id": 30001,
+                      "items": [],
+                      "menuname": "店铺首页",
+                      "permission": "chebian:store:store:shop:index"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/list",
+                      "id": 30002,
+                      "items": [],
+                      "menuname": "店铺列表",
+                      "permission": "chebian:store:store:shop:list"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/edit",
+                      "id": 30003,
+                      "items": [],
+                      "menuname": "编辑店铺",
+                      "permission": "chebian:store:store:shop:edit"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/search",
+                      "id": 30004,
+                      "items": [],
+                      "menuname": "查询店铺",
+                      "permission": "chebian:store:store:shop:search"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/register",
+                      "id": 30005,
+                      "items": [],
+                      "menuname": "注册店铺",
+                      "permission": "chebian:store:store:shop:register"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/belong",
+                      "id": 30006,
+                      "items": [],
+                      "menuname": "店铺转让",
+                      "permission": "chebian:store:store:shop:belong"
+                    },
+                    {
+                      "category": "store",
+                      "display": "1",
+                      "href": "/store/shop/close",
+                      "id": 30007,
+                      "items": [],
+                      "menuname": "注销店铺",
+                      "permission": "chebian:store:store:shop:close"
+                    }
+                  ],
+                  "menuname": "店铺管理",
+                  "permission": "chebian:store:store:shop:view"
+                }
+              ],
+              "menuname": "店铺管理"
             },
             {
               "category": "system",
@@ -905,23 +940,6 @@
                 }
               ],
               "menuname": "系统管理"
-            },
-            {
-              "category": "markting",
-              "display": "1",
-              "id": 11,
-              "items": [
-                {
-                  "category": "markting",
-                  "display": "1",
-                  "href": "/markting/debitcard",
-                  "id": 120000,
-                  "items": [],
-                  "menuname": "店铺活动",
-                  "permission": "chebian:store:markting:debitcard:view"
-                }
-              ],
-              "menuname": "营销中心"
             }
           ],
           "menuname": "全部菜单"
@@ -932,8 +950,8 @@
           "chebian:store:system:modpwd:view",
           "chebian:store:product:server:view",
           "chebian:store:product:goods:price",
-          "chebian:store:product:package:export",
           "chebian:store:product:package:add",
+          "chebian:store:product:package:export",
           "chebian:store:product:server:price",
           "chebian:store:member:role:view",
           "chebian:store:markting:debitcard:view",
@@ -941,8 +959,8 @@
           "chebian:store:user:customer:edit",
           "chebian:store:product:server:import",
           "chebian:store:product:package:putdown",
-          "chebian:store:user:customer:remark",
           "chebian:store:finance:journal:view",
+          "chebian:store:user:customer:remark",
           "chebian:store:user:customer:detail",
           "chebian:store:trade:comment:search",
           "chebian:store:trade:porder:add",
@@ -964,8 +982,8 @@
           "chebian:store:trade:porder:split",
           "chebian:store:user:customer:recovery",
           "chebian:store:user:customer:add",
-          "chebian:store:product:server:export",
           "chebian:store:product:goods:belong",
+          "chebian:store:product:server:export",
           "chebian:store:member:employee:disable",
           "chebian:store:user:customer:order",
           "chebian:store:member:employee:reset",
@@ -977,13 +995,15 @@
           "chebian:store:product:server:belong",
           "chebian:store:store:shop:index",
           "chebian:store:user:customer:address",
+          "chebian:store:user:package:view",
           "chebian:store:store:shop:view",
           "chebian:store:user:customer:import",
           "chebian:store:trade:porder:search",
           "chebian:store:member:employee:export",
           "chebian:store:member:role:add",
           "chebian:store:member:employee:search",
-          "chebian:store:finance:debitcard:view",
+          "chebian:store:markting:package:view",
+          "chebian:store:user:debitcard:view",
           "chebian:store:product:goods:add",
           "chebian:store:store:shop:belong",
           "chebian:store:user:customer:reset",
@@ -999,17 +1019,17 @@
           "chebian:store:product:server:putup",
           "chebian:store:product:server:edit",
           "chebian:store:member:role:remove",
-          "chebian:store:user:customer:view",
           "chebian:store:store:shop:list",
+          "chebian:store:user:customer:view",
           "chebian:store:user:customer:grades:view",
-          "chebian:store:trade:porder:view",
           "chebian:store:trade:comment:details",
+          "chebian:store:trade:porder:view",
           "chebian:store:user:customer:export",
           "chebian:store:product:package:import",
           "chebian:store:member:role:edit",
           "chebian:store:trade:porder:delsub",
-          "chebian:store:member:employee:enable",
           "chebian:store:store:shop:edit",
+          "chebian:store:member:employee:enable",
           "chebian:store:product:goods:edit",
           "chebian:store:product:goods:import",
           "chebian:store:product:goods:export",
@@ -1029,13 +1049,15 @@
             "rolename": "店主",
             "storeid": 0
           }
-        ]
+        ],
+        "realname": ""
       };
     </script>
   </head>
   <body>
     <div view-framework class="view-framework" ng-class="{'viewFramework-sidebar-mini':(!view.config.disableNavigation && !view.config.hideSidebar) && view.config.sidebar == 'mini', 'viewFramework-sidebar-full': (!view.config.disableNavigation && !view.config.hideSidebar) && view.config.sidebar == 'full','viewFramework-topbar-hide': view.config.disableNavigation || view.config.hideTopbar}"></div>
     <div view-framework-preloader></div>
+    <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261988219'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1261988219%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->
     <!-- run `gulp inject` to automatically populate bower script dependencies -->

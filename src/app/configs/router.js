@@ -18,10 +18,12 @@
      */
     $urlRouterProvider
       .otherwise('/notfound')         // 页面找不到
-      .when('', '/desktop/home')       // 工作台
+      // .when('', '/desktop/home')       // 工作台
+      .when('', '/trade/porder/list/1')   // 订单管理
       .when('/', '/desktop/home')       // 工作台
       .when('/desktop', '/desktop/home')       // 工作台
       .when('/desktop/', '/desktop/home')       // 工作台
+      .when('/feedback', '/system/feedback/feedback') // 建议反馈
       .when('/store', '/store/shop/')      // 店铺管理
       .when('/store/', '/store/shop/')
       .when('/store/shop', '/store/shop/home')
@@ -121,6 +123,7 @@
       .state('store', {   // 店铺管理
         url: '/store',
         title: '店铺管理',
+        abstract: true,
         template: '<div ui-view></div>',
         permission: "chebian:store:store:shop:view"
       })
@@ -178,6 +181,7 @@
       })
       .state('product.goods', {     // 商品管理
         url: '/goods',
+        abstract: true,
         template: '<div ui-view></div>',
         title: '商品管理',
         permission: "chebian:store:product:goods:view"
@@ -279,7 +283,7 @@
         permission: "chebian:store:trade:porder:view"
       })
       .state('trade.order.list', {      // 订单管理列表
-        url: '/list/:page?keyword&status&paystatus&createtime0&createtime1',
+        url: '/list/:page?keyword&status&paystatus&createtime0&createtime1&motorid&orderstype',
         templateUrl: 'app/pages/trade_order/list.html',
         controller: 'TradeOrderListController',
         controllerAs: 'vm',
@@ -288,14 +292,28 @@
       })
       .state('trade.order.add', {     // 新增订单
         url: '/add',
+        templateUrl: 'app/pages/trade_order/add.html',
+        controller: 'TradeOrderAddController',
+        controllerAs: 'vm',
+        title: '新增订单',
+        permission: "chebian:store:trade:porder:add",
+        onExit: function(tadeOrderAddData){
+          tadeOrderAddData.updata(undefined)
+        }
+      })
+      .state('trade.order.added', {     // 新增订单2
+        url: '/added?mobile&license&motorid',
         templateUrl: 'app/pages/trade_order/change.html',
         controller: 'TradeOrderChangeController',
         controllerAs: 'vm',
         title: '新增订单',
-        permission: "chebian:store:trade:porder:add"
+        permission: "chebian:store:trade:porder:add",
+        onExit: function(tadeOrderAddData){
+          tadeOrderAddData.updata(undefined)
+        }
       })
       .state('trade.order.edit', {     // 编辑订单
-        url: '/edit/:id',
+        url: '/edit/:orderid',
         templateUrl: 'app/pages/trade_order/change.html',
         controller: 'TradeOrderChangeController',
         controllerAs: 'vm',
@@ -317,7 +335,7 @@
         permission: "chebian:store:trade:comment:view"
       })
       .state('trade.comment.list', {      // 评价管理
-        url: '/list/:page?skill&environment&replyflag&service&commenttime0&commenttime1',
+        url: '/list/:page?keyword&skill&environment&replyflag&service&commenttime0&commenttime1',
         templateUrl: 'app/pages/trade_comment/list.html',
         controller: 'TradeCommentListController',
         controllerAs: 'vm',
@@ -337,34 +355,12 @@
         permission: "chebian:store:finance:journal:view"
       })
       .state('finance.journal.list', {      // 收支明细
-        url: '/list/:page',
+        url: '/list/:page?keyword&journaltime0&journaltime1&tradetype&journalmoney0&journalmoney1&journaltype&paytype',
         templateUrl: 'app/pages/finance_journal/list.html',
         controller: 'FinanceJournalListController',
         controllerAs: 'vm',
         title: '收支明细',
         permission: "chebian:store:finance:journal:view"
-      })
-      .state('finance.debitcard', {      // 储存卡账单
-        url: '/debitcard',
-        template: '<div ui-view></div>',
-        title: '储存卡账单',
-        permission: "chebian:store:finance:debitcard:view"
-      })
-      .state('finance.debitcard.list', {      // 储存卡账单
-        url: '/list/:page?keyword&userbalance0&userbalance1&recharge0&recharge1&cost0&cost1',
-        templateUrl: 'app/pages/finance_debitcard/list.html',
-        controller: 'FinanceDebitcardLsitController',
-        controllerAs: 'vm',
-        title: '储存卡账单',
-        permission: "chebian:store:finance:debitcard:view"
-      })
-      .state('finance.debitcard.detail', {      // 储存卡账单详情
-        url: '/detail/:userid?balance&mobile',
-        templateUrl: 'app/pages/finance_debitcard/detail.html',
-        controller: 'FinanceDebitcardDetailController',
-        controllerAs: 'vm',
-        title: '储存卡账单详情',
-        permission: "chebian:store:finance:debitcard:view"
       })
       .state('user', {      // 会员管理
         url: '/user',
@@ -437,6 +433,50 @@
         controllerAs: 'vm',
         title: '会员等级',
         permission: "chebian:store:user:customer:grades:view"
+      })
+      .state('user.debitcard', {      // 储存卡账单
+        url: '/debitcard',
+        template: '<div ui-view></div>',
+        title: '储存卡账单',
+        permission: "chebian:store:user:debitcard:view"
+      })
+      .state('user.debitcard.list', {      // 储存卡账单
+        url: '/list/:page?keyword&userbalance0&userbalance1&recharge0&recharge1&cost0&cost1',
+        templateUrl: 'app/pages/user_debitcard/list.html',
+        controller: 'UserDebitcardLsitController',
+        controllerAs: 'vm',
+        title: '储存卡账单',
+        permission: "chebian:store:user:debitcard:view"
+      })
+      .state('user.debitcard.detail', {      // 储存卡账单详情
+        url: '/detail/:userid?balance&mobile&journaltime0&journaltime1',
+        templateUrl: 'app/pages/user_debitcard/detail.html',
+        controller: 'UserDebitcardDetailController',
+        controllerAs: 'vm',
+        title: '储存卡账单详情',
+        permission: "chebian:store:user:debitcard:view"
+      })
+      .state('user.package', {   // 套餐卡账单
+        url: '/package',
+        template: '<div ui-view></div>',
+        title: '套餐卡账单',
+        permission: "chebian:store:user:package:view"
+      })
+      .state('user.package.list', {      //套餐卡账单
+        url: '/list/:page?keyword&createtime0&createtime1&con',
+        templateUrl: 'app/pages/user_package/list.html',
+        controller: 'UserPackageLsitController',
+        controllerAs: 'vm',
+        title: '储存卡账单',
+        permission: "chebian:store:user:package:view"
+      })
+      .state('user.package.detail', {      //套餐卡账单详情
+        url: '/detail/:userpackageid?mobile&createtime0&createtime1&keywords',
+        templateUrl: 'app/pages/user_package/detail.html',
+        controller: 'UserPackageDetailController',
+        controllerAs: 'vm',
+        title: '储存卡账单详情',
+        permission: "chebian:store:user:package:view"
       })
       .state('stocks', {      // 货源中心
         url: '/stocks',
@@ -514,6 +554,14 @@
         title: '系统管理',
         permission: "chebian:store:system:modpwd:view"
       })
+      .state('system.feedback', { // 反馈页面
+        url: '/feedback',
+        templateUrl: 'app/pages/system_feedback/feedback.html',
+        controller: 'FeedBackController',
+        controllerAs: 'vm',
+        title: '建议反馈-改进建议',
+        permission: 'desktop'
+      })
       .state('system.personal', {      // 个人信息
         url: '/personal',
         template: '<div ui-view></div>',
@@ -547,6 +595,20 @@
         controllerAs: 'vm',
         title: '店铺活动',
         permission: "chebian:store:markting:debitcard:view"
+      })
+      .state('markting.package', {      // 套餐卡活动
+        url: '/package',
+        template: '<div ui-view></div>',
+        title: '套餐卡活动',
+        permission: "chebian:store:markting:package:view"
+      })
+      .state('markting.package.list', { // 套餐卡活动
+        url: '/list/:page?status',
+        templateUrl: 'app/pages/markting_package/package.html',
+        controller: 'MarktingPackageController',
+        controllerAs: 'vm',
+        title: '套餐卡活动',
+        permission: "chebian:store:markting:package:view"
       });
   }
 })();

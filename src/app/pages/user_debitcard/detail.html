@@ -1,0 +1,36 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="finance.journal.list({page:1})">财务管理</a></li>
+    <li><a ui-sref="user.debitcard.list({page:1})">储值卡账单</a></li>
+    <li class="active">储值卡详情</li>
+</ol>
+<div class="g-view">
+    <div class="container-fluid">
+        <div cb-access-control="chebian:store:user:debitcard:view" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+        <div ng-if="vm.userModel" class="m-user-model">
+            <div class="f-fl user-images">
+                <img ng-src="{{vm.userModel.avatar}}" alt="">
+            </div>
+            <div class="f-fl user-account">
+                <div class="">
+                    <strong ng-bind="vm.userModel.realname"></strong>&nbsp;&nbsp;&nbsp;&nbsp;<span ng-bind="vm.userModel.gender | formatStatusFilter : 'sex'"></span>
+                </div>
+                <div class="">
+                    <span ng-bind="vm.userModel.mobile"></span>
+                </div>
+            </div>
+            <div class="f-fl user-info">
+                <div class="">
+                    关注状态：<span ng-class="{}" ng-bind="vm.userModel.followed | formatStatusFilter :'followed'"></span>
+                </div>
+                <div class="">
+                    公司名称：<strong ng-bind="vm.userModel.companyname"></strong>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" request-params="vm.gridModel.requestParams" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
+        <div class="f-tac">
+            <button type="button" class="u-btn u-btn-disabled u-btn-sm" cb-back-button="{'name':'user.debitcard.list','params':{'page': 1}}" data-router="user.debitcard.detail">返　回</button>
+        </div>
+    </div>
+</div>

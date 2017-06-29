@@ -1,6 +1,6 @@
 'use strict';
 
-var AngularHomepage = function() {
+/*var AngularHomepage = function() {
   var nameInput = element(by.model('yourName'));
   var greeting = element(by.binding('yourName'));
 
@@ -15,9 +15,27 @@ var AngularHomepage = function() {
   this.getGreeting = function() {
     return greeting.getText();
   };
-};
+};*/
 
-describe('The main view', function () {
+describe('index.html', function() {
+
+  beforeEach(function() {
+    browser.get('http://localhost:3000/index.html');
+  });
+
+  it('get index html', function() {
+
+    var a = element(by.model('a'));
+    var b = element(by.model('b'));
+    a.sendKeys(1);
+    b.sendKeys(2);
+    var result = element(by.id('result'));
+    expect(result.getText()).toEqual('3');
+  });
+});
+
+
+/*describe('The main view', function () {
   var page;
 
   beforeEach(function () {
@@ -35,4 +53,4 @@ describe('The main view', function () {
     expect(page.thumbnailEls.count()).toBeGreaterThan(5);
   });
 
-});
+});*/

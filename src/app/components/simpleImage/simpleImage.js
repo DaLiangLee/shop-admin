@@ -52,7 +52,7 @@
         uploadHandler: "&"
       },
       templateUrl: "app/components/simpleImage/simpleImage.html",
-      link: function (scope, iElement, iAttrs) {
+      link: function (scope) {
         scope.config = angular.extend({
           limit: 1,
           width: 300,
@@ -67,7 +67,6 @@
           height: scope.config.height + "px"
         };
         scope.imageArr = [];
-        console.log(scope.image);
 
         getImage(scope.image).length && angular.forEach(getImage(scope.image), function (item, index) {
           scope.imageArr.push({
@@ -78,12 +77,9 @@
             index: index
           });
         });
-        console.log(scope.imageArr);
 
         scope.remove = function ($event, item) {
           $event.stopPropagation();
-          console.log(item);
-
           _.remove(scope.imageArr, function (key) {
             return key.index === item.index;
           });
@@ -91,7 +87,6 @@
 
         scope.upload = {
           handler: function(data) {
-            console.log(data);
             if(data.status == 0 && data.data.length){
               var index = scope.imageArr.length - 1;
               scope.imageArr.push({

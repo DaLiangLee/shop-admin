@@ -1,8 +1,29 @@
 $mini: 40px;
 $full: 150px;
 $topbar: 110px;
+$lessTopbar: 30px;
 body {
   position: relative;
+}
+html,body,.view-framework{
+  width: 100%;
+  height: 100%;
+}
+
+.less-top-bar {
+  .viewFramework-topbar {
+    height: $lessTopbar;
+  }
+  .topbar-wrap {
+    display: none;
+  }
+  .viewFramework-sidebar {
+    top: $lessTopbar;
+  }
+  .viewFramework-main {
+    padding-top: $lessTopbar;
+    margin-bottom: $topbar;
+  }
 }
 
 .viewFramework-topbar {

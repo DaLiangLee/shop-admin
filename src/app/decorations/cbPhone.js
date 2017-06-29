@@ -4,18 +4,18 @@
 /**
  * 手机号码输入格式化
  */
-(function () {
+/*(function () {
   'use strict';
   angular
     .module('shopApp')
     .directive('cbPhone', cbPhone);
 
-  /** @ngInject */
+  /!** @ngInject *!/
   function cbPhone(webSiteVerification) {
 
-    /**
+    /!**
      *
-     */
+     *!/
     var PHONE_REGULAR = webSiteVerification.REGULAR.phone,
         NUMBER_REGULAR = /[^0-9]/g;
     return {
@@ -64,9 +64,9 @@
 
           var flag = true,
             result = parseInt(value, 10);
-          /**
+          /!**
            * 检查是否有-，如果有就是负数，如果没有就是正数
-           */
+           *!/
           if (value !== "-") {
             if (rangeEnabled === 'true') {
               flag = NUMBER_INT_REGULAR.test(value) && (valueMin < result && result < valueMax);
@@ -84,5 +84,5 @@
       }
     }
   }
-})();
+})();*/
 

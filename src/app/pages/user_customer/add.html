@@ -1,20 +1,22 @@
+<ol class="k-breadcrumb">
+  <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
+  <li><a ui-sref="user.customer.list({page:1})">会员管理</a></li>
+  <li class="active">新增会员</li>
+</ol>
 <div class="g-view">
   <div class="container-fluid">
-    <div class="panel panel-default">
-      <div class="panel-heading">新增会员</div>
-    </div>
-    <form name="add" class="form-horizontal" autocomplete="off" ng-submit="vm.submitBtn()" novalidate>
+    <form name="add" class="form-horizontal" autocomplete="off" ng-submit="vm.submitBtn()" novalidate style="width: 600px; margin:60px auto;">
       <div class="form-group">
-        <label for="inputPassword1" class="col-sm-2 control-label"><span class="text-danger"><i class="icon-required"></i></span>会员手机号：</label>
-        <div class="col-sm-5" ng-class="{'has-error': add.mobile.$error.pattern}">
+        <label for="inputPassword1" class="b-w-4 control-label"><span class="text-red"><i class="icon-required"></i></span>会员手机号：</label>
+        <div class="b-w-8" ng-class="{'has-error': add.mobile.$error.pattern}">
           <input type="text"
-                 class="form-control"
+                 class="input-control"
                  name="mobile"
                  id="inputPassword1"
                  ng-required="true"
-                 ng-pattern="/^(13[0-9]{9}|15[012356789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|170[0-9]{8}|177[0-9]{8})$/"
+                 ng-pattern="/^(1[3|5|7|8][0-9]{9}|14[5|7|9][0-9]{8})$/"
                  ng-model="vm.form.mobile"
-                 placeholder="请输入会员手机号" ng-blur="vm.existMobile(add.mobile.$valid)">
+                 placeholder="请输入会员11位手机号" ng-change="vm.existMobile(add.mobile.$valid)" maxlength="11">
           <br>
           <div class="alert alert-success" ng-if="vm.myUsers == 1">
             该用户已经是本店铺会员，点击下一步
@@ -22,34 +24,36 @@
         </div>
       </div>
       <div class="form-group" ng-if="vm.myUsers == -1 || vm.myUsers == 0">
-        <label for="inputPassword2" class="col-sm-2 control-label"><span class="text-danger"><i class="icon-required"></i></span>短信验证码：</label>
-        <div class="col-sm-5">
-          <div class="row">
-            <div class="col-sm-8">
+        <label for="inputPassword2" class="b-w-4 control-label"><span class="text-red"><i class="icon-required"></i></span>短信验证码：</label>
+        <div class="b-w-8">
+            <div class="b-w-8 ">
               <input type="text"
-                     class="form-control"
+                     class="input-control"
                      id="inputPassword2"
                      ng-model="vm.form.code"
-                     placeholder="请输入验证码"
+                     placeholder="请输入验6位数字证码"
                      name="code"
                      ng-disabled="vm.myUsers == -1 || vm.myUsers == 1"
                      ng-required="true"
-                     ng-pattern="/^\d{6}$/">
+                     ng-pattern="/^\d{6}$/" maxlength="6">
             </div>
-            <div class="col-sm-4">
-              <button type="button" class="btn btn-default btn-block" ng-disabled="((vm.myUsers == -1 || vm.myUsers == 1) && add.mobile.$invalid) || !vm.isCountdown" ng-click="vm.setCountdown()" ng-bind="vm.countdown">获取验证码</button>
+            <div class="b-w-1">&nbsp;</div>
+            <div class="b-w-3">
+              <button type="button" ng-class="{code_disable: ((vm.myUsers == -1 || vm.myUsers == 1) && add.mobile.$invalid) || !vm.isCountdown}" class="u-btn u-btn-default u-btn-block u-btn-sm" ng-disabled="((vm.myUsers == -1 || vm.myUsers == 1) && add.mobile.$invalid) || !vm.isCountdown" ng-click="vm.setCountdown()" ng-bind="vm.countdown">获取验证码</button>
+            </div>
+            <br>
+            <div class="form-group">
+              <br>
+              <div class="alert alert-warning">
+                为确保会员手机号的真实性，请在点击“获取验证码”后向您的会员索取验证码。验证码10分钟内有效。
+              </div>
             </div>
           </div>
-          <br>
-          <div class="alert alert-warning">
-            为确保会员手机号的真实性，请在点击“获取验证码”后向您的会员索取验证码。
-          </div>
-        </div>
       </div>
-
       <div class="form-group">
-        <div class="col-sm-10 col-sm-offset-2"  class="text-center">
-          <button type="submit" class="btn btn-primary" style="width: 300px;" ng-disabled="add.$invalid">下一步</button>
+        <div class="control-label">&nbsp;</div>
+        <div class="b-w-8"  class="text-center">
+          <button type="submit" class="u-btn u-btn-primary u-btn-lg" style="width: 300px;" ng-disabled="add.$invalid">下一步</button>
         </div>
       </div>
     </form>

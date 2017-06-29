@@ -4,14 +4,14 @@
     <h5 class="modal-title">设置营业时间</h5>
   </div>
   <div class="modal-body">
-      <div class="row">
-        <div class="col-md-5">
-          <div class="pull-right"><div timepicker ng-model="hours.start" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div></div>
+      <div class="row f-cb">
+        <div class="b-w-5 time-ml">
+          <div class="f-fr"><div cb-timepicker ng-model="hours.start" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div></div>
 
         </div>
-        <div class="col-md-1" style="line-height: 102px">至</div>
-        <div class="col-md-5">
-          <div timepicker ng-model="hours.end" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+        <div class="b-w-1 time-connect">至</div>
+        <div class="b-w-5 time-ml">
+          <div cb-timepicker ng-model="hours.end" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
         </div>
       </div>
     <div class="alert alert-danger" ng-if="hours.start >= hours.end">
@@ -19,16 +19,16 @@
     </div>
   </div>
   <div class="modal-footer">
-    <div class="alert alert-danger" ng-if="interceptor">
+    <div class="alert alert-danger f-tal" ng-if="interceptor">
       <p>修改营业时间，会影响用户查看店铺，您确定要修改吗？</p>
     </div>
-    <div class="inline-block margin-right" ng-if="interceptor">
-      <button class="btn btn-warning" ng-click="interceptorConfirm()">确定设置</button>
-      <button class="btn btn-default" ng-click="close(false)">暂不设置</button>
+    <div class="inline-block f-tac" ng-if="interceptor">
+      <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()">确定设置</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">暂不设置</button>
     </div>
-    <div class="inline-block margin-right" ng-if="!interceptor">
-      <button class="btn btn-primary" ng-click="confirm()">确定</button>
-      <button class="btn btn-default" ng-click="close(false)">取消</button>
+    <div class="inline-block f-tac" ng-if="!interceptor">
+      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="hours.start >= hours.end">确　定</button>　　
+      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

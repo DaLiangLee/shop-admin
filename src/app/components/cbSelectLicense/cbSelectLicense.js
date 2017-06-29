@@ -280,18 +280,18 @@
     return {
       restrict: "A",
       scope: {
-        select: "="
+        select: "=",
+        updateLicence: "&"
       },
       templateUrl: "app/components/cbSelectLicense/cbSelectLicense.html",
       link: function (scope) {
-        console.log(loadData);
         var dataLists = formatData(loadData.data);
-        console.log(scope.select);
         scope.selectModel2 = {
           store: dataLists[0].items,
           handler: function (data) {
             if (scope.selectModel3.text) {
               scope.select = scope.selectModel1.select + data + " " + scope.selectModel3.text;
+              scope.updateLicence({data: scope.select});
             }
           }
         };
@@ -302,6 +302,7 @@
             scope.selectModel2.select = scope.selectModel2.store[0].name;
             if (scope.selectModel3.text) {
               scope.select = data + scope.selectModel2.select + " " + scope.selectModel3.text;
+              scope.updateLicence({data: scope.select});
             }
           }
         };
@@ -309,15 +310,15 @@
           handler: function () {
             if (scope.selectModel3.text) {
               scope.select = scope.selectModel1.select + scope.selectModel2.select + " " + scope.selectModel3.text;
+              scope.updateLicence({data: scope.select});
             }
           }
         };
         var select = scope.$watch('select', function (value) {
-          console.log();
-
           if (angular.isDefined(value)) {
             scope.selectModel1.select = value.charAt(0);
             scope.selectModel2.select = value.charAt(1);
+            scope.selectModel2.store = _.find(dataLists, {'name': value.charAt(0)}).items;
             if (/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/.test(value)) {
               scope.selectModel3.text = value.substring(3);
             } else {
@@ -348,6 +349,7 @@
       require: "?ngModel",  // 获取ngModelController
       scope: {}, // 这个指令有一个独立的作用域对象，也就是有一个独立的scope对象
       link: function (scope, iElement, iAttrs, ngModelCtrl) {
+        var required = iAttrs.cbInputLicense === 'required';
         var parents = iElement.parent();
         var errorClass = iAttrs.cbInputLicense;
         // 如果没有ng-model则什么都不做
@@ -367,12 +369,19 @@
             var valueStart = value.substring(0, 4).replace(/[^A-Za-z0-9]/g, "");
             var valueEnd = value.substring(4).replace(/[^A-Za-z0-9挂学警港澳]/g, "");
             value = valueStart.toLocaleUpperCase() + valueEnd.toLocaleUpperCase();
+            if(value.length === 5 && required){
+              iElement.blur();
+            }
             if (value != viewValue) {
               ngModelCtrl.$setViewValue(value);
               ngModelCtrl.$render();
             }
           }
-          if (LICENSE_REGULAR.test(value)) {
+          if(!required){
+            ngModelCtrl.$setValidity("cbInputLicense", true);
+            return value;
+          }
+          if (LICENSE_REGULAR.test(value) && required) {
             ngModelCtrl.$setValidity("cbInputLicense", true);
             parents.removeClass(errorClass);
             isError = false;

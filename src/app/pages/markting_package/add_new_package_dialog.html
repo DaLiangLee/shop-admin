@@ -1,0 +1,169 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+                aria-hidden="true">&times;</button>
+        <h5 class="modal-title">新增套餐卡</h5>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" autocomplete="off" name="package" role="form" novalidate>
+            <div class="form-header" ng-if="!isEditable()"> <!-- 全部可以修改的 -->
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl"><span class="text-red"><i class="icon-required"></i></span>套餐卡名称：</div>
+                    <div class="control-content f-fl">
+                        <input type="text" class="input-control" name="packagename" ng-model="dataBase.name" cb-string-range value-max="20" ng-required="true">
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">发行数量：</div>
+                    <div class="control-content f-fl">
+                        <input type="text" class="input-control" name="num" ng-model="dataBase.num" number-range maxlength="9" placeholder="不填即为无限">
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">备注：</div>
+                    <div class="control-content f-fl">
+                        <input type="text" class="input-control" ng-model="dataBase.bak" cb-string-range value-max="20" placeholder="请添加备注">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-header" ng-if="isEditable()" ng-form="header"> <!-- 部分可以修改的 -->
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl"><span class="text-red"><i class="icon-required"></i></span>套餐卡名称：</div>
+                    <div class="control-content f-fl">
+                        <input type="text" class="input-control disabled" name="packagename" ng-model="dataBase.name" ng-disabled="true">
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">发行数量：</div>
+                    <div class="control-content f-fl alert-container" ng-class="{'has-error': package.header.num.$error.cbNumberRange}">
+                        <input type="text" class="input-control" name="num" ng-model="dataBase.num" maxlength="9" cb-number-range range-enable data-value-min="{{minNum}}" placeholder="不填即为无限">
+                        <span class="alert alert-danger" ng-show="package.header.num.$error.cbNumberRange">发行数量只能增加不能减少</span>
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">备注：</div>
+                    <div class="control-content f-fl">
+                        <input type="text" class="input-control disabled" ng-model="dataBase.bak" ng-disabled="true">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-body f-cb">
+                <table class="w-table table-striped table-hover package-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 48px;"></th>
+                            <th>类型</th>
+                            <th style="width: 390px;">名称</th>
+                            <th class="f-tar">原价</th>
+                            <th class="f-tar">套餐价</th>
+                            <th class="f-tar">包含数量</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="!isEditable()"> <!-- 全部可以修改的 -->
+                        <tr ng-repeat="item in dataBase.packageItems" ng-form="list">
+                            <td><span class="icon-trash text-red" ng-click="removePackageItem(item, $index)"></span></td>
+                            <td>
+                                <select name="type" ng-model="item.type" class="package-type-select" ng-change="reselectType(item)" ng-required="true">
+                                    <option value="0">服务</option>
+                                    <option value="1">商品</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="pull-down">
+                                    <input type="text" name="name" id="name" class="input-control" ng-model="item.name"
+                                           ng-change="searchHandler(item, $index)"
+                                           ng-focus="getFocus(item)"
+                                           ng-disabled="!item.type || item.$isValueEmpty" placeholder="输入名称" ng-required="true">
+                                    <span class="icon-remove_circle" ng-click="clearContent(item, $index)"></span>
+                                    <ul class="pull-down-list" dg-click="chooseItem($event, subitem, item)" selector="li" ng-if="config.searchList && !item.$isSelected" bindonce="config.searchList">
+                                        <li ng-repeat="subitem in config.searchList" >
+                                            <span bo-text="subitem.name" bo-title="subitem.name"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <!--<input type="text" class="input-control" name="originprice" ng-model="item.originprice" number-range range-enable data-value-min="0" data-value-max="999999.99" ng-blur="inputPrice()" data-value-step="0.01" ng-disabled="!item.type || !item.name" ng-required="true">-->
+                                <div ng-class="{'has-error': list.originprice.$error.cbMoneyRange}" cb-field-error="" field-error-status="list.originprice.$error.cbMoneyRange" field-error-msg="原价不能超过100万" style="position: relative;">
+                                    <input type="text" class="input-control package-input-item" name="originprice" ng-model="item.originprice" ng-keyup="inputPrice(item)" ng-disabled="!config.isSelectItem" ng-blur="formatMoney(item)" cb-money-range="" data-value-min="0.01" range-enabled="true" data-value-max="999999.99" ng-required="true"  maxlength="11">
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-class="{'has-error': list.price.$error.cbMoneyRange}" cb-field-error="" field-error-status="list.price.$error.cbMoneyRange" field-error-msg="套餐价不能大于原价" style="position: relative;">
+                                    <input type="text" class="input-control package-input-item" name="price" ng-model="item.price" ng-keyup="inputPrice(item)" ng-blur="formatMoney(item)" ng-disabled="!config.isSelectItem" cb-money-range="" data-value-min="0.01" range-enabled="true" data-value-max="{{item.originprice}}" ng-required="true"  maxlength="11">
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="input-control package-input-item" name="num" ng-model="item.num" ng-keyup="inputPrice(item)" ng-disabled="!config.isSelectItem" cb-number-range range-enable data-value-min="0" maxlength="9" ng-disabled="!item.type" ng-required="true">
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                    <tbody ng-if="isEditable()"> <!-- 部分可以修改的 -->
+                        <tr ng-repeat="item in dataBase.packageItems" ng-form="list">
+                            <!--<td><span class="icon-remove_circle"></span></td>-->
+                            <!--<td><span class="icon-trash"></span></td>-->
+                            <td></td>
+                            <td>
+                                <select name="type" ng-model="item.type" class="package-type-select  disabled" ng-change="reselectType(item)" ng-required="true" ng-disabled="true">
+                                    <option value="0">服务</option>
+                                    <option value="1">商品</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="pull-down">
+                                    <input type="text" name="name" class="input-control  disabled" ng-model="item.name" ng-change="searchHandler(item)" placeholder="输入名称" ng-required="true" ng-disabled="true">
+                                    <ul class="pull-down-list" dg-click="chooseItem($event, subitem, item)" selector="li" ng-if="config.searchList" bindonce="config.searchList">
+                                        <li ng-repeat="subitem in config.searchList track by $index" >
+                                            <span bo-text="subitem.name" bo-title="subitem.name"></span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="input-control  disabled package-input-item" name="originprice" ng-model="item.originprice" cb-number-range range-enable data-value-min="0" data-value-max="999999.99" data-value-step="0.01" ng-disabled="true" ng-required="true">
+                            </td>
+                            <td>
+                                <div class="alert-container" ng-class="{'has-error': package.list.price.$error.cbNumberRange}">
+                                    <input type="text" class="input-control  disabled package-input-item" name="price" ng-model="item.price" ng-blur="inputPrice(item)" cb-number-range range-enable data-value-min="0" data-value-max="{{item.originprice}}" data-value-step="0.01" ng-disabled="true" ng-required="true" >
+                                    <span ng-show="package.list.price.$error.cbNumberRange" class="alert alert-danger">套餐价不能大于原价</span>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="input-control disabled package-input-item" name="num" ng-model="item.num" number-range maxlength="9" ng-disabled="true" ng-required="true" ng-disabled="true">
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="f-tac"><button ng-click="addPackageItem()" class="u-btn u-btn-primary transparent btn-add-item" ng-disabled="isEditable() || package.list.price.$error.cbMoneyRange">添 加</button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br>
+                <div class="stat f-cb">
+                    <div class="stat-item"><span class="stat-label">原价合计：</span><span class="stat-total" ng-bind="dataBase.originprice | currency: '￥'"></span></div>
+                    <div class="stat-item"><span class="stat-label">套餐价合计：</span><span class="stat-total stat-price" ng-bind="dataBase.price | currency: '￥'"></span></div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="savePackage()" ng-disabled="package.$invalid || (dataBase.num && dataBase.num == 0) || dataBase.$emptyPackage || !config.isSelectItem">确定</button>　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取消</button>
+        </div>
+    </div>
+</div>

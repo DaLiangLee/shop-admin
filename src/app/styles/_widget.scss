@@ -17,7 +17,9 @@
   float:left;
   text-align: right;
   height:34px;
-  padding: 6px 12px;
+  line-height:34px;
+  padding-right: 20px;
+  //padding: 6px 12px;
   width: 24%;
 }
 .control-content{
@@ -32,13 +34,22 @@
   position: relative;
   .input-addon{
     position: absolute;
-    top:0;
+    top: 1px;
   }
   .input-addon:first-child{    // input之前
     left: 0;
   }
   .input-control + .input-addon{ // input之后
-    right: 0;
+    right: 1px;
+  }
+  .u-btn.btn{
+    height:100%;
+    padding:0 10px;
+    width: auto;
+    line-height:100%;
+    background: #038AE3;
+    font-size:14px;
+    color:#fff;
   }
 }
 
@@ -87,5 +98,93 @@
 textarea.input-control{
   height:auto;
 }
+.alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert-danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+//提示文字颜色
+.text-warning {
+  color: #ff8f00;
+}
+.text-danger {
+  color: #e71e28;
+}
+.text-success {
+  color: #45bf1f;
+}
+.text-primary {
+  color: #337ab7;
+}
+.text-muted {
+  color: #777777;
+}
+.text-orange {
+  color: #ff8f00;
+}
+.text-red {
+  color: red;
+}
+.text-default {
+  color: #038AE3;
+}
+.text-link {
+  color: #337ab7;
+}
 
+// 带 "*" 的必填字段
+//.text-label-wrapper {
+//  position: relative;
+//  width: 78px;
+//}
+//.text-required {
+//  font-size: 24px;
+//  vertical-align: middle;
+//  position: absolute;
+//  top: 5px;
+//}
 
+.u-truncate-wrapper {
+  //width: 90%;
+  max-width: 100%;
+  //max-width: 300px;
+  position: relative;
+}
+// 字数过长变省略号
+.u-truncate-text {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// caret
+.u-caret-down {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #026ad0 transparent transparent transparent;
+  display: inline-block;
+  margin-left: 2px;
+  top: -2px;
+  position: relative;
+  transform: rotate(0deg);
+  transition: all 0.25s ease-in;
+}
+.u-caret-up {
+  transform: rotate(180deg);
+  transition: all 0.25s ease-out;
+}

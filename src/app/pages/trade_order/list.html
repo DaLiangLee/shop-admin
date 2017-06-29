@@ -1,162 +1,142 @@
-<div class="g-view">
-  <div class="container-fluid">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="javascript:;" class="text-muted">订单</a></li>
-    </ul>
-    <br>
-    <div cb-access-control="chebian:store:trade:porder:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+<ol class="k-breadcrumb">
+  <li><a ui-sref="trade.order.list({page:1})">交易管理</a></li>
+  <li class="active">订单</li>
+</ol>
+<br>
+<div class="g-view trade-porder">
+  <div class="container-fluid" style="min-width: 1213px">
+    <div cb-access-control="chebian:store:trade:porder:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
     <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
          pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
          config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams"
          page-changed="vm.gridModel.pageChanged(page)" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <div ng-if="vm.ordersDetails" style="min-width: 950px; overflow-x: auto;"  ng-if="vm.gridModel.itemList">
-      <table width="100%">
-        <tr>
-          <td style="vertical-align: top; width: 20%" bindonce="">
-            <ul class="nav nav-tabs">
-              <li ng-class="{'active': vm.ordersDetailsTab == 0}" ng-click="vm.ordersDetailsTab = 0"><a href="javascript:;" class="text-muted">会员信息</a></li>
-              <li ng-class="{'active': vm.ordersDetailsTab == 1}" ng-click="vm.ordersDetailsTab = 1"><a href="javascript:;" class="text-muted">车辆信息</a></li>
-            </ul>
-            <div ng-if="vm.ordersDetailsTab == 0" style="min-height: 290px; margin-top: 10px; border: 1px solid #ddd;">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">昵称：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.nickname"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">姓名：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.realname"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">手机号：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.mobile"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">性别：</td>
-                    <td><span bo-bind="vm.ordersDetails.userinfo.gender | formatStatusFilter : 'sex'"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">关注状态：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.followed | formatStatusFilter : 'followed'"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">公司名称：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.companyname"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">备注：</td>
-                    <td><span bo-text="vm.ordersDetails.userinfo.remark"></span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div ng-if="vm.ordersDetailsTab == 1" style="min-height: 290px; margin-top: 10px; border: 1px solid #ddd;">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">
-                      <div class="list">
-                        <div class="logo">
-                          <img width="90px" bo-src-i="{{vm.ordersDetails.carinfo.logo}}" alt="">
-                          <span class="imeienabled" ng-class="{'imeienabled1': vm.ordersDetails.carinfo.imeienabled == 1, 'imeienabled0': vm.ordersDetails.carinfo.imeienabled == 0, 'imeienabledno': !vm.ordersDetails.carinfo.imei && !vm.ordersDetails.carinfo.imeienabled}"></span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><p class="licence" style="height: 30px; line-height: 30px;" ng-bind="vm.ordersDetails.carinfo.licence"></p></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">车型：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.model"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">VIN码：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.vin"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">发动机号：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.enginenumber"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">前轮胎：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.frontwheel"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">后轮胎：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.rearwheel"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">购车日期：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.buydate"></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">距保养里程：</td>
-                    <td><span bo-text="vm.ordersDetails.carinfo.countdownmiles"></span> 公里</td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">故障码：</td>
-                    <td><span><span bo-if="!vm.ordersDetails.carinfo.errorcode" class="text-success">正常</span>
-              <a ng-href="vm.dataBase.carinfo.$$errorcode" bo-if="vm.ordersDetails.carinfo.errorcode" bo-text="vm.ordersDetails.carinfo.errorcode" class="text-danger"></a></span></td>
-                  </tr>
-                  <tr>
-                    <td style="width: 90px; text-align: right;">问题描述：</td>
-                    <td><span bo-text="vm.ordersDetails.problem"></span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-          <td style="vertical-align: top;">
-            <table class="table" style="margin-top: 52px;margin-left: 10px;">
-              <thead>
-                <tr>
-                  <th style="min-width: 50px">序号</th>
-                  <th style="min-width: 150px">服务/项目</th>
-                  <th style="min-width: 150px">商品/材料</th>
-                  <th>工时费</th>
-                  <th>商品/材料费</th>
-                  <th>合计</th>
-                  <th style="min-width: 100px">施工人员</th>
-                  <th style="min-width: 150px">备注</th>
-                </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="item in vm.ordersDetails.details" bindonce>
-                <td><span ng-bind="$index + 1"></span></td>
-                <td><span class="state-unread" cb-truncate-text="{{item.$$itemname}}" text-length="8"></span></td>
-                <td>
-                  <ul class="list-unstyled">
-                    <li ng-repeat="key in item.products">
-                      <span class="state-unread" cb-truncate-text="{{key.$itemskuname}}" text-length="8"></span>
-                    </li>
-                  </ul>
-                </td>
-                <td>
-                  ￥<span bo-bind="item.price | moneyformatFilter"></span>X<span bo-bind="item.num"></span> = <span bo-bind="item.allprice | moneyformatFilter"></span>
-                </td>
-                <td>
-                  <ul class="list-unstyled">
-                    <li ng-repeat="key in item.products">
-                      ￥<span bo-bind="key.price | moneyformatFilter"></span>X<span bo-bind="key.num"></span> = <span bo-bind="key.allprice | moneyformatFilter"></span>
-                    </li>
-                  </ul>
-                </td>
-                <td><span bo-bind="item.$$totalPrice | moneyformatFilter"></span></td>
-                <td><span class="state-unread" cb-truncate-text="{{item.servicername}}" text-length="6"></span></td>
-                <td><span class="state-unread" cb-truncate-text="{{item.remark}}" text-length="9"></span></td>
-              </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="8" bindonce>
-                    <strong>数据汇总：</strong> 服务/项目 <span bo-bind="vm.ordersDetails.servercount"></span> 项，共 <span bo-bind="vm.ordersDetails.ssaleprice | moneyformatFilter"></span> 元 | 商品/材料 <span bo-bind="vm.ordersDetails.productcount"></span> 项，共 <span bo-bind="vm.ordersDetails.psaleprice | moneyformatFilter"></span> 元 | <strong>合计 <span bo-bind="vm.ordersDetails.totalprice | moneyformatFilter"></span> 元</strong>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </td>
-        </tr>
-      </table>
+    <div ng-if="vm.ordersDetails" ng-if="vm.gridModel.itemList">
+      <div class="f-tac" ng-init="vm.toggleDetail1 = true">
+        <button class="u-btn u-btn-sm order-details" ng-click="vm.toggleDetail1 = !vm.toggleDetail1">订单详情
+            <i class="u-caret-down" ng-class="{'u-caret-up': !vm.toggleDetail1}"></i>
+        </button>
+      </div>
+      <div style="vertical-align: top;" ng-show="vm.toggleDetail1">
+        <table class="w-table-details" style="margin:56px 0 66px;">
+          <thead>
+          <tr>
+            <th style="min-width: 160px">服务项目</th>
+            <th style="min-width: 220px">商品材料</th>
+            <th style="min-width: 120px">工时费</th>
+            <th style="min-width: 140px">商品材料费</th>
+            <th style="min-width: 140px">合计</th>
+            <th style="min-width: 100px">施工员</th>
+            <th style="min-width: 150px">备注</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in vm.ordersDetails.ordersjson.details" bindonce>
+            <td><span class="state-unread" bo-text="item.itemname"></span></td>
+            <td>
+              <ul class="list-unstyled">
+                <li ng-repeat="key in item.products">
+                  <span class="state-unread u-truncate-text" bo-text="key.itemname"></span>
+                </li>
+              </ul>
+            </td>
+            <td>
+              &yen; <span bo-bind="item.price | number: '2'"></span> × <span bo-bind="item.num"></span>
+            </td>
+            <td>
+              <ul class="list-unstyled">
+                <li ng-repeat="key in item.products">
+                  &yen; <span bo-bind="key.price | number: '2'"></span> × <span bo-bind="key.num"></span>
+                </li>
+              </ul>
+            </td>
+            <td><span bo-bind="item.$totalPrice | number: '2'"></span></td>
+            <td><span class="state-unread" cb-truncate-text="{{item.servicername}}" text-length="6"></span></td>
+            <td><span class="state-unread" cb-truncate-text="{{item.remark}}" text-length="9"></span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
+
   </div>
 </div>
+
+
+
+<script type="text/ng-template" id="orderUserTemplate.html">
+  <div class="showCont" style="width:260px">
+    <dl>
+      <dt><img width="90px" bo-src-i="{{templateData.avatar}}" alt=""></dt>
+      <dd>
+        <h3><span bo-text="templateData.realname"></span></h3>
+        <p><span bo-text="templateData.mobile"></span></p>
+      </dd>
+    </dl>
+    <ul>
+      <li>
+        <label class="f-fl">关注状态：</label>
+        <p class="f-fl"><span bo-text="templateData.followed | formatStatusFilter : 'followed'"></span></p>
+      </li>
+      <li>
+        <label class="f-fl">公司名称：</label>
+        <p class="f-fl"><span bo-text="templateData.companyname"></span></p>
+      </li>
+      <li>
+        <label class="f-fl">备注：</label>
+        <p class="f-fl"><span bo-text="templateData.remark"></span></p>
+      </li>
+    </ul>
+  </div>
+</script>
+<script type="text/ng-template" id="orderCarTemplate.html">
+  <div class="showCont">
+    <dl>
+      <dt><img width="90px" bo-src-i="{{templateData.logo}}" alt=""></dt>
+      <dd>
+        <h3><span bo-text="templateData.model"></span></h3>
+        <p><span bo-text="templateData.licence"></span></p>
+      </dd>
+    </dl>
+    <ul>
+      <li class="f-cb">
+        <label class="f-fl">VIN码：</label>
+        <p class="f-fl"><span bo-text="templateData.vin"></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">发动机号：</label>
+        <p class="f-fl"><span bo-text="templateData.enginenumber"></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">前轮胎：</label>
+        <p class="f-fl"><span bo-text="templateData.frontwheel"></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">后轮胎：</label>
+        <p class="f-fl"><span bo-text="templateData.rearwheel"></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">购车日期：</label>
+        <p class="f-fl"><span bo-text="templateData.buydate"></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">当前里程：</label>
+        <p class="f-fl"><span bo-if="templateData.totalmile != undefined"><span bo-text="templateData.totalmile"></span> km</span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">距下次保养：</label>
+        <p><span bo-text="templateData.countdownmiles"></span> km</p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">故障码：</label>
+        <p class="f-fl"><span><span bo-if="!templateData.errorcode" class="text-success">无</span>
+                    <a ng-href="templateData.$$errorcode" bo-if="templateData.errorcode"
+                       bo-text="templateData.errorcode" class="text-danger"></a></span></p>
+      </li>
+      <li class="f-cb">
+        <label class="f-fl">问题描述：</label>
+        <p class="f-fl"><span bo-text="templateData.problem"></span></p>
+      </li>
+    </ul>
+  </div>
+</script>

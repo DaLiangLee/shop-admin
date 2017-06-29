@@ -1,10 +1,12 @@
 <ol class="k-breadcrumb">
-  <li><a ui-sref="member.employee.list({page:1})">人事管理</a></li>
-  <li class="active">员工管理</li>
+  <li><a ui-sref="member.employee.list({page:1})">人员管理</a></li>
+  <li class="active">员工管理 / 帐号</li>
 </ol>
-<div class="g-view">
-    <div class="container-fluid">
-        <div cb-access-control="chebian:store:member:employee:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
-        <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" request-params="vm.gridModel.requestParams" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
-    </div>
+<br />
+<div class="g-view" style="min-width:1302px;">
+  <div class="container-fluid">
+    <div cb-access-control="chebian:store:member:employee:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" request-params="vm.gridModel.requestParams" config="vm.gridModel.config" sort-changed="vm.gridModel.sortChanged(dtat)" page-changed="vm.gridModel.pageChanged(page)"></div>
+
+  </div>
 </div>

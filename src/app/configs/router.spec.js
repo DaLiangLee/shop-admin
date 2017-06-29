@@ -271,7 +271,7 @@ describe('Router test', function () {
      */
     expect(state.current.controller).toBe('SystemRoleLsitController')
   });
-  it('store role /', function () {
+  it('system role /', function () {
     // 设置跳转
     location.path('/system/role/');
     /**
@@ -283,7 +283,7 @@ describe('Router test', function () {
      */
     expect(state.current.controller).toBe('SystemRoleLsitController')
   });
-  it('store role list', function () {
+  it('system role list', function () {
     // 设置跳转
     location.path('/system/role/list');
     /**
@@ -295,7 +295,7 @@ describe('Router test', function () {
      */
     expect(state.current.controller).toBe('SystemRoleLsitController')
   });
-  it('store role list /', function () {
+  it('system role list /', function () {
     // 设置跳转
     location.path('/system/role/list/');
     /**

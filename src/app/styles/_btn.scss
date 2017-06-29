@@ -1,16 +1,45 @@
-
 @import '_skin.scss';
+
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+}
+
+@mixin button-variant-hover($color, $background, $border) {
+  &:hover {
+    @include button-variant($color, $background, $border);
+  }
+}
+
+@mixin button-variant-focus($color, $background, $border) {
+  &:focus {
+    @include button-variant($color, $background, $border);
+  }
+}
+
+@mixin button-variant-active($color, $background, $border) {
+  &:active,&.action {
+    @include button-variant($color, $background, $border);
+  }
+}
+
+// Button sizes
+@mixin button-size($width, $height, $font-size, $line-height) {
+  width: $width;
+  height: $height;
+  font-size: $font-size;
+  line-height: $line-height;
+}
 
 /**
 按钮元件
  */
-.u-btn{
+.u-btn {
   display: inline-block;
-  padding: 6px 25px;
   margin-bottom: 0;
-  font-size: 14px;
+  text-decoration: none;
   font-weight: 400;
-  line-height: 1.42857143;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -18,36 +47,119 @@
   touch-action: manipulation;
   cursor: pointer;
   user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
   border-radius: 4px;
-  &.u-btn-default{
-
+  border: 1px solid transparent;
+  &[disabled], &.disabled {
+    opacity: .6;
+    filter: alpha(opacity=60);
+    cursor: not-allowed;
   }
-  &.u-btn-primary{
-    color: $btn-primary-color;
-    background-color: $btn-primary-bg;
+  transition: border-color ease-in-out .15s,background-color ease-in-out .15s,color ease-in-out .15s;
+}
+
+a.u-btn:hover {
+  text-decoration: none;
+}
+
+.btn-group{
+  font-size: 0;
+  > .u-btn:first-child{ // 第一个
+    border-radius: 4px 0 0 4px;
+  }
+  > .u-btn{
+    margin-left: -1px;
+    border-radius: 0;
     &:hover{
-      background-color: $btn-primary-hover-bg;
+      position: relative;
+      z-index: 1;
     }
   }
-  &.u-btn-warning{
-
-  }
-  &.u-btn-warning{
-
-  }
-  &.u-btn-danger{
-
-  }
-  &.u-btn-disabled{
-
+  > .u-btn:last-child:not(:first-child){ // 最后一个
+    border-radius: 0 4px 4px 0;
   }
 }
-.u-btn-link{
+
+.u-btn-link {
   color: $btn-link-color;
-  &:hover{
+  &:hover {
     color: $btn-link-color;
     text-decoration: none;
   }
+}
+
+.u-btn-primary {
+  @include button-variant(#fff, #038AE3, #038AE3);
+  @include button-variant-hover(#fff, #026ab0, #026ab0);
+  @include button-variant-focus(#fff, #026ab0, #026ab0);
+  &.transparent{
+    @include button-variant(#038AE3, transparent, #038AE3);
+    @include button-variant-hover(#fff, #026ab0, #026ab0);
+    @include button-variant-focus(#fff, #026ab0, #026ab0);
+  }
+}
+.u-btn-default {
+  @include button-variant(#c8c8c8, #fff, #c8c8c8);
+  @include button-variant-hover(#c8c8c8, #fff, #c8c8c8);
+  @include button-variant-focus(#c8c8c8, #fff, #c8c8c8);
+}
+.u-btn-info {
+  @include button-variant(#fff, #038AE3, #038AE3);
+  @include button-variant-hover(#fff, #026ab0, #026ab0);
+  @include button-variant-focus(#fff, #026ab0, #026ab0);
+}
+.u-btn-success {
+  @include button-variant(#fff, #5cb85c, #4cae4c);
+  @include button-variant-hover(#fff, #449d44, #398439);
+  @include button-variant-focus(#fff, #5cb85c, #4cae4c);
+}
+/*
+.u-btn-disabled {
+  @include button-variant(#808080, #fff, #808080);
+  @include button-variant-hover(#026ab0, #fff, #026ab0);
+  @include button-variant-focus(#026ab0, #fff, #026ab0);
+}
+*/
+
+.u-btn-warning {
+  @include button-variant(#fff, #f69a18, #f69a18);
+  @include button-variant-hover(#fff, #df8505, #df8505);
+  @include button-variant-focus(#fff, #df8505, #df8505);
+  &.transparent{
+    @include button-variant(#f69a18, transparent, #f69a18);
+    @include button-variant-hover(#fff, #df8505, #df8505);
+    @include button-variant-focus(#fff, #df8505, #df8505);
+  }
+}
+
+.u-btn-danger {
+  @include button-variant(#fff, #e71e28, #e71e28);
+  @include button-variant-hover(#fff, #c00000, #c00000);
+  @include button-variant-focus(#fff, #c00000, #c00000);
+}
+
+.u-btn-cancel {
+  @include button-variant(#fff, #999999, #999999);
+  @include button-variant-hover(#fff, #828282, #828282);
+  @include button-variant-focus(#fff, #828282, #828282);
+}
+// Button Sizes
+// --------------------------------------------------
+
+.u-btn-lg {
+  // line-height: ensure even-numbered height of button next to large input
+  @include button-size(300px, 40px, 18px, 40px);
+}
+
+.u-btn-sm {
+  // line-height: ensure proper height of button next to small input
+  @include button-size(120px, 34px, 16px, 34px);
+}
+
+.u-btn-xs {
+  @include button-size(88px, 30px, 14px, 30px);
+}
+.u-btn-auto {
+  width: auto !important;
+  padding: 0 8px;
+  @include button-size(auto, 34px, 16px, 34px);
 }
