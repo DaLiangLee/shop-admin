@@ -1,11 +1,55 @@
 .stop-scrolling {
   overflow: hidden;
 }
-
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  animation: #{$str};
+}
+// Modal animation
+@include keyframes(showAlertDialog) {
+  0% {
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+  }
+  45% {
+    transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+  }
+  80% {
+    transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
+@include keyframes(hideAlertDialog) {
+  0% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+  100% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+  }
+}
 .k-alert-dialog {
-  /*
-* Animations
-*/
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: none;
   &.notAnimation {
     .alert-overlay {
       background-color: #000; /* IE8 */
@@ -50,25 +94,6 @@
       }
     }
   }
-  @mixin keyframes($animation-name) {
-    @-webkit-keyframes #{$animation-name} {
-      @content;
-    }
-    @keyframes #{$animation-name} {
-      @content;
-    }
-  }
-  @mixin animation($str) {
-    -webkit-animation: #{$str};
-    animation: #{$str};
-  }
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 10000;
-  display: none;
   .alert-overlay {
     position: absolute;
     left: 0;
@@ -610,36 +635,6 @@
       }
     }
   }
-  // Modal animation
-  @include keyframes(showAlertDialog) {
-    0% {
-      transform: scale(0.7);
-      -webkit-transform: scale(0.7);
-    }
-    45% {
-      transform: scale(1.05);
-      -webkit-transform: scale(1.05);
-    }
-    80% {
-      transform: scale(0.95);
-      -webkit-transform: scale(0.95);
-    }
-    100% {
-      transform: scale(1);
-      -webkit-transform: scale(1);
-    }
-  }
-  @include keyframes(hideAlertDialog) {
-    0% {
-      transform: scale(1);
-      -webkit-transform: scale(1);
-    }
-    100% {
-      transform: scale(0.5);
-      -webkit-transform: scale(0.5);
-    }
-  }
-
   .showAlertDialog {
     &[data-animation=pop] {
       @include animation('showAlertDialog 0.3s');

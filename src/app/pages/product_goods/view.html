@@ -1,0 +1,236 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="product.goods.list({page:1})">商品与服务</a></li>
+    <li class="active">商品管理</li>
+</ol>
+
+<div class="g-view-goods">
+
+    <div class="trade-wrapper">
+        <div class="trade-search">
+            <div cb-access-control="chebian:store:product:goods:view" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+        </div>
+
+        <div class="trade-grid">
+            <div class="grid-header f-cb">
+                <div class="f-fl">
+                    <a cb-access-control="chebian:store:product:goods:add" ui-sref="product.goods.add()"
+                       class="u-btn u-btn-primary u-btn-sm">新增商品</a>
+                </div>
+                <div class="f-fr">
+                    <div class="f-fl switchover"  ng-if="!vm.gridModel.loadingState && vm.gridModel.itemList.length">
+                        <a ng-click="vm.switchMode('list')"><i class="icon-list"></i></a>
+                        <a class="active" ng-click="vm.switchMode()"><i class="icon-view"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-body grid-body-view f-cb">
+
+                <div ng-if="!vm.gridModel.loadingState && vm.gridModel.itemList.length">
+
+                    <div class="grid-aside f-fl">
+                        <div class="list">
+                            <ul dg-click="vm.gridModel.selectHandler($event, item)" selector="li">
+                                <li bindonce ng-repeat="item in vm.gridModel.itemList track by item.guid"
+                                    ng-class="{'active': item.$$active}">
+
+                                    <h4><strong bo-text="item.productname"></strong></h4>
+                                    <p><span bo-text="item.catename" class="f-fl"></span> <span class="f-fr" style="width: 90px;">销量&nbsp;&nbsp;<span ng-class="{'text-danger': item.skusalenum == 0}" bo-text="item.skusalenum"></span>&nbsp;<span cb-truncate-text="{{item.unit}}" text-length="2"></span></span></p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="f-tac" ng-if="vm.gridModel.itemList.length">
+                            <div style="display: inline-block;" class="grid-paging" simple-pagination
+                                 previous-text="&lt;"
+                                 next-text="&gt;" on-select-page="vm.gridModel.pageChanged(page)"
+                                 pagination-info="vm.gridModel.paginationinfo" max-size="6" page-info-show="false"
+                                 page-goto-show="false"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-article f-fr" ng-if="vm.productDetails">
+                        <div class="details" bindonce="vm.productDetails">
+
+                            <div class="product-header f-cb">
+                                <div class="f-fl">
+                                    <p style="margin-bottom: 10px;"><span class="product-cnname" ng-bind="vm.productDetails.productname"></span> <a ng-if="vm.productDetails.remove == 1" class="state-unread f-curp primary-link" style="margin-left: 10px; padding-right: 10px;" ui-sref="product.goods.edit({pskuid: vm.productDetails.guid})">编辑</a> <span style="margin-left: 10px; padding-right: 10px;" class="text-muted" ng-if="vm.productDetails.remove == 0" cb-popover popover-placement="right" popover-template-id="product-edit.html" popover-animation="false">编辑</span></p>
+                                    <p class="text-muted">商品编码：<span ng-bind="vm.productDetails.code"></span></p>
+                                </div>
+                                <div class="f-fr">
+                                    <span>状态：</span>
+                                    <select class="product-remove" ng-model="vm.productDetails.remove" ng-change="vm.switchRemove(vm.productDetails)">
+                                        <option value="1">下架</option>
+                                        <option value="0">上架</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="details-body f-cb" ng-if="vm.productDetails">
+
+                                <div class="info product-info" style="padding-top: 0; border-top: 0;">
+                                    <div class="info-item">
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">商品类目：</span>
+                                            <span class="info-piece-data"><span ng-bind="vm.productDetails.catename"></span> > <span ng-bind="vm.productDetails.catename2"></span></span>
+                                        </p>
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">品牌：</span>
+                                            <span class="info-piece-data"><span
+                                                    ng-bind="vm.productDetails.brandname"></span>
+                                            </span>
+                                        </p>
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">商品单位：</span>
+                                            <span class="info-piece-data" ng-if="vm.productDetails.unit" simple-truncate-text="{{vm.productDetails.unit}}" offset="90" resize="true"></span>
+                                        </p>
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">商品简介：</span>
+                                            <span class="info-piece-data" ng-if="vm.productDetails.seodescription" simple-truncate-text="{{vm.productDetails.seodescription}}" offset="90" resize="true"></span>
+                                        </p>
+                                    </div>
+                                    <div class="info-item">
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">销量：</span>
+                                            <span class="info-piece-data"><span ng-bind="vm.skusalenum"></span> <span ng-bind="vm.productDetails.unit"></span></span>
+                                        </p>
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">库存：</span>
+                                            <span class="info-piece-data"><span ng-bind="vm.stock"></span>&nbsp;<span ng-bind="vm.productDetails.unit"></span></span>
+                                        </p>
+                                        <p class="f-cb info-piece" style="margin-top: 10px;">
+                                            <span class="info-piece-label">保质期：</span>
+                                            <span class="info-piece-data"><span ng-bind="vm.productDetails.shelflife"></span><span ng-if="vm.productDetails.shelflife"> 天</span></span>
+                                        </p>
+                                    </div>
+                                    <div class="info-item">
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">供应商：</span>
+                                            <span class="info-piece-data" ng-if="vm.productDetails.provider" simple-truncate-text="{{vm.productDetails.provider}}" offset="90" resize="true"></span>
+                                        </p>
+                                        <p class="f-cb info-piece">
+                                            <span class="info-piece-label">供应商电话：</span>
+                                            <span class="info-piece-data"><span ng-bind="vm.productDetails.providertel"></span></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="product-image" ng-if="vm.productDetails.mainphoto">
+                                    <img ng-src="{{vm.productDetails.mainphoto}}" alt="" width="136" height="139">
+                                </div>
+                            </div>
+
+                            <div class="details-footer f-cb items-group2">
+
+                                <table class="trade-order-item">
+                                    <colgroup>
+                                        <col style="width: 130px; min-width: 130px;">
+                                        <col style="width: 120px; min-width: 120px;">
+                                        <col style="width: 90px; min-width: 90px;">
+                                        <col style="width: 120px; min-width: 120px;">
+                                        <col style="width: 140px; min-width: 140px;">
+                                        <col style="width: 80px; min-width: 80px;">
+                                        <col style="width: 120px; min-width: 120px;">
+                                        <col style="width: 100px; min-width: 100px;">
+                                        <col style="width: 70px; min-width: 70px;">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th style="padding-left: 20px;">规格型号</th>
+                                            <th class="">零售单价</th>
+                                            <th class="">销量</th>
+                                            <th class="">库存</th>
+                                            <th class="">零件码</th>
+                                            <th class="">条形码</th>
+                                            <th class="">适用车型</th>
+                                            <th class="">备注</th>
+                                            <th class="">启用停用</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in vm.productDetails.items">
+                                            <td style="padding-left: 20px;"><span ng-if="item.skuvalues" class="state-unread" cb-truncate-text="{{item.skuvalues | skuvaluesFilter}}" text-length="8"></span><span class="state-unread" ng-if="item.manualskuvalues" cb-truncate-text="{{item.manualskuvalues}}" text-length="8"></span></td>
+
+                                            <td><div style="position: relative;"><span class="state-unread" ng-bind="item.saleprice | number : '2'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.saleprice" editor-handler="vm.gridModel2.editorhandler(data, item, 'saleprice', vm.productDetails.guid)" data-max="1000000" data-min="-1" data-step="0.01" data-placeholder="0~999999"></span></div></td>
+
+                                            <td><span ng-bind="item.salenums"></span></td>
+
+                                            <td><div style="position: relative;"><span class="state-unread"><span ng-bind="item.$$stockShow" ng-if="item.$$stockShow == '无限'"></span><span ng-bind="item.$$stockShow | number : '0'" ng-if="item.$$stockShow != '无限'"></span> </span> <span bo-text="vm.productDetails.unit"></span><span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.$$stock" data-placeholder="库存" editor-handler="vm.gridModel2.editorhandler(data, item, 'stock', vm.productDetails.guid)" data-max="1000000000" data-min="-1" data-step="1"></span></div></td>
+
+                                            <td><span ng-bind="item.partscode"></span></td>
+
+                                            <td><span ng-bind="item.skucode"></span></td>
+
+                                            <!--<td><div cb-vehicle-show  store="item.motobrandids"></div></td>-->
+
+                                            <td class="edit-motor" style="position: relative">
+                                                <span ng-if="!item.motorsList.length">
+                                                    <span style="display: inline-block; min-width: 90px;">全部车型</span>
+                                                    <span class="text-primary vehicle-edit f-curp" cb-vehicle-select="add" handler="vm.vehicleShow(data, item, vm.productDetails.guid)"> <i class="caret" style="color: #666;"></i></span>
+                                                </span>
+
+                                                <div ng-if="item.motorsList.length">
+                                                    <div class="f-fl" style="width: 105px;" ng-if="!vm.showSelectDrop || !item.$current">
+                                                        <ul >
+                                                            <li class="f-fl" ng-repeat="keys in item.motorsList | limitTo : 3" >
+                                                                <img width="30px" ng-src="{{keys.brand.logo}}" alt="" cb-popover="" popover-placement="left" popover-template-id="vehicleShowTemplate.html" popover-template-data="keys" popover-animation="false">
+                                                            </li>
+                                                        </ul>
+                                                        <span class="f-curp f-fr" ng-click="vm.showdrop(item,$event)"><i class="caret" style="color: #666;"></i></span>
+                                                    </div>
+                                                    <div class="drop-part" style="width: 130px;" ng-if="vm.showSelectDrop && item.$current">
+                                                        <ul class="f-cb">
+                                                            <li class="f-fl" ng-repeat="keys in item.motorsList">
+                                                                <img width="30px" ng-src="{{keys.brand.logo}}" alt="" cb-popover="" popover-placement="left" popover-template-id="vehicleShowTemplate.html" popover-template-data="keys" popover-animation="false">
+                                                            </li>
+                                                        </ul>
+                                                        <p class="u-btn-link edit-btn" cb-vehicle-select="edit" handler="vm.vehicleShow(data, item, vm.productDetails.guid)" select="item.motobrandids">编辑</p>
+                                                        <span class="edit-caret"><i class="caret" style="color: #666;"></i></span>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td><span ng-bind="item.skudescription"></span></td>
+
+                                            <td><div cb-switch checkstatus="item.status" cb-access-control="chebian:store:product:goods:edit"
+                                                     ng-click="vm.statusItem(item, vm.productDetails.guid)"></div><div cb-switch checkstatus="item.status" cb-access-control="!chebian:store:product:goods:edit"></div></td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-loading" ng-if="vm.gridModel.loadingState">
+                    <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+                </div>
+                <div class="grid-nodata" ng-if="!vm.gridModel.loadingState && !vm.gridModel.itemList.length">
+                    <span><i class="icon-not-data"></i>暂无数据</span>
+                </div>
+
+        </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/ng-template" id="product-edit.html">
+    <p>如需编辑，请先下架。</p>
+</script>
+
+<script type="text/ng-template" id="vehicleShowTemplate.html">
+    <div>
+        <dl>
+            <dt><span>适用品牌：</span><span ng-bind="templateData.brand.brand"></span></dt>
+            <dd>
+                <span class="f-fl">适用车系：</span><span class="f-fl" ng-if="!templateData.series">全系通用</span>
+                <ul class="f-fl list-unstyled" style="margin: 0;padding: 0;" ng-if="templateData.series">
+                    <li ng-repeat="keys in templateData.series">
+                        <span ng-bind="keys.series"></span>
+                    </li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</script>
+

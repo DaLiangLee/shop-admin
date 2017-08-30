@@ -100,11 +100,13 @@
             restrict: 'A',
             replace: true,
             scope: {
+                maxNum: "=",
+                minNum: "=",
                 base: "=",
                 getBase: "&"
             },
             templateUrl: 'app/components/cbAmount/cbAmount.html',
-            controller: function ($scope, $attrs) {
+            controller: function ($scope, $attrs) { // 通过控制器向子指令传递属性和方法
                 var vm = this;
                 /**
                  * 给子组件传递数据
@@ -112,9 +114,9 @@
                  * minNum 最小值
                  * precision 精度， 表示保留小数的位数
                  */
-                this.maxNum = $scope.$eval($attrs.maxNum) * 1;
-                this.minNum = $scope.$eval($attrs.minNum) * 1;
-                this.precision = $scope.$eval($attrs.precision) || 0;
+                this.maxNum = $scope.maxNum * 1 || Number.MAX_VALUE;
+                this.minNum = $scope.minNum * 1 || 0;
+                this.precision = $attrs.precision || 0;
 
                 function setDefaultNum(num, precision) {
                     var intNum = parseFloat(num);
@@ -172,9 +174,9 @@
                 if (_.isUndefined(iAttrs.precision)) {
                     iAttrs.precision = 0;
                 }
+
                 // 改变数量
                 scope.changeAmount = function (step) {
-
                     scope.num = parseFloat(scope.num) + step * iAttrs.factor; // 点击 '+' '-' 的幅度
                     scope.num = scope.num.toFixed(iAttrs.precision); // 保留小数点位数
                     if (scope.num <= scope.config.minNum) {
@@ -184,7 +186,7 @@
                         scope.num = scope.config.maxNum;
                         scope.config.isMaxNum = true;
                     } else {
-                        scope.num = scope.num;
+                        // scope.num = scope.num;
                         scope.config.isMinNum = false;
                         scope.config.isMaxNum = false;
                     }

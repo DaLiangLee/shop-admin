@@ -17,11 +17,11 @@
     </div>
     <div class="inline-block f-tac" ng-if="interceptor.show">
       <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()" ng-bind="interceptor.confirmText"></button>
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="cancel()"  ng-bind="interceptor.closeText"></button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="cancel()"  ng-bind="interceptor.closeText"></button>
     </div>
     <div class="inline-block f-tac" ng-if="!interceptor.show">
       <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!editor.content.length">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
   <div class="modal-footer" ng-if="type == 'review'">

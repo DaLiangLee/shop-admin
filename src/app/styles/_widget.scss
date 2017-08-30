@@ -1,11 +1,8 @@
 .w-form{
-  &.form-inline{
-
-  }
 }
 .form-group{
   padding:2px 0 10px;
-  margin:0;  //bootstarp
+  margin: 0;
   *zoom:1;
   &:after,&:before{
     content: "";
@@ -56,13 +53,11 @@
 .input-control{
   display: block;
   width: 100%;
-  min-height: 34px;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
   color: #555;
   background-color: #fff;
-  background-image: none;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
@@ -98,21 +93,21 @@
 textarea.input-control{
   height:auto;
 }
-.alert-warning {
-  background-color: #fcf8e3;
-  border-color: #faebcc;
-  color: #8a6d3b;
-}
 .alert {
   padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
+  border-style: solid;
+  border-width: 1px;
   border-radius: 4px;
-}
-.alert-danger {
-  background-color: #f2dede;
-  border-color: #ebccd1;
-  color: #a94442;
+  &-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+  }
+  &-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+  }
 }
 //提示文字颜色
 .text-warning {
@@ -128,32 +123,23 @@ textarea.input-control{
   color: #337ab7;
 }
 .text-muted {
-  color: #777777;
+  color: #999999;
 }
 .text-orange {
-  color: #ff8f00;
+  color: #ff9b28;
 }
 .text-red {
-  color: red;
+  color: #e71e28;
 }
 .text-default {
   color: #038AE3;
 }
 .text-link {
-  color: #337ab7;
+  color: #038ae3;
+  &:hover{
+    color: #038ae3!important;
+  }
 }
-
-// 带 "*" 的必填字段
-//.text-label-wrapper {
-//  position: relative;
-//  width: 78px;
-//}
-//.text-required {
-//  font-size: 24px;
-//  vertical-align: middle;
-//  position: absolute;
-//  top: 5px;
-//}
 
 .u-truncate-wrapper {
   //width: 90%;

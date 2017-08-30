@@ -8,7 +8,7 @@
   <form class="form-horizontal" autocomplete="off" name="customer" role="form" novalidate ng-if="vm.isLoadData">
     <div>
       <div class="form-group">
-        <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>姓名：</label>
+        <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>姓名：</label>
         <div class="control-content w5">
           <input type="text" class="input-control" name="realname" ng-model="vm.dataBase.realname"
                  placeholder="请输入会员姓名" cb-placeholder="" ng-required="true" cb-string-range value-max="10">
@@ -49,18 +49,6 @@
           <p class="input-control readonly" ng-bind="vm.dataBase.followed | formatStatusFilter :'followed'"></p>
         </div>
       </div>
-      <!--<div class="form-group">-->
-      <!--<label class="control-label">会员等级：</label>-->
-      <!--<div class="control-content w5">-->
-      <!--<p class="input-control readonly" ng-bind="vm.dataBase.$gradename"></p>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--<div class="form-group">-->
-      <!--<label class="control-label">关注状态：</label>-->
-      <!--<div class="control-content w5">-->
-      <!--<p class="input-control readonly" ng-bind="vm.dataBase.followed | formatStatusFilter :'followed'"></p>-->
-      <!--</div>-->
-      <!--</div>-->
       <div class="form-group">
         <label class="control-label">公司名称：</label>
         <div class="control-content w5">
@@ -76,50 +64,6 @@
         </div>
       </div>
     </div>
-    <!--<div ng-if="vm.dataBase.guid">
-      <div class="form-group">
-        <label class="control-label">姓名：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.realname"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">性别：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.gender | formatStatusFilter : 'sex'"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">手机号：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.mobile"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">会员等级：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.$gradename"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">关注状态：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.followed | formatStatusFilter :'followed'"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">公司名称：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.companyname"></p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">备注：</label>
-        <div class="control-content w5">
-          <p class="input-control readonly" ng-bind="vm.dataBase.remark"></p>
-        </div>
-      </div>
-    </div>-->
     <div ng-if="vm.isLoadData">
       <div class="form-group">
         <label class="control-label">车辆信息：</label>
@@ -144,7 +88,7 @@
       </div>
       <div class="row form-horizontal" ng-if="vm.item">
         <div class="form-group">
-          <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>车牌号：</label>
+          <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>车牌号：</label>
           <div class="control-content w5">
             <input type="text" style="display: none;" ng-model="vm.item.licence" ng-pattern="/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/" name="licence" ng-required="true">
             <div cb-select-license="required" update-licence="vm.updateLicence(data)" select="vm.item.licence"></div>
@@ -152,7 +96,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="control-label"><span class="text-red"><i class="icon-required"></i></span>选择车辆：</label>
+          <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>选择车辆：</label>
           <div class="control-content w5">
             <input type="hidden" ng-model="vm.item.model" name="model" ng-required="true">
             <p class="input-control readonly"><span ng-bind="vm.item.model"></span> <i user-add-vehicle-dialog="edit" item="vm.item" item-handler="vm.vehicleHandler(data)" class="icon-search" style="float: right;cursor: pointer"></i></p>
@@ -211,68 +155,6 @@
           </div>
         </div>
       </div>
-      <!--<div class="row form-horizontal" ng-if="vm.item && vm.item.guid">
-        <div class="form-group">
-          <label class="control-label">车牌号：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.licence"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">选择车辆：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.model"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">VIN码：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.vin"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">发动机号：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.enginenumber"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">当前里程（km）：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.totalmile"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">剩余保养里程（km）：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.countdownmiles"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">购车日期：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.buydate"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">上次年检日期：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.lastcheckdate"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">保险公司：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.insurance"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="control-label">保险购买日期：</label>
-          <div class="control-content w5">
-            <p class="input-control readonly" ng-bind="vm.item.lastinsurancedate"></p>
-          </div>
-        </div>
-      </div>-->
     </div>
       <br>
       <br>

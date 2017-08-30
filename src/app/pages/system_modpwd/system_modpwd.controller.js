@@ -33,6 +33,21 @@
             }
           });
         };
+        vm.list = _.map(new Array(10), function (item, index) {
+            return {
+                text: index+1
+            }
+        });
+
+        vm.dragdrop = {
+            stop: function (data) {
+                console.log('拖拽结束', data);
+                vm.list = data;
+            },
+            drag: function (data) {
+                console.log('拖拽中', data);
+            }
+        }
     }
 
 })();

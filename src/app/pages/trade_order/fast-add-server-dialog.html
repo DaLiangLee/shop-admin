@@ -1,0 +1,107 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+                aria-hidden="true">&times;
+        </button>
+        <h5 class="modal-title">快速新增服务</h5>
+    </div>
+
+    <div class="modal-body">
+        <form class="form-horizontal" autocomplete="off" name="server" role="form" novalidate>
+            <div class="form-group">
+                <label class="event-title f-fl"><span class="text-danger"><i class="icon-required"></i></span>服务类目：</label>
+                <div class="event-content f-fl input-w-180" ng-class="{'has-error':$isScateid1Empty && !dataBase.scateid1}">
+                    <div simple-select="id,catename" store="serverCategory" select="dataBase.scateid1"
+                         select-handler="selectCategory(data)" placeholder="请选择"></div>
+                </div>
+                <span class="text-danger" ng-if="$isScateid1Empty && !dataBase.scateid1" style="line-height: 34px;margin-left: 10px">请选择服务类目</span>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px">
+                <label class="event-title f-fl"><span class="text-danger"><i class="icon-required"></i></span>服务名称：</label>
+                <div class="event-content f-fl f-cb" style="position: relative;">
+                    <div class="f-fl input-w-360">
+                        <input name="servername" type="text" class="input-control" placeholder="请输入"
+                               ng-model="dataBase.servername"
+                               ng-change="serachServername()"
+                               ng-click="changeServername($event)"
+                               ng-class="{'has-error':!dataBase.servername && $isServernameEmpty }"
+                               cb-string-range
+                               value-max="20"
+                               maxlength="20"
+                               ng-required="true">
+                    </div>
+
+                    <span class="f-fl text-danger" ng-if="showTips">请选择服务类目</span>
+                    <span  class="text-danger" ng-if="$isServernameEmpty && !dataBase.servername">请选择服务名称</span>
+                    <div ng-if="showSelect">
+                        <div class="server-drop-select" server-name-select="" item="serverStore" item-handler="selectServerCallback(data)"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-top: 15px">
+                <label class="event-title f-fl"><span class="text-danger"><i class="icon-required"></i></span>规格：</label>
+                <div class="event-content f-fl">
+                    <div class="f-fl input-w-360">
+                        <input name="manualskuvalues" type="text" class="input-control" placeholder="请输入"
+                               ng-model="dataBase.manualskuvalues"
+                               ng-class="{'has-error': $isManualskuvaluesEmpty && !dataBase.manualskuvalues}"
+                               ng-disabled="!dataBase.servername || !dataBase.scateid1"
+                               cb-string-range
+                               value-max="20"
+                               maxlength="20"
+                               ng-required="true">
+                    </div>
+
+                    <span class="f-fl text-danger" ng-if="$isManualskuvaluesEmpty && !dataBase.manualskuvalues">请输入规格</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="event-title f-fl"><span class="text-danger"><i class="icon-required"></i></span>服务费：</label>
+                <div class="event-content f-fl input-w-180">
+                    <div class="f-fl">
+                        <input name="serverprice" type="text" class="input-control" placeholder="0~999999"
+                               ng-model="dataBase.serverprice"
+                               ng-class="{'has-error':$isServerpriceEmpty && !dataBase.serverprice,'has-wrong':$isOverMax && dataBase.serverprice * 1 > 999999}"
+                               ng-disabled="!dataBase.servername || !dataBase.scateid1"
+                               number-range
+                               maxlength="9">
+                    </div>
+
+                </div>
+                <span class="f-fl text-danger" ng-if="$isServerpriceEmpty && !dataBase.serverprice" style="line-height: 34px;margin-left: 10px">请输入服务费</span>
+                <span class="f-fl text-danger" ng-if="$isOverMax && dataBase.serverprice * 1 > 999999" style="line-height: 34px;margin-left: 10px">服务费最大为 999,999</span>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;margin-bottom: 20px">
+                <label class="event-title f-fl">备注：</label>
+                <div class="event-content f-fl input-w-360">
+                    <input name="skudescription" type="text" class="input-control" placeholder="请输入"
+                           ng-model="dataBase.skudescription"
+                           cb-string-range
+                           value-max="20"
+                           maxlength="20"
+                           ng-required="true">
+                </div>
+            </div>
+        </form>
+
+        <div class="tips" ng-if="showGuideInfo">
+            <p>
+                如需填写更多信息，请到【服务管理】编辑。<span style="cursor: pointer;" ng-click="hideGuideInfo()">&times;</span>
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" style="margin-right: 15px">确　定
+            </button>
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)" style="margin-left: 15px">取　消
+            </button>
+        </div>
+    </div>
+</div>

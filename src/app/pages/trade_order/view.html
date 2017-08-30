@@ -1,0 +1,448 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="trade.order.list({page:1})">交易管理</a></li>
+    <li class="active">订单</li>
+</ol>
+<div class="g-view-trade">
+    <div class="trade-wrapper">
+        <div class="trade-search">
+            <div cb-access-control="chebian:store:trade:porder:search" simple-search="" config="vm.searchModel.config"
+                 search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+        </div>
+        <div class="trade-grid">
+            <div class="grid-header f-cb">
+                <div class="f-fl">
+                    <a cb-access-control="chebian:store:trade:porder:add" ui-sref="trade.order.add()"
+                       class="u-btn u-btn-primary u-btn-sm">开 单</a>
+                </div>
+                <div class="f-fr">
+                    <div class="f-fl switchover">
+                        <a ng-click="vm.switchMode('list')"><i class="icon-list"></i></a>
+                        <a class="active" ng-click="vm.switchMode()"><i class="icon-view"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-body grid-body-view f-cb">
+                <div ng-if="!vm.gridModel.loadingState && vm.gridModel.itemList.length">
+                    <div class="grid-aside f-fl">
+                        <div class="list">
+                            <ul dg-click="vm.gridModel.selectHandler($event, item)" selector="li">
+                                <li bindonce ng-repeat="item in vm.gridModel.itemList track by item.guid"
+                                    ng-class="{'active': item.$$active}">
+                                    <span class="car-logo" bo-if="item.orderstype == 1"><span class="icon-car-warp"><i
+                                            class="icon-car"></i></span></span>
+                                    <span class="car-logo" bo-if="item.orderstype != 1"><img
+                                            bo-src-i="{{item.carinfo.logo}}" alt=""></span>
+                                    <h4><strong bo-text="item.carno"></strong>
+                                        <small class="f-fr text-danger" ng-if="item.paystatus == 1">&yen; <i
+                                                ng-bind="item.arrearsprice | moneyformatFilter"></i></small>
+                                        <small class="f-fr text-success" ng-if="item.paystatus == 0">&yen; <i
+                                                ng-bind="item.actualprice | moneyformatFilter"></i></small>
+                                    </h4>
+                                    <p><span simple-truncate-text="{{item.username}}" offset="100"></span> <span style="display: inline-block; vertical-align: middle;" bo-text="item.usermobile"></span></p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="f-tac" ng-if="vm.gridModel.itemList.length">
+                            <div style="display: inline-block;" class="grid-paging" simple-pagination
+                                 previous-text="&lt;"
+                                 next-text="&gt;" on-select-page="vm.gridModel.pageChanged(page)"
+                                 pagination-info="vm.gridModel.paginationinfo" max-size="6" page-info-show="false"
+                                 page-goto-show="false"></div>
+                        </div>
+                    </div>
+                    <div class="grid-article f-fr" ng-if="vm.ordersDetails">
+                        <div class="details" bindonce="vm.ordersDetails">
+                            <div class="details-header f-cb">
+                                <div class="number f-fl">
+                                    <p>订单编号：<span ng-bind="vm.ordersDetails.guid"></span></p>
+                                    <p>订单状态：<span ng-if="vm.ordersDetails.status != 4"><span class="tags"
+                                                                                             ng-class="{'tags-done': vm.ordersDetails.status == 2, 'tags-undone': vm.ordersDetails.status == 1}"
+                                                                                             ng-bind="vm.ordersDetails.status | formatStatusFilter : 'server_order_status'"></span><span
+                                            class="tags"
+                                            ng-class="{'tags-done': vm.ordersDetails.paystatus == 0, 'tags-undone': vm.ordersDetails.paystatus == 1}"
+                                            ng-bind="vm.ordersDetails.paystatus | formatStatusFilter : 'server_order_paystatus'"></span></span><span
+                                            ng-if="vm.ordersDetails.status == 4"><span class="tags">已关闭</span></span>
+                                    </p>
+                                </div>
+                                <div class="price f-fl">
+                                    <ul class="f-fl" ng-if="vm.ordersDetails.paystatus == 0">
+                                        <li><label>应收金额：</label><span>&yen; <i
+                                                ng-bind="vm.ordersDetails.$arrearsprice | moneyformatFilter"></i></span></li>
+                                        <li ng-if="vm.payprice['99'] != undefined"><label>抹零：</label><span>&yen; <i
+                                                ng-bind="vm.payprice['99'] | moneyformatFilter"></i></span>
+                                        </li>
+                                        <li ng-if="vm.payprice['0'] != undefined"><label>劵抵扣：</label><span>&yen; <i ng-bind="vm.payprice['0'] | moneyformatFilter"></i></span>
+                                        </li>
+                                    </ul>
+                                    <div class="f-fl arrearsprice">
+                                        <dl ng-if="vm.ordersDetails.paystatus == 1">
+                                            <dt>应收金额</dt>
+                                            <dd><em>&yen;</em> <strong
+                                                    ng-bind="vm.ordersDetails.arrearsprice | moneyformatFilter"></strong>
+                                            </dd>
+                                        </dl>
+                                        <dl ng-if="vm.ordersDetails.paystatus == 0">
+                                            <dt>实收金额</dt>
+                                            <dd><em>&yen;</em> <strong
+                                                    ng-bind="vm.ordersDetails.actualprice | moneyformatFilter"></strong>
+                                            </dd>
+                                        </dl>
+                                        <span class="payment payment-{{vm.ordersDetails.paytype}}"
+                                              ng-if="vm.ordersDetails.paystatus == 0"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="details-body f-cb">
+                                <div class="schedule">
+                                    <ul class="f-cb" bindonce="vm.schedule">
+                                        <li class="step" ng-class="{'active': item.active, 'current': item.current}"
+                                            ng-repeat="item in vm.schedule">
+                                            <span class="circle" bo-if="item.title" bo-bind="item.step">1</span>
+                                            <dl bo-if="item.title">
+                                                <dt bo-bind="item.title"></dt>
+                                                <dd><span bo-bind="item.time"></span></dd>
+                                            </dl>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="info">
+                                    <div class="order">
+                                        <div class="motor" ng-if="vm.ordersDetails.orderstype != 1">
+                                            <h3 ng-bind="vm.ordersDetails.carno"></h3>
+                                            <p ng-bind="vm.ordersDetails.carmodel"></p>
+                                            <dl class="f-cb">
+                                                <dt>故障码：</dt>
+                                                <dd>
+                                                    <span class="notget">无法获取，该车辆未安装（未连接）智能车机。</span>
+                                                    <!--<a href="" class="fault">1212</a>-->
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="motor" ng-if="vm.ordersDetails.orderstype == 1">
+                                            <h3 ng-bind="vm.ordersDetails.carno"></h3>
+                                        </div>
+                                        <div class="customer" ng-if="vm.ordersDetails.orderstype != 1">
+                                            <h3 ng-bind="vm.ordersDetails.userinfo.realname">王文</h3>
+                                            <p ng-bind="vm.ordersDetails.userinfo.mobile">188 2700 6235</p>
+                                            <a href="javascript:;" cb-popover="" popover-trigger="click"
+                                               popover-placement="top-left"
+                                               popover-template-id="orderUserTemplate.html" popover-animation="false"
+                                               popover-template-data="vm.ordersDetails.userinfo"
+                                               content-class="order-popover-user" class="">•••</a>
+                                        </div>
+                                        <div class="customer" ng-if="vm.ordersDetails.orderstype == 1">
+                                            <h3>临客</h3>
+                                        </div>
+                                    </div>
+                                    <div class="other">
+                                        <dl class="f-cb b-mb10">
+                                            <dt>送车人：</dt>
+                                            <dd><span ng-bind="vm.ordersDetails.username"></span> <span
+                                                    ng-bind="vm.ordersDetails.usermobile"></span></dd>
+                                        </dl>
+                                        <dl class="f-cb">
+                                            <dt>当前里程：</dt>
+                                            <dd><span
+                                                    ng-bind="vm.ordersDetails.totalmile | formatTotalmileFilter"></span>
+                                            </dd>
+                                        </dl>
+                                        <dl class="f-cb">
+                                            <dt>问题描述：</dt>
+                                            <dd><span ng-bind="vm.ordersDetails.problem"></span></dd>
+                                        </dl>
+                                        <dl class="f-cb">
+                                            <dt>车身外观：</dt>
+                                            <dd><span ng-bind="vm.ordersDetails.carstatus"></span></dd>
+                                        </dl>
+                                        <dl class="f-cb b-mb10">
+                                            <dt>预计完工：</dt>
+                                            <dd><span ng-bind="vm.ordersDetails.completetime"></span></dd>
+                                        </dl>
+                                        <dl class="f-cb">
+                                            <dt>备注：</dt>
+                                            <dd><span ng-bind="vm.ordersDetails.remark"></span></dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="details-footer f-cb items-group2" style="width: 100%;overflow-x: auto;">
+                                <div class="trade-order-item" style="min-width: 1070px;"
+                                     ng-if="vm.ordersDetails.orderstype == 2">
+                                    <div class="thead f-cb" style="width: 100%;">
+                                        <div class="td td1"><span style="margin-left: 10px;">名称</span></div>
+                                        <div class="td td2 f-tar"><span>服务费/零售单价</span></div>
+                                        <div class="td td3 f-tar"><span>数量</span></div>
+                                        <div class="td td4 f-tar"></div>
+                                        <div class="td td5 f-tar"><span>优惠</span></div>
+                                        <div class="td td6 f-tar"><span>合计</span></div>
+                                        <div class="td td7 f-tac"><span>施工员</span></div>
+                                        <div class="td td8"><span>备注</span></div>
+                                    </div>
+                                    <div class="tbody f-cb">
+                                        <dl ng-repeat="item in vm.ordersDetails.details" bindonce=""
+                                            ng-class="{'striped': $odd}">
+                                            <dt>
+                                                <div class="td td1">
+                                                    <div class="item-name">
+                                                        <span class="tags"
+                                                              bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
+                                                        <span class="title" bo-title="item.itemname"
+                                                              bo-text="item.itemname"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td2 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="item.originprice | number : '2'"></span>
+                                                </div>
+                                                <div class="td td3 f-tar">
+                                                    <span class="output-price" ng-bind="item.num | number : '1'"></span>
+                                                </div>
+                                                <div class="td td4">
+                                                    <div class="item-name" bo-if="item.itemtype == 1">
+                                                        <span class="title" bo-text="item.unit" bo-title="item.unit"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td5 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="item.preferential | number : '2'"></span>
+                                                </div>
+                                                <div class="td td6 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="item.$allprice | number : '2'"></span>
+                                                </div>
+                                                <div class="td td7 f-tac">
+                                                    <span class="output-price" ng-bind="item.servicername"></span>
+                                                </div>
+                                                <div class="td td8">
+                                                    <div class="item-name">
+                                                        <span class="title" bo-bind="item.remark" bo-title="item.remark"></span>
+                                                    </div>
+                                                </div>
+                                            </dt>
+                                        </dl>
+                                    </div>
+                                    <div class="tfoot f-cb">
+                                        <span>总费用：&yen; <i ng-bind="vm.ordersDetails.$totalprice | moneyformatFilter"></i></span>
+                                        <span>优惠：&yen; <i ng-bind="vm.ordersDetails.$preferentialprice | moneyformatFilter"></i>（套餐卡优惠）</span>
+                                        <span>应收金额：&yen; <i ng-bind="vm.ordersDetails.$arrearsprice | moneyformatFilter"></i></span>
+                                    </div>
+                                </div>
+                                <div class="trade-order-item trade-order-item2" style="min-width: 1070px;"
+                                     ng-if="vm.ordersDetails.orderstype != 2">
+                                    <div class="thead f-cb" style="width: 100%;">
+                                        <div class="td td1"><span style="margin-left: 10px;">名称</span></div>
+                                        <div class="td td2 f-tar"><span>服务费/零售单价</span></div>
+                                        <div class="td td3 f-tar"><span>数量</span></div>
+                                        <div class="td td4"></div>
+                                        <div class="td td5 f-tar"><span>合计</span></div>
+                                        <div class="td td6 f-tac"><span>施工员</span></div>
+                                        <div class="td td7"><span>备注</span></div>
+                                    </div>
+                                    <div class="tbody f-cb">
+                                        <dl ng-form="list" ng-repeat="item in vm.ordersDetails.details" class="striped"
+                                            bindonce=""
+                                            ng-class="{'striped': $odd}">
+                                            <dt>
+                                                <div class="td td1">
+                                                    <div class="item-name">
+                                                        <span class="tags"
+                                                              bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
+                                                        <span class="title" bo-title="item.itemname"
+                                                              bo-text="item.itemname"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td2 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="item.price | number : '2'"></span>
+                                                </div>
+                                                <div class="td td3 f-tar">
+                                                    <span class="output-price" bo-bind="item.num | number : '1'"></span>
+                                                </div>
+                                                <div class="td td4">
+                                                    <div class="item-name" bo-if="item.itemtype == 1">
+                                                        <span class="title" bo-text="item.unit" bo-title="item.unit"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td5 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="item.$allprice | number : '2'"></span>
+                                                </div>
+
+                                                <div class="td td6 f-tac">
+                                                    <span class="output-price" bo-bind="item.servicername"></span>
+                                                </div>
+                                                <div class="td td7">
+                                                    <div class="item-name">
+                                                        <span class="title" bo-bind="item.remark" bo-title="item.remark"></span>
+                                                    </div>
+                                                </div>
+                                            </dt>
+                                            <dd class="products" ng-if="item.products && item.products.length"
+                                                ng-repeat="subitem in item.products">
+                                                <div class="td td1">
+                                                    <div class="item-name">
+                                                        <span class="line"></span>
+                                                        <span class="title" bo-title="subitem.itemname"
+                                                              bo-text="subitem.itemname"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td2 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="subitem.price | number : '2'"></span>
+                                                </div>
+                                                <div class="td td3 f-tar">
+                                                    <span class="output-price"
+                                                          bo-bind="subitem.num | number : '1'"></span>
+                                                </div>
+                                                <div class="td td4">
+                                                    <div class="item-name">
+                                                        <span class="title" bo-text="subitem.unit" bo-title="subitem.unit"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="td td5 f-tar">
+                                                    <span class="price"
+                                                          bo-bind="subitem.$allprice | number : '2'"></span>
+                                                </div>
+                                                <div class="td td6">
+
+                                                </div>
+                                                <div class="td td7">
+
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="tfoot f-cb">
+                                        <span>总费用：&yen; <i ng-bind="vm.ordersDetails.$totalprice | moneyformatFilter"></i></span>
+                                        <span>优惠：&yen; <i ng-bind="vm.ordersDetails.$preferentialprice | moneyformatFilter"></i></span>
+                                        <span>应收金额：&yen; <i ng-bind="vm.ordersDetails.$arrearsprice | moneyformatFilter"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action action-fixed" trade-view-action="vm.isShowMore()">
+                            <ul>
+                                <li ng-class="{'complete': vm.ordersDetails.status==2 || vm.ordersDetails.status==4}">
+                                    <span class="link u-btn-link" ng-click="vm.propsParams.completed(vm.ordersDetails)">完工</span>
+                                </li>
+                                <li ng-class="{'complete': vm.ordersDetails.paystatus== 0 || vm.ordersDetails.status == 4}">
+                                    <span class="link u-btn-link" orader-received-dialog item="vm.ordersDetails"
+                                          item-handler="vm.propsParams.received(data, vm.ordersDetails)">收款</span></li>
+                                <li ng-class="{'complete': vm.ordersDetails.status==2 || vm.ordersDetails.paystatus ==0 || vm.ordersDetails.status == 4}">
+                                    <span class="link u-btn-link" ng-click="vm.goToEdit(vm.ordersDetails)">编辑</span>
+                                </li>
+                                <li ng-class="{'complete': vm.ordersDetails.status==2 || vm.ordersDetails.paystatus ==0 || vm.ordersDetails.status==4}">
+                                    <span class="link u-btn-link" ng-click="vm.propsParams.closed(vm.ordersDetails)">关闭订单</span>
+                                </li>
+                                <li><a class="link u-btn-link" target="_blank"
+                                       ng-href="{{vm.propsParams.printOrder(vm.ordersDetails)}}">打印</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="grid-loading" ng-if="vm.gridModel.loadingState">
+                    <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+                </div>-->
+                <div class="grid-nodata" ng-if="!vm.gridModel.loadingState && !vm.gridModel.itemList.length">
+                    <span><i class="icon-not-data"></i>暂无数据</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="orderUserTemplate.html">
+    <ul bindonce="">
+        <li>
+            <label class="f-fl">性别：</label>
+            <p class="f-fl"><span bo-bind="templateData.gender | formatStatusFilter : 'sex'"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">会员等级：</label>
+            <p class="f-fl"><span bo-text="templateData.storegrade"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">关注状态：</label>
+            <p class="f-fl"><span bo-bind="templateData.followed | formatStatusFilter : 'followed'"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">公司名称：</label>
+            <p class="f-fl"><span bo-text="templateData.companyname"></span></p>
+        </li>
+    </ul>
+</script>
+<script type="text/ng-template" id="orderCarTemplate.html">
+    <ul bindonce="">
+        <li>
+            <label>故障码：</label>
+            <p><span><span bo-if="!templateData.errorcode" class="text-success">无</span>
+                  <a ng-href="templateData.$$errorcode" bo-if="templateData.errorcode"
+                     bo-text="templateData.errorcode" class="text-danger"></a></span></p>
+        </li>
+        <li>
+            <label>当前里程：</label>
+            <p><span class="text-success" bo-text="templateData.totalmile"></span> km</p>
+        </li>
+        <li>
+            <label>距下次保养：</label>
+            <p><span bo-text="templateData.countdownmiles"></span> km</p>
+        </li>
+        <li>
+            <label>保养手册：</label>
+            <p><a target="_blank" ng-href="{{templateData.baoyang}}"><i class="icon-book"></i></a></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>上次到店时间：</label>
+            <p><span><span bo-text="templateData.lastaccess"></span></span></p>
+        </li>
+        <li>
+            <label>至今日未到店天数：</label>
+            <p><span><span bo-text="templateData.daysofnotaccess"></span></span></p>
+        </li>
+        <li>
+            <label>历史订单：</label>
+            <p><span><span bo-text="templateData.accesscount"></span></span></p>
+        </li>
+        <li>
+            <label>累计订单金额：</label>
+            <p><span><span bo-bind="templateData.expendamount | moneyformatFilter"></span></span></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>VIN码：</label>
+            <p><span bo-text="templateData.vin"></span></p>
+        </li>
+        <li>
+            <label>发动机号：</label>
+            <p><span bo-text="templateData.enginenumber"></span></p>
+        </li>
+        <li>
+            <label>前轮胎：</label>
+            <p><span bo-text="templateData.frontwheel"></span></p>
+        </li>
+        <li>
+            <label>后轮胎：</label>
+            <p><span bo-text="templateData.rearwheel"></span></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>购车日期：</label>
+            <p><span bo-text="templateData.buydate"></span></p>
+        </li>
+        <li>
+            <label>上次年检时间：</label>
+            <p><span bo-text="templateData.lastcheckdate"></span></p>
+        </li>
+        <li>
+            <label>保险公司：</label>
+            <p><span bo-text="templateData.insuranceCompany"></span></p>
+        </li>
+        <li>
+            <label>保险购买日期：</label>
+            <p><span bo-text="templateData.lastinsurancedate"></span></p>
+        </li>
+    </ul>
+</script>

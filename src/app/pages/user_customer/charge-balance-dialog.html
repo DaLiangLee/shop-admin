@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="form-group f-cb">
-          <label class="control-label"><span class="text-red"><i class="icon-required"></i></span><span>充值</span></label>
+          <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span><span>充值</span></label>
           <div class="b-w-8" ng-class="{'has-error': message.rechargeamountflag}" cb-field-error field-error-status="message.rechargeamountflag" field-error-message="message.rechargeamount">
             <input type="text" class="input-control" name="rechargeamount" ng-model="baseData.rechargeamount" cb-money-range=""
                    data-value-min="0.01"
@@ -50,9 +50,22 @@
 
       </div>
       <div ng-if="interception" class="f-tac charge_confirm">
-        <div class="icon confirm"></div>
-        <div>确定为 <span ng-bind="item.realname"></span> 充值 <strong style="font-size: 30px; color:#ff0000; font-weight: normal;">&yen; </strong><strong style="font-size: 30px; color:#ff0000; font-weight: normal;" ng-bind="baseData.rechargeamount | number : '2'"></strong></div>
-        <div>赠送金额：&yen; <span ng-bind="baseData.giveamount | number : '2'"></span></div>
+        <!--<div class="icon confirm"></div>-->
+          <h2 class="h3 f-tac" style="padding-bottom: 20px">
+              <span ng-bind="item.realname"></span> （<span ng-bind="item.mobile"></span>）
+          </h2>
+        <div class="f-cb charge" style="margin-bottom: 10px">
+            <div class="event-title f-fl f-tar" style="margin-right: 10px">充值：</div>
+            <div class="event-content f-fl f-tal" style="margin-top: -17px">
+                <strong style="font-size: 30px; color:#ff0000; font-weight: normal;">&yen; </strong><strong style="font-size: 30px; color:#ff0000; font-weight: normal;" ng-bind="baseData.rechargeamount | number : '2'"></strong>
+            </div>
+        </div>
+        <div class="f-cb gift">
+            <div class="event-title f-fl f-tar" style="margin-right: 12px">赠送：</div>
+            <div class="enent-content f-fl f-tal">
+                &yen; <span ng-bind="baseData.giveamount | number : '2'"></span>
+            </div>
+        </div>
       </div>
     </form>
     <div class="alert alert-danger" ng-if="isPrevent()">
@@ -62,11 +75,11 @@
   <div class="modal-footer">
     <div class="inline-block f-tac" ng-if="!interception">
       <button class="u-btn u-btn-primary u-btn-sm" ng-click="interceptionConfirm()" ng-disabled="balance.$invalid || isPrevent()">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
     <div class="inline-block f-tac" ng-if="interception">
       <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

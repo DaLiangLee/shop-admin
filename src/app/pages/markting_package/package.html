@@ -11,15 +11,13 @@
 <!--<br>-->
 
 <div class="g-view markting-package-part">
-    <div class="container-fluid" style="min-width:1148px;">
-
+    <div style="min-width:1148px;">
+        <div class="panel-header" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
         <div class="panel-body" ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
              pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
              config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
 
     </div>
-    <br>
-    <br>
 </div>
 
 <script type="text/ng-template" id="marktingPackageInfo.html">
@@ -28,13 +26,21 @@
             <tr>
                 <th class="info-header">类型</th>
                 <th class="info-header">名称</th>
+                <th class="info-header">原价</th>
+                <th class="info-header">套餐价</th>
                 <th class="info-header">包含数量</th>
             </tr>
             <tr ng-repeat="item in templateData" bindonce="templateData" ng-if="templateData.length" class="info-body">
-               <td bo-bind="item.type" class="info-item"></td>
-               <td bo-bind="item.name" class="info-item"></td>
-               <td bo-bind="item.num" class="info-item"></td>
+                <td bo-bind="item.type" class="info-item"></td>
+                <td bo-bind="item.name" class="info-item"></td>
+                <td bo-bind="item.originprice" class="info-item"></td>
+                <td bo-bind="item.price" class="info-item"></td>
+                <td bo-bind="item.num" class="info-item"></td>
             </tr>
         </table>
     </div>
+</script>
+
+<script type="text/ng-template" id="package-edit.html">
+    <p>如需编辑，请先停售。</p>
 </script>

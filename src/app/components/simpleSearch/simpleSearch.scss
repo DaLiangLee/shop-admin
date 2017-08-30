@@ -1,7 +1,6 @@
 .search-wrap{
   width: 453px;
   padding: 1px;
-  //border:1px solid #93c3e4;
   border-radius:6px;
   position: relative;
   overflow: hidden;
@@ -30,7 +29,7 @@
   right:10px;
   top:6px;
   &:before{
-    content: "\e91e";
+    content: "\e926";
     color:#2787ca;
     font-weight: bold;
   }
@@ -40,12 +39,11 @@
   width:82px;
   padding-left:20px;
   line-height:32px;
-  //border: 1px solid #088ae3;
   border-radius:4px;
   background:none;
   color:#2787ca;
   margin-left: 16px;
-  font-size:14px;
+  font-size:20px;
   cursor: pointer;
   margin-top: 1px;
 }
@@ -80,5 +78,26 @@
     width: auto;
     padding-right:10px;
 
+  }
+}
+.simple-search-radio{
+  position: relative;
+  display: inline-block;
+  line-height: 34px;
+  margin-left: 10px;
+  margin-bottom: 0;
+  vertical-align: middle;
+  font-weight: 400;
+  cursor: pointer;
+  .simple-search-radio-list{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    .simple-radio{
+      margin-right: 0;
+    }
+  }
+  .simple-radio{
+    margin-right: 10px;
   }
 }

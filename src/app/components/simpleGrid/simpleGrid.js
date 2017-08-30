@@ -196,7 +196,7 @@
       }
 
       if (config.paginationSupport && !scope.showNoneDataInfoTip) {
-        page = '<div class="simple-grid-page-warp f-fr cb-pagination" simple-grid-page="" previous-text="&#xe907;" next-text="&#xe908;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'
+        page = '<div class="simple-grid-page-warp f-fr cb-pagination" simple-grid-page="" previous-text="&#xe910;" next-text="&#xe911;" pagination-info="paginationInfo" rotate="false" boundary-link-numbers="5" force-ellipses="true" on-select-page="pageSelectChanged(page)"></div>'
       }
 
       node += btn;

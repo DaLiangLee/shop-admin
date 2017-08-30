@@ -10,14 +10,13 @@
         .controller('ErorNotfoundController', ErorNotfoundController);
 
     /** @ngInject */
-    function ErrorForbiddenController($interval, $state, preferencenav) {
+    function ErrorForbiddenController($interval, $state) {
       var vm = this;
       var timer = null;
       vm.countdown = 10;
       timer = $interval(function(){
         vm.countdown--;
         if(vm.countdown < 1){
-          preferencenav.removePreference($state.current);
           $interval.cancel(timer);
           $state.go('desktop.home');
         }
@@ -25,14 +24,13 @@
     }
 
     /** @ngInject */
-    function ErorNotfoundController($interval, $state, preferencenav) {
+    function ErorNotfoundController($interval, $state) {
       var vm = this;
       var timer = null;
       vm.countdown = 10;
       timer = $interval(function(){
         vm.countdown--;
         if(vm.countdown < 1){
-          preferencenav.removePreference($state.current);
           $interval.cancel(timer);
           $state.go('desktop.home');
         }

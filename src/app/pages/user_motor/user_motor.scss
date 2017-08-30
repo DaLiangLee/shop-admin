@@ -1,3 +1,4 @@
+/*
 .user-grade{
   .table{
     td,th{
@@ -27,6 +28,21 @@
       font-size: 18px;
       line-height: 40px;
       color: #4f9fcf;
+    }
+  }
+}
+*/
+
+.motor-table {
+  thead {
+
+  }
+  tbody {
+    tr {
+      height:60px;
+      & td:first-child {
+        //padding:10px 0 10px 10px;
+      }
     }
   }
 }

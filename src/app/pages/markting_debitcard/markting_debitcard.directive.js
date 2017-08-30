@@ -48,41 +48,41 @@
           childScope.isReadonly = iAttrs.settingDebitcardDialog === 'edit';
           childScope.dataBase = {};
           childScope.covers = DEfAULT_COVERS;
-          shophomeService.getInfo().then(function(results) {
+          shophomeService.getInfo().then(function (results) {
             childScope.manager = results.data.store.storename;
-            console.log('yyyyy');
           });
 
           childScope.checkRechargeamount = function (item) {
-            if((item.giveamount - item.rechargeamount) > 0){
-              item.isPrevent=true;
-            }else{
-              item.isPrevent=false;
+            if ((item.giveamount - item.rechargeamount) > 0) {
+              item.isPrevent = true;
+            } else {
+              item.isPrevent = false;
             }
           };
 
-          _.map(childScope.covers, function(key){
+          _.map(childScope.covers, function (key) {
             key.images = configuration.getStatic() + key.cover;
           });
 
-          if(_.isUndefined(scope.item)){
+          if (_.isUndefined(scope.item)) {
             childScope.dataBase = {
               status: 1
             };
             setActive(0);
-          }else{
+          } else {
             childScope.dataBase = _.pick(scope.item, ['guid', 'name', 'rechargeamount', 'giveamount', 'quantity', 'background', 'status']);
-            var index = _.findIndex(childScope.covers, function(key){
+            var index = _.findIndex(childScope.covers, function (key) {
               return key.cover === childScope.dataBase.background;
             });
             index === -1 ? setActive(0) : setActive(index);
             index = null;
           }
+
           /**
            * 设置背景选择按钮当前状态
            * @param i
            */
-          function setActive(i){
+          function setActive(i) {
             _.map(childScope.covers, function (key) {
               key.active = false;
             });
@@ -102,7 +102,7 @@
            * 设置储值卡背景
            * @param cover
            */
-          function setCover(cover){
+          function setCover(cover) {
             childScope.dataBase.cover = configuration.getStatic() + cover;
             childScope.dataBase.background = cover;
           }
@@ -117,6 +117,7 @@
             childScope.close();
           };
         }
+
         /**
          * 点击按钮
          */

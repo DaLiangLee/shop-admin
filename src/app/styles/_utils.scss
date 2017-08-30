@@ -116,3 +116,8 @@
 .u-fw-600 {
   font-weight: 600;
 }
+
+// 添加阴影
+.u-box-shadow {
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.15), 1px 0 6px rgba(0,0,0,0.1);
+}

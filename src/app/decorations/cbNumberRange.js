@@ -61,7 +61,7 @@
             value = viewValue.replace(NUMBER_REGULAR, "");
 
             if (NUMBER_INT_REGULAR.test(value)) {
-              if (minus === "-" && value == "0") {
+              if (minus === "-" && value === "0") {
                 value = "0";
               } else {
                 value = minus + value;
@@ -77,7 +77,7 @@
                 value = minus + value;
               }
             }
-            if (value != viewValue) {
+            if (value !== viewValue) {
               ngModelCtrl.$setViewValue(value);
               ngModelCtrl.$render();
             }

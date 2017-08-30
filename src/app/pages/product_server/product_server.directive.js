@@ -8,10 +8,11 @@
     .module('shopApp')
     .directive('serverCategory', serverCategory)
     .directive('dragItem', dragItem)
-    .directive('productServerQuoteDialog', productServerQuoteDialog);
+    .directive('productServerQuoteDialog', productServerQuoteDialog)
+    .directive('showMoreMotorsLogo',showMoreMotorsLogo);
 
   /** @ngInject */
-  function serverCategory(cbAlert) {
+  function serverCategory() {
     return {
       restrict: "A",
       replace: true,
@@ -38,6 +39,7 @@
             scateid2: item.id
           };
           scope.folded = true;
+          console.log(scope.category);
           scope.handler({data: scope.category});
         };
         scope.folded = false;
@@ -76,12 +78,11 @@
       scope: {
         dragEnd: "&"
       },
-      link: function(scope, iElement, iAttrs){
+      link: function(scope, iElement){
         var parent = iElement.parent();
         var dragSrcEl = null;
         var lastDrag = null;
         iElement.on('dragstart', function (event) {
-          console.log('拖动开始 dragstart');
           /*拖拽开始*/
           event.originalEvent.dataTransfer.effectAllowed = "move";
           event.originalEvent.dataTransfer.setData("index", angular.element(iElement).index());
@@ -89,9 +90,8 @@
           dragSrcEl = event.target;
           return true;
         });
-        iElement.on('dragenter', function (event) {
-          console.log('拖动过程中进入 dragenter')
-          if(dragSrcEl != this){
+        iElement.on('dragenter', function () {
+          if(dragSrcEl !== this){
             angular.element(this).addClass('drag');
           }
           return true;
@@ -103,14 +103,12 @@
           event.originalEvent.dataTransfer.dropEffect = 'move';
           return false;
         });
-        iElement.on('dragleave', function (event) {
-          console.log('拖动过程中离开 dragleave')
+        iElement.on('dragleave', function () {
           /*拖拽元素进入目标元素头上的时候*/
           angular.element(this).removeClass('drag');
           return true;
         });
         iElement.on('drop', function (event) {
-          console.log('拖动结束 drop')
           scope.dragEnd({data: {targetIndex: angular.element(this).index(), currentIndex:  event.originalEvent.dataTransfer.getData('index') * 1}});
           scope.$apply();
         });
@@ -180,6 +178,23 @@
             windowClass: "viewFramework-product_server_quote_dialog"
           });
         })
+      }
+    }
+  }
+
+  function showMoreMotorsLogo(){
+    return {
+      restrict: "A",
+      replace: true,
+      templateUrl: "app/pages/product_server/showMoreMotorsLogo",
+      scope: {
+        store: "=",
+        step: "=",
+        servername: "=",
+        handler: "&"
+      },
+      link: function (scope) {
+
       }
     }
   }

@@ -1,0 +1,114 @@
+<div class="jk-detail-dialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)"
+                aria-hidden="true">&times;</button>
+        <h5 class="modal-title">积客券详情</h5>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="store-title">
+            <h3 ng-bind="dataBase.name"></h3>
+        </div>
+        <div class="coupon-detail-box">
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">劵面值：</p>
+                <p class="right-text f-fl">
+                    <span>￥</span>
+                    <span ng-bind="dataBase.price | moneyformatFilter "></span>
+                </p>
+            </div>
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">发行数量：</p>
+                <p class="right-text f-fl" ng-if="dataBase.num !=0" ng-bind="dataBase.num"></p>
+                <p class="right-text f-fl" ng-if="dataBase.num ==0" ng-bind="dataBase.num | stateFilter :'allnum'"></p>
+            </div>
+
+            <div class="event-item f-cb cut-part">
+                <p class="left-text f-fl">每人限领：</p>
+                <p class="right-text f-fl" ng-bind="dataBase.numPerUser | stateFilter : 'pernum'"></p>
+            </div>
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">使用门槛：</p>
+                <p class="right-text f-fl" ng-if="dataBase.conditionPrice!=0">满<span ng-bind="dataBase.conditionPrice | stateFilter : 'threshold' | moneyformatFilter"></span>元可用</p>
+            </div>
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">与其他优惠同享：</p>
+                <p class="right-text f-fl" ng-bind="dataBase.canMix?'可以':'不可'"></p>
+            </div>
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">用券范围：</p>
+                <p class="right-text f-fl" ng-if="dataBase.scopeType==1 && dataBase.itemScope" style="word-break:break-all;word-wrap:break-word;">仅限<span ng-bind="dataBase.itemScope"></span>可用</p>
+                <p class="right-text f-fl" ng-if="!dataBase.scopeType">全场通用</p>
+            </div>
+
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">其它使用说明：</p>
+                <p class="right-text f-fl" ng-bind="dataBase.instruction"></p>
+            </div>
+
+            <div class="event-item f-cb cut-part">
+                <p class="left-text f-fl">有效期：</p>
+                <p class="right-text f-fl" ng-if="dataBase.availableDays === undefined">
+                    <span ng-bind="dataBase.start"></span>至<span ng-bind="dataBase.end"></span>
+                </p>
+                <p class="right-text f-fl" ng-if="dataBase.availableDays">
+                    <span>领取后{{dataBase.availableDays}}天有效</span>
+                </p>
+            </div>
+
+
+
+            <!--<div ng-if="dataBase.scopeType===1">
+                <ul class="sku-list">
+                    <li ng-repeat="item in dataBase.productScope">
+                        <span>商品-</span><span>{{item.productname}}</span>
+                    </li>
+                </ul>
+                <ul class="sku-list">
+                    <li ng-repeat="item in dataBase.serverScope">
+                        <span>服务-</span><span>{{item.manualskuvalues}}</span>
+                    </li>
+                </ul>
+            </div>-->
+            <div class="event-item f-cb">
+                <p class="left-text f-fl">可用时间：</p>
+                <p class="right-text f-fl" ng-bind="dataBase.availableInWeek | weekFilter"></p>
+            </div>
+
+            <div class="pic-erm">
+                <div class="qr-wrapper">
+                    <div qr text="{{dataBase.qrcode}}" width="164" height="164"></div>
+                </div>
+                <div class="use-tips">
+                    <p>使用微信扫描二维码</p>
+                    <p>查看积客券并分享</p>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm special" ng-click="savePackage()" ui-sref="markting.jk.new">复制本券信息并新建</button>
+            <button class="u-btn u-btn-disabled u-btn-sm" ng-click="showTips()" ng-bind="dataBase.status?'停用':'启用'" style="background: #808080;color: #fff;margin: 0 20px;"></button>
+            <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)" style="background: #808080;color: #fff;">取　消</button>
+        </div>
+
+        <div class="stop-warning-tips" ng-if="showWarningTips">
+            <div class="order-alert alert-danger ng-scope">
+                <p ng-if="dataBase.status" class="text-red f-tac">您确认停用该积客券吗？</p>
+                <p ng-if="!dataBase.status" class="text-red f-tac">您确认开启该积客券吗？</p>
+            </div>
+            <button class="u-btn u-btn-warning u-btn-sm" ng-click="changeState()">确认</button>
+        </div>
+    </div>
+</div>
+</div>

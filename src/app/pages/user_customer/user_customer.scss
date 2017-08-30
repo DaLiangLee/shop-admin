@@ -65,12 +65,20 @@
       }
     }
   }
+
+  .charge div , .gift div {
+    width: 40%;
+  }
+  .charge {
+    text-align: right;
+  }
+
 }
 .user-customer-change{
   padding-bottom: 300px;
 }
 
-.viewFramework-upload-result-dialog {
+/*.viewFramework-upload-result-dialog {
 
   .modal-body {
     text-align: center;
@@ -82,7 +90,73 @@
       margin-bottom: 5px;
     }
   }
+}*/
+
+/*
+版本优化  2017/08/07  by   yigeng
+*/
+.viewFramework-upload-result-dialog {
+  .modal-content {
+    width: 480px;
+    .modal-body {
+      padding: 40px 0 0 30px;
+      .title {
+        font-size: 14px;
+        color: rgb(153,153,153);
+        padding-bottom: 8px;
+        padding-left: 30px;
+        border-bottom:1px solid #eee;
+        span {
+          font-weight:700;
+        }
+      }
+      .success {
+        font-size: 16px;
+        color: rgb(51,51,51);
+        padding: 15px 0 10px 30px;
+        span {
+          font-weight: 700;
+        }
+      }
+      .failed {
+        font-size: 16px;
+        color: rgb(51,51,51);
+        padding: 0 0 10px 30px;
+        margin-bottom: 35px;
+        span {
+          font-weight: 700;
+        }
+      }
+      .tips-download {
+
+        padding-left: 30px;
+        color: rgb(153,153,153);
+        font-size: 14px;
+        border-bottom:1px solid #eee;
+        line-height: 30px;
+      }
+      .download-btn {
+        display: block;
+        margin-left: 30px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        width: 88px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        color: rgb(3,138,227);
+        border:1px solid #1d9ed7;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+    }
+    .modal-footer {
+      border-top: none;
+    }
+  }
 }
+
 
 .package-popover + .popover {
   max-width: 350px;
@@ -107,13 +181,13 @@
     &:first-child {
       min-width: 100px;
     }
-    &:nth-child(2) {
+    /*&:nth-child(2) {
       width: 205px;
       max-width: 205px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    }
+    }*/
   }
 
 }
@@ -186,4 +260,848 @@
     font-size: 18px;
     margin-bottom: 20px;
   }
+}
+
+// 修改密码
+.viewFramework-change-pwd-dialog {
+
+  .spinner { // 加载loading
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #e2e2e2;
+    border-top-color: #038ae3;
+    animation: spinner 0.5s linear infinite;
+  }
+  @keyframes spinner {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .modal-dialog {
+    width: 480px;
+
+    .popover-content {
+      width: 140px;
+      font-size: 12px;
+      color: #666666;
+      padding: 4px;
+    }
+  }
+  .modal-body {
+    margin-top: 15px;
+  }
+  label {
+    color: #333333;
+    font-weight: 700;
+    width: 118px;
+  }
+  input {
+    width: 150px;
+    //padding-left: 6px;
+    //padding-right: 6px;
+    margin-left: -10px;
+    display: inline-block;
+  }
+
+  .b-w-6 {
+    width: 73%;
+  }
+
+  ::placeholder {
+    font-size: 14px;
+    color: #999999;
+  }
+  .form-group {
+    //&:first-child {
+    //  margin-top: 15px;
+    //}
+    &:last-child {
+      margin-bottom: 13px;
+    }
+  }
+
+  .alert-icon {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    box-sizing: content-box;
+    border: 4px solid #d7d7d7;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+
+    &:before {
+      content: "!";
+      position: absolute;
+      top: 0;
+      left: 30px;
+      right: 0;
+      bottom: 0;
+      color: #b3b3b3;
+      font-size: 4.4em;
+    }
+  }
+
+  .alert-info {
+    text-align: center;
+    font-size: 24px;
+    color: #333333;
+  }
+
+  .btn-pwd {
+    color: #ffffff;
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .btn-countdown {
+    cursor: not-allowed;
+    background-color: #999999;
+    width: 142px;
+  }
+  .btn-code {
+    background-color: #038ae3;
+    width: 120px;
+  }
+
+  .error-container {
+    position: relative;
+  }
+  .error {
+    color: red;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid red;
+    padding: 3px 4px;
+    position: absolute;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 83%;
+      left: 21%;
+      background-color: inherit;
+      border: inherit;
+      padding: 4px;
+      border-top: 0;
+      border-left: 0;
+      transform: rotate(45deg);
+    }
+   /* &:before {
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      top: 100%;
+      left: 21%;
+      border-top: 7px solid red;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+
+    &:after {
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      top: 100%;
+      left: 21%;
+      border-top: 5px solid #FFFFFF;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }*/
+
+  }
+  .error-origin-pwd { //原密码错误
+    top: -19px;
+    left: 214px;
+    //width: 133px;
+  }
+  .error-new-pwd { // 新密码错误
+    top: 40px;
+    left: 214px;
+    //width: 133px;
+  }
+  .error-confirm-pwd { // 确认密码错误
+    top: -40px;
+    left: 85px;
+    //width: 90px;
+  }
+  .error-feedback { // 后台返回原密码错误
+    top: -19px;
+    left: 214px;
+  }
+
+  .error-verify-pwd { // 验证码确认密码和密码不一致
+    top: 93px;
+    left: 220px;
+  }
+}
+
+
+/*
+新增会员弹窗样式
+*/
+
+/*
+输入框三种标准
+*/
+.input-w-140 {
+  width: 200px;
+}
+.input-w-200 {
+  width: 200px;
+}
+.input-w-280 {
+  width: 350px;
+}
+
+.control-label {
+  padding-right: 10px;
+  color: rgb(51,51,51);
+}
+
+.viewFramework-add-new-customer-dialog {
+
+  .code_disabled {
+    color: #fff;
+    background-color: #b2b2b2;
+    border:none;
+    padding: 0 10px;
+    width: 140px;
+  }
+
+  .modal-body {
+    margin-bottom: 20px;
+  }
+  .modal-footer {
+    border-top: none;
+  }
+  .tips {
+    font-size: 12px;
+    line-height: 18px;
+    color: rgb(153,153,153);
+  }
+  .control-label {
+    padding-right: 10px;
+    color: rgb(51,51,51);
+  }
+  .verify-code-check {
+    .input-control {
+      width: 140px;
+    }
+    .has-customer {
+      margin: 20px 0;
+    }
+  }
+  .edit-customer {
+    position: relative;
+    .mask {
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,.2);
+      text-align: center;
+      span {
+        font-size: 28px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -14px;
+        animation: rotate 1s infinite;
+      }
+    }
+  }
+  .add-customer {
+    position: relative;
+    .mask {
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,.1);
+      text-align: center;
+      span {
+        font-size: 28px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -14px;
+        animation: rotate 1s infinite;
+      }
+    }
+  }
+}
+
+
+/*
+是否继续添加车辆弹窗样式
+*/
+.viewFramework-add-motor-confirm {
+
+  .modal-dialog {
+    width: 300px;
+    p {
+      text-align: center;
+      font-size: 24px;
+      color: rgb(102,102,102);
+      margin:60px 0;
+    }
+    .button-group {
+      width: 100%;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+  }
+
+}
+
+/*
+新增车辆弹窗样式
+*/
+.viewFramework-add-motor-dialog {
+  .modal-footer {
+    border-top: none;
+  }
+  .viewFramework-select-license {
+    .k-simple-select .value {
+      height: 34px;
+    }
+    input {
+      width: 140px;
+    }
+  }
+  .mileage {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .cut-part {
+    margin-bottom: 20px;
+  }
+}
+
+/*
+修改手机号弹窗样式
+*/
+.viewFramework-edit-telphone-dialog {
+
+  .code_disabled {
+    color: #fff;
+    background-color: #b2b2b2;
+    border:none;
+    padding: 0 10px;
+    width: 140px;
+  }
+  .modal-footer {
+    border-top: none;
+  }
+  .modal-body {
+    padding: 20px;
+  }
+  .tips {
+    font-size: 12px;
+    line-height: 16px;
+    color: rgb(102,102,102);
+  }
+  .cut-line {
+    width: 100%;
+    height: 1px;
+    margin:20px 0;
+    background-color: #eee;
+  }
+  .warning-tips {
+    width: 320px;
+    margin:0 auto;
+    margin-bottom: 20px;
+    line-height: 24px;
+    text-align: left;
+    color: rgb(215,41,42);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/*
+   会员页面优化样式   2017/08/01  by  yigeng
+*/
+
+.g-view-customer {
+  padding:15px 15px 20px 15px;
+  background-color: #d7d7d7;
+  min-height: 100%;
+  min-width: 1440px;
+  &.g-view-motor {
+    //min-width: 1100px;
+  }
+  a.u-btn-link , span.u-btn-link {
+    color: #038ae3;
+  }
+  .trade-wrapper {
+    border:none;
+  }
+  .w-tabs {
+    padding: 20px;
+    //margin-bottom: 2px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    position: relative;
+    .tabs-nav {
+      border-bottom:none;
+      a {
+        font-size: 16px;
+        font-family: 'Arial', 'Microsoft YaHei';
+        color: #038ae3;
+        background-color: #fff;
+        position: relative;
+        text-decoration: none;
+        display: block;
+        height: 40px;
+        padding: 0 36px;
+        margin-right: 0;
+        line-height: 40px;
+        border-bottom: none;
+        border:1px solid #038ae3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+      li.active a {
+        background-color: #038ae3;
+        color: #fff;
+      }
+    }
+  }
+  .trade-wrapper {
+    //margin-bottom: 160px;
+    .trade-search {
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: none;
+      .b-tab-bor {
+        padding-bottom: 20px;
+        border-bottom:1px solid #eee;
+      }
+
+    }
+  }
+  .table-content {
+    //overflow: auto;
+    tbody {
+      tr {
+        &:hover {
+          background-color: rgb(250,250,250);
+        }
+        >td {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .popover-content {
+        td {
+          overflow: hidden;
+          text-overflow:clip;
+          white-space: nowrap;
+        }
+
+      }
+    }
+  }
+  .grid-header {
+    padding-top: 10px;
+    padding-right: 50px;
+    .export , .import{
+      margin-top: 7px;
+      margin-right: 0;
+      line-height: 20px;
+      padding: 0 10px;
+      border-right: none;
+      color: #038ae3;
+    }
+  }
+  table {
+    .table-thead {
+      th {
+        padding:0 10px;
+      }
+    }
+    .table-tbody {
+      td {
+        padding:0 10px;
+      }
+      .text-break {
+        p {
+          max-width: 90px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+      }
+    }
+  }
+  /* 套餐卡popover样式 */
+  .popover-content {
+    max-height: 240px;
+    overflow: auto;
+    td {
+      text-align: left;
+    }
+  }
+}
+
+
+.g-view-customer-detail {
+  padding: 15px;
+  background-color: #d7d7d7;
+  min-height: 100%;
+  a.u-btn-link , span.u-btn-link {
+    color: #038ae3;
+  }
+  .grid-loading{
+    height: 200px;
+    line-height: 300px;
+    text-align: center;
+    .loading{
+      display: inline-block;
+      vertical-align: middle;
+      width: 180px;
+      height: 36px;
+      line-height: 36px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+      > span{
+        position: relative;
+        top: -2px;
+        display: inline-block;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        i{
+          position: absolute;
+          left: 0;
+          top: 0;
+          font-size: 20px;
+          animation: rotate 1s infinite;
+        }
+      }
+    }
+  }
+  .detail-wrapper {
+    background-color: #fff;
+    padding:30px 0 0 20px;
+    min-height:100%;
+    .pointer {
+      cursor: pointer;
+    }
+    .pl-30 {
+      padding-left: 30px;
+    }
+    .operat-part {
+      button {
+        width: 88px;
+        margin-bottom: 20px;
+      }
+      ul {
+        width: 88px;
+        margin:0 auto;
+        border:1px solid #1d9ed7;
+        li {
+          line-height: 34px;
+          cursor: pointer;
+          &:hover {
+            background-color: #038ae3;
+            a {
+              color: #fff;
+            }
+
+          }
+        }
+      }
+    }
+    .customer-info {
+      margin-bottom: 40px;
+      .operat-part {
+        ul li:nth-child(3) {
+          padding:0 10px;
+          a {
+            display: block;
+            border-bottom:1px solid #eee;
+          }
+        }
+      }
+      .customer-name {
+        padding-left: 30px;
+        font-size: 24px;
+        color: rgb(51,51,51);
+        line-height:30px;
+      }
+      .customer-mobile {
+        padding-left: 30px;
+        font-size: 14px;
+        line-height: 30px;
+        color: rgb(51,51,51);
+      }
+      .info-part {
+        ul {
+          width: 100%;
+          margin-top: 20px;
+          li {
+            float: left;
+            width: 50%;
+            line-height: 30px;
+            .event-title {
+              display: inline-block;
+              min-width: 70px;
+              color: rgb(102,102,102);
+              margin-right: 10px;
+              &.remarks {
+                margin-top: 15px;
+              }
+            }
+            .event-content {
+              color: rgb(51,51,51);
+            }
+          }
+          & li:nth-child(2n-1) {
+            padding-left: 30px;
+          }
+        }
+      }
+    }
+
+    .motor-info {
+      height: 100%;
+      padding-bottom: 100px;
+      .operat-part {
+        ul li:first-child {
+          padding:0 10px;
+          a {
+            display: block;
+            border-bottom: 1px solid #eee;
+          }
+        }
+      }
+      .info-part {
+        border:1px solid #E8E8E8;
+        padding-bottom: 20px;
+        li {
+          float: left;
+        }
+        .tabBar {
+          border-bottom: 1px solid #E8E8E8;
+          margin-bottom: 30px;
+          background-color: #f2f2f2;
+          li {
+            height: 40px;
+            //width: 120px;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+            &.active {
+              border-right: 1px solid #e8e8e8;
+              background-color: #fff;
+              height: 41px;
+              position: relative;
+              top: 1px;
+              span {
+                cursor: pointer;
+                border-right:none;
+              }
+            }
+            span {
+              border-right:1px solid #E8E8E8;
+              padding: 0 25px;
+            }
+          }
+          .more-btn {
+            i {
+              margin-left: 5px;
+            }
+
+          }
+          .more-motors {
+            position:absolute;
+            top: 40px;
+            left: 0;
+            border: 1px solid #E8E8E8;
+            width: 100%;
+            background-color: #fff;
+            text-align: center;
+            padding-bottom: 10px;
+            li {
+              height: 34px;
+              line-height: 34px;
+              width: 100%;
+              border-bottom:1px solid #eee;
+              &:hover {
+                background-color: #038ae3;
+              }
+              &:last-child {
+                //border:none;
+              }
+            }
+          }
+        }
+        .detail-bar {
+          ul li {
+            .event-title ,.event-content {
+              float: left;
+            }
+            .event-title {
+              margin-right: 10px;
+              color: rgb(102,102,102);
+            }
+            .event-content {
+              color: rgb(51,51,51);
+            }
+            &:nth-child(2n-1) {
+              .event-title {
+                min-width: 90px;
+              }
+            }
+            &:nth-child(2n) {
+              .event-title {
+                min-width: 115px;
+              }
+            }
+          }
+
+          .car-des {
+            margin-bottom: 10px;
+            .img-box {
+              width: 80px;
+              height: 57px;
+              display: table-cell;
+              text-align: center;
+              vertical-align: middle;
+              img {
+                vertical-align: middle;
+              }
+            }
+            .motor-licence {
+              font-size: 24px;
+              margin-right: 5px;
+              line-height: 30px;
+              //font-weight:700;
+            }
+          }
+          ul {
+            width: 100%;
+            li {
+              width: 50%;
+              line-height: 30px;
+              &:nth-child(2n-1) {
+                padding-left: 80px;
+              }
+            }
+          }
+        }
+      }
+
+
+    }
+  }
+}
+
+/*
+   批量导入会员弹窗样式  2017/08/03   by   yigeng
+*/
+.viewFramework-up-file-dialog {
+  .modal-content {
+    width: 480px;
+  }
+
+  .modal-body {
+    padding: 40px 0 20px 30px;
+    .down-load {
+      padding-left:20px;
+      border-bottom:1px solid #eee;
+      padding-bottom: 15px;
+      color: #333;
+    }
+    .import-item {
+      width: 88px;
+      height: 30px;
+      margin-left: 20px;
+      margin-top: -5px;
+      line-height: 30px;
+      text-align: center;
+      border:1px solid #1d9ed7;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      &:hover {
+        background-color: #edf6fb;
+      }
+    }
+    .up-load {
+      padding-left: 20px;
+      margin-top: 10px;
+      .text-title {
+        line-height: 40px;
+      }
+      .input-control {
+        border-color: #eee;
+        box-shadow: none;
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+    }
+    .text-warning {
+      padding-left: 30px;
+      line-height: 30px;
+      color: rgb(215,41,42);
+    }
+  }
+
+  .modal-footer {
+    border-top:none;
+    margin-top: 20px;
+  }
+}
+
+
+/*
+  送券弹窗样式  2017/08/04  by   yigeng
+*/
+.viewFramework-gift-coupon-dialog {
+  .modal-content {
+    width: 480px;
+  }
+  .modal-body {
+    .gift-coupon {
+      padding: 40px 0;
+      .title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
 }

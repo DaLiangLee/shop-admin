@@ -50,7 +50,7 @@
                 subScope.isEmpty = true;
 
                 $timeout(function(){
-                  if(!_.isUndefined(ngModelCtrl.$viewValue)){
+                  if(!_.isEmpty(ngModelCtrl.$viewValue)){
                     subScope.min = ngModelCtrl.$viewValue.length;
                     subScope.isEmpty = !subScope.min;
                     subScope.isBlur = !!subScope.min;
@@ -111,7 +111,7 @@
                     '<span class="min" ng-bind="min"></span>/<span class="max" ng-bind="max"></span>',
                     '</span>',
                     '<span class="input-addon m-string-item m-string-icon" ng-if="isBlur&&!isEmpty">',
-                    '<i class="icon-remove_circle m-string-clear" ng-click="clearContent()"></i>',
+                    '<i class="icon-remove-circle m-string-clear" ng-click="clearContent()"></i>',
                     '</span>'].join('');
                 // 将模版添加到parent
                 iElement.parent().append($compile(tpl)(subScope))

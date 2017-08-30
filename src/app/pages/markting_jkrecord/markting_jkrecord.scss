@@ -1,0 +1,27 @@
+.jk-record {
+  .has-used {
+    color: rgb(121,121,121);
+  }
+  .has-expired {
+    color: rgb(231,30,40);
+  }
+  .never-used {
+    color: rgb(9,187,7);
+  }
+  .body-part {
+    .grid-header {
+      height: 20px;
+      margin:0;
+      margin-top: 3px;
+      padding:0;
+    }
+    .user-avatar ,.user-avatar img{
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+  }
+}

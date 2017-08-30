@@ -51,7 +51,7 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<div class="state-unread orderUser"><span class="state-unread"  cb-image-hover="{{item.map.avatar}}" bo-if="item.map.avatar"><img bo-src-i="{{item.map.avatar}}?x-oss-process=image/resize,w_150" alt=""></span><span class="state-unread default-product-image"  bo-if="!item.map.avatar"></span><span class="state-unread" bo-text="item.map.realname"></span></div>',
+            "fieldDirective": '<div class="state-unread orderUser"><span class="state-unread" ng-class="{\'default-user-image\': !item.avatar}" style="display: inline-block; width: 24px; height: 24px;"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""></span><span class="state-unread" bo-text="item.map.realname"></span></div>',
             "name": '姓名',
             "field": "map.realname",
             "width": 150

@@ -1,46 +1,71 @@
 .w-amount {
   &-choose {
     position: relative;
-    width: 49px;
-    height: 26px;
+    min-width: 90px;
+    height: 28px;
     overflow: hidden;
-    border: 1px solid #CCCCCC;
-
     input {
-      width: 34px;
+      width: calc(100% - 60px);
       font-size: 12px;
-      height: 24px;
-      line-height: 24px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      border: 0;
+      height: 28px;
+      line-height: 28px;
+      border: 1px solid #CCCCCC;
       text-align: center;
+      float: left;
+      margin-left: 2px;
+      margin-right: 2px;
+      border-radius: 4px;
+      color: #333333;
+      font-weight: 600;
     }
 
     button {
-      width: 13px;
-      height: 13px;
-      line-height: 13px;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
       overflow: hidden;
-      background: #f1f1f1;
-      position: absolute;
-      right: -1px;
+      background-color: transparent;
+      background-clip: padding-box;
       border: 1px solid #CCCCCC;
       cursor: pointer;
-
+      display: inline-block;
+      float: left;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      outline: 0;
       &[disabled] {
         color: #CCCCCC;
         cursor: not-allowed;
+        .icon {
+          color: #CCCCCC;
+        }
+        &:hover {
+          color: #CCCCCC;
+          border-color: #CCCCCC;
+
+          .icon {
+            color: #CCCCCC;
+          }
+        }
+      }
+      &:hover {
+        color: #038AE3;
+        border-color: #038AE3;
+        .icon {
+          color: #038AE3;
+        }
+      }
+      &:active {
+        background-color: #edf6fb;
+        color: #038AE3;
+        border-color: #038AE3;
+        outline: 0;
+      }
+      .icon {
+        color: #666666;
       }
     }
-  }
-
-  &-add {
-    top: -1px;
-  }
-  &-reduce {
-    bottom: -1px;
   }
 }
 

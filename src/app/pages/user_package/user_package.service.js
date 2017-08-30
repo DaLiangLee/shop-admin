@@ -62,10 +62,24 @@
       DEFAULT_GRID: {
         "columns": [
           {
+            "id": 11,
+            "cssProperty": "state-column",
+            "fieldDirective": '<div class="state-unread orderUser"><span class="state-unread" ng-class="{\'default-user-image\': !item.avatar}" style="display: inline-block; width: 24px; height: 24px;"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""></span><span class="state-unread" bo-text="item.gender | formatStatusFilter : \'sex\'"></span></div>',
+            "name": '姓名',
+            "width": 50
+          },
+          // {
+          //   "id": 12,
+          //   "cssProperty": "state-column",
+          //   "fieldDirective": '<div class="state-unread orderUser"></span><span class="state-unread" bo-text="item.$gender"></span></div>',
+          //   "name": '',
+          //   "width": 50
+          // },
+          {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<div class="state-unread orderUser"></span><span class="state-unread" bo-text="item.realname"></span></div>',
-            "name": '姓名',
+            "fieldDirective": '<div class="state-unread orderUser"><span class="state-unread" bo-text="item.realname"></span></div>',
+            "name": '',
             "width": 50
           },
           {
@@ -145,7 +159,7 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread"><span bo-text="item.createdate"></span></span>',
             "name": '时间',
-            "width": 150
+            "width": 180
           },
           {
             "id": 2,

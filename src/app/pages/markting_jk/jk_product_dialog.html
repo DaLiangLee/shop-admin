@@ -1,0 +1,77 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="closed()"
+                aria-hidden="true">&times;</button>
+        <h5 class="modal-title">选择商品</h5>
+    </div>
+    <div class="modal-body">
+        <ul class="tab-wrap f-cb">
+            <li ng-click="toggleTab(0)" ng-class="{'active': tabindex == 0}">常用</li>
+            <li ng-click="toggleTab(1)" ng-class="{'active': tabindex == 1}">商品库</li>
+        </ul>
+        <div class="list-wrap f-cb" ng-if="tabindex == 0">
+            <div class="list productcommonlyused">
+                <ul class="content" dg-click="productcommonlyusedHandler($event, item)" selector="li">
+                    <li class="f-cb" ng-repeat="item in productcommonlyused track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
+                        <span class="text f-fl" bo-text="item.itemname" bo-title="item.itemname"></span>
+                        <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="list-wrap f-cb" ng-if="tabindex == 1">
+            <div class="f-fl list parentclass">
+                <h3 class="title">商品一级类目</h3>
+                <ul class="content" dg-click="parentclassHandler($event, item)" selector="li">
+                    <li ng-repeat="item in parentclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+                        <span bo-text="item.catename"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="f-fl list subclass">
+                <h3 class="title">商品二级类目</h3>
+                <ul class="content" dg-click="subclassHandler($event, item)" selector="li">
+                    <li ng-repeat="item in subclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
+                        <span bo-text="item.catename"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="f-fl list productname">
+                <h3 class="title">商品名称</h3>
+                <ul class="content" dg-click="productnameHandler($event, item)" selector="li">
+                    <li ng-repeat="item in productname track by item.guid" bindonce ng-class="{'active': item.$folded}">
+                        <p class="text" bo-title="item.cnname+' '+item.productname">
+                            <span bo-text="item.cnname"></span>
+                            <span bo-text="item.productname"></span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="f-fl list productspec">
+                <h3 class="title">商品规格</h3>
+                <ul class="content" dg-click="productspecHandler($event, item)" selector="li">
+                    <li ng-repeat="item in productspec track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
+                        <span class="text f-fl" bo-text="item.manualskuvalues" bo-title="item.manualskuvalues"></span>
+                        <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="results">
+            <h3 class="title">已选择商品：</h3>
+            <ul class="content" class="f-cb" bindonce="" dg-click="removeItem($event, item)" selector=".remove">
+                <li ng-repeat="item in dataSources track by item.guid">
+                    <span bo-text="item.itemname"></span>
+                    <span>&yen; <span bo-bind="item.price | number : 2"></span></span>
+                    <span class="icon-remove_circle remove"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!dataSources.length">确　定</button>　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="closed()">取　消</button>
+        </div>
+    </div>
+</div>

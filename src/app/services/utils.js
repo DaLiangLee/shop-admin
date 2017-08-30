@@ -14,7 +14,7 @@
     .factory('utils', utils);
 
   /** @ngInject */
-  function utils($q, $filter, cbAlert, configuration, webDefaultConfig) {
+  function utils($q, $filter, simpleDialogService, configuration, webDefaultConfig) {
     return {
       /**
        * 根据start和end获取列表的model
@@ -98,7 +98,7 @@
         if (results.data.status === 0 || results.data.status === "0") {
           deferred.resolve(results.data);
         } else {
-          cbAlert.error("错误提示", results.data.data);
+          simpleDialogService.error(results.data.data);
           deferred.reject(results.data);
         }
         return deferred.promise;
@@ -135,6 +135,20 @@
           return day;
         }
         return day + 1;
+      },
+
+      /**
+       * 后端会返回一些null回来，需要过滤
+       * @param obj
+       */
+      filterNull: function (obj) {
+          var result = {};
+          _.forIn(obj, function (value, key) {
+              if(!_.isNull(value)){
+                  result[key] = value;
+              }
+          });
+          return result;
       }
     }
   }

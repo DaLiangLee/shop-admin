@@ -1,49 +1,226 @@
 <ol class="k-breadcrumb">
-  <li><a ui-sref="product.server.list({page:1})">商品与服务</a></li>
-  <li class="active">服务管理</li>
+    <li><a ui-sref="product.server.list({page:1})">商品与服务</a></li>
+    <li class="active">服务管理</li>
 </ol>
-<div class="w-tabs">
+<!--<div class="w-tabs">
   <ul class="tabs-nav f-cb">
     <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 1})" class="text-muted">在售服务库</a></li>
     <li ui-sref-active="active"><a ui-sref="product.server.list({page: 1, status: 0})" class="text-muted">已下架</a></li>
   </ul>
 </div>
-<br>
-<div class="g-view">
-  <div class="container-fluid" style="min-width:1087px;">
-    <div cb-access-control="chebian:store:product:server:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+<br>-->
+<div class="g-view product-server g-view-trade">
+    <div class="trade-wrapper" style="min-width:1087px;">
+        <div class="trade-search">
+            <div class="" cb-access-control="chebian:store:product:server:search" simple-search="" config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+        </div>
+        <!--<div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams" select-handler="vm.gridModel.selectHandler(item)"></div>-->
+        <!--操作区域 S-->
+        <div class="operating-part f-cb">
+            <!--  -->
+            <div class="f-fl">
+                <button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:product:server:edit" ui-sref="product.server.add()">新增服务</button>
+            </div>
 
-    <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)" sort-changed="vm.gridModel.sortChanged(data)" request-params="vm.gridModel.requestParams" select-handler="vm.gridModel.selectHandler(item)"></div>
-    <br>
-    <br>
-    <div style="margin-bottom:60px; width: 100%; height: 400px;" ng-if="vm.gridModel.itemList">
-      <table class="w-table">
-        <thead>
-        <tr>
-          <th style="min-width:150px;">属性</th>
-          <th style="min-width:100px;">工时</th>
-          <th style="min-width:100px;">单价</th>
-          <th style="min-width:102px;">工时费</th>
-          <th style="min-width:100px;">销量</th>
-          <th style="min-width:200px;">适用车型</th>
-          <th style="min-width:80px;">启用</th>
-          <th style="min-width:120px;">描述</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="item in vm.items.serverSkus">
-          <td><span class="state-unread" ng-bind="item.$skuvalues"></span></td>
-          <td><div style="position: relative;"><span class="state-unread" ng-bind="item.servertime | number : '1'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)" data-max="1000" data-min="0" data-step="0.1" data-placeholder="输入1-999工时"></span></div></td>
-          <td><span class="state-unread" ng-bind="item.serverprice | moneyformatFilter"></span></td>
-          <td><span class="state-unread" ng-bind="item.$servertimeprice | number : '2'"></span></td>
-          <td><span><span class="state-unread" ng-bind="item.countorder | number : '0'"></span> 笔</span></td>
-          <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
-          <td><div cb-switch checkstatus="item.status"
-                   ng-click="vm.gridModel2.statusItem(item, vm.items.guid)"></div></td>
-          <td><span class="state-unread" cb-truncate-text="{{item.skudescription}}" text-length="8"></span></td>
-        </tr>
-        </tbody>
-      </table>
+            <div class="f-fr f-cb">
+                <div class="export f-fl">
+                    <a title="导出列表" cb-access-control="chebian:store:product:server:export" export-data="{{vm.gridModel.requestParams.request}}" params="vm.gridModel.requestParams.params" class="" target="_blank">
+                        <span class="u-btn-link">导出</span>
+                    </a>
+                </div>
+                <!--<div class="change-view f-fl">
+                    <div>
+                        <a ui-sref="product.server.list({page:1})">列表视图</a>
+                        <a ui-sref="product.server.detail({page:1})">详情视图</a>
+                    </div>
+                </div>-->
+                <div class="f-fl switchover"  ng-if="!vm.gridModel.loadingState && vm.gridModel.itemList.length">
+                    <a class="active" ng-click="vm.switchMode()" title="列表视图" style="cursor: pointer"><i class="icon-list"></i></a>
+                    <a ng-click="vm.switchMode('detail')" title="详情视图" style="cursor: pointer;"><i class="icon-view"></i></a>
+                </div>
+            </div>
+
+        </div>
+        <!--操作区域 E-->
+
+        <!--表格区域 S-->
+        <table class="w-table table-striped table-hover table-part">
+            <thead>
+            <tr>
+                <th style="min-width:100px;padding-left: 20px" ng-click="vm.gridModel.serverSortHandler('scatename1', vm.gridModel.sortReverse)">服务类目<span class="" ng-class="{'icon-arrow-up': vm.gridModel.sortReverse['scatename1'],'icon-arrow-down':!vm.gridModel.sortReverse['scatename1']}"></span></th>
+                <th style="min-width:100px;" ng-click="vm.gridModel.serverSortHandler('code', vm.gridModel.sortReverse)">服务编码<span class="" ng-class="{'icon-arrow-up': vm.gridModel.sortReverse['code'],'icon-arrow-down':!vm.gridModel.sortReverse['code']}"></span></th>
+                <th style="min-width:150px;" ng-click="vm.gridModel.serverSortHandler('servername', vm.gridModel.sortReverse)">服务名称<span class="" ng-class="{'icon-arrow-up': vm.gridModel.sortReverse['servername'],'icon-arrow-down':!vm.gridModel.sortReverse['servername']}"></span></th>
+                <th class="f-tar" style="min-width:150px;">服务费</th>
+                <th class="f-tar" style="min-width:50px;">销量</th>
+                <th class="f-tac" style="min-width:150px;">创建时间</th>
+                <th style="min-width:50px;">状态</th>
+                <th class="f-tac" style="min-width:150px;"></th>
+            </tr>
+            </thead><!-- ngIf: !loadingState -->
+            <!--<tbody ng-if="!loadingState" class="ng-scope">&lt;!&ndash; ngRepeat: item in store &ndash;&gt;
+            <tr ng-click="selectItem(item)" ng-class="{'active':item.$active,'striped': $odd}" bindonce="" ng-repeat="item in store" class="ng-scope active">
+                <td><span class="state-unread" bo-text="item.scatename1">养护</span></td>
+                <td>
+                    <div class="img-wrap">&lt;!&ndash; boIf: item.mainphoto &ndash;&gt;&lt;!&ndash; boIf: !item.mainphoto &ndash;&gt;<span class="state-unread default-service-image ng-scope" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><span class="state-unread ng-isolate-scope" cb-truncate-text="养护刹车系统" text-length="10">养护刹车系统</span></div>
+                </td>
+                <td>
+                    <div><p bo-text="item.code"></p></div>
+                </td>
+                <td><span class="state-unread" bo-text="item.serverprice">55.00~88.00</span></td>
+                <td><span class="state-unread"><span bo-text="item.countso">0</span> 笔</span></td>
+                <td><span class="state-unread" bo-text="item.createtime">2017-07-10 16:05:48</span></td>
+                <td><span class="state-unread discontainued" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" bo-text="item.status | formatStatusFilter :'serviceStatus'">停售</span></td>
+                <td><span class="state-unread ng-binding" ng-click="propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'">上架</span>&lt;!&ndash; boIf: item.status == 0 &ndash;&gt;<a ui-sref="product.server.edit({serverid: item.guid})" class="state-unread ng-scope" bo-if="item.status == 0" href="#/product/server/edit/884322753489281024">编辑</a>&lt;!&ndash; ngIf: item.status==1 &ndash;&gt;</td>
+            </tr>&lt;!&ndash; end ngRepeat: item in store &ndash;&gt;
+            <tr ng-click="selectItem(item)" ng-class="{'active':item.$active,'striped': $odd}" bindonce="" ng-repeat="item in store" class="ng-scope striped">
+                <td><span class="state-unread" bo-text="item.scatename1">钣金油漆</span></td>
+                <td>
+                    <div class="img-wrap">&lt;!&ndash; boIf: item.mainphoto &ndash;&gt;&lt;!&ndash; boIf: !item.mainphoto &ndash;&gt;<span class="state-unread default-service-image ng-scope" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><span class="state-unread ng-isolate-scope" cb-truncate-text="换车门内护板" text-length="10">换车门内护板</span></div>
+                </td>
+                <td>
+                    <div><p bo-text="item.code"></p></div>
+                </td>
+                <td><span class="state-unread" bo-text="item.serverprice">111.00~111.00</span></td>
+                <td><span class="state-unread"><span bo-text="item.countso">0</span> 笔</span></td>
+                <td><span class="state-unread" bo-text="item.createtime">2017-06-06 20:48:41</span></td>
+                <td><span class="state-unread in-stock" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" bo-text="item.status | formatStatusFilter :'serviceStatus'">在售</span></td>
+                <td><span class="state-unread ng-binding" ng-click="propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'">下架</span>&lt;!&ndash; boIf: item.status == 0 &ndash;&gt;&lt;!&ndash; ngIf: item.status==1 &ndash;&gt;<span ng-if="item.status==1" class="ng-scope">编辑</span>&lt;!&ndash; end ngIf: item.status==1 &ndash;&gt;</td>
+            </tr>&lt;!&ndash; end ngRepeat: item in store &ndash;&gt;
+            <tr ng-click="selectItem(item)" ng-class="{'active':item.$active,'striped': $odd}" bindonce="" ng-repeat="item in store" class="ng-scope">
+                <td><span class="state-unread" bo-text="item.scatename1">维修</span></td>
+                <td>
+                    <div class="img-wrap">&lt;!&ndash; boIf: item.mainphoto &ndash;&gt;&lt;!&ndash; boIf: !item.mainphoto &ndash;&gt;<span class="state-unread default-service-image ng-scope" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><span class="state-unread ng-isolate-scope" cb-truncate-text="换拆清油底壳内滤网油泥" text-length="10"><span tooltip-trigger="mouseenter" tooltip-placement="top" cb-tooltip="换拆清油底壳内滤网油泥" content-html="false" tooltip-animation="false" class="ng-scope">换拆清油底壳内滤网油...</span></span></div>
+                </td>
+                <td>
+                    <div><p bo-text="item.code"></p></div>
+                </td>
+                <td><span class="state-unread" bo-text="item.serverprice">58.00~58.00</span></td>
+                <td><span class="state-unread"><span bo-text="item.countso">5</span> 笔</span></td>
+                <td><span class="state-unread" bo-text="item.createtime">2017-06-05 10:17:02</span></td>
+                <td><span class="state-unread in-stock" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" bo-text="item.status | formatStatusFilter :'serviceStatus'">在售</span></td>
+                <td><span class="state-unread ng-binding" ng-click="propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'">下架</span>&lt;!&ndash; boIf: item.status == 0 &ndash;&gt;&lt;!&ndash; ngIf: item.status==1 &ndash;&gt;<span ng-if="item.status==1" class="ng-scope">编辑</span>&lt;!&ndash; end ngIf: item.status==1 &ndash;&gt;</td>
+            </tr>&lt;!&ndash; end ngRepeat: item in store &ndash;&gt;
+            <tr ng-click="selectItem(item)" ng-class="{'active':item.$active,'striped': $odd}" bindonce="" ng-repeat="item in store" class="ng-scope striped">
+                <td><span class="state-unread" bo-text="item.scatename1">维修</span></td>
+                <td>
+                    <div class="img-wrap">&lt;!&ndash; boIf: item.mainphoto &ndash;&gt;&lt;!&ndash; boIf: !item.mainphoto &ndash;&gt;<span class="state-unread default-service-image ng-scope" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><span class="state-unread ng-isolate-scope" cb-truncate-text="清洗汽油箱" text-length="10">清洗汽油箱</span></div>
+                </td>
+                <td>
+                    <div><p bo-text="item.code">SADD222</p></div>
+                </td>
+                <td><span class="state-unread" bo-text="item.serverprice">33.00~177.76</span></td>
+                <td><span class="state-unread"><span bo-text="item.countso">0</span> 笔</span></td>
+                <td><span class="state-unread" bo-text="item.createtime">2017-06-03 15:23:27</span></td>
+                <td><span class="state-unread in-stock" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" bo-text="item.status | formatStatusFilter :'serviceStatus'">在售</span></td>
+                <td><span class="state-unread ng-binding" ng-click="propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'">下架</span>&lt;!&ndash; boIf: item.status == 0 &ndash;&gt;&lt;!&ndash; ngIf: item.status==1 &ndash;&gt;<span ng-if="item.status==1" class="ng-scope">编辑</span>&lt;!&ndash; end ngIf: item.status==1 &ndash;&gt;</td>
+            </tr>&lt;!&ndash; end ngRepeat: item in store &ndash;&gt;
+            <tr ng-click="selectItem(item)" ng-class="{'active':item.$active,'striped': $odd}" bindonce="" ng-repeat="item in store" class="ng-scope">
+                <td><span class="state-unread" bo-text="item.scatename1">养护</span></td>
+                <td>
+                    <div class="img-wrap">&lt;!&ndash; boIf: item.mainphoto &ndash;&gt;&lt;!&ndash; boIf: !item.mainphoto &ndash;&gt;<span class="state-unread default-service-image ng-scope" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" bo-if="!item.mainphoto"></span><span class="state-unread ng-isolate-scope" cb-truncate-text="换车灯" text-length="10">换车灯</span></div>
+                </td>
+                <td>
+                    <div><p bo-text="item.code"></p></div>
+                </td>
+                <td><span class="state-unread" bo-text="item.serverprice">111.00~111.00</span></td>
+                <td><span class="state-unread"><span bo-text="item.countso">6</span> 笔</span></td>
+                <td><span class="state-unread" bo-text="item.createtime">2017-06-03 14:33:58</span></td>
+                <td><span class="state-unread in-stock" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" bo-text="item.status | formatStatusFilter :'serviceStatus'">在售</span></td>
+                <td><span class="state-unread ng-binding" ng-click="propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'">下架</span>&lt;!&ndash; boIf: item.status == 0 &ndash;&gt;&lt;!&ndash; ngIf: item.status==1 &ndash;&gt;<span ng-if="item.status==1" class="ng-scope">编辑</span>&lt;!&ndash; end ngIf: item.status==1 &ndash;&gt;</td>
+            </tr>&lt;!&ndash; end ngRepeat: item in store &ndash;&gt;</tbody>--><!-- end ngIf: !loadingState -->
+            <tbody>
+            <tr ng-repeat="item in vm.gridModel.itemList">
+                <td style="padding-left: 20px">
+                    <span class="state-unread" ng-bind="item.scatename1"></span>
+                </td>
+                <td style="max-width: 180px">
+                    <!--<span class="state-unread" ng-bind="item.code"></span>-->
+                    <!--<span class="state-unread" cb-truncate-text="{{item.code}}"></span>-->
+                    <span class="state-unread" simple-truncate-text="{{item.code}}" resize="true"></span>
+                </td>
+                <td>
+                    <div class="img-wrap">
+                        <!--<span class="state-unread" style="width: 24px; height: 20px; overflow: hidden; display: inline-block;" cb-image-hover="{{item.mainphoto}}" ng-if="item.mainphoto">
+                            <img ng-src-i="{{item.mainphoto}}?x-oss-process=image/resize,w_150" alt="">
+                        </span>-->
+                       <!-- <span class="state-unread default-service-image" style="width:24px; height: 20px; overflow: hidden; display: inline-block;" ng-if="!item.mainphoto"></span>-->
+                        <!--<span class="state-unread" cb-truncate-text="{{item.servername}}" text-length="10"></span>-->
+                        <span class="state-unread" simple-truncate-text="{{item.servername}}" resize="true"></span>
+                    </div>
+                </td>
+
+                <td class="f-tar">
+                    <span class="state-unread" ng-bind="item.serverprice"></span>
+                </td>
+                <td class="f-tar">
+                    <span class="state-unread"><span ng-bind="item.countso"></span> 笔</span>
+                </td>
+                <td class="f-tac">
+                    <span class="state-unread" ng-bind="item.createtime.slice(0,10)"></span>
+                </td>
+                <td>
+                    <span class="state-unread" ng-class="{'in-stock':item.status==1,'discontainued':item.status==0}" ng-bind="item.status | formatStatusFilter :'serviceStatus'"></span>
+                </td>
+                <td class="f-tac">
+                    <span class="state-unread service-status edit" ng-click="vm.gridModel.config.propsParams.changeStatus(item)" ng-bind="item.status ==0?'上架':'下架'"></span>
+                    <a class="state-unread service-status edit" ui-sref="product.server.edit({serverid: item.guid})" class="state-unread edit" ng-if="item.status == 0">编辑</a>
+                    <span class="state-unread service-status edit" ng-if="item.status==1" cb-popover popover-placement="top" popover-template-id="edit-tips.html" popover-animation="false" style="color: #999;">编辑</span>
+                    <a class="state-unread edit" ng-click="vm.gotoDetail(item.guid)">&nbsp;&nbsp;详情</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="grid-nodata" ng-if="!vm.gridModel.loadingState && !vm.gridModel.itemList.length">
+            <span><i class="icon-not-data"></i>暂无数据</span>
+        </div>
+        <div class="grid-loading" ng-if="vm.gridModel.loadingState">
+            <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+        </div>
+
+        <div class="grid-footer" ng-if="vm.gridModel.itemList.length" style="padding-bottom: 60px">
+            <div class="grid-paging f-fr" simple-pagination previous-text="&lt;" next-text="&gt;"
+                 on-select-page="vm.gridModel.pageChanged(page)" pagination-info="vm.gridModel.paginationinfo"
+                 rotate="false" boundary-link-numbers="true" force-ellipses="true" show-page-goto="true"></div>
+            <!--<div class="grid-paging" simple-pagination previous-text="&lt;" next-text="&gt;" on-select-page="vm.gridModel.pageChanged(page)" pagination-info="vm.gridModel.paginationinfo" max-size="6" page-info-show="false" page-goto-show="false"></div>-->
+        </div>
+        <!--表格区域 E-->
+
+
+        <!--<br>
+        <br>
+        <div style="margin-bottom:60px; width: 100%; height: 400px;" ng-if="vm.gridModel.itemList">
+          <table class="w-table">
+            <thead>
+            <tr>
+              <th style="min-width:150px;">属性</th>
+              <th style="min-width:100px;">工时</th>
+              <th style="min-width:100px;">单价</th>
+              <th style="min-width:102px;">工时费</th>
+              <th style="min-width:100px;">销量</th>
+              <th style="min-width:200px;">适用车型</th>
+              <th style="min-width:80px;">启用</th>
+              <th style="min-width:120px;">描述</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in vm.items.serverSkus">
+              <td><span class="state-unread" ng-bind="item.$skuvalues"></span></td>
+              <td><div style="position: relative;"><span class="state-unread" ng-bind="item.servertime | number : '1'"></span> <span cb-access-control="chebian:store:product:goods:edit" simple-editable editor="item.servertime" editor-handler="vm.gridModel2.editorhandler(data, item, 'servertime', vm.items.guid)" data-max="1000" data-min="0" data-step="0.1" data-placeholder="输入1-999工时"></span></div></td>
+              <td><span class="state-unread" ng-bind="item.serverprice | moneyformatFilter"></span></td>
+              <td><span class="state-unread" ng-bind="item.$servertimeprice | number : '2'"></span></td>
+              <td><span><span class="state-unread" ng-bind="item.countorder | number : '0'"></span> 笔</span></td>
+              <td><div cb-vehicle-show  store="item.motobrandids"></div></td>
+              <td><div cb-switch checkstatus="item.status"
+                       ng-click="vm.gridModel2.statusItem(item, vm.items.guid)"></div></td>
+              <td><span class="state-unread" cb-truncate-text="{{item.skudescription}}" text-length="8"></span></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>-->
     </div>
-  </div>
 </div>
+
+<script type="text/ng-template" id="edit-tips.html">
+    <p>如需编辑，请先下架。</p>
+</script>

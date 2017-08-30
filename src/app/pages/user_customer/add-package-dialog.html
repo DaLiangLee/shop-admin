@@ -9,7 +9,7 @@
         <h2 class="h3 f-tac"><span ng-bind="item.realname"></span> （<span ng-bind="item.mobile | numberFormatFilter"></span>）</h2>
         <br>
         <div class="form-group f-cb">
-          <label class="control-label"><span class="icon-required text-red"></span>套餐卡：</label>
+          <label class="control-label"><span class="icon-required text-danger"></span>套餐卡：</label>
           <div class="b-w-8">
             <div simple-select="id,name" store="selectModel.store" select="selectModel.select" select-handler="selectModel.handler(data)" class="package-card-select"></div>
           </div>
@@ -28,21 +28,22 @@
           <div class="b-w-8">
             <div>
               <span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>
-              <span ng-if="selectRequired.selectModel" class="input-control readonly package-price" style="border: none; background: none; box-shadow: none; padding-left: 0;">￥ <span ng-bind="item.price | moneyformatFilter"></span></span>
+              <span ng-if="selectRequired.selectModel" class="input-control readonly package-price" style="border: none; background: none; box-shadow: none; padding-left: 0;">￥<span ng-bind="item.price | moneyformatFilter"></span></span>
             </div>
           </div>
         </div>
         <div class="form-group f-cb">
-          <label class="control-label"><span class="icon-required text-red"></span>有效天数：</label>
+          <label class="control-label"><span class="icon-required text-danger"></span>有效天数：</label>
           <div class="b-w-8">
             <span ng-if="!selectRequired.selectModel" class="input-control readonly" style="border: none; background: none; box-shadow: none;">请先选择套餐卡</span>
             <div ng-if="selectRequired.selectModel">
+                <!--ng-disabled="baseData.$permanent"-->
               <input type="text" class="input-control recharge-input" name="rechargeamount"
-                     ng-disabled="baseData.$permanent"
+
                      ng-model="baseData.expireDay"
                      number-range
                      ng-change="setExpireDate(baseData.expireDay, false)" maxlength="5"> 天
-              <label style="margin-left: 10px; cursor: pointer; font-weight: 500;"><input type="checkbox" name="permanent" ng-change="setExpireDate('', true)" ng-model="baseData.$permanent" ng-disabled="baseData.expireDay"> 永久有效</label>
+              <label style="margin-left: 20px; cursor: pointer; font-weight: 500;"><input type="checkbox" style="margin-top: 0;" name="permanent" ng-checked="!baseData.expireDay" ng-click="setExpireDate('', true)" ng-model="baseData.$permanent"> 永久有效</label>
             </div>
             <p ng-if="expireDate" class="text-muted">至 <span ng-bind="expireDate | date: 'yyyy-MM-dd'"></span></p>
           </div>
@@ -135,7 +136,7 @@
           <span class="final-price-icon">￥</span><span class="final-price" ng-bind="baseData.$chargeprice | number: 2"></span>
         </div>
 
-        <div><p class="f-tac text-red confirm-info">您确定收款吗？</p></div>
+        <div><p class="f-tac text-danger confirm-info">您确定收款吗？</p></div>
       </form>
     </div>
   </div>

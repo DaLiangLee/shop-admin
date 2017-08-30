@@ -1,0 +1,280 @@
+<!-- 新增车辆 -->
+<div ng-if="!isEdit">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">添加车辆</h5>
+    </div>
+
+    <div class="modal-body">
+        <!--<div ng-if="isLoadData">-->
+            <!--<div class="form-group">
+                <label class="control-label">车辆信息：</label>
+                <div class="control-content">
+                    <ul class="list-inline licence-list" dg-click="currentSelect($event, item)" selector="li .list">
+                        <li ng-repeat="item in dataLists" ng-class="{'active': item.$current}">
+                            <div class="list">
+                                <div class="logo">
+                                    <img ng-src="{{item.$logo}}" alt="">
+                                    <span class="imeienabled" ng-class="{'imeienabled1': item.imeienabled == 1, 'imeienabled0': item.imeienabled == 0, 'imeienabledno': !item.imei && !item.imeienabled}"></span>
+                                </div>
+                                <p class="licence" ng-bind="item.licence"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="add" user-add-vehicle-dialog="add" item="" item-handler="vehicleHandler(data)" title="添加新车">
+                                <span class="icon-plus"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>-->
+        <form class="form-horizontal" autocomplete="off" role="form" novalidate name="motor">
+                <div class="form-group">
+                    <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>车牌号：</label>
+                    <div class="control-content">
+                        <input type="text" style="display: none;" ng-model="item.licence" ng-pattern="/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/" name="licence" ng-required="true">
+                        <div cb-select-license="required" update-licence="updateLicence(data)" select="item.licence"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>车型：</label>
+                    <div class="control-content input-w-280">
+                        <input type="hidden" ng-model="item.model" name="model" ng-required="true">
+                        <p class="input-control" style="max-height: 34px">
+                            <span ng-bind="item.model" title="{{item.model}}" style="display: inline-block;width: 200px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden"></span>
+                            <i user-add-vehicle-dialog="add" item-handler="vehicleHandler(data)" style="float: right;cursor: pointer;color: #038ae3;">选择</i>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">发动机号：</label>
+                    <div class="control-content input-w-280">
+                        <input type="text" class="input-control" name="realname" ng-model="item.enginenumber"
+                               placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">VIN码：</label>
+                    <div class="control-content input-w-280">
+                        <input type="text" class="input-control" name="realname" ng-model="item.vin"
+                               placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                    </div>
+                </div>
+
+                <div class="form-group cut-part">
+                    <label class="control-label">当前里程：</label>
+                    <div class="control-content">
+                        <input type="text" class="input-control mileage input-w-140" name="realname" ng-model="item.totalmile" maxlength="9"
+                               placeholder="请输入" cb-placeholder="" number-range="">km
+                    </div>
+                </div>
+                <!--<div class="form-group">
+                    <label class="control-label">剩余保养里程（km）：</label>
+                    <div class="control-content w5">
+                        <input type="text" class="input-control" name="countdownmiles" ng-model="item.countdownmiles" maxlength="9"
+                               placeholder="请输入剩余保养里程" cb-placeholder="" number-range="">
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label class="control-label">购车日期：</label>
+                    <div class="control-content input-w-280">
+                        <div cb-datepicker="" is-open="date1.opened" datepicker-options="date1.options" datepicker-open="date1.open()" datepicker-model="item.buydate"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">保险公司：</label>
+                    <div class="control-content input-w-280">
+                        <div simple-select="id,companyname" store="insuranceModel.store" select="item.insuranceid" placeholder="请选择"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">上次年检日期：</label>
+                    <div class="control-content input-w-280">
+                        <div cb-datepicker="" is-open="date2.opened" datepicker-options="date2.options" datepicker-open="date2.open()" datepicker-model="item.lastcheckdate"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">保险购买日期：</label>
+                    <div class="control-content input-w-280">
+                        <div cb-datepicker="" is-open="date3.opened" datepicker-options="date3.options" datepicker-open="date3.open()" datepicker-model="item.lastinsurancedate"></div>
+                    </div>
+                </div>
+
+                <div class="form-group cut-part">
+                    <label class="control-label">备注：</label>
+                    <div class="control-content input-w-280">
+                        <input type="text" class="input-control" name="realname" ng-model="item.remarks"
+                               placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                    </div>
+                </div>
+
+                <!--<div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="control-content">
+                        如需添加多辆车，请前往 会员详情 页面添加。
+                    </div>
+                </div>-->
+            <div class="alert alert-danger f-tac" ng-if="motor.licence.$error.pattern">车牌号不正确</div>
+            <!--<div class="alert alert-danger f-tac" ng-if="isClose">
+                当前输入内容未保存，是否取消？
+            </div>-->
+        </form>
+        <!--</div>-->
+    </div>
+
+    <div class="modal-footer">
+        <div class="inline-block f-tac" ng-if="!isClose">
+            <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="motor.$invalid" ng-click="saveData()" style="margin-right: -10px">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+            　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="cancel()">取　消</button>
+
+        </div>
+        <!--<div class="inline-block f-tac" ng-if="isClose">
+            <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-click="sureClose()" style="margin-right: 30px">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="cancelClose()">取&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+        </div>-->
+    </div>
+</div>
+
+<!--编辑车辆-->
+
+<div ng-if="isEdit">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">编辑车辆</h5>
+    </div>
+
+    <div class="modal-body">
+        <!--<div ng-if="isLoadData">-->
+        <!--<div class="form-group">
+            <label class="control-label">车辆信息：</label>
+            <div class="control-content">
+                <ul class="list-inline licence-list" dg-click="currentSelect($event, item)" selector="li .list">
+                    <li ng-repeat="item in dataLists" ng-class="{'active': item.$current}">
+                        <div class="list">
+                            <div class="logo">
+                                <img ng-src="{{item.$logo}}" alt="">
+                                <span class="imeienabled" ng-class="{'imeienabled1': item.imeienabled == 1, 'imeienabled0': item.imeienabled == 0, 'imeienabledno': !item.imei && !item.imeienabled}"></span>
+                            </div>
+                            <p class="licence" ng-bind="item.licence"></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="add" user-add-vehicle-dialog="add" item="" item-handler="vehicleHandler(data)" title="添加新车">
+                            <span class="icon-plus"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>-->
+        <form class="form-horizontal" autocomplete="off" role="form" novalidate name="motor">
+            <div class="form-group">
+                <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>车牌号：</label>
+                <div class="control-content">
+                    <input type="text" style="display: none;" ng-model="editItem.licence" ng-pattern="/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/" name="licence" ng-required="true">
+                    <div cb-select-license="required" update-licence="updateLicence(data)" select="editItem.licence"></div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label"><span class="text-danger"><i class="icon-required"></i></span>车型：</label>
+                <div class="control-content input-w-280">
+                    <input type="hidden" ng-model="editItem.model" name="model" ng-required="true">
+                    <p class="input-control" style="max-height: 34px">
+                        <span ng-bind="editItem.model" title="{{editItem.model}}" style="display: inline-block;width: 200px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden"></span>
+                        <i user-add-vehicle-dialog="edit" item="editItem" item-handler="vehicleHandler(data)" style="float: right;cursor: pointer;color: #038ae3;">选择</i>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">发动机号：</label>
+                <div class="control-content input-w-280">
+                    <input type="text" class="input-control" name="realname" ng-model="editItem.enginenumber"
+                           placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">VIN码：</label>
+                <div class="control-content input-w-280">
+                    <input type="text" class="input-control" name="realname" ng-model="editItem.vin"
+                           placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                </div>
+            </div>
+
+            <div class="form-group cut-part">
+                <label class="control-label">当前里程：</label>
+                <div class="control-content">
+                    <input type="text" class="input-control mileage input-w-140" name="realname" ng-model="editItem.totalmile" maxlength="9"
+                           placeholder="请输入" cb-placeholder="" number-range="">km
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="control-label">剩余保养里程（km）：</label>
+                <div class="control-content w5">
+                    <input type="text" class="input-control" name="countdownmiles" ng-model="item.countdownmiles" maxlength="9"
+                           placeholder="请输入剩余保养里程" cb-placeholder="" number-range="">
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="control-label">购车日期：</label>
+                <div class="control-content input-w-280">
+                    <div cb-datepicker="" is-open="date1.opened" datepicker-options="date1.options" datepicker-open="date1.open()" datepicker-model="editItem.buydate"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">保险公司：</label>
+                <div class="control-content input-w-280">
+                    <div simple-select="id,companyname" store="insuranceModel.store" select="editItem.insuranceid" placeholder="请选择"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">上次年检日期：</label>
+                <div class="control-content input-w-280">
+                    <div cb-datepicker="" is-open="date2.opened" datepicker-options="date2.options" datepicker-open="date2.open()" datepicker-model="editItem.lastcheckdate"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">保险购买日期：</label>
+                <div class="control-content input-w-280">
+                    <div cb-datepicker="" is-open="date3.opened" datepicker-options="date3.options" datepicker-open="date3.open()" datepicker-model="editItem.lastinsurancedate"></div>
+                </div>
+            </div>
+
+            <div class="form-group cut-part">
+                <label class="control-label">备注：</label>
+                <div class="control-content input-w-280">
+                    <input type="text" class="input-control" name="realname" ng-model="editItem.remarks"
+                           placeholder="请输入" cb-placeholder="" cb-string-range value-max="20">
+                </div>
+            </div>
+
+
+            <div class="alert alert-danger f-tac" ng-if="motor.licence.$error.pattern">车牌号不正确</div>
+            <!--<div class="alert alert-danger f-tac" ng-if="isClose">
+                当前输入内容未保存，是否取消？
+            </div>-->
+        </form>
+        <!--</div>-->
+    </div>
+
+    <div class="modal-footer">
+        <div class="inline-block f-tac" ng-if="!isClose">
+            <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="motor.$invalid" ng-click="editData()" style="margin-right: 20px">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+            <!--ng-disabled="customer.$invalid"　　-->
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="cancel()">取&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+        </div>
+
+        <!--<div class="inline-block f-tac" ng-if="isClose">
+
+            <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-click="sureClose()" style="margin-right: 30px">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="cancelClose()">取&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+        </div>-->
+        <!--<div class="inline-block f-tac" ng-if="interception">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>
+            　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+        </div>-->
+    </div>
+</div>

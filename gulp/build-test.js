@@ -48,7 +48,7 @@ gulp.task('htmlTest', ['inject', 'partialsTest'], function () {
     .pipe($.ngAnnotate())
     .pipe(jsFilter.restore)
     .pipe(cssFilter)
-    .pipe($.replace('../../bower_components/bootstrap-sass/assets/fonts/bootstrap/', '../fonts/'))
+    .pipe($.replace('../../../assets/', '../assets/'))
     .pipe($.cssnano())
     .pipe(cssFilter.restore)
     .pipe($.revReplace())
@@ -94,7 +94,7 @@ gulp.task('images', function () {
     .pipe($.imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
-      use: [pngquant()]
+      use: []
     }))
     .pipe(gulp.dest('images'));
 });

@@ -1,9 +1,8 @@
 <div>
-  <div class="radio-inline" ng-repeat="list in items.list">
-    <label>
-      <input type="radio" cb-name="items.name" ng-change="handler()" ng-model="searchParams[items.name]" ng-value="list.id">
-      {{list.label}}
-    </label>
-    <i ng-if="list.tooltip" tooltip="{{list.tooltip.text}}" tooltip-append-to-body="true" tooltip-placement="{{list.tooltip.dir}}" tooltip-animation="false" class="icon-question"></i>
+  <div class="simple-search-radio">
+    <div class="simple-search-radio-list" ng-repeat="list in items.list">
+      <div simple-radio="" radio-label="list.label" radio-checked="list.checked" radio-value="list.id" on-change="handler(data, list)"></div>
+      <i ng-if="list.tooltip" tooltip="{{list.tooltip.text}}" tooltip-append-to-body="true" tooltip-placement="{{list.tooltip.dir}}" tooltip-animation="false" class="icon-question"></i>
+    </div>
   </div>
 </div>

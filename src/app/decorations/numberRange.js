@@ -64,7 +64,7 @@
         return value;
       }
       var minus = "",
-        length = 16;
+          length = 16;
       // 是否是负数
       /^-\d*/g.test(value) && (minus += "-", length += 1);
       value = minus + value.replace(/[^\d.]/g, "");
@@ -99,12 +99,12 @@
          * 支持加减按钮
          */
         var integer = true,   // 整型 or 负数
-          rangeEnabled = !_.isUndefined(iAttrs.rangeEnabled),   // 是否需要验证
+          rangeEnabled = iAttrs.rangeEnabled === "true",   // 是否需要验证
           step = 1,      // 步长
           ellipsis = 0,  // 是否有小数点，长度是多少
           valueMin = iAttrs.valueMin * 1 || 0,  // 最小值
-          valueMax = iAttrs.valueMax * 1 || Number.MAX_VALUE,  // 最大值
-          amount = _.isUndefined(iAttrs.numberRange);   // 支持加减按钮
+          valueMax = iAttrs.valueMax * 1 || Number.MAX_VALUE;  // 最大值
+          // amount = _.isUndefined(iAttrs.numberRange);   // 支持加减按钮
 
         /**
          * 保留几位小数
@@ -169,7 +169,7 @@
           /**
            * 检查是否有-，如果有就是负数，如果没有就是正数
            */
-
+          console.log(rangeEnabled)
           if (rangeEnabled) {
             if (value !== "-") {
               if (integer) {
@@ -178,19 +178,19 @@
                 flag = NUMBER_FLOAT_REGULAR.test(value) && (valueMin <= result && result <= valueMax);
               }
               ngModelCtrl.$setValidity("numberRange", flag);
+              console.log(flag, value)
               return value;
             } else {
+                console.log(2)
               ngModelCtrl.$setValidity("numberRange", false);
               return undefined;
             }
           } else {
+              console.log(3)
             ngModelCtrl.$setValidity("numberRange", true);
             return value;
           }
         });
-
-        if (amount) {
-        }
 
         iElement.on('blur', function () {
           if (!_.isNaN(parseFloat(ngModelCtrl.$viewValue)) && ellipsis > 0) {

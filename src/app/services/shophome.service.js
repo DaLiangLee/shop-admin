@@ -34,18 +34,6 @@
     this.setInfo = function(value) {
       shopInfo.data = value;
       shopInfo.countIsshow = value.$countIsshow;
-      /*if (_.isUndefined(value.countIsshow) && _.isUndefined(value.$countIsshow)) {
-        console.log('111');
-        shopInfo.data = value;
-      } else if (_.isUndefined(value.countIsshow) && !_.isUndefined(value.$countIsshow)){
-        console.log('222');
-        shopInfo.data = value;
-        shopInfo.countIsshow = value.$countIsshow;
-      } else {
-          console.log('333');
-          shopInfo = value;
-          console.log('no');
-      }*/
     }
 
   }

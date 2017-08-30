@@ -38,6 +38,7 @@
       tbody {
         td {
           height: 60px;
+          padding-right: 20px;
         }
         tr:hover {
           background-color: #fafafa;
@@ -62,7 +63,6 @@
       padding-left: 10px;
     }
     .icon-remove_circle {
-      color: #555;
       cursor: pointer;
       &:hover {
         color: red;
@@ -79,9 +79,6 @@
       width: 97px;
       float: right;
       text-align: right;
-      &:last-child {
-        margin-right: 16px;
-      }
     }
 
     .alert-container {
@@ -163,27 +160,37 @@
   }
 }
 
-.package-popover + .popover {
-  max-width: 350px;
-  width: 350px;
+.package-popover.package-item + .popover {
+  /*max-width: 350px;
+  width: 350px;*/
+  max-width: 500px;
+  width: 500px;
   margin-left: 15px;
 }
 
+// 套餐卡悬浮框
 #package-info {
   table {
     text-align: left;
     table-layout: fixed;
 
-    tr.info-body:hover {
-      background-color: #f0f0f0;
+    tr:first-child:hover {
+      background-color: transparent;
     }
+
+    //tr:not(::first-child):hover {
+    //  background-color: #f0f0f0;
+    //}
   }
 
   .info-header {
-    padding-left: 5px;
-    font-weight: 400;
+    padding-left: 0;
+    &:nth-of-type(2) {
+      text-align: left;
+    }
+    &:nth-of-type(4),
     &:last-child {
-      width: 82px;
+      width: 80px;
     }
   }
   .info-item {
@@ -195,24 +202,85 @@
     &:first-child {
       width: 55px;
     }
+    &:nth-of-type(2) {
+      padding-left: 0;
+    }
+
+    &:nth-of-type(3),
+    &:nth-of-type(4),
+    &:nth-of-type(5) {
+      padding-right: 0;
+      text-align: right;
+    }
+
     &:nth-child(2) {
+      text-align: left;
       width: 205px;
       max-width: 205px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
   }
+
+
+
+  th {
+    font-weight: 700;
+  }
+  th:first-child {
+    width: 50px;
+  }
+  td:first-child {
+    padding-left: 0;
+  }
+
 }
 
 .markting-package-part {
-  background-color: #F2F2F2;
-  height: 100%;
+  background-color: #d7d7d7;
+  min-height: 100%;
+  padding: 15px;
+  padding-bottom: 40px;
+  
+  .panel-header {
+    padding: 20px 0 20px 30px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .package-list-popover {
+    .popover-content {
+      padding: 4px 5px 4px 8px;
+      color: #666666;
+      font-size: 12px;
+    }
+  }
+  .panel-body {
+    background-color: #ffffff;
+    padding-bottom: 20px;
+    margin-bottom: 100px;
+
+    .text-muted + .popover .popover-inner {
+      width: auto;
+    }
+    .popover-inner {
+      width: 600px;
+    }
+
+    tr:hover {
+      background-color: #f0f0f0;
+    }
+  }
 
   .grid-header {
+    padding-top: 20px;
     padding-bottom: 20px;
     background: #ffffff;
+    margin-left: 30px;
     margin-bottom: 0;
+    margin-top: 3px;
 
     div.f-fl {
       width: 100%;
@@ -260,38 +328,51 @@
     border-bottom: none;
   }
   th {
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     color: #333333;
 
+    &:nth-of-type(1) {
+      padding-left: 30px;
+      width: 307px;
+    }
+
+    &:nth-of-type(2),
     &:nth-of-type(3),
     &:nth-of-type(4),
     &:nth-of-type(5),
-    &:nth-of-type(6),
-    &:nth-of-type(7),
-    &:nth-of-type(8) {
+    &:nth-of-type(6) {
       text-align: right;
+    }
+
+    &:nth-of-type(7) {
+      padding-left: 30px;
+    }
+
+    &:nth-of-type(8) {
+      width: 100px;
     }
   }
   tbody td {
     &:first-child {
-      width: 70px;
+      //width: 70px;
+      padding-left: 30px;
     }
-    height: 60px;
+    height: 40px;
     background-color: #ffffff;
 
+    &:nth-of-type(2),
     &:nth-of-type(3),
     &:nth-of-type(4),
     &:nth-of-type(5),
-    &:nth-of-type(6),
-    &:nth-of-type(7),
-    &:nth-of-type(8) {
+    &:nth-of-type(6) {
       text-align: right;
+      padding-right: 10px;
     }
-  }
 
-  tbody tr:hover {
-    background-color: #f0f0f0;
+    &:nth-of-type(7) {
+      padding-left: 20px;
+    }
   }
 
   .package-item {
@@ -302,6 +383,7 @@
     display: inline-block;
     margin-left: 10px;
   }
+
 }
 
 .w-table > tbody tr.info-body:nth-of-type(even) {

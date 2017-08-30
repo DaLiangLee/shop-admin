@@ -6,8 +6,8 @@
 
 
   angular
-    .module('shopApp')
-    .config(routerConfig);
+      .module('shopApp')
+      .config(routerConfig);
 
   /** @ngInject */
   function routerConfig($stateProvider, $urlRouterProvider) {
@@ -17,66 +17,66 @@
      * @param when(name, router)    指定路由(当前状态,指定路由)
      */
     $urlRouterProvider
-      .otherwise('/notfound')         // 页面找不到
-      // .when('', '/desktop/home')       // 工作台
-      .when('', '/trade/porder/list/1')   // 订单管理
-      .when('/', '/desktop/home')       // 工作台
-      .when('/desktop', '/desktop/home')       // 工作台
-      .when('/desktop/', '/desktop/home')       // 工作台
-      .when('/feedback', '/system/feedback/feedback') // 建议反馈
-      .when('/store', '/store/shop/')      // 店铺管理
-      .when('/store/', '/store/shop/')
-      .when('/store/shop', '/store/shop/home')
-      .when('/store/shop/', '/store/shop/home')
-      .when('/store/shop/home', '/store/shop/home/info')
-      .when('/store/shop/home/', '/store/shop/home/info')
-      .when('/product', '/notfound')                  // 抛出异常
-      .when('/product/', '/notfound')                 // 抛出异常
-      .when('/product/goods', '/product/goods/list/')     // 产品管理
-      .when('/product/goods/', '/product/goods/list/')
-      .when('/product/goods/list', '/product/goods/list/1')
-      .when('/product/goods/list/', '/product/goods/list/1')
-      .when('/product/goods/list/1', '/product/goods/list/1/0')
-      .when('/product/goods/list/1/', '/product/goods/list/1/0')
-      .when('/product/server', '/product/server/list/')     // 产品管理
-      .when('/product/server/', '/product/server/list/')
-      .when('/product/server/list', '/product/server/list/1')
-      .when('/product/server/list/', '/product/server/list/1')
-      .when('/product/server/list/1', '/product/server/list/1/1')
-      .when('/product/server/list/1/', '/product/server/list/1/1')
-      .when('/trade/porder', '/trade/porder/list/')              // 商品订单管理
-      .when('/trade/porder/', '/trade/porder/list/')
-      .when('/trade/porder/list', '/trade/porder/list/1')
-      .when('/trade/porder/list/', '/trade/porder/list/1')
-      .when('/user/grades', '/user/grades/list')                 // 会员等级
-      .when('/user/grades/', '/user/grades/list')
-      .when('/member', '/member/employee/list/')                  // 服务管理
-      .when('/member/', '/member/employee/list/')
-      .when('/member/employee', '/member/employee/list/')
-      .when('/member/employee/', '/member/employee/list/')
-      .when('/member/employee/list', '/member/employee/list/1')
-      .when('/member/employee/list/', '/member/employee/list/1')
-      .when('/system', '/notfound')                  // 抛出异常
-      .when('/system/', '/notfound')                 // 抛出异常
-      .when('/system/role', '/system/role/list/')    // 角色管理
-      .when('/system/role/', '/system/role/list/')
-      .when('/system/role/list', '/system/role/list/1')
-      .when('/system/role/list/', '/system/role/list/1')
-      .when('/system/role/list/', '/system/role/list/1')
-      .when('/markting', '/notfound')
-      .when('/markting/', '/notfound')
-      .when('/markting/debitcard', '/markting/debitcard/list')   // 店铺活动
-      .when('/markting/debitcard/', '/markting/debitcard/list')
-      .when('/finance', '/notfound')
-      .when('/finance/', '/notfound')
-      .when('/finance/journal', '/finance/journal/list/')            // 收支明细
-      .when('/finance/journal/', '/finance/journal/list/')
-      .when('/finance/journal/list', '/finance/journal/list/1')
-      .when('/finance/journal/list/', '/finance/journal/list/1')
-      .when('/finance/debitcard', '/finance/debitcard/list/')   // 储值卡账单
-      .when('/finance/debitcard/', '/finance/debitcard/list/')
-      .when('/finance/debitcard/list', '/finance/debitcard/list/1')
-      .when('/finance/debitcard/list/', '/finance/debitcard/list/1');
+        .otherwise('/notfound')         // 页面找不到
+        // .when('', '/desktop/home')       // 工作台
+        .when('', '/trade/porder/list/1')   // 订单管理
+        .when('/', '/desktop/home')       // 工作台
+        .when('/desktop', '/desktop/home')       // 工作台
+        .when('/desktop/', '/desktop/home')       // 工作台
+        .when('/feedback', '/system/feedback/feedback') // 建议反馈
+        .when('/store', '/store/shop/')      // 店铺管理
+        .when('/store/', '/store/shop/')
+        .when('/store/shop', '/store/shop/home')
+        .when('/store/shop/', '/store/shop/home')
+        .when('/store/shop/home', '/store/shop/home/info')
+        .when('/store/shop/home/', '/store/shop/home/info')
+        .when('/product', '/notfound')                  // 抛出异常
+        .when('/product/', '/notfound')                 // 抛出异常
+        .when('/product/goods', '/product/goods/list')     // 商品管理
+        .when('/product/goods/', '/product/goods/list')
+        .when('/product/goods/list', '/product/goods/list/1')
+        .when('/product/goods/list/', '/product/goods/list/1')
+        .when('/product/server', '/product/server/list/')     // 产品管理
+        .when('/product/server/', '/product/server/list/')
+        .when('/product/server/list', '/product/server/list/1')
+        .when('/product/server/list/', '/product/server/list/1')
+        .when('/trade/porder', '/trade/porder/list/')              // 商品订单管理
+        .when('/trade/porder/', '/trade/porder/list/')
+        .when('/trade/porder/list', '/trade/porder/list/1')
+        .when('/trade/porder/list/', '/trade/porder/list/1')
+        .when('/user/grades', '/user/grades/list')                 // 会员等级
+        .when('/user/grades/', '/user/grades/list')
+        .when('/user/am', '/user/am/list')                 // 智能提醒
+        .when('/user/am/', '/user/am/list')
+        .when('/member', '/member/employee/list/')                  // 服务管理
+        .when('/member/', '/member/employee/list/')
+        .when('/member/employee', '/member/employee/list/')
+        .when('/member/employee/', '/member/employee/list/')
+        .when('/member/employee/list', '/member/employee/list/1')
+        .when('/member/employee/list/', '/member/employee/list/1')
+        .when('/system', '/notfound')                  // 抛出异常
+        .when('/system/', '/notfound')                 // 抛出异常
+        .when('/system/role', '/system/role/list/')    // 角色管理
+        .when('/system/role/', '/system/role/list/')
+        .when('/system/role/list', '/system/role/list/1')
+        .when('/system/role/list/', '/system/role/list/1')
+        .when('/system/role/list/', '/system/role/list/1')
+        .when('/markting', '/notfound')
+        .when('/markting/', '/notfound')
+        .when('/markting/debitcard', '/markting/debitcard/list')   // 店铺活动
+        .when('/markting/debitcard/', '/markting/debitcard/list')
+        .when('/markting/jk', '/markting/jk/list')   // 积客券
+        .when('/markting/jk/', '/markting/jk/list')
+        .when('/finance', '/notfound')
+        .when('/finance/', '/notfound')
+        .when('/finance/journal', '/finance/journal/list/')            // 收支明细
+        .when('/finance/journal/', '/finance/journal/list/')
+        .when('/finance/journal/list', '/finance/journal/list/1')
+        .when('/finance/journal/list/', '/finance/journal/list/1')
+        .when('/finance/debitcard', '/finance/debitcard/list/')   // 储值卡账单
+        .when('/finance/debitcard/', '/finance/debitcard/list/')
+        .when('/finance/debitcard/list', '/finance/debitcard/list/1')
+        .when('/finance/debitcard/list/', '/finance/debitcard/list/1');
 
     /**
      * 路由配置
@@ -186,15 +186,23 @@
         title: '商品管理',
         permission: "chebian:store:product:goods:view"
       })
-      .state('product.goods.list', {     // 商品管理
-        url: '/list/:page/:remove?keyword&pcateid1&salenums0&salenums1&stock0&stock1&saleprice0&saleprice1&shelflife0&shelflife1',
+      .state('product.goods.list', {     // 商品管理 列表
+        url: '/list/:page?remove&keyword&pcateid1&salenums0&salenums1&stock0&stock1&saleprice0&saleprice1&shelflife0&shelflife1',
         templateUrl: 'app/pages/product_goods/list.html',
         controller: 'ProductGoodsListController',
         controllerAs: 'vm',
         title: '商品管理',
         permission: "chebian:store:product:goods:view"
       })
-      .state('product.goods.add', {     // 商品管理
+      .state('product.goods.view', {     // 商品管理 视图
+        url: '/view/:page?remove?productid&keyword&pcateid1&salenums0&salenums1&stock0&stock1&saleprice0&saleprice1&shelflife0&shelflife1',
+        templateUrl: 'app/pages/product_goods/view.html',
+        controller: 'ProductGoodsViewController',
+        controllerAs: 'vm',
+        title: '商品管理',
+        permission: "chebian:store:product:goods:view"
+      })
+      .state('product.goods.add', {     // 商品管理 新增商品
         url: '/add',
         templateUrl: 'app/pages/product_goods/change.html',
         controller: 'ProductGoodsChangeController',
@@ -202,7 +210,7 @@
         title: '添加商品',
         permission: "chebian:store:product:goods:add"
       })
-      .state('product.goods.edit', {     // 编辑商品
+      .state('product.goods.edit', {     // 编辑商品 编辑商品
         url: '/edit/:pskuid',
         templateUrl: 'app/pages/product_goods/change.html',
         controller: 'ProductGoodsChangeController',
@@ -216,10 +224,18 @@
         title: '服务管理',
         permission: "chebian:store:product:server:view"
       })
-      .state('product.server.list', {     // 服务项目管理
-        url: '/list/:page/:status?keyword&scateid1&sumserverorder0&sumserverorder1&serverprice0&serverprice1&shelflife0&shelflife1',
+      .state('product.server.list', {     // 服务项目列表视图
+        url: '/list/:page?status&keyword&scateid1&sumserverorder0&sumserverorder1&serverprice0&serverprice1&shelflife0&shelflife1',
         templateUrl: 'app/pages/product_server/list.html',
         controller: 'ProductServerListController',
+        controllerAs: 'vm',
+        title: '服务管理',
+        permission: "chebian:store:product:server:view"
+      })
+      .state('product.server.detail', {     // 服务项目详情视图
+        url: '/detail/:page?status&keyword&scateid1&sumserverorder0&sumserverorder1&serverprice0&serverprice1&shelflife0&shelflife1&serverid',
+        templateUrl: 'app/pages/product_server/detail.html',
+        controller: 'ProductServerViewController',
         controllerAs: 'vm',
         title: '服务管理',
         permission: "chebian:store:product:server:view"
@@ -283,12 +299,20 @@
         permission: "chebian:store:trade:porder:view"
       })
       .state('trade.order.list', {      // 订单管理列表
-        url: '/list/:page?keyword&status&paystatus&createtime0&createtime1&motorid&orderstype',
+        url: '/list/:page?keyword&status&paystatus&createtime0&createtime1&motorid&orderstype&paytype',
         templateUrl: 'app/pages/trade_order/list.html',
         controller: 'TradeOrderListController',
         controllerAs: 'vm',
         title: '订单管理',
         permission: "chebian:store:trade:porder:view"
+      })
+      .state('trade.order.view', {      // 订单管理列表
+          url: '/view/:page?orderid&keyword&status&paystatus&createtime0&createtime1&motorid&orderstype&paytype',
+          templateUrl: 'app/pages/trade_order/view.html',
+          controller: 'TradeOrderViewController',
+          controllerAs: 'vm',
+          title: '订单管理',
+          permission: "chebian:store:trade:porder:view"
       })
       .state('trade.order.add', {     // 新增订单
         url: '/add',
@@ -297,7 +321,7 @@
         controllerAs: 'vm',
         title: '新增订单',
         permission: "chebian:store:trade:porder:add",
-        onExit: function(tadeOrderAddData){
+        onExit: function (tadeOrderAddData) {
           tadeOrderAddData.updata(undefined)
         }
       })
@@ -308,7 +332,7 @@
         controllerAs: 'vm',
         title: '新增订单',
         permission: "chebian:store:trade:porder:add",
-        onExit: function(tadeOrderAddData){
+        onExit: function (tadeOrderAddData) {
           tadeOrderAddData.updata(undefined)
         }
       })
@@ -382,6 +406,14 @@
         title: '会员管理',
         permission: "chebian:store:user:customer:view"
       })
+      .state('user.customer.detail', {      // 会员详情
+        url: '/detail/:mobile?licence',
+        templateUrl: 'app/pages/user_customer/detail.html',
+        controller: 'UserCustomerDetailController',
+        controllerAs: 'vm',
+        title: '会员管理',
+        permission: "chebian:store:user:customer:view"
+      })
       .state('user.customer.add', {      // 新增会员
         url: '/add',
         templateUrl: 'app/pages/user_customer/add.html',
@@ -433,6 +465,20 @@
         controllerAs: 'vm',
         title: '会员等级',
         permission: "chebian:store:user:customer:grades:view"
+      })
+      .state('user.am', {      // 智能提醒
+        url: '/am',
+        template: '<div ui-view></div>',
+        title: '精准提醒',
+        permission: "chebian:store:user:am:view"
+      })
+      .state('user.am.list', {      // 智能提醒列表
+        url: '/list',
+        templateUrl: 'app/pages/user_am/list.html',
+        controller: 'UserAmListController',
+        controllerAs: 'vm',
+        title: '精准提醒',
+        permission: "chebian:store:user:am:view"
       })
       .state('user.debitcard', {      // 储存卡账单
         url: '/debitcard',
@@ -603,12 +649,48 @@
         permission: "chebian:store:markting:package:view"
       })
       .state('markting.package.list', { // 套餐卡活动
-        url: '/list/:page?status',
+        url: '/list/:page?keyword&status&originprice0&originprice1&price0&price1',
         templateUrl: 'app/pages/markting_package/package.html',
         controller: 'MarktingPackageController',
         controllerAs: 'vm',
         title: '套餐卡活动',
         permission: "chebian:store:markting:package:view"
+      })
+      .state('markting.jk', {      // 积客劵活动
+        url: '/jk',
+        template: '<div ui-view></div>',
+        title: '积客劵',
+        permission: "chebian:store:markting:jk:view"
+      })
+      .state('markting.jk.list', { // 积客劵活动列表信息
+        url: '/list/:page?status&conditionPriceStart&conditionPriceEnd&scopeType&keywords&conditionPrice&price0&price1',
+        templateUrl: 'app/pages/markting_jk/list.html',
+        controller: 'MarktingJkListController',
+        controllerAs: 'vm',
+        title: '积客劵',
+        permission: "chebian:store:markting:jk:view"
+      })
+      .state('markting.jk.new', { // 积客劵详情
+        url: '/addnew/:page?status',
+        templateUrl: 'app/pages/markting_jk/new.html',
+        controller: 'addNewJkController',
+        controllerAs: 'vm',
+        title: '积客劵详情',
+        permission: "chebian:store:markting:jk:view"
+      })
+      .state('markting.jksendrecorde', { // 发放记录
+        url: '/jksendrecorde',
+        template: '<div ui-view></div>',
+        title: '积客劵发放记录',
+        permission: "chebian:store:markting:jk:sendrecorde:view"
+      })
+      .state('markting.jksendrecorde.list', { // 发放记录
+        url: '/list/:page?way&status&keywords',
+        templateUrl: 'app/pages/markting_jkrecord/list.html',
+        controller: 'MarktingJkRecordController',
+        controllerAs: 'vm',
+        title: '积客劵发放记录',
+        permission: "chebian:store:markting:jk:sendrecorde:view"
       });
   }
 })();

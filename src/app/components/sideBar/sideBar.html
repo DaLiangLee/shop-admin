@@ -25,7 +25,7 @@
       <ul class="sidebar-trans">
         <li ng-repeat="item in group.items track by $index" class="nav-item"
             ng-class="{'active': $state.includes(item.router)}">
-          <a ui-sref="{{item.uisref}}" sidebar-tooltip="{{type =='mini'? item.menuname :''}}"
+          <a ng-click="gotoPage(item.uisref)" class="f-curp" sidebar-tooltip="{{type =='mini'? item.menuname :''}}"
              tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="true">
             <span class="nav-title">{{item.menuname}}</span>
           </a>

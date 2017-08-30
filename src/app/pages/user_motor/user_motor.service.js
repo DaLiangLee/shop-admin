@@ -53,7 +53,20 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.rolename"></span>',
             "name": '保险及车审情况'
+          },
+          {
+            "id": 9,
+            "cssProperty": "state-column",
+            "fieldDirective": '<span class="state-unread" bo-text="item.remarks"></span>',
+            "name": '备注'
+          },
+          {
+            "id": 8,
+            "cssProperty": "state-column",
+            "fieldDirective": '<a class="state-unread" add-motor-dialog="edit" item="item" motor-list="store" item-handler="propsParams.editMotorHandler(data)">编辑</a>',
+            "name": ''
           }
+
         ],
         "config": {
           'settingColumnsSupport': false,   // 设置表格列表项
@@ -88,6 +101,16 @@
             end: 500
           }
         ],
+        errorCode:[
+          {
+            "label": "有",
+            id: 0
+          },
+          {
+            "label": "无",
+            id: 1
+          }
+        ],
         config: function (params) {
           return {
             other: params,
@@ -98,6 +121,82 @@
                 isShow: true
             },
             searchDirective: [
+              /*{
+                label: "故障码",
+                all: true,
+                type: "list",
+                list:this.errorCode,
+                name: "errorCode",
+                model:params.errorCode
+              },*/
+              {
+                label: "当前里程",
+                name: "TotalMile",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                start: {
+                  name: "startTotalMile",
+                  model: params.startTotalMile,
+                  config: {
+
+                  }
+                },
+                end: {
+                  name: "endTotalMile",
+                  model: params.endTotalMile,
+                  config: {
+
+                  }
+                }
+              },
+              {
+                label: "距下次保养里程",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "CountdownMile",
+                start: {
+                  name: "startCountdownMile",
+                  model: params.startCountdownMile,
+                  config: {
+
+                  }
+                },
+                end: {
+                  name: "endCountdownMile",
+                  model: params.endCountdownMile,
+                  config: {
+
+                  }
+                }
+              }/*,
+              {
+                label: "未到店天数",
+                all: true,
+                custom: true,
+                region: true,
+                type: "integer",
+                name: "CountdownDays",
+                start: {
+                  name: "startCountdownMile",
+                  model: params.startCountdownMile,
+                  config: {
+
+                  }
+                },
+                end: {
+                  name: "endCountdownMile",
+                  model: params.endCountdownMile,
+                  config: {
+
+                  }
+                }
+              }*/
+            ]
+            /*searchDirective: [
               {
                 label: "剩余保养里程",
                 all: true,
@@ -152,18 +251,20 @@
                   name: "startBuyDate",
                   model: params.startBuyDate,
                   config: {
-                    minDate: new Date("2010/01/01 00:00:00")
+                    minDate: new Date("2010/01/01 00:00:00"),
+                    maxDate: new Date()
                   }
                 },
                 end: {
                   name: "endBuyDate",
                   model: params.endBuyDate,
                   config: {
-                    minDate: new Date("2010/01/01 00:00:00")
+                    minDate: new Date("2010/01/01 00:00:00"),
+                    maxDate: new Date()
                   }
                 }
               }
-            ]
+            ]*/
           }
         }
       }

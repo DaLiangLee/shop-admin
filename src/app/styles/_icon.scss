@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: 'icomoon';
-  src:  url('../assets/fonts/icomoon.eot?kyu6lc');
-  src:  url('../assets/fonts/icomoon.eot?kyu6lc#iefix') format('embedded-opentype'),
-  url('../assets/fonts/icomoon.ttf?kyu6lc') format('truetype'),
-  url('../assets/fonts/icomoon.woff?kyu6lc') format('woff'),
-  url('../assets/fonts/icomoon.svg?kyu6lc#icomoon') format('svg');
+  src:  url('../assets/fonts/icomoon20170801.eot??37qdi5');
+  src:  url('../assets/fonts/icomoon20170801.eot??37qdi5#iefix') format('embedded-opentype'),
+  url('../assets/fonts/icomoon20170801.ttf??37qdi5') format('truetype'),
+  url('../assets/fonts/icomoon20170801.woff??37qdi5') format('woff'),
+  url('../assets/fonts/icomoon20170801.svg??37qdi5#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,138 +15,173 @@
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
-  font-size: 16px;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  vertical-align: middle;
+
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-cancel:before {
-  content: "\e900";
-}
-.icon-confirm:before {
-  content: "\e901";
-}
-.icon-doc_empty:before {
-  content: "\e902";
-}
-.icon-doc_fill:before {
-  content: "\e903";
-}
-.icon-trash:before {
-  content: "\e904";
-}
-.icon-delete:before {
-  content: "\e905";
-}
-.icon-arrow_down:before {
-  content: "\e906";
-}
-.icon-arrow_left:before {
-  content: "\e907";
-}
-.icon-arrow_right:before {
-  content: "\e908";
-}
-.icon-arrow_up:before {
+.icon-success:before {
   content: "\e909";
 }
-.icon-ban-circle:before {
-  content: "\e90a";
+.icon-arrow-up:before {
+  content: "\e906";
+}
+.icon-refresh:before {
+  content: "\e900";
+}
+.icon-more:before {
+  content: "\e901";
+}
+.icon-arrow-down:before {
+  content: "\e902";
 }
 .icon-book:before {
-  content: "\e90b";
-}
-.icon-calendar:before {
-  content: "\e90c";
-}
-.icon-desktop:before {
-  content: "\e90d";
-}
-.icon-exclamation:before {
-  content: "\e90e";
-}
-.icon-sidebar-finance:before {
-  content: "\e90f";
-}
-.icon-full:before {
-  content: "\e910";
-}
-.icon-info:before {
-  content: "\e911";
-}
-.icon-sidebar-markting:before {
-  content: "\e912";
-}
-.icon-sidebar-member:before {
-  content: "\e913";
+  content: "\e903";
 }
 .icon-minus:before {
-  content: "\e914";
+  content: "\e904";
 }
-.icon-ok:before {
+.icon-add:before {
+  content: "\e905";
+}
+.icon-car:before {
+  content: "\e907";
+}
+.icon-avatar:before {
+  content: "\e908";
+}
+.icon-remove-circle:before {
+  content: "\e90a";
+}
+.icon-doc-empty:before {
+  content: "\e90b";
+}
+.icon-doc-fill:before {
+  content: "\e90c";
+}
+.icon-trash:before {
+  content: "\e90d";
+}
+.icon-failed:before {
+  content: "\e90e";
+}
+.icon-agnle-down:before {
+  content: "\e90f";
+}
+.icon-agnle-left:before {
+  content: "\e910";
+}
+.icon-agnle-right:before {
+  content: "\e911";
+}
+.icon-agnle-up:before {
+  content: "\e912";
+}
+.icon-ban-circle:before {
+  content: "\e913";
+}
+.icon-calendar:before {
   content: "\e915";
 }
-.icon-ok_circle:before {
+.icon-desktop:before {
   content: "\e916";
 }
-.icon-pen:before {
+.icon-exclamation:before {
   content: "\e917";
 }
-.icon-plus:before {
+.icon-sidebar-finance:before {
   content: "\e918";
 }
-.icon-sidebar-product:before {
+.icon-full:before {
   content: "\e919";
 }
-.icon-question:before {
+.icon-info-circle:before {
   content: "\e91a";
 }
-.icon-remove:before {
+.icon-sidebar-markting:before {
   content: "\e91b";
 }
-.icon-remove_circle:before {
+.icon-sidebar-member:before {
   content: "\e91c";
 }
-.icon-required:before {
+.icon-minus-circle:before {
   content: "\e91d";
 }
-.icon-search:before {
+.icon-ok:before {
   content: "\e91e";
 }
-.icon-star:before {
+.icon-ok-circle:before {
   content: "\e91f";
 }
-.icon-stocks:before {
+.icon-pen:before {
   content: "\e920";
 }
-.icon-sidebar-store:before {
+.icon-plus-circle:before {
   content: "\e921";
 }
-.icon-sidebar-system:before {
+.icon-sidebar-product:before {
   content: "\e922";
 }
-.icon-sidebar-trade:before {
+.icon-question:before {
   content: "\e923";
 }
-.icon-triangle_down:before {
+.icon-remove:before {
   content: "\e924";
 }
-.icon-triangle_up:before {
+.icon-required:before {
   content: "\e925";
 }
-.icon-sidebar-user:before {
+.icon-search:before {
   content: "\e926";
 }
-.icon-not_data:before {
+.icon-star:before {
   content: "\e927";
 }
-.icon-loading:before {
+.icon-stocks:before {
   content: "\e928";
+}
+.icon-sidebar-store:before {
+  content: "\e929";
+}
+.icon-sidebar-system:before {
+  content: "\e92a";
+}
+.icon-sidebar-trade:before {
+  content: "\e92b";
+}
+.icon-triangle-down:before {
+  content: "\e92c";
+}
+.icon-triangle-up:before {
+  content: "\e92d";
+}
+.icon-sidebar-user:before {
+  content: "\e92e";
+}
+.icon-not-data:before {
+  content: "\e92f";
+}
+.icon-loading:before {
+  content: "\e930";
+}
+.icon-list:before {
+  content: "\e931";
+}
+.icon-view:before {
+  content: "\e932";
+}
+.icon-address:before {
+  content: "\e933";
+}
+.icon-telephone:before {
+  content: "\e934";
+}
+.icon-trumpet:before {
+  content: "\e935";
 }

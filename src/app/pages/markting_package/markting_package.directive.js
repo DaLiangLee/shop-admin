@@ -110,6 +110,7 @@
             _.forEach(childScope.dataBase.packageItems, function(packageItem) {
               packageItem.$isSelected = true;
             });
+            childScope.searchHandler(item);
             item.$isSelected = false;
             childScope.config.isSelectItem = false; // focus则表明还没有选择搜索框中的item
           };
@@ -147,7 +148,7 @@
            */
           childScope.removePackageItem = function(item, index) {
             // _.remove(childScope.dataBase.packageItems, {'guid': item.guid});
-            childScope.config.isSelectItem = true; // 清楚的时候将已选中设置为true,防止不能提交
+            childScope.config.isSelectItem = true; // 清除的时候将已选中设置为true,防止不能提交
             childScope.config.searchList = undefined; // 清除下拉框
             childScope.dataBase.packageItems.splice(index, 1);
             if (angular.isDefined(childScope.dataBase.packageItems)) {
@@ -223,7 +224,7 @@
            * 查询搜索
            * @param value
            */
-          childScope.searchHandler = _.throttle(function(item, index) {
+          childScope.searchHandler = _.throttle(function(item) {
             getResults(getOrder[item.type], {pageSize: 10000, keyword: item.name})
                 .then(function(results) {
                   /**
@@ -236,11 +237,11 @@
                   });
 
                   childScope.config.searchList = _.map(results, function (item) {
-                    if (angular.isDefined(item.serverid)) {
+                    if (angular.isDefined(item.serverid)) { // 如果是服务
                       item.name = item.servername + ' ' + item.manualskuvalues;
                       item.originprice = $filter('moneySubtotalFilter')([computeService.pullMoney(item.serverprice), item.servertime]);
                       item.originprice = item.originprice.toFixed(2);
-                    } else {
+                    } else { // 如果是商品
                       item.name = item.productname + ' ' + item.cnname + ' ' + item.manualskuvalues;
                       item.originprice = computeService.pullMoney(item.salepriceText);
                       item.originprice = item.originprice.toFixed(2);
@@ -275,6 +276,12 @@
 
             // scope.itemHandler({data: {"status": "-1", "data": childScope.dataBase}});
 
+            // 去除packageItem 中item json中不必要的字段
+            _.forEach(childScope.dataBase.packageItems, function(packageItem) {
+              var itemJson = angular.fromJson(packageItem.item);
+              itemJson = _.omit(itemJson, ['name', 'originprice']);
+              packageItem.item = angular.toJson(itemJson)
+            });
             marktingPackage.save_package(childScope.dataBase)
                 .then(utils.requestHandler)
                 .then(function() {

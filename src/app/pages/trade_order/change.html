@@ -1,410 +1,482 @@
 <div class="g-view addedOrder">
-  <div class="container-fluid">
-    <ol class="k-breadcrumb">
-      <li><a ui-sref="trade.order.list({page:1})">交易管理</a></li>
-      <li class="active">开单</li>
-    </ol>
-    <form class="form-horizontal" autocomplete="off" name="order" role="form" novalidate ng-if="vm.isLoadData">
-      <div class="w-panel info-group">
-        <div class="panel-header">
-          <div class="info-wraper" ng-if="vm.customer">
-            <!--userType：n(找不到)，u(会员)，c(客户)。-->
-            <div class="info f-cb">
-              <dl class="user f-fl">
-                <dt>
-                  <span class="default-user-image user-avatar" ng-if="!vm.customer.user_avatar"></span>
-                  <img class="user-avatar" ng-if="vm.customer.user_avatar" ng-src="{{vm.customer.user_avatar}}" alt="">
-                </dt>
-                <dd>
-                  <h3 class="h3"><span ng-bind="vm.customer.realname"></span></h3>
-                  <p><span ng-bind="vm.customer.mobile"></span></p>
-                  <p ng-if="vm.dataBase.$isuser && vm.isChange">储值余额：<span
-                    ng-bind="vm.customer.customers[0].user.balance | moneyformatFilter"></span> <span
-                    class="text-primary ng-isolate-scope" style="cursor: pointer; margin-left: 20px;"
-                    cb-access-control="chebian:store:user:customer:view" charge-balance-dialog=""
-                    item="vm.customer.customers[0].user" item-handler="vm.balanceItem(data)" ng-if="!vm.isChange"><i
-                    class="icon-full"></i></span></p>
-                  <a ng-if="vm.dataBase.$isuser" href="javascript:;" cb-popover="" popover-trigger="click" popover-placement="top-left"
-                     popover-template-id="orderUserTemplate.html" popover-animation="false"
-                     popover-template-data="vm.customer.customers[0].user" content-class="order-popover-user" class="">•••</a>
-                </dd>
-              </dl>
-              <dl class="motor f-fl">
-                <dt>
-                  <span class="default-car-image brand-logo" ng-if="!vm.customer.motor_logo"></span>
-                  <img class="brand-logo" ng-if="vm.customer.motor_logo" ng-src="{{vm.customer.motor_logo}}" alt="">
-                </dt>
-                <dd>
-                  <h3 class="h3"><span ng-bind="vm.customer.licence"></span></h3>
-                  <p ng-if="vm.dataBase.$isuser"><span ng-bind="vm.customer.customers[0].motor.model"></span></p>
-                  <a ng-if="vm.dataBase.$isuser" href="javascript:;" cb-popover="" popover-trigger="click" popover-placement="top-left"
-                     popover-template-id="orderCarTemplate.html" popover-animation="false"
-                     popover-template-data="vm.customer.customers[0].motor" content-class="order-popover-motor">•••</a>
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="send-carinfo f-cb">
-            <div class="form-group">
-              <label class="control-label">送车人：</label>
-              <div class="control-content">
-                <input type="text" class="input-control" name="code" ng-model="vm.dataBase.username"
-                       placeholder="请输入送车人姓名" cb-placeholder>
-              </div>
-              <!--<div class="f-fl trade-order-wait">
-                <input type="checkbox" name="waitinstore" ng-model="vm.dataBase.waitinstore">
-                <span>店内等待</span>
-              </div>-->
-            </div>
-            <div class="form-group">
-              <label class="control-label">送车人手机号：</label>
-              <div class="control-content">
-                <input type="text" class="input-control" name="code" ng-model="vm.dataBase.usermobile"
-                       placeholder="请输入送车人手机号" cb-placeholder cb-phone-format="mobile">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label">当前里程(km)：</label>
-              <div class="control-content">
-                <input type="text" class="input-control" name="code" ng-model="vm.dataBase.totalmile"
-                       cb-number-range="" range-enabled="true"
-                       data-value-min="-1" data-value-max="100000000"
-                       maxlength="9"
-                       placeholder="请输入当前车辆里程" cb-placeholder>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label">问题描述：</label>
-              <div class="control-content">
-                <input class="input-control" placeholder="请输入问题描述" cb-string-range value-max="20"
-                       ng-model="vm.dataBase.problem"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label">车身外观：</label>
-              <div class="control-content">
-                <input class="input-control" placeholder="请输入车身状况" cb-string-range value-max="20"
-                       ng-model="vm.dataBase.carstatus"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label">备注：</label>
-              <div class="control-content">
-                <input class="input-control" placeholder="请输入备注" cb-string-range value-max="20"
-                       ng-model="vm.dataBase.remark"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label">预计完工：</label>
-              <div class="control-content">
-                <div cb-datepicker="" is-open="vm.completedDate.opened" datepicker-options="vm.completedDate.config"
-                     datepicker-open="vm.completedDate.open()" datepicker-model="vm.dataBase.completetime"
-                     datepicker-handler="vm.completedDate.handler(data)"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="w-panel items-group">
-        <div class="panel-header">
-          <div class="add-order-item f-tar">
-            <div class="package-wrap" style="margin-right: 10px;" ng-if="vm.dataBase.$isuser">
-              <div class="package-popover" ng-show="!vm.isSelectedPackage">
-                <button class="u-btn u-btn-warning transparent u-btn-sm" ng-click="vm.packageShow = !vm.packageShow"
-                        ng-disabled="vm.isService">套餐卡(<span ng-bind="vm.package.length"></span>)
-                </button>
-                <div class="popover bottom" ng-if="vm.packageShow && vm.package.length">
-                  <div class="arrow"></div>
-                  <div class="popover-inner">
-                    <ul bindonce="vm.package">
-                      <li ng-repeat="item in vm.package" orader-package-dialog items="item"
-                          handler="vm.addPackage(data, item)">
-                        <span bo-text="item.packagename"></span>
-                      </li>
-                    </ul>
-                  </div>
+    <div class="container-fluid">
+        <ol class="k-breadcrumb">
+            <li><a ui-sref="trade.order.list({page:1})">交易管理</a></li>
+            <li class="active">开单</li>
+        </ol>
+        <form class="form-horizontal" autocomplete="off" name="order" role="form" novalidate ng-if="vm.isLoadData">
+            <div class="w-panel info-group">
+                <div class="panel-header">
+                    <div class="info-wraper" ng-if="vm.customer">
+                        <!--userType：n(找不到)，u(会员)，c(客户)。-->
+                        <div class="info f-cb">
+                            <dl class="user f-fl">
+                                <dt>
+                                    <span class="default-user-image user-avatar"
+                                          ng-if="!vm.customer.user_avatar"></span>
+                                    <img class="user-avatar" ng-if="vm.customer.user_avatar"
+                                         ng-src="{{vm.customer.user_avatar}}" alt="">
+                                </dt>
+                                <dd>
+                                    <h3 class="h3"><span ng-bind="vm.customer.realname"></span></h3>
+                                    <p><span ng-bind="vm.customer.mobile"></span></p>
+                                    <p ng-if="vm.dataBase.$isuser && !vm.isChange">储值余额：<span
+                                            ng-bind="vm.customer.customers[0].user.balance | moneyformatFilter"></span>
+                                        <span
+                                                class="text-primary ng-isolate-scope"
+                                                style="cursor: pointer; margin-left: 20px;"
+                                                cb-access-control="chebian:store:user:customer:view"
+                                                charge-balance-dialog=""
+                                                item="vm.customer.customers[0].user" item-handler="vm.balanceItem(data)"
+                                                ng-if="!vm.isChange"><i
+                                                class="icon-full"></i></span></p>
+                                    <a ng-if="vm.dataBase.$isuser" href="javascript:;" cb-popover=""
+                                       popover-trigger="click" popover-placement="top-left"
+                                       popover-template-id="orderUserTemplate.html" popover-animation="false"
+                                       popover-template-data="vm.customer.customers[0].user"
+                                       content-class="order-popover-user" class="">•••</a>
+                                </dd>
+                            </dl>
+                            <dl class="motor f-fl">
+                                <dt>
+                                    <span class="default-car-image brand-logo" ng-if="!vm.customer.motor_logo"></span>
+                                    <img class="brand-logo" ng-if="vm.customer.motor_logo"
+                                         ng-src="{{vm.customer.motor_logo}}" alt="">
+                                </dt>
+                                <dd>
+                                    <h3 class="h3"><span ng-bind="vm.customer.licence"></span></h3>
+                                    <p ng-if="vm.dataBase.$isuser"><span
+                                            ng-bind="vm.customer.customers[0].motor.model"></span></p>
+                                    <a ng-if="vm.dataBase.$isuser" href="javascript:;" cb-popover=""
+                                       popover-trigger="click" popover-placement="top-left"
+                                       popover-template-id="orderCarTemplate.html" popover-animation="false"
+                                       popover-template-data="vm.customer.customers[0].motor"
+                                       content-class="order-popover-motor">•••</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="package-items u-btn  u-btn-warning u-btn-auto" ng-show="vm.isSelectedPackage">
-                <span ng-bind="vm.currentPackage.packagename" orader-package-dialog
-                      items="vm.currentPackage" change="vm.dataBase.details" handler="vm.addPackage(data, currentPackage)"></span>
-                <span class="icon-remove f-curp" ng-click="vm.clearedPackage()"></span>
-              </div>
-            </div>
-            <button class="u-btn u-btn-primary transparent u-btn-sm" order-service-dialog items="vm.dataBase.details"
-                    handler="vm.addService(data)" ng-disabled="vm.isPackage">选择服务
-            </button><button class="u-btn u-btn-primary transparent u-btn-sm" style="margin-left: 10px;" order-product-dialog items="vm.dataBase.details"
-                    handler="vm.addProduct(data)" ng-disabled="vm.isPackage">选择商品
-            </button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="trade-order-item">
-            <div class="thead f-cb" style="width: 100%;">
-              <div class="td td1"></div>
-              <div class="td td2"><span style="margin-left: 10px;">名称</span></div>
-              <div class="td td3 f-tar"><span>原价</span></div>
-              <div class="td td4 f-tar"><span>数量</span></div>
-              <div class="td td5 f-tar"><span>优惠</span></div>
-              <div class="td td6 f-tar"><span>合计</span></div>
-              <div class="td td7 f-tac"><span>施工员</span></div>
-              <div class="td td8 f-tac"><span>备注</span></div>
-              <div class="td td9 f-tac"><span>设为常用</span></div>
-            </div>
-            <div class="tbody f-cb" ng-if="vm.isPackage">
-              <dl ng-repeat="item in vm.dataBase.details" bindonce="" ng-class="{'striped': $odd}">
-                <dt>
-                  <div class="td td1 f-tac"><span class="icon-trash h4 text-danger f-curp"
-                                                  ng-click="vm.removeItem(item)"></span></div>
-                  <div class="td td2">
-                    <div class="item-name">
-                      <span class="u-tags u-tags-default" bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
-                      <span class="title" bo-title="item.itemname" bo-text="item.itemname"></span>
+                <div class="panel-body">
+                    <div class="send-carinfo f-cb">
+                        <div class="f-fl">
+                            <div class="form-group">
+                                <label class="control-label">送车人：</label>
+                                <div class="control-content">
+                                    <input type="text" class="input-control" name="username" ng-model="vm.dataBase.username"
+                                           placeholder="送车人" cb-placeholder cb-string-range value-max="10">
+                                </div>
+                                <!--<div class="f-fl trade-order-wait">
+                                  <input type="checkbox" name="waitinstore" ng-model="vm.dataBase.waitinstore">
+                                  <span>店内等待</span>
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">送车人手机号：</label>
+                                <div class="control-content" ng-class="{'has-error': order.usermobile.$error.mobile}">
+                                    <input type="text" class="input-control" name="usermobile" ng-model="vm.dataBase.usermobile"
+                                           placeholder="送车人手机号" cb-placeholder cb-phone-format="mobile" maxlength="11">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="f-fl">
+                            <div class="form-group">
+                                <label class="control-label">当前里程(km)：</label>
+                                <div class="control-content">
+                                    <input type="text" class="input-control" name="totalmile" ng-model="vm.dataBase.totalmile"
+                                           number-range="" maxlength="8"
+                                           placeholder="当前里程" cb-placeholder>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">预计完工：</label>
+                                <div class="control-content">
+                                    <div cb-datepicker="" is-open="vm.completedDate.opened"
+                                         datepicker-options="vm.completedDate.config"
+                                         datepicker-open="vm.completedDate.open()"
+                                         datepicker-model="vm.dataBase.completetime"
+                                         datepicker-handler="vm.completedDate.handler(data)"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="f-fl">
+                            <div class="form-group">
+                                <label class="control-label">车身外观：</label>
+                                <div class="control-content">
+                                    <input class="input-control" placeholder="车身状况" cb-string-range value-max="20"
+                                           ng-model="vm.dataBase.carstatus"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">问题描述：</label>
+                                <div class="control-content">
+                                    <input class="input-control" placeholder="问题描述" cb-string-range value-max="20"
+                                           ng-model="vm.dataBase.problem"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="f-fl">
+                            <div class="form-group">
+                                <label class="control-label">备注：</label>
+                                <div class="control-content">
+                                    <input class="input-control" placeholder="备注" cb-string-range value-max="20"
+                                           ng-model="vm.dataBase.remark"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="td td3 f-tar">
-                    <span class="output-price" bo-bind="item.originprice | number : '2'"></span>
-                  </div>
-                  <div class="td td4 f-tar">
-                    <span class="output-price" bo-bind="item.num"></span>
-                  </div>
-                  <div class="td td5 f-tar">
+                </div>
+            </div>
+            <div class="w-panel items-group">
+                <div class="panel-header f-cb">
+                    <div class="add-order-item f-fr">
+                        <div class="package-wrap f-fl" style="margin-right: 10px;" ng-if="vm.dataBase.$isuser">
+                            <div ng-if="!vm.isSelectedPackage && vm.isService">
+                                <button class="u-btn u-btn-warning transparent u-btn-sm disabled" cb-popover=""
+                                        popover-placement="top"
+                                        popover-template-id="orderDisabledPackageTemplate.html" popover-animation="false">套餐卡(<span ng-bind="vm.package.length"></span>)</button>
+                            </div>
+                            <div class="package-popover" ng-if="!vm.isSelectedPackage && !vm.isService">
+                                <button class="u-btn u-btn-warning transparent u-btn-sm"
+                                        ng-click="vm.packageShow = !vm.packageShow"
+                                        ng-disabled="vm.isService">套餐卡(<span ng-bind="vm.package.length"></span>)</button>
+                                <div class="popover bottom" ng-if="vm.packageShow && vm.package.length">
+                                    <div class="arrow"></div>
+                                    <div class="popover-inner">
+                                        <ul bindonce="vm.package">
+                                            <li ng-repeat="item in vm.package" orader-package-dialog items="item"
+                                                handler="vm.addPackage(data, item)">
+                                                <span bo-text="item.packagename"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-items u-btn u-btn-warning u-btn-auto" ng-if="vm.isSelectedPackage">
+                                <span ng-bind="vm.currentPackage.packagename" orader-package-dialog
+                                    items="vm.currentPackage" change="vm.dataBase.details"
+                                    handler="vm.addPackage(data, vm.currentPackage)"></span>
+                                <span class="icon-remove f-curp" ng-click="vm.clearedPackage()"></span>
+                            </div>
+                        </div>
+                        <div ng-if="!vm.isPackage" class="f-fl">
+                            <button class="u-btn u-btn-primary transparent u-btn-sm" order-service-dialog
+                                    items="vm.dataBase.details"
+                                    handler="vm.addService(data)" ng-disabled="vm.isPackage">选择服务
+                            </button><button class="u-btn u-btn-primary transparent u-btn-sm" style="margin-left: 10px;"
+                                    order-product-dialog items="vm.dataBase.details" product-service="true"
+                                    handler="vm.addProduct(data)" ng-disabled="vm.isPackage">选择商品
+                            </button>
+                        </div>
+                        <div ng-if="vm.isPackage" class="f-fl">
+                            <button class="u-btn u-btn-primary transparent u-btn-sm disabled" cb-popover=""
+                                    popover-placement="top"
+                                    popover-template-id="orderDisabledServiceAndProductTemplate.html" popover-animation="false">选择服务
+                            </button><button class="u-btn u-btn-primary transparent u-btn-sm disabled" style="margin-left: 10px;" cb-popover=""
+                                    popover-placement="top"
+                                    popover-template-id="orderDisabledServiceAndProductTemplate.html" popover-animation="false">选择商品
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="trade-order-item">
+                        <div class="thead f-cb" style="width: 100%;">
+                            <div class="td td1"></div>
+                            <div class="td td2"><span style="margin-left: 10px;">名称</span></div>
+                            <div class="td td3 f-tar"><span style="margin-right: 10px;">服务费/零售单价</span></div>
+                            <div class="td td4 f-tac" ng-class="{'f-tar': vm.isPackage}"><span>数量</span></div>
+                            <div class="td td5 f-tar"></div>
+                            <div class="td td6 f-tar"><span>优惠</span></div>
+                            <div class="td td7 f-tar"><span>合计</span></div>
+                            <div class="td td8 f-tac"><span>施工员</span></div>
+                            <div class="td td9 f-tac"><span>备注</span></div>
+                        </div>
+                        <div class="tbody f-cb" ng-if="vm.isPackage">
+                            <dl ng-repeat="item in vm.dataBase.details" bindonce="" ng-class="{'striped': $odd}">
+                                <dt>
+                                    <div class="td td1 f-tac"><span class="icon-trash h4 text-danger f-curp"
+                                                                    ng-click="vm.removeItem(item)"></span></div>
+                                    <div class="td td2">
+                                        <div class="item-name">
+                                            <span class="u-tags u-tags-default"
+                                                  bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
+                                            <span class="title" bo-title="item.itemname" bo-text="item.itemname"></span>
+                                        </div>
+                                    </div>
+                                    <div class="td td3 f-tar">
+                                        <span class="output-price" bo-bind="item.originprice | number : '2'"></span>
+                                    </div>
+                                    <div class="td td4 f-tar">
+                                        <span class="output-price" bo-bind="item.num"></span>
+                                    </div>
+                                    <div class="td td5">
+                                        <div class="item-name" ng-if="item.$unit">
+                                            <span class="title" bo-title="item.$unit" bo-text="item.$unit"></span>
+                                        </div>
+                                    </div>
+                                    <div class="td td6 f-tar">
                     <span class="output-price text-danger" bo-if="item.preferential">-<span
-                      bo-bind="item.preferential | number : '2'">0</span></span>
-                  </div>
-                  <div class="td td6 f-tar">
-                    <span class="output-price" bo-bind="item.$allprice | number : '2'"></span>
-                  </div>
-                  <div class="td td7">
-                    <div style="padding: 14px 25px;">
-                      <div simple-select="guid,realname" store="vm.servicerModel.store" select="item.servicer" select-handler="vm.servicerModel.handler(data, item)" placeholder="请选择"></div>
+                            bo-bind="item.preferential | number : '2'">0</span></span>
+                                    </div>
+
+                                    <div class="td td7 f-tar">
+                                        <span class="output-price" bo-bind="item.$allprice | number : '2'"></span>
+                                    </div>
+                                    <div class="td td8">
+                                        <div style="padding: 14px 25px;">
+                                            <div simple-select="guid,realname" store="vm.servicerModel.store"
+                                                 select="item.servicer"
+                                                 select-handler="vm.servicerModel.handler(data, item)"
+                                                 placeholder="请选择"></div>
+                                        </div>
+                                    </div>
+                                    <div class="td td9 f-tac">
+                                        <div cb-remark remark-content="item.remark"
+                                             handle-remark="vm.updateItemRemark(data, item)"></div>
+                                    </div>
+                                </dt>
+                            </dl>
+                        </div>
+                        <div class="tbody f-cb" ng-if="vm.isService">
+                            <dl ng-form="list" ng-repeat="item in vm.dataBase.details" class="striped" bindonce=""
+                                ng-class="{'striped': $odd}">
+                                <dt>
+                                    <div class="td td1 f-tac">
+                                        <span class="icon-trash h4 text-danger f-curp"
+                                              ng-click="vm.removeItem(item)"></span></div>
+                                    <div class="td td2">
+                                        <div class="item-name">
+                                            <span class="u-tags u-tags-default"
+                                                  bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
+                                            <span class="title" bo-title="item.itemname" bo-text="item.itemname"></span>
+                                            <span class="link" bo-if="item.itemtype == 0" order-product-dialog
+                                                  items="item.products"
+                                                  handler="vm.addServiceProduct(data, item)">添加材料</span>
+                                        </div>
+                                    </div>
+                                    <div class="td td3 f-tar">
+                                        <div class="input-price" ng-class="{'has-error': order.list.servicePrice.$error.numberRange}">
+                                            <input class="input-control" type="text" ng-model="item.price"
+                                                   name="servicePrice"
+                                                   style="padding: 4px 12px; text-align: right;"
+                                                   number-range=""
+                                                   data-value-min="0"
+                                                   data-value-max="999999.99"
+                                                   data-value-step="0.01"
+                                                   data-range-enabled="true" placeholder="必填"
+                                                   ng-blur="vm.updateItemPriceNum(item.num, item)" cb-placeholder maxlength="9">
+                                        </div>
+                                    </div>
+                                    <div class="td td4 f-tar">
+                                        <div class="input-price">
+                                            <div cb-amount max-num="999" min-num="1" base="item.num" get-base="vm.updateItemPriceNum(data, item)"></div>
+                                        </div>
+                                    </div>
+                                    <div class="td td5">
+                                        <div class="item-name" ng-if="item.$unit">
+                                            <span class="title" bo-title="item.$unit" bo-text="item.$unit"></span>
+                                        </div>
+                                    </div>
+                                    <div class="td td6 f-tar">
+                                        <span class="price text-danger">0.00</span>
+                                    </div>
+                                    <div class="td td7 f-tar">
+                                        <span class="output-price" ng-bind="item.$allprice | number : '2'"></span>
+                                    </div>
+                                    <div class="td td8">
+                                        <div style="padding: 14px 25px;">
+                                            <div simple-select="guid,realname" store="vm.servicerModel.store"
+                                                 select="item.servicer"
+                                                 select-handler="vm.servicerModel.handler(data, item)"
+                                                 placeholder="请选择"></div>
+                                        </div>
+                                    </div>
+                                    <div class="td td9 f-tac">
+                                        <div cb-remark remark-content="item.remark"
+                                             handle-remark="vm.updateItemRemark(data, item)"></div>
+                                    </div>
+                                </dt>
+                                <dd class="products" ng-if="item.products && item.products.length"
+                                    ng-repeat="subitem in item.products" bindonce="">
+                                    <div class="td td1 f-tac"><span class="icon-trash text-danger f-curp"
+                                                                    ng-click="vm.removeItem(item, subitem)"></span>
+                                    </div>
+                                    <div class="td td2">
+                                        <div class="item-name">
+                                            <span class="line"></span>
+                                            <span class="title" bo-title="subitem.itemname"
+                                                  bo-text="subitem.itemname"></span>
+                                        </div>
+                                    </div>
+                                    <div class="td td3 f-tar">
+                                        <div class="input-price">
+                                            <input class="input-control" type="text" ng-model="subitem.price"
+                                                   number-range=""
+                                                   style="padding: 4px 12px; text-align: right;"
+                                                   data-value-min="0" name="servicePrice" data-value-max="999999.99"
+                                                   data-value-step="0.01"
+                                                   data-range-enabled placeholder="必填"
+                                                   ng-blur="vm.updateItemPriceNum(subitem.num, item, subitem)" cb-placeholder
+                                                   maxlength="9">
+                                        </div>
+                                    </div>
+                                    <div class="td td4 f-tar">
+                                        <div class="input-price">
+                                            <div cb-amount max-num="999" min-num="1" base="subitem.num" get-base="vm.updateItemPriceNum(data, item, subitem)"></div>
+                                        </div>
+                                    </div>
+                                    <div class="td td5">
+                                        <div class="item-name">
+                                            <span class="title" bo-title="subitem.$unit" bo-text="subitem.$unit"></span>
+                                        </div>
+                                    </div>
+                                    <div class="td td6 f-tar">
+                                        <span class="price text-danger">0.00</span>
+                                    </div>
+                                    <div class="td td7 f-tar">
+                                        <span class="price" ng-bind="subitem.$allprice | number : '2'"></span>
+                                    </div>
+                                    <div class="td td8 f-tac"></div>
+                                    <div class="td td9 f-tac"></div>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="not-data" ng-if="!vm.dataBase.details.length">
+                            <h2 class="h1 f-tac">请选择服务或商品，或使用套餐卡</h2>
+                        </div>
                     </div>
-                  </div>
-                  <div class="td td8 f-tac">
-                    <div cb-remark remark-content="item.remark" handle-remark="vm.updateItemRemark(data, item)"></div>
-                  </div>
-                  <div class="td td9 f-tac">
-                    <input type="checkbox" ng-model="item.commonlyused" ng-change="vm.setCommonlyused(item)" class="f-curp" />
-                  </div>
-                </dt>
-              </dl>
+                </div>
             </div>
-            <div class="tbody f-cb" ng-if="vm.isService">
-              <dl ng-form="list" ng-repeat="item in vm.dataBase.details" class="striped" bindonce=""
-                  ng-class="{'striped': $odd}">
-                <dt>
-                  <div class="td td1 f-tac">
-                    <span class="icon-trash h4 text-danger f-curp" ng-click="vm.removeItem(item)"></span></div>
-                  <div class="td td2">
-                    <div class="item-name">
-                      <span class="u-tags u-tags-default" bo-bind="item.itemtype | formatStatusFilter : 'packageType'"></span>
-                      <span class="title" bo-title="item.itemname" bo-text="item.itemname"></span>
-                      <span class="link" bo-if="item.itemtype == 0" order-product-dialog items="item.products"
-                            handler="vm.addServiceProduct(data, item)">添加材料</span>
-                    </div>
-                  </div>
-                  <div class="td td3 f-tar">
-                    <div class="input-price">
-                      <input class="input-control" type="text" ng-model="item.price" number-range=""
-                             data-value-min="0" name="servicePrice" data-value-max="999999.99" data-value-step="0.01"
-                             data-range-enabled placeholder="单价"
-                             ng-blur="vm.updateItemPriceNum(item)" cb-placeholder maxlength="9">
-                    </div>
-                  </div>
-                  <div class="td td4 f-tar">
-                    <div class="input-price">
-                      <input class="input-control" type="text" ng-model="item.num" number-range=""
-                             data-value-min="1" name="servicePrice" data-value-max="999" data-value-step="1"
-                             data-range-enabled placeholder="数量"
-                             ng-blur="vm.updateItemPriceNum(item)" cb-placeholder maxlength="3">
-                    </div>
-                  </div>
-                  <div class="td td5 f-tar">
-                    <span class="price text-danger">0.00</span>
-                  </div>
-                  <div class="td td6 f-tar">
-                    <span class="output-price" ng-bind="item.$allprice | number : '2'"></span>
-                  </div>
-                  <div class="td td7">
-                    <div style="padding: 14px 25px;">
-                      <div simple-select="guid,realname" store="vm.servicerModel.store" select="item.servicer" select-handler="vm.servicerModel.handler(data, item)" placeholder="请选择"></div>
-                    </div>
-                  </div>
-                  <div class="td td8 f-tac">
-                    <div cb-remark remark-content="item.remark" handle-remark="vm.updateItemRemark(data, item)"></div>
-                  </div>
-                  <div class="td td9 f-tac">
-                    <input bo-if="!item.defaultsku" type="checkbox" ng-model="item.commonlyused"
-                           ng-change="vm.setCommonlyused(item)" class="f-curp">
-                  </div>
-                </dt>
-                <dd class="products" ng-if="item.products && item.products.length" ng-repeat="subitem in item.products">
-                  <div class="td td1 f-tac"><span class="icon-trash text-danger f-curp"
-                                                  ng-click="vm.removeItem(item, subitem)"></span></div>
-                  <div class="td td2">
-                    <div class="item-name">
-                      <span class="line"></span>
-                      <span class="title" bo-title="subitem.itemname" bo-text="subitem.itemname"></span>
-                    </div>
-                  </div>
-                  <div class="td td3 f-tar">
-                    <div class="input-price">
-                      <input class="input-control" type="text" ng-model="subitem.price" number-range=""
-                             data-value-min="0" name="servicePrice" data-value-max="999999.99" data-value-step="0.01"
-                             data-range-enabled placeholder="单价"
-                             ng-blur="vm.updateItemPriceNum(item, subitem)" cb-placeholder maxlength="9">
-                    </div>
-                  </div>
-                  <div class="td td4 f-tar">
-                    <div class="input-price">
-                      <input class="input-control" type="text" ng-model="subitem.num" number-range=""
-                             data-value-min="1" name="servicePrice" data-value-max="999" data-value-step="1"
-                             data-range-enabled placeholder="数量"
-                             ng-blur="vm.updateItemPriceNum(item, subitem)" cb-placeholder maxlength="3">
-                    </div>
-                  </div>
-                  <div class="td td5 f-tar">
-                    <span class="price text-danger">0.00</span>
-                  </div>
-                  <div class="td td6 f-tar">
-                    <span class="price" ng-bind="subitem.$allprice | number : '2'"></span>
-                  </div>
-                  <div class="td td7 f-tac"></div>
-                  <div class="td td8 f-tac"></div>
-                  <div class="td td9 f-tac">
-                    <input bo-if="!subitem.isSystem" type="checkbox" ng-model="subitem.commonlyused"
-                           ng-change="vm.setCommonlyused(item, subitem)" class="f-curp">
-                  </div>
-                </dd>
-              </dl>
+            <div class="receipt f-cb" ng-if="vm.dataBase.details.length">
+                <button class="f-fl u-btn u-btn-danger u-btn-sm" ng-click="vm.clearDetails()">清空
+                </button>
+                <button class="f-fr u-btn u-btn-warning u-btn-sm" style="width: 150px; margin-left: 20px;"
+                        ng-disabled="order.$invalid || vm.statistics.totalprice >= 10000000" offers="vm.statistics"
+                        order-offers-received-dialog="" database="vm.dataBase" ng-click="vm.getOffers()"
+                        handler="vm.saveOrderAndPay(data)">生成订单并收款
+                </button>
+                <button class="f-fr u-btn u-btn-primary u-btn-sm" style="margin-left: 30px;"
+                        ng-disabled="order.$invalid || vm.statistics.totalprice >= 10000000" carno="vm.customer.licence"
+                        orader-offers-dialog="" offers="vm.statistics" offers-handler="vm.submitBtn(data)"
+                        userid="vm.dataBase.userinfo.guid" orderstype="vm.dataBase.orderstype"
+                        ng-click="vm.getOffers()">生成订单
+                </button>
+                <dl class="f-fr statistics f-tar">
+                    <dt>
+                        合计：<strong>&yen; <span ng-bind="vm.statistics.totalprice | number : '2'"></span></strong>
+                    </dt>
+                    <dd>
+                        <span>服务&nbsp;<span ng-bind="vm.statistics.serviceCount"></span>&nbsp;项：<strong>&yen; <span
+                                ng-bind="vm.statistics.ssalepriceAll | number : '2'"></span></strong></span><span>|</span><span>商品&nbsp;<span
+                            ng-bind="vm.statistics.productCount"></span>&nbsp;项：<strong>&yen; <span
+                            ng-bind="vm.statistics.psalepriceAll | number : '2'"></span></strong></span>
+                </dl>
             </div>
-            <div class="not-data" ng-if="!vm.dataBase.details.length">
-              <h2 class="h1 f-tac">请选择服务或商品，或使用套餐卡</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="receipt f-cb" ng-if="vm.dataBase.details.length">
-        <button class="f-fl u-btn u-btn-danger u-btn-sm" ng-click="vm.clearDetails()">清空
-        </button>
-        <button class="f-fr u-btn u-btn-warning u-btn-sm" style="width: 150px; margin-left: 20px;"
-                ng-disabled="order.$invalid || vm.statistics.totalprice >= 10000000" offers="vm.statistics"
-                order-offers-received-dialog="" orderstype="vm.dataBase.orderstype" userid="vm.dataBase.userinfo.guid" ng-click="vm.getOffers()" handler="vm.saveOrderAndPay(data)" useraccount="vm.dataBase.userinfo.balance" package="vm.dataBase.extra">生成订单并收款
-        </button>
-        <button class="f-fr u-btn u-btn-primary u-btn-sm" style="margin-left: 30px;"
-                ng-disabled="order.$invalid || vm.statistics.totalprice >= 10000000"
-                orader-offers-dialog="" offers="vm.statistics" offers-handler="vm.submitBtn(data)"
-                userid="vm.dataBase.userinfo.guid" orderstype="vm.dataBase.orderstype" ng-click="vm.getOffers()">生成订单
-        </button>
-        <dl class="f-fr statistics f-tar">
-          <dt>
-            合计：<strong>&yen; <span ng-bind="vm.statistics.totalprice | number : '2'"></span></strong>
-          </dt>
-          <dd>
-            <span>服务&nbsp;<span ng-bind="vm.statistics.serviceCount"></span>&nbsp;项：<strong>&yen; <span ng-bind="vm.statistics.ssalepriceAll | number : '2'"></span></strong></span><span>|</span><span>商品&nbsp;<span ng-bind="vm.statistics.productCount"></span>&nbsp;项：<strong>&yen; <span ng-bind="vm.statistics.psalepriceAll | number : '2'"></span></strong></span>
-        </dl>
-      </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
 <script type="text/ng-template" id="orderUserTemplate.html">
-  <ul bindonce="">
-    <li>
-      <label class="f-fl">性别：</label>
-      <p class="f-fl"><span bo-bind="templateData.gender | formatStatusFilter : 'sex'"></span></p>
-    </li>
-    <li>
-      <label class="f-fl">会员等级：</label>
-      <p class="f-fl"><span bo-text="templateData.storegrade"></span></p>
-    </li>
-    <li>
-      <label class="f-fl">关注状态：</label>
-      <p class="f-fl"><span bo-bind="templateData.followed | formatStatusFilter : 'followed'"></span></p>
-    </li>
-    <li>
-      <label class="f-fl">公司名称：</label>
-      <p class="f-fl"><span bo-text="templateData.companyname"></span></p>
-    </li>
-  </ul>
+    <ul bindonce="">
+        <li>
+            <label class="f-fl">性别：</label>
+            <p class="f-fl"><span bo-bind="templateData.gender | formatStatusFilter : 'sex'"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">会员等级：</label>
+            <p class="f-fl"><span bo-text="templateData.storegrade"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">关注状态：</label>
+            <p class="f-fl"><span bo-bind="templateData.followed | formatStatusFilter : 'followed'"></span></p>
+        </li>
+        <li>
+            <label class="f-fl">公司名称：</label>
+            <p class="f-fl"><span bo-text="templateData.companyname"></span></p>
+        </li>
+    </ul>
 </script>
 <script type="text/ng-template" id="orderCarTemplate.html">
-  <ul bindonce="">
-    <li>
-      <label>故障码：</label>
-      <p><span><span bo-if="!templateData.errorcode" class="text-success">无</span>
+    <ul bindonce="">
+        <li>
+            <label>故障码：</label>
+            <p><span><span bo-if="!templateData.errorcode">无法获取，该车辆未安装（未连接）智能车机。</span>
                   <a ng-href="templateData.$$errorcode" bo-if="templateData.errorcode"
                      bo-text="templateData.errorcode" class="text-danger"></a></span></p>
-    </li>
-    <li>
-      <label>当前里程：</label>
-      <p><span class="text-success" bo-text="templateData.totalmile"></span> km</p>
-    </li>
-    <li>
-      <label>距下次保养：</label>
-      <p><span bo-text="templateData.countdownmiles"></span> km</p>
-    </li>
-    <li>
-      <label>保养手册：</label>
-      <p><a target="_blank" ng-href="{{templateData.baoyang}}"><i class="icon-book"></i></a></p>
-    </li>
-  </ul>
-  <ul bindonce="">
-    <li>
-      <label>上次到店时间：</label>
-      <p><span><span bo-text="templateData.lastaccess"></span></span></p>
-    </li>
-    <li>
-      <label>至今日未到店天数：</label>
-      <p><span><span bo-text="templateData.daysofnotaccess"></span></span></p>
-    </li>
-    <li>
-      <label>历史订单：</label>
-      <p><span><span bo-text="templateData.accesscount"></span></span></p>
-    </li>
-    <li>
-      <label>累计订单金额：</label>
-      <p><span><span bo-bind="templateData.expendamount | moneyformatFilter"></span></span></p>
-    </li>
-  </ul>
-  <ul bindonce="">
-    <li>
-      <label>VIN码：</label>
-      <p><span bo-text="templateData.vin"></span></p>
-    </li>
-    <li>
-      <label>发动机号：</label>
-      <p><span bo-text="templateData.enginenumber"></span></p>
-    </li>
-    <li>
-      <label>前轮胎：</label>
-      <p><span bo-text="templateData.frontwheel"></span></p>
-    </li>
-    <li>
-      <label>后轮胎：</label>
-      <p><span bo-text="templateData.rearwheel"></span></p>
-    </li>
-  </ul>
-  <ul bindonce="">
-    <li>
-      <label>购车日期：</label>
-      <p><span bo-text="templateData.buydate"></span></p>
-    </li>
-    <li>
-      <label>上次年检时间：</label>
-      <p><span bo-text="templateData.lastcheckdate"></span></p>
-    </li>
-    <li>
-      <label>保险公司：</label>
-      <p><span bo-text="templateData.insuranceCompany"></span></p>
-    </li>
-    <li>
-      <label>保险购买日期：</label>
-      <p><span bo-text="templateData.lastinsurancedate"></span></p>
-    </li>
-  </ul>
+        </li>
+        <li>
+            <label>当前里程：</label>
+            <p><span class="text-success" bo-text="templateData.totalmile"></span> km</p>
+        </li>
+        <li>
+            <label>距下次保养：</label>
+            <p><span bo-text="templateData.countdownmiles"></span> km</p>
+        </li>
+        <li>
+            <label>保养手册：</label>
+            <p><a target="_blank" ng-href="{{templateData.baoyang}}"><i class="icon-book"></i></a></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>上次到店时间：</label>
+            <p><span><span bo-text="templateData.lastaccess"></span></span></p>
+        </li>
+        <li>
+            <label>至今日未到店天数：</label>
+            <p><span><span bo-text="templateData.daysofnotaccess"></span></span></p>
+        </li>
+        <li>
+            <label>历史订单：</label>
+            <p><span><span bo-text="templateData.accesscount"></span></span></p>
+        </li>
+        <li>
+            <label>累计订单金额：</label>
+            <p><span><span bo-bind="templateData.expendamount | moneyformatFilter"></span></span></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>VIN码：</label>
+            <p><span bo-text="templateData.vin"></span></p>
+        </li>
+        <li>
+            <label>发动机号：</label>
+            <p><span bo-text="templateData.enginenumber"></span></p>
+        </li>
+        <li>
+            <label>前轮胎：</label>
+            <p><span bo-text="templateData.frontwheel"></span></p>
+        </li>
+        <li>
+            <label>后轮胎：</label>
+            <p><span bo-text="templateData.rearwheel"></span></p>
+        </li>
+    </ul>
+    <ul bindonce="">
+        <li>
+            <label>购车日期：</label>
+            <p><span bo-text="templateData.buydate"></span></p>
+        </li>
+        <li>
+            <label>上次年检时间：</label>
+            <p><span bo-text="templateData.lastcheckdate"></span></p>
+        </li>
+        <li>
+            <label>保险公司：</label>
+            <p><span bo-text="templateData.insuranceCompany"></span></p>
+        </li>
+        <li>
+            <label>保险购买日期：</label>
+            <p><span bo-text="templateData.lastinsurancedate"></span></p>
+        </li>
+    </ul>
+</script>
+<script type="text/ng-template" id="orderDisabledServiceAndProductTemplate.html">
+    <p>使用套餐卡时无法从店铺库中选择。</p>
+</script>
+<script type="text/ng-template" id="orderDisabledPackageTemplate.html">
+    <p>正常选择商品或服务时不能使用套餐卡。</p>
 </script>
 
 

@@ -57,7 +57,7 @@
 .total p{overflow:hidden;}
 .total p label{font-weight:normal;color:#000;font-size: 16px;}
 .total p strong{text-align: right; min-width:80px;font-weight:normal;}
-.total p label{width:148px; border-bottom:1px solid #ccc;}
+.total p label{min-width:148px; border-bottom:1px solid #ccc;}
 .total .sum strong{font-weight:bold;}
 .total .sum label{font-size:20px;font-weight:bold;}
 .total .col-red{color:red;}

@@ -1,0 +1,27 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="markting.jk.list({page:1})">营销中心</a></li>
+    <li class="active">积客券管理</li>
+</ol>
+
+<!--<br>-->
+<div class="g-view jk-coupon-list" style="padding: 20px 0 180px 6px;">
+    <div class="container-fluid special-table" style="min-width:1148px;">
+        <div class="top-part" cb-access-control="chebian:store:markting:jk:view" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)"></div>
+        <div class="body-part list" ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList"
+             pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState"
+             config="vm.gridModel.config"  sort-changed="vm.gridModel.sortChanged(data)" page-changed="vm.gridModel.pageChanged(page)"></div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="jkQrCode.html">
+    <div qr text="{{templateData.qrcode}}" width="164" height="164"></div>
+    <div class="use-tips    ">
+        <p>使用微信扫描二维码</p>
+        <p>查看积客券并分享</p>
+    </div>
+</script>
+
+<script type="text/ng-template" id="tips.html">
+    <p>即满足一定消费金额可用</p>
+</script>

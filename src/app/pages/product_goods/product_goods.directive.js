@@ -48,107 +48,137 @@
   }
 
   /** @ngInject */
-  function productCategory($window, $timeout, category, cbAlert) {
+  function productCategory(category) {
+    var currentCategoryId; // 这也用来记录以及类目的id 在重选时使用
+    var currentChildIndex; // 用来记录二级类目的id
     return {
       restrict: "A",
       replace: true,
       templateUrl: "app/pages/product_goods/product_category.html",
       scope: {
         step: "=",
-        handler: "&"
+        handler: "&",
+        cate: '=',
+        isEdit: '=', // 判断是否是编辑模式 用于掩藏 '编辑' 2个字
+        isReselect: '=' // 是否是重选
       },
-      link: function(scope, iElement){
+      link: function(scope){
+
+        scope.config = {};
+        scope.pcateid = {};
+        /*scope.isSelected = false; // 是否已经选择商品
+        scope.isShowBtn = true; // 是否显示展示按钮
+        scope.isShowItems = false; // 是否显示弹框*/
+        if (scope.cate) { // 编辑商品
+          scope.pcateid.parentCatename = scope.cate.catename;
+          scope.pcateid.catename = scope.cate.items[0].catename;
+          scope.currentIndex = scope.cate.id;
+          currentCategoryId = scope.cate.id;
+          scope.currentChildIndex = scope.cate.items[0].id;
+          // scope.isShowBtn = false;
+          // scope.isSelected = true;
+        }
+
+
+
         category.goods().then(function (results) {
           scope.store = _.cloneDeep(results);
-          $timeout(function(){
-            minHeight = iElement.find('.list .tags .u-item').outerHeight(true);
-            getMore(minHeight);
-          },0);
-        });
-        var minHeight;
-        var tagsHeight;
-        scope.pcateid = {};
-        scope.select = function ($event, subItem, item) {
-          resetActive();
-          subItem.$active = true;
-          scope.pcateid = _.omit(item, 'items');
-          scope.pcateid.items = [subItem];
-          scope.toggle();
-        };
-        scope.folded = false;
-        scope.toggle = function (flag) {
-          if(flag === false){
-            scope.handler({data: 'rollback'});
-            scope.folded = !scope.folded;
-            return false;
-          }
-          if(scope.step > 1 && flag){
-            cbAlert.confirm("编辑类目类型", function (isConfirm) {
-              if (isConfirm) {
-                scope.folded = !scope.folded;
-                scope.handler({data: 'reset'});
-              }
-              cbAlert.close();
-            }, "如果修改以后的品牌将被清空，是否继续？", "warning");
-          }else{
-            scope.folded = !scope.folded;
-            scope.handler({data: scope.pcateid});
-          }
-        };
-
-        scope.$watch('step', function (value) {
-          if(value === 0){
-            scope.pcateid = {};
-            scope.folded = false;
-            resetActive();
-          }
-        });
-        angular.element($window).on('resize', function () {
-          getMore(minHeight);
-        });
-
-        function getMore(minHeight){
-          iElement.find('.list').each(function (iIndex, oElement) {
-            var list = angular.element(oElement);
-            list.find('.more').removeClass('flag');
-            list.find('.tags').css('height', 'auto');
-            if(list.find('.tags').height() > minHeight){
-              list.find('.tags').data('actual-height', list.find('.tags').height()).height(minHeight);
-              list.find('.more').removeClass('f-hide');
-            }else{
-              list.find('.more').addClass('f-hide');
-            }
-          });
-        }
-
-        iElement.on('click', '.more', function () {
-          var tags = angular.element(this).siblings('.tags');
-          if (_.isUndefined(tags.data('actual-height'))) {
-            tagsHeight =  tags.data('actual-height', tags.height());
-            getMore(minHeight);
-          } else {
-            tagsHeight = tags.data('actual-height');
-          }
-
-          // var tagsHeight = tags.data('actual-height') || tags.data('actual-height', tags.height());
-          // var tagsHeight = tags.data(tags.data('actual-height'));
-          var flag = tags.height() === minHeight;
-          var height = flag ? tagsHeight : minHeight;
-          tags.height(height);
-          angular.element(this).toggleClass('flag');
-        });
-
-
-        /**
-         * 重置高亮
-         */
-        function resetActive() {
-          _.forEach(scope.store, function (item) {
-            item.items.length && _.forEach(item.items, function (subItem) {
-              subItem.$active = false;
+          console.log('999', scope.store);
+          if (!scope.isReselect) { // 如果不是重选，则表示是第一次选择
+            scope.currentIndex = scope.store[0].id; // 将当前类目设置为类目列表中的第一项
+            scope.categoryItems = scope.store[0].items;
+          } else { // 重选
+            var index = _.findIndex(scope.store, function(cate) {
+              return cate.id === currentCategoryId
             });
+            scope.currentIndex = scope.store[index].id;
+            scope.categoryItems = scope.store[index].items;
+            scope.currentChildIndex = currentChildIndex;
+          }
+
+        });
+
+
+
+        // 切换商品类目显示
+        /*scope.config.toggleItems = function() {
+          // scope.isShowItems = !scope.isShowItems;
+
+          // 如果不是重选 则表示是第一次选择
+          if (!scope.isReselect && scope.store) {
+            scope.selectCategory(null, scope.store[0]);
+          }
+        };*/
+
+
+        // 选择分类
+        scope.selectCategory = function($event, cate) {
+          console.log('333', cate);
+          scope.categoryItems = cate.items;
+          scope.currentIndex = cate.id;
+        };
+
+        // 选择子类目
+        scope.select = function ($event, subItem) {
+          // console.log('777', subItem);
+
+          scope.currentChildIndex = subItem.id;
+          scope.pcateid.parentid = subItem.parentid;
+          scope.pcateid.catename = subItem.catename; // 二级类目的名称
+          var parentCategory = _.filter(scope.store, function(cate) { // 找到二级类目所在的一级类目
+            return cate.id === scope.pcateid.parentid
           });
-        }
+
+          scope.pcateid.parentCatename = parentCategory[0].catename; // 一级类目的名称
+
+          scope.pcateid.id = subItem.id;
+          scope.pcateid.items = [subItem];
+
+          currentCategoryId = subItem.parentid; // 选择项的一级类目的id
+          currentChildIndex = subItem.id;       // 选择项的二级类目的id
+          scope.isReselect = true;
+
+          if (scope.cate) { // 编辑商品时使用
+            scope.cate.catename = parentCategory[0].catename;
+            scope.cate.items[0].catename = subItem.catename;
+          }
+          scope.step = 2; // 选择后将 步骤设置为 '2'
+
+          if (scope.isReselect) {
+            scope.handler({data: [scope.pcateid, scope.step, scope.isReselect]}); // 返回给控制器
+          } else {
+            scope.handler({data: [scope.pcateid, scope.step]}); // 返回给控制器
+          }
+
+          // scope.isShowBtn = false;
+          // scope.isSelected = true;
+          // scope.isShowItems = false;
+
+        };
+
+       /* // 重选
+        scope.reselect = function() {
+
+          // 重选前 先将tab 切换到 已选择项
+          var index = _.findIndex(scope.store, function(cate) {
+            return cate.id === scope.currentIndex;
+          });
+          scope.selectCategory(null, scope.store[index]);
+
+          // scope.isShowItems = true;
+          scope.isReselect = true;
+        };
+
+
+        // 关闭浮层
+        scope.closeItems = function() {
+          scope.isShowItems = false;
+
+          if (scope.isReselect) { // 如果是重新选择,取消时将currentIndex还原
+            scope.currentIndex = currentCategoryId;
+          }
+        };*/
+
       }
     }
   }
@@ -162,6 +192,7 @@
       scope: {
         store: "=",
         step: "=",
+        isReselect: "=",
         brandname: "=",
         handler: "&"
       },
@@ -173,10 +204,17 @@
         // 需要提交的数据 brandname和brandid
         scope.brand = _.pick(scope.brandname, ['brandid', 'brandname']);
 
+        if (scope.isReselect) { // 如果是重选类目 则清空商品品牌
+          scope.brand.brandname = '';
+        } else {
+          console.log('8989', scope.brand);
+        }
+
         // 选择展开状态
         scope.folded = false;
+        scope.isFocused = false; // 是否点击了输入框
         // 生成初始化字母过滤
-        scope.initials = [{text: '全部品牌', active: true}];
+        scope.initials = [{text: '全部', active: true}];
         scope.initials = scope.initials.concat(_.map(_.times(26, {}), function (item) {
           return {text: String.fromCharCode(65 + item)};
         }));
@@ -187,7 +225,7 @@
         };
         // 直接选中品牌操作
         scope.select = function ($event, item) {
-          scope.toggle();
+          scope.folded = false;
           setBrandListClass(item.id);
           scope.brand = {
             brandname: item.cnname,
@@ -207,8 +245,19 @@
         };
         // 切换展开状态
         scope.toggle = function () {
+          if (!scope.isFocused) {
+            scope.isFocused = true;
+          }
           setBrandListClass(scope.brand.brandid);
-          scope.folded = !scope.folded;
+          if (scope.step !== 0) {
+            console.log('555', scope.step);
+            scope.folded = true;
+          }
+        };
+
+        // 关闭
+        scope.closeItems = function() {
+          scope.folded = false;
         };
 
 
@@ -229,7 +278,7 @@
          */
         scope.filterIn = function ($event, item) {
           scope.params = {
-            firstletter: item.text === "全部品牌" ? "" : item.text
+            firstletter: item.text === "全部" ? "" : item.text
           };
           _.forEach(scope.initials, function (key) {
             key.active = key['$$hashKey'] === item['$$hashKey'];
@@ -249,86 +298,103 @@
     }
   }
 
-    /** @ngInject */
-    function productUnit() {
-        return {
-            restrict: 'A',
-            templateUrl: 'app/pages/product_goods/product_unit.html',
-            replace: true,
-            scope: {
-              store: '=',
-              handler: '&'
-            },
-            link: function(scope) {
-                scope.units = _.map(['件', '桶', 'kg', 'g', 'm', '个', '套', '袋', '升', '台', '副', '片'], function (item) {
-                    return {
-                      text: item
-                    };
+  /** @ngInject */
+  function productUnit() {
+      return {
+          restrict: 'A',
+          templateUrl: 'app/pages/product_goods/product_unit.html',
+          replace: true,
+          scope: {
+            store: '=',
+            handler: '&'
+          },
+          link: function(scope) {
+              // scope.isShow = false;
+              // scope.isEdit = false; // 这个用于是否是手动的输入单位
+              scope.units = _.map(['件', '桶', 'kg', 'g', 'm', '个', '套', '袋', '升', '台', '副', '片'], function (item) {
+                  return {
+                    text: item
+                  };
+              });
+              // 如果scope.store一开始不存在则将 '件' 设置为默认单位，并添加样式
+              if (_.isUndefined(scope.store)) {
+                  scope.currentunit = '';
+
+                // scope.units[0].active = true;
+                // scope.currentunit = scope.units[0].text; // 默认为 '件'
+
+              } else {
+                scope.currentunit = scope.store;
+                var index = _.findIndex(scope.units, function(unit) {
+                  return unit.text === scope.store;
                 });
-                // 如果scope.store一开始不存在则将 '件' 设置为默认单位，并添加样式
-                if (_.isUndefined(scope.store)) {
-                    scope.units[0].active = true;
-                    scope.currentunit = scope.units[0].text;
+                if (index > -1) {
+                    scope.units[index].active = true;
                 } else {
-                  scope.currentunit = scope.store;
-                  var index = _.findIndex(scope.units, function(unit) {
-                    return unit.text === scope.store;
-                  });
-                  if (index > -1) {
-                      scope.units[index].active = true;
-                  } else {
-                      _.forEach(scope.units, function(unit) {
-                        unit.active = false;
-                      })
-                  }
+                    _.forEach(scope.units, function(unit) {
+                      unit.active = false;
+                    })
                 }
+              }
 
+              scope.handler({data: scope.currentunit});
+              // 选择单位
+              scope.chooseUnit = function(unit) {
+                _.forEach(scope.units, function (item) {
+                    item.active = false;
+                });
+
+                unit.active = true;
+                scope.currentunit = unit.text;
                 scope.handler({data: scope.currentunit});
-                // 选择单位
-                scope.chooseUnit = function(unit) {
-                  _.forEach(scope.units, function (item) {
-                      item.active = false;
-                  });
+                // scope.isShow = false;
+              };
 
-                  unit.active = true;
-                  scope.currentunit = unit.text;
-                  scope.handler({data: scope.currentunit});
+              /*// 切换显示
+                scope.toggleItems = function() {
+                  scope.isShow = !scope.isShow;
                 };
 
-                // 添加单位
-                scope.addUnit = function(item) {
-                  var count = 0;
-                  _.forEach(scope.units, function(unit) {
-                    if (unit.text === item) {
-                      count++;
-                      return;
-                    }
-                  });
+                scope.closeItems = function() {
+                  scope.isShow = false;
+                };
+             */
 
-                  /**
-                   * 如果 count 为0 则表示输入框中的单位和默认单位库中不一致，则将所有active样式去掉
-                   * 如果 count 不为0 则表示输入框中单位和默认单位库中的某个单位一致，然后找出索引添加active样式
-                   */
-                  if (count === 0) {
-                      _.forEach(scope.units, function(unit) {
-                          unit.active = false;
-                      })
-                  } else {
-                    _.map(scope.units, function(unit) {
+              // 添加单位
+              scope.addUnit = function(item) {
+                // scope.isShow = true;
+                var count = 0;
+                _.forEach(scope.units, function(unit) {
+                  if (unit.text === item) {
+                    count++;
+                    return;
+                  }
+                });
+
+                /**
+                 * 如果 count 为0 则表示输入框中的单位和默认单位库中不一致，则将所有active样式去掉
+                 * 如果 count 不为0 则表示输入框中单位和默认单位库中的某个单位一致，然后找出索引添加active样式
+                 */
+                if (count === 0) {
+                    _.forEach(scope.units, function(unit) {
                         unit.active = false;
                     });
-                    var index = _.findIndex(scope.units, function(unit) {
-                      return unit.text === item;
-                    });
-                    scope.units[index].active = true;
-                  }
-                  scope.handler({data: item});
+                } else {
+                  _.map(scope.units, function(unit) {
+                      unit.active = false;
+                  });
+                  var index = _.findIndex(scope.units, function(unit) {
+                    return unit.text === item;
+                  });
+                  scope.units[index].active = true;
                 }
+                scope.handler({data: item});
+              }
 
-            }
+          }
 
-        }
-    }
+      }
+  }
 
   /** @ngInject */
   function addSkuvaluesDialog(cbDialog) {

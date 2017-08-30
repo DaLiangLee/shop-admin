@@ -115,8 +115,13 @@
     }
   }
 }
+.list-inline {
+  //padding-right: 10px;
+}
 .list-inline>li {
   display: inline-block;
+  //width: 33.33%;
+  //text-align: center;
 }
 .list-unstyled li {
   line-height: 22px;

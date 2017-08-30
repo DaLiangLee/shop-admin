@@ -1,122 +1,178 @@
 <div>
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="closed()"
-            aria-hidden="true">&times;</button>
-    <h5 class="modal-title">选择商品</h5>
-  </div>
-  <div class="modal-body">
-    <div class="list-btns f-cb">
-      <div class="btn-group f-fl">
-        <button class="u-btn u-btn-default transparent u-btn-sm" ng-click="toggleTab(0)" ng-class="{'active': tabindex == 0}">常用
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="closed()"
+                aria-hidden="true">&times;
         </button>
-        <button class="u-btn u-btn-default transparent u-btn-sm" ng-click="toggleTab(1)" ng-class="{'active': tabindex == 1}">商品库
-        </button>
-      </div>
-      <span class="tips f-fl">商品库无对应商品？去右侧【车边库】找找看</span>
-      <button class="u-btn u-btn-default transparent u-btn-sm f-fr" ng-click="toggleTab(2)" ng-class="{'active': tabindex == 2}">车边库
-      </button>
+        <h5 class="modal-title">选择商品</h5>
     </div>
-    <div class="list-wrap f-cb" ng-if="tabindex == 0">
-      <div class="list productcommonlyused">
-        <ul class="content" dg-click="productcommonlyusedHandler($event, item)" selector="li">
-          <li class="f-cb" ng-repeat="item in productcommonlyused track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
-            <span class="text f-fl" bo-text="item.itemname" bo-title="item.itemname"></span>
-            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
-          </li>
-        </ul>
-      </div>
+    <div class="modal-body w-panel">
+        <div class="panel-header">
+            <div class="search">
+                <div class="tips" ng-if="!searchModel.isTips">
+                    <p>若本店商品库未新增商品，可在【车边库】找找看，从【车边库】选择的商品，将自动添加到您店铺的商品库中。</p>
+                    <span class="icon-remove" ng-click="searchModel.isTips = true"></span>
+                </div>
+                <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                    <input type="text" ng-model="searchModel.search.keyword" class="input-control f-fl"
+                           style="width: 370px; margin-right: 10px;" placeholder="请输入商品编码、名称、品牌、规格关键字" maxlength="60" ng-change="searchModel.searchHandler(searchModel.search.keyword)" ng-focus="searchModel.isOpen = true" />
+                    <button class="u-btn u-btn-primary u-btn-sm f-fl" ng-click="searchModel.handler()">查 询</button>
+                    <!--<div class="lastuse" ng-if="searchModel.isOpen && searchModel.lastuse().length">
+                        <h4>最近使用</h4>
+                        <ul class="list" dg-click="searchModel.lastusehandler($event, item)" selector="li">
+                            <li ng-repeat="item in searchModel.lastuse() track by $index" bindonce="">
+                                <span bo-text="item"></span>
+                            </li>
+                        </ul>
+                        <div class="btn f-cb">
+                            <span class="u-btn-link" ng-click="searchModel.clearlastuse()">清空最近使用</span>
+                            <span class="f-fr" ng-click="searchModel.isOpen = false">关闭</span>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="form-group">
+                    <label class="control-label">库源：</label>
+                    <div class="control-content">
+                        <div simple-radio-group="stencilstore" radio-value="searchModel.search.stencilstore"
+                             radio-options="searchModel.stencilstore" on-change="searchModel.handler(data, 'stencilstore')"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">排序：</label>
+                    <div class="control-content">
+                        <div simple-radio-group="order" radio-value="searchModel.search.order"
+                             radio-options="searchModel.order" on-change="searchModel.handler(data, 'order')"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">一级类目：</label>
+                    <div class="control-content">
+                        <div simple-radio-group="pcateid1" radio-value="searchModel.search.pcateid1"
+                             radio-options="searchModel.pcateid1" on-change="searchModel.handler(data, 'pcateid1')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="table-body">
+                <div class="table-wrap" ng-if="searchModel.search.stencilstore == 0">
+                    <div class="table-thead" ng-class="{'scrollbar': gridModel.itemList.length > 7}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th style="width: 36px;" class="f-tac">
+                                    <div simple-checkbox checkbox-checked="gridModel.checkedAll" checkbox-indeterminate="gridModel.indeterminate()" on-change="gridModel.changeSelectionAll(data)"></div></th>
+                                <th style="width: 125px;"><span style="margin-left: 3px;">二级类目</span></th>
+                                <th style="width: 125px;"><span>商品编码</span></th>
+                                <th style="width: 125px;"><span>商品品牌</span></th>
+                                <th style="width: 300px;"><span>商品名称+规格</span></th>
+                                <th style="width: 100px;" class="f-tar">零售单价</th>
+                                <th style="width: 100px;" class="f-tar"><span>库存</span></th>
+                                <th style="width: 80px;"><span style="margin-right: 20px;"></span></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table-tbody" ng-if="!gridModel.loadingState && gridModel.itemList.length">
+                        <table>
+                            <tbody>
+                            <tr ng-repeat="item in gridModel.itemList track by item.guid" bindonce="" ng-class="{'active': item.$checked, 'text-danger': item.$stockwarn}" dg-click="gridModel.handler($event, item)" selector="td">
+                                <td style="width: 36px;" class="f-tac">
+                                    <div simple-checkbox checkbox-checked="item.$checked" on-change="gridModel.changeSelection(data, item)"></div>
+                                </td>
+                                <td style="width: 125px;">
+                                    <span simple-truncate-text="{{item.pcatename2}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 120px;">
+                                    <span simple-truncate-text="{{item.code}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 125px;">
+                                    <span simple-truncate-text="{{item.cnname}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 300px;">
+                                    <span simple-truncate-text="{{item.productname +' '+ item.manualskuvalues}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 100px;" class="f-tar"><span bo-bind="item.salepriceText | number: '2'"></span></td>
+                                <td style="width: 100px;" class="f-tar"><span bo-bind="item.$stock"></span></td>
+                                <td style="width: 80px;">
+                                    <span style="margin-left: 5px;" simple-truncate-text="{{item.unit}}" bindevent="true"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-wrap" ng-if="searchModel.search.stencilstore == 1">
+                    <div class="table-thead" ng-class="{'scrollbar': gridModel.itemList.length > 7}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th style="width: 36px;" class="f-tac">
+                                    <div simple-checkbox checkbox-checked="gridModel.checkedAll" checkbox-indeterminate="gridModel.indeterminate()" on-change="gridModel.changeSelectionAll(data)"></div></th>
+                                <th style="width: 150px;"><span style="margin-left: 3px;">二级类目</span></th>
+                                <th style="width: 150px;"><span>商品编码</span></th>
+                                <th style="width: 150px;"><span>商品品牌</span></th>
+                                <th style="width: 380px;"><span>商品名称+规格</span></th>
+                                <th style="width: 125px;" class="f-tar"><span style="margin-right: 20px;">零售单价</span></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table-tbody" ng-if="!gridModel.loadingState && gridModel.itemList.length">
+                        <table>
+                            <tbody>
+                            <tr ng-repeat="item in gridModel.itemList track by item.guid" bindonce="" ng-class="{'active': item.$checked, 'text-danger': item.$stockwarn}" dg-click="gridModel.handler($event, item)" selector="td">
+                                <td style="width: 36px;" class="f-tac">
+                                    <div simple-checkbox checkbox-checked="item.$checked" on-change="gridModel.changeSelection(data, item)"></div>
+                                </td>
+                                <td style="width: 150px;">
+                                    <span simple-truncate-text="{{item.pcatename2}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 150px;">
+                                    <span simple-truncate-text="{{item.code}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 150px;">
+                                    <span simple-truncate-text="{{item.cnname}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 380px;">
+                                    <span simple-truncate-text="{{item.productname +' '+ item.manualskuvalues}}" bindevent="true"></span>
+                                </td>
+                                <td style="width: 125px;" class="f-tar"><span style="margin-right: 20px;" bo-bind="item.salepriceText | number: '2'"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="grid-loading" ng-if="gridModel.loadingState">
+                    <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+                </div>
+                <div class="grid-nodata" ng-if="!gridModel.loadingState && !gridModel.itemList.length">
+                    <span class="h1" ng-if="!searchModel.search.keyword"><i class="icon-not-data"></i>暂无数据</span>
+                    <span ng-if="searchModel.search.keyword">很抱歉，没有找到与“<span class="text-danger" ng-bind="searchModel.search.keyword"></span>”相关的信息</span>
+                </div>
+            </div>
+            <div class="table-foot f-cb">
+                <div class="grid-stats f-fl">
+                    已选<span ng-bind="dataSources.length"></span>项
+                </div>
+                <div ng-if="gridModel.itemList.length" class="grid-paging f-fr" simple-pagination
+                     previous-text="&lt;" next-text="&gt;"
+                     on-select-page="gridModel.pageChanged(page)" pagination-info="gridModel.paginationinfo"
+                     rotate="false" boundary-link-numbers="true" force-ellipses="true" show-page-goto="true"></div>
+            </div>
+            <div ng-if="isEmptyData" style="margin-top: 10px;"  class="alert alert-warning">
+                温馨提醒：必须要选择一项
+            </div>
+        </div>
     </div>
-    <div class="list-wrap f-cb" ng-if="tabindex == 1">
-      <div class="f-fl list parentclass">
-        <h3 class="title">商品一级类目</h3>
-        <ul class="content" dg-click="parentclassHandler($event, item)" selector="li">
-          <li ng-repeat="item in parentclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
-            <span bo-text="item.catename"></span>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list subclass">
-        <h3 class="title">商品二级类目</h3>
-        <ul class="content" dg-click="subclassHandler($event, item)" selector="li">
-          <li ng-repeat="item in subclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
-            <span bo-text="item.catename"></span>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list productname">
-        <h3 class="title">商品名称</h3>
-        <ul class="content" dg-click="productnameHandler($event, item)" selector="li">
-          <li ng-repeat="item in productname track by item.guid" bindonce ng-class="{'active': item.$folded}">
-            <p class="text" bo-title="item.cnname+' '+item.productname">
-              <span bo-text="item.cnname"></span>
-              <span bo-text="item.productname"></span>
-            </p>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list productspec">
-        <h3 class="title">商品规格</h3>
-        <ul class="content" dg-click="productspecHandler($event, item)" selector="li">
-          <li ng-repeat="item in productspec track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
-            <span class="text f-fl" bo-text="item.manualskuvalues" bo-title="item.manualskuvalues"></span>
-            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
-          </li>
-        </ul>
-      </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定
+            </button>
+            　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="closed()">取　消</button>
+        </div>
     </div>
-    <div class="list-wrap f-cb" ng-if="tabindex == 2">
-      <div class="f-fl list parentclass">
-        <h3 class="title">商品一级类目</h3>
-        <ul class="content" dg-click="parentclassHandler($event, item)" selector="li">
-          <li ng-repeat="item in parentclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
-            <span bo-text="item.catename"></span>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list subclass">
-        <h3 class="title">商品二级类目</h3>
-        <ul class="content" dg-click="subclassHandler($event, item)" selector="li">
-          <li ng-repeat="item in subclass track by item.id" bindonce="" ng-class="{'active': item.$folded}">
-            <span bo-text="item.catename"></span>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list productname">
-        <h3 class="title">商品名称</h3>
-        <ul class="content" dg-click="productnameHandler($event, item)" selector="li">
-          <li ng-repeat="item in productname track by item.guid" bindonce ng-class="{'active': item.$folded}">
-            <p class="text" bo-title="item.cnname+' '+item.productname">
-              <span bo-text="item.cnname"></span>
-              <span bo-text="item.productname"></span>
-            </p>
-          </li>
-        </ul>
-      </div>
-      <div class="f-fl list productspec">
-        <h3 class="title">商品规格</h3>
-        <ul class="content" dg-click="productspecHandler($event, item)" selector="li">
-          <li ng-repeat="item in productspec track by item.guid" bindonce ng-class="{'active': item.$folded, 'disabled': item.$disabled}" class="order-item-list">
-            <span class="text f-fl" bo-text="item.manualskuvalues" bo-title="item.manualskuvalues"></span>
-            <span class="price f-fr">&yen; <span bo-bind="item.price | number : 2"></span></span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="results">
-      <h3 class="title">已选择商品：</h3>
-      <ul class="content" class="f-cb" bindonce="" dg-click="removeItem($event, item)" selector=".remove">
-        <li ng-repeat="item in dataSources track by item.guid">
-          <span bo-text="item.itemname"></span>
-          <span>&yen; <span bo-bind="item.price | number : 2"></span></span>
-          <span class="icon-remove_circle remove"></span>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <div class="inline-block f-tac">
-      <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="!dataSources.length">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="closed()">取　消</button>
-    </div>
-  </div>
 </div>
+<script type="text/ng-template" id="orderTooltipProductTemplate.html">
+    <p bindonce="" bo-text="templateData.title"></p>
+</script>

@@ -1,0 +1,473 @@
+.simple-dialog-open{
+  overflow-y: visible!important;
+}
+.simple-dialog{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  &-backdrop{
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    &.am-fade{
+      opacity: .5;
+      transition: opacity .15s linear;
+      &.ng-enter {
+        opacity: 0;
+        &.ng-enter-active {
+          opacity: .5;
+        }
+      }
+      &.ng-leave {
+        opacity: .5;
+        &.ng-leave-active {
+          opacity: 0;
+        }
+      }
+    }
+  }
+  .dialog{
+    position: relative;
+    width: 700px;
+    margin: 30px auto;
+    &-lg{
+      width: 1000px;
+    }
+    &-sm{
+      width: 400px;
+    }
+    &-content{
+      position: relative;
+      background-color: #fff;
+      overflow: hidden;
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+      border: 1px solid rgba(0,0,0,.2);
+      border-radius: 6px;
+      outline: 0;
+      box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    }
+    &-header{
+      position: relative;
+      padding: 0 10px 0 20px;
+      height: 36px;
+      background: #038ae3;
+      line-height: 36px;
+      color: #fff;
+      .close {
+        position: absolute;
+        right: 20px;
+        color: #fff;
+        opacity: 1;
+        line-height: 36px;
+        border: none;
+        background: none;
+        font-weight: 400;
+        font-size: 28px;
+        cursor: pointer;
+        &:hover,
+        &:focus {
+          opacity: 0.5;
+        }
+      }
+    }
+    &-body{
+      position: relative;
+      padding: 15px;
+    }
+    &-footer{
+      padding: 15px;
+      text-align:center;
+      border-top: 1px solid #e5e5e5;
+      background-color: #fafafa;
+    }
+  }
+  &.center .dialog{
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  &.dialog-success,&.dialog-error,&.dialog-success,&.dialog-warning,&.dialog-confirm{
+    .dialog-body{
+      text-align: center;
+      .icon{
+        padding: 15px 0;
+        > i{
+          font-size: 48px;
+        }
+      }
+      .text{
+        font-size: 24px;
+        padding-bottom: 20px;
+      }
+    }
+  }
+  &.dialog-success .dialog-body{
+    color: #09bb07;
+  }
+  &.dialog-error .dialog-body{
+    color: #d7292a;
+  }
+  &.dialog-warning .dialog-body{
+    color: #F8BB86;
+  }
+  &.dialog-confirm .dialog-body{
+    color: #999;
+  }
+}
+
+.am-fade-and-scale {
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards
+}
+
+.am-fade-and-scale.am-fade-and-scale-add,.am-fade-and-scale.ng-enter,.am-fade-and-scale.ng-hide-remove,.am-fade-and-scale.ng-move {
+  -webkit-animation-name: fadeAndScaleIn;
+  animation-name: fadeAndScaleIn
+}
+
+.am-fade-and-scale.am-fade-and-scale-remove,.am-fade-and-scale.ng-hide,.am-fade-and-scale.ng-leave {
+  -webkit-animation-name: fadeAndScaleOut;
+  animation-name: fadeAndScaleOut
+}
+
+.am-fade-and-scale.ng-enter {
+  visibility: hidden;
+  -webkit-animation-name: fadeAndScaleIn;
+  animation-name: fadeAndScaleIn;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-scale.ng-enter.ng-enter-active {
+  visibility: visible;
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-scale.ng-leave {
+  -webkit-animation-name: fadeAndScaleOut;
+  animation-name: fadeAndScaleOut;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-scale.ng-leave.ng-leave-active {
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+
+@keyframes fadeAndScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7)
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+@keyframes fadeAndScaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+
+.am-fade-and-slide-top {
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards
+}
+
+.am-fade-and-slide-top.am-fade-and-slide-top-add,.am-fade-and-slide-top.ng-hide-remove,.am-fade-and-slide-top.ng-move {
+  -webkit-animation-name: fadeAndSlideFromTop;
+  animation-name: fadeAndSlideFromTop
+}
+
+.am-fade-and-slide-top.am-fade-and-slide-top-remove,.am-fade-and-slide-top.ng-hide {
+  -webkit-animation-name: fadeAndSlideToTop;
+  animation-name: fadeAndSlideToTop
+}
+
+.am-fade-and-slide-top.ng-enter {
+  visibility: hidden;
+  -webkit-animation-name: fadeAndSlideFromTop;
+  animation-name: fadeAndSlideFromTop;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-top.ng-enter.ng-enter-active {
+  visibility: visible;
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-top.ng-leave {
+  -webkit-animation-name: fadeAndSlideToTop;
+  animation-name: fadeAndSlideToTop;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-top.ng-leave.ng-leave-active {
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-right {
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards
+}
+
+.am-fade-and-slide-right.am-fade-and-slide-right-add,.am-fade-and-slide-right.ng-hide-remove,.am-fade-and-slide-right.ng-move {
+  -webkit-animation-name: fadeAndSlideFromRight;
+  animation-name: fadeAndSlideFromRight
+}
+
+.am-fade-and-slide-right.am-fade-and-slide-right-remove,.am-fade-and-slide-right.ng-hide {
+  -webkit-animation-name: fadeAndSlideToRight;
+  animation-name: fadeAndSlideToRight
+}
+
+.am-fade-and-slide-right.ng-enter {
+  visibility: hidden;
+  -webkit-animation-name: fadeAndSlideFromRight;
+  animation-name: fadeAndSlideFromRight;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-right.ng-enter.ng-enter-active {
+  visibility: visible;
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-right.ng-leave {
+  -webkit-animation-name: fadeAndSlideToRight;
+  animation-name: fadeAndSlideToRight;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-right.ng-leave.ng-leave-active {
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-bottom {
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards
+}
+
+.am-fade-and-slide-bottom.am-fade-and-slide-bottom-add,.am-fade-and-slide-bottom.ng-hide-remove,.am-fade-and-slide-bottom.ng-move {
+  -webkit-animation-name: fadeAndSlideFromBottom;
+  animation-name: fadeAndSlideFromBottom
+}
+
+.am-fade-and-slide-bottom.am-fade-and-slide-bottom-remove,.am-fade-and-slide-bottom.ng-hide {
+  -webkit-animation-name: fadeAndSlideToBottom;
+  animation-name: fadeAndSlideToBottom
+}
+
+.am-fade-and-slide-bottom.ng-enter {
+  visibility: hidden;
+  -webkit-animation-name: fadeAndSlideFromBottom;
+  animation-name: fadeAndSlideFromBottom;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-bottom.ng-enter.ng-enter-active {
+  visibility: visible;
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-bottom.ng-leave {
+  -webkit-animation-name: fadeAndSlideToBottom;
+  animation-name: fadeAndSlideToBottom;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-bottom.ng-leave.ng-leave-active {
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-left {
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards
+}
+
+.am-fade-and-slide-left.am-fade-and-slide-left-add,.am-fade-and-slide-left.ng-hide-remove,.am-fade-and-slide-left.ng-move {
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards;
+  -webkit-animation-name: fadeAndSlideFromLeft;
+  animation-name: fadeAndSlideFromLeft
+}
+
+.am-fade-and-slide-left.am-fade-and-slide-left-remove,.am-fade-and-slide-left.ng-hide {
+  -webkit-animation-name: fadeAndSlideToLeft;
+  animation-name: fadeAndSlideToLeft
+}
+
+.am-fade-and-slide-left.ng-enter {
+  visibility: hidden;
+  -webkit-animation-name: fadeAndSlideFromLeft;
+  animation-name: fadeAndSlideFromLeft;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-left.ng-enter.ng-enter-active {
+  visibility: visible;
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+.am-fade-and-slide-left.ng-leave {
+  -webkit-animation-name: fadeAndSlideToLeft;
+  animation-name: fadeAndSlideToLeft;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused
+}
+
+.am-fade-and-slide-left.ng-leave.ng-leave-active {
+  -webkit-animation-play-state: running;
+  animation-play-state: running
+}
+
+@keyframes fadeAndSlideFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20%)
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeAndSlideToTop {
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-20%)
+  }
+}
+
+
+@keyframes fadeAndSlideFromRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translateX(20%);
+    transform: translateX(20%)
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeAndSlideToRight {
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(20%)
+  }
+}
+
+@keyframes fadeAndSlideFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20%)
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+
+@keyframes fadeAndSlideToBottom {
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(20%)
+  }
+}
+
+
+@keyframes fadeAndSlideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20%)
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+
+@keyframes fadeAndSlideToLeft {
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-20%)
+  }
+}

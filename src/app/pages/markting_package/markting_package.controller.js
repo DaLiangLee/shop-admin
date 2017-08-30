@@ -13,15 +13,15 @@
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params, { pageSize: 5 }); // { page: "1", pageSize: 5 }
+    var currentParams = angular.extend({}, $state.params, { pageSize: 15 }); // { page: "1", pageSize: 5 }
     var total = 0;
 
     /**
      * 一开始重定向到 '/list/1?status=1'
      */
-    if (angular.isUndefined(currentParams.status)) {
+    /*if (angular.isUndefined(currentParams.status)) {
       currentParams.status = '1';
-    }
+    }*/
     $state.go(currentStateName, currentParams);
 
     /**
@@ -64,14 +64,16 @@
           propsParams.templateData.push({
             type: packageItem.type === '0' ? '服务' : '商品',
             name: packageItem.name,
-            num: packageItem.num
+            num: packageItem.num,
+            originprice: computeService.pullMoney(packageItem.originprice).toFixed(2),
+            price: computeService.pullMoney(packageItem.price).toFixed(2)
           })
         });
       }
     };
 
     vm.gridModel = {
-      // columns: angular.copy(marktingPackageConfig.DEFAULT_GRID.columns),
+      columns: _.clone(marktingPackageConfig.DEFAULT_GRID.columns),
       itemList: [],
       config: angular.extend({}, marktingPackageConfig.DEFAULT_GRID.config, {propsParams: propsParams}),
       loadingState: true,      // 加载数据
@@ -81,19 +83,45 @@
       }
     };
 
-    /**
-     * 条件选择列表的格式
-     * @type {*}
-     */
-    var started = _.clone(marktingPackageConfig.DEFAULT_GRID.columns),
-        unstarted = _.clone(marktingPackageConfig.DEFAULT_GRID.columns);
-    unstarted.splice(1, 1);
-    started.shift(); // 将第1列 '编辑' 去除
-    if (currentParams.status === '0') {
-      vm.gridModel.columns = unstarted;
-    } else {
-      vm.gridModel.columns = started;
-    }
+    // 搜索
+    var DEFAULT_SEARCH = _.cloneDeep(marktingPackageConfig.DEFAULT_SEARCH);
+    var searchModel = _.chain(_.clone(currentParams)).tap(function (value) {
+      _.forEach(_.pick(value, ['originprice0', 'originprice1','price0','price1']), function (item, key) {
+        !_.isUndefined(item) && (value[key] = computeService.pullMoney(item));
+      });
+    }).value();
+
+    vm.searchModel = {
+      config: DEFAULT_SEARCH.config(searchModel),
+      'handler': function (data) {
+        var items = _.find(DEFAULT_SEARCH.originprice, function (item) {
+          return item.id === data.originprice0 * 1;
+        });
+        if (angular.isDefined(items)) {
+          data.originprice1 = undefined;
+        }
+        var search = _.chain(data).tap(function (value) {
+          _.forEach(_.pick(value, ['originprice0', 'originprice1','price0','price1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] = computeService.pushMoney(item));
+          });
+        }).value();
+
+        _.chain(currentParams).tap(function (value) {
+          _.forEach(_.pick(value, ['originprice0', 'originprice1', 'price0','price1']), function (item, key) {
+            !_.isUndefined(item) && (value[key] *= 1);
+
+          });
+        }).value();
+        // 如果路由一样需要刷新一下
+        if (angular.equals(currentParams, search)) {
+          $state.reload();
+        } else {
+          search.page = '1';
+          $state.go(currentStateName, search);
+        }
+      }
+    };
+
 
     /**
      * 获取列表数据
@@ -109,8 +137,8 @@
 
       marktingPackage.search(params).then(function (data) {
         if (data.data.status === 0) {
-          vm.gridModel.config.$on = data.data.on;
-          vm.gridModel.config.$off = data.data.off;
+          // vm.gridModel.config.$on = data.data.on;
+          // vm.gridModel.config.$off = data.data.off;
           if (!data.data.data.length && params.page*1 !== 1) {
             currentParams.page = 1;
             $state.go(currentStateName, currentParams);
@@ -129,6 +157,7 @@
             item.originprice = computeService.pullMoney(item.originprice);
             item['$$num'] = utils.isEmpty(item.num) ? '无限' : item.num;
             item.restnum = item['$$num'] === '无限' ? '无限' : item['$$num'] - item.soldnum;
+            item.status = item.status;
             vm.gridModel.itemList.push(item);
           });
 

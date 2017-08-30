@@ -1,8 +1,8 @@
 <ol class="k-breadcrumb">
-  <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
-  <li class="active">会员管理</li>
+    <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
+    <li class="active">会员管理</li>
 </ol>
-<div class="w-tabs">
+<!--<div class="w-tabs">
   <ul class="tabs-nav f-cb">
     <li><a ui-sref="user.customer.list({page:1})" class="text-muted">按会员</a></li>
     <li class="active"><a href="javascript:;" class="text-muted text-success">按车辆</a></li>
@@ -16,5 +16,188 @@
 
     <div ng-if="vm.gridModel2.columns.length && vm.gridModel.itemList" simple-grid columns="vm.gridModel2.columns" store="vm.gridModel2.itemList" loading-state="vm.gridModel2.loadingState" config="vm.gridModel2.config"></div>
   </div>
-</div>
+</div>-->
 
+<div class="g-view-customer g-view-motor">
+    <div class="w-tabs">
+        <ul class="tabs-nav f-cb">
+            <li><a ui-sref="user.customer.list({page:1})" class="text-muted text-success" style="border-radius: 4px 0 0 4px">按会员</a></li>
+            <li class="active"><a class="text-muted" style="border-radius: 0 4px 4px 0">按车辆</a></li>
+        </ul>
+    </div>
+
+    <div class="trade-wrapper">
+        <div class="trade-search">
+            <div cb-access-control="chebian:store:user:customer:search" simple-search config="vm.searchModel.config" search-handler="vm.searchModel.handler(data)" class="b-tab-bor"></div>
+        </div>
+        <div class="trade-grid">
+            <div class="grid-header f-cb">
+                <div class="f-fr">
+                    <div class="f-fl export">
+                        <a class="f-fl export" style="margin-top: -5px" title="导出列表" cb-access-control="chebian:store:user:customer:export" export-data="{{vm.gridModel.requestParams.request}}" params="vm.gridModel.requestParams.params" target="_blank">
+                            导出
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-body motor-table">
+                <div class="table-scroll-position-left">
+                    <div class="table-content">
+                        <div class="">
+                            <div class="table-body" style="width:100%;">
+                                <table class="table-fixed">
+                                    <thead class="table-thead">
+                                    <tr>
+                                        <th style="min-width: 350px">
+                                            <span class="state-unread" style="margin-left: 20px">车辆信息</span>
+                                        </th>
+                                        <th style="min-width: 300px">故障码</th>
+                                        <th class="f-tar" style="min-width: 80px">当前里程</th>
+                                        <th class="f-tar" style="min-width: 100px">距下次保养</th>
+                                        <th class="f-tar" style="min-width: 80px">上次到店</th>
+                                        <!--<th class="f-tar" ng-click="vm.serverSortHandler('lastaccess')">未到店天数<i ng-class="{'icon-arrow-down': sortReverse[lastaccess],'icon-arrow-up':!sortReverse[lastaccess]}"></i></th>
+                                        <th class="f-tar" ng-click="vm.serverSortHandler('accesscount')">历史订单<i ng-class="{'icon-arrow-down': sortReverse[accesscount],'icon-arrow-up':!sortReverse[accesscount]}"></i></th>-->
+                                        <th class="f-tar" style="min-width: 100px">未到店天数</th>
+                                        <th class="f-tar" style="min-width: 80px">历史订单</th>
+                                        <th style="min-width: 200px"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-tbody" ng-if="vm.gridModel.itemList.length !== 0">
+                                    <tr bindonce ng-repeat="item in vm.gridModel.itemList">
+                                        <td>
+                                            <div class="">
+                                                <div>
+                                                    <div class="f-fl" style="margin-right: 5px;">
+                                                        <img width="57px" bo-src-i="{{item.logo}}" alt="">
+                                                    </div>
+                                                    <div class="f-fl">
+                                                        <p class="state-unread" bo-text="item.licence" style="color: #333"></p>
+                                                        <span bo-text="item.model" style="font-size: 12px;color: #666"></span>
+                                                        <a target="_blank" ng-href="{{item.baoyang}}" class="u-btn-link"><i class="icon-book"></i></a></div>
+                                                    </div>
+                                            </div>
+                                        </td>
+                                        <td style="min-width: 300px">
+                                           <!--<span ng-if="item.brokennumber">
+                                               <span ng-bind="item.errorcode"></span>
+                                           </span>-->
+                                            <span ng-if="!item.errorcode" style="color: #999;" title="">
+                                            <!--<span ng-if="!item.errorcode" style="color: #999;" simple-truncate-text="无法获取，该车主未安装（未连接）智能车机" resize="true">-->
+                                                无法获取，该车辆未安装（未连接）智能车机
+                                            </span>
+                                        </td>
+                                        <td class="f-tar">
+                                            <span class="state-unread" bo-text="item.totalmile!=0?item.totalmile:''"></span> km
+                                        </td>
+                                        <td class="f-tar">
+                                            <span class="state-unread" bo-text="item.countdownmiles!=0?item.countdownmiles:''"></span> km
+                                        </td>
+                                        <td class="f-tar">
+                                            <span class="state-unread" bo-text="item.lastaccess"></span>
+                                        </td>
+                                        <td class="f-tar">
+                                            <p ng-if="item.daysofnotaccess">
+                                                <span class="state-unread" bo-text="item.daysofnotaccess"></span> 天
+                                            </p>
+                                        </td>
+                                        <td class="f-tar">
+                                            <a ng-if="item.accesscount" class="state-unread link u-btn-link" ui-sref="trade.order.list({page:1,keyword:item.guid})">
+                                                <span bo-text="item.accesscount" ></span> 笔
+                                            </a>
+
+                                        </td>
+                                        <td>
+                                            <div class="action f-tar">
+                                                <span class="link u-btn-link" ng-click="vm.gotoOrder(item)">开单</span>
+                                                <span class="link u-btn-link" add-motor-dialog="edit" item="item" motor-list="store" item-handler="vm.propsParams.addMotorHandler(data)">编辑</span>
+                                                <span class="line">|</span>
+                                                <span class="link u-btn-link" ng-click="vm.gotoDetail(item)">详情</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--<div class="table-fixed-left">
+                            <div class="table-body-outer">
+                                <div class="table-body-inner">
+                                    <table class="table-fixed">
+                                        <colgroup>
+                                            <col style="width: 150px; min-width: 150px;">
+                                            <col style="width: 80px; min-width: 80px;">
+                                        </colgroup>
+                                        <thead class="table-thead">
+                                        <tr>
+                                            <th><strong style="margin-left: 19px;">车辆信息</strong></th>
+                                            <th><strong>故障码</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-tbody">
+                                        <tr bindonce class="table-row" ng-repeat="item in vm.gridModel.itemList">
+                                            <td>
+                                                <div class="orderUser">
+                                                    <span class="state-unread" bo-text="item.worknum">
+                                                        <img bo-if="item.$avatar" bo-src-i="{{item.$avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt="">
+                                                    </span>
+                                                    <span class="state-unread" bo-bind="item.gender | formatStatusFilter : 'sex'"></span>&nbsp;
+                                                    <span class="state-unread" cb-truncate-text="{{item.nickname}}" text-length="11"></span>
+                                                    <span class="state-unread" bo-text="item.realname"></span>
+                                                    &lt;!&ndash;<span class="state-unread" bo-text="item.mobile | numberFormatFilter"></span>&ndash;&gt;
+                                                </div>
+                                            </td>
+                                            <td><span class="state-unread"  ng-class="{'icon-ok_circle': item.followed == 1, 'text-success': item.followed == 1, 'icon-exclamation': item.followed == 0, 'text-danger': item.followed == 0}"></span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-fixed-right">
+                            <div class="table-body-outer">
+                                <div class="table-body-inner">
+                                    <table class="table-fixed">
+                                        <colgroup>
+                                            <col style="width: 320px; min-width: 320px;">
+                                        </colgroup>
+                                        <thead class="table-thead">
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-tbody">
+                                        <tr bindonce class="table-row" ng-repeat="item in vm.gridModel.itemList">
+                                            <td>
+                                                <div class="action f-tar">
+                                                    <span class="link u-btn-link">开单</span>
+                                                    <span class="line">|</span>
+                                                    <span class="link u-btn-link" ui-sref="user.customer.detail({mobile: item.mobile})" ng-click="vm.saveData(item)">详情</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>-->
+                        <!--<div class="table-footer">
+                            <strong style="margin-left: 19px;">合计：</strong>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="grid-loading" ng-if="vm.gridModel.loadingState">
+                    <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+                </div>
+                <div class="grid-nodata" ng-if="!vm.gridModel.loadingState && !vm.gridModel.itemList.length">
+                    <span><i class="icon-not-data"></i>暂无数据</span>
+                </div>
+            </div>
+            <div class="grid-footer" ng-if="vm.gridModel.itemList.length">
+                <div class="grid-paging f-fr" simple-pagination previous-text="&lt;" next-text="&gt;"
+                     on-select-page="vm.gridModel.pageChanged(page)" pagination-info="vm.gridModel.paginationinfo"
+                     rotate="false" boundary-link-numbers="true" force-ellipses="true" show-page-goto="true"></div>
+                <!--<div class="grid-paging" simple-pagination previous-text="&lt;" next-text="&gt;" on-select-page="vm.gridModel.pageChanged(page)" pagination-info="vm.gridModel.paginationinfo" max-size="6" page-info-show="false" page-goto-show="false"></div>-->
+            </div>
+        </div>
+    </div>
+</div>

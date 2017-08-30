@@ -56,7 +56,7 @@
             if(filtration.indexOf('.') > -1){
               filtration = filtration.substring(0, filtration.indexOf('.') + ellipsis);
             }
-            if(filtration != value){
+            if(filtration !== value){
               filtration = setViewValue(filtration);
             }
           }

@@ -5,4 +5,12 @@ coverage/
 .idea/
 .tmp/
 dist/
+release/
+images/
+build/
 npm-debug.log
+.bowerrc
+.editorconfig
+.yo-rc.json
+.stylelintrc
+src/library/

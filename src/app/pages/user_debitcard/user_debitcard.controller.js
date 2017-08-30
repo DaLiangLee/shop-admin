@@ -11,7 +11,7 @@
 
 
   /** @ngInject */
-  function UserDebitcardLsitController($state, cbAlert, userDebitcard, userDebitcardConfig, computeService, utils) {
+  function UserDebitcardLsitController($state, cbAlert, userDebitcard, userDebitcardConfig, computeService) {
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
@@ -89,7 +89,11 @@
 
 
 
-
+      /**
+       * 检查oss返回的头像
+       * @type {RegExp}
+       */
+      var AVATAR_OSS_REGULAR = /^http:\/\/|https:\/\//;
 
     /**
      * 获取列表
@@ -107,7 +111,9 @@
         var result = results.data;
         if (result.status*1 === 0) {
           _.forEach(result.data, function (item) {
-            item.map.avatar=utils.getImageSrc(item.map.avatar,"user")
+              if (!AVATAR_OSS_REGULAR.test(item.avatar)) {
+                  item.avatar = "";
+              }
           });
 
           vm.gridModel.itemList = result.data;

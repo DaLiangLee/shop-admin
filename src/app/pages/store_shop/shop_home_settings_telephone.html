@@ -34,11 +34,11 @@
     </div>
     <div class="inline-block f-tac" ng-if="interceptor">
       <button class="u-btn u-btn-warning u-btn-sm" ng-click="interceptorConfirm()">确定设置</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">暂不设置</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">暂不设置</button>
     </div>
     <div class="inline-block f-tac" ng-if="!interceptor">
       <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()" ng-disabled="tel.phone.$invalid">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

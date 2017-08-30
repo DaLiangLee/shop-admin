@@ -1,0 +1,5 @@
+<div ng-if="item.length">
+    <ul>
+        <li ng-repeat="keys in item" ng-bind="keys.catename" ng-class="{'active':keys.$current}" ng-click="select(keys)"></li>
+    </ul>
+</div>

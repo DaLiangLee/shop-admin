@@ -1,0 +1,455 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="markting.jk.list({page:1})">营销中心</a></li>
+    <li><a ui-sref="markting.jk.list({page:1})" ng-click="vm.formHandler.reset()">积客券管理</a></li>
+    <li class="active">新增积客券</li>
+</ol>
+
+<div class="m-markting-jk f-cb">
+
+    <div class="h5-preview f-fl">
+        <div class="border"></div>
+        <div class="main-content">
+            <div class="content">
+                <!--<div class="border"></div>-->
+                <div class="top-part">
+                    <p class="store-name" ng-bind="vm.config.storeName"></p>
+                    <h3 class="coupon-name" ng-bind="vm.formData.name">
+                    </h3>
+                    <h3 class="coupon-name" ng-if="!vm.formData.name" style="color: #ccc">
+                        积客券名称
+                    </h3>
+                    <p class="coupon-value" style="min-height: 115px;">
+                        <span ng-bind="vm.formData.price"></span>
+                        <i ng-if="vm.formData.price">元</i>
+
+                        <span class="placeholer" ng-if="!vm.formData.price" style="color: #ccc;font-weight: 400;">
+                            面值
+                        </span>
+                    </p>
+
+                    <div class="get-btn">立即领取</div>
+                    <div class="use-date">
+                        <span>有效期：</span>
+                        <div ng-if="vm.formData.dateOrtime && vm.formData.start">
+                            <span ng-bind="vm.formData.start"></span>
+                            <span>至</span>
+                            <span ng-bind="vm.formData.end"></span>
+                        </div>
+
+                        <div ng-if="!vm.formData.dateOrtime">
+                            <p ng-if="vm.formData.availableDays">领取后<span ng-bind="vm.formData.availableDays"></span>天有效</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-part">
+                    <div class="instructions js-instructions fs24">
+                        <h3>使用须知</h3>
+                        <ul>
+                            <li ng-if="vm.formData.numPerUser" ng-bind="vm.formData.numPerUser | stateFilter : 'pernum'"></li>
+                            <li ng-if="vm.formData.conditionPrice">满<span ng-bind="vm.formData.conditionPrice"></span>元可用</li>
+                            <!--<li ng-if="vm.formData.canMix">可与其他优惠共同使用</li>-->
+                            <!--<li ng-if="!vm.formData.canMix">不可与其他优惠共同使用</li>-->
+                            <li ng-bind="vm.formData.canMix?'可与其他优惠共同使用':'不可与其他优惠共同使用'"></li>
+                            <li ng-if="vm.formData.scopeType==1 && vm.formData.itemScope" style="word-break:break-all;word-wrap:break-word;">仅限<span ng-bind="vm.formData.itemScope"></span>可用</li>
+                            <li ng-if="vm.formData.scopeType==0">全场通用</li>
+                            <li ng-if="vm.formData.instruction" ng-bind="vm.formData.instruction"></li>
+                        </ul>
+                    </div>
+
+                    <div class="use-days">
+                        <h3>可用时间</h3>
+                        <ul>
+                            <li ng-bind="vm.formData.availableInWeek | weekFilter"></li>
+                        </ul>
+                    </div>
+
+                    <div class="store-infomation">
+                        <h3>店铺信息</h3>
+                        <p><span class="icon-address" style="margin-right: 5px;color: #038AE3;"></span><span ng-bind="vm.config.storeAddress"></span></p>
+                        <p class="phone-number"><span class="icon-telephone" style="margin-right: 5px;color: #038AE3;"></span><span ng-bind="vm.config.storeTel"></span></p>
+                    </div>
+
+                    <div class="arrow icon-arrow js-arrow"></div>
+
+                </div>
+
+                <p class="explanation">最终解释权归<span ng-bind="vm.config.storeName"></span>所有</p>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" autocomplete="off" name="jk" role="form" novalidate>
+
+        <h3 class="add-new-jk">新增积客券<i class="icon-exclamation" cb-popover popover-placement="right" popover-template-id="tips.html" popover-animation="false" style="position:relative;top:2px;"></i></h3>
+
+        <div class="warning-tips">
+            积客券一旦创建，只能增加发行数量和停用。停用后已领取的券，在有效期内均可正常使用，请谨慎设置
+        </div>
+        <div class="form-header">
+            <div class="form-group jk-name f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    积客劵名称：
+                </div>
+                <div class="control-content f-fl">
+                    <div style="width: 200px;">
+                        <input type="text"
+                               class="input-control"
+                               name="jkname"
+                               ng-model="vm.formData.name"
+                               ng-required="true"
+                               maxlength="12"
+                               cb-string-range
+                               value-max="12" placeholder="请输入积客券名称">
+                    </div>
+                    <p>填写券的优惠名称。例：保养减200，保养优惠卡，贴膜满1000减100</p>
+                </div>
+            </div>
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    券面值：
+                </div>
+                <div class="control-content f-fl money-sign"
+                     ng-class="{'has-error': jk.price.$error.cbMoneyRange}"
+                     cb-field-error
+                     field-error-status="jk.price.$error.cbMoneyRange"
+                     field-error-msg="券面值必须小于使用门槛且小于100000">
+                    <input type="text"
+                           class="input-control"
+                           name="price"
+                           ng-model="vm.formData.price"
+                           maxlength="8"
+                           ng-required="true"
+                           ng-change="vm.formHandler.invalite()"
+                           placeholder="请输入面值"
+                           cb-money-range=""
+                           range-enabled="true"
+                           data-value-max="99999.99"
+                    >元
+                    <p>设置该券的金额，即消费时可抵扣的金额</p>
+                </div>
+            </div>
+
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">发行数量：</div>
+                <div class="control-content f-fl"
+                     ng-class="{'has-error': jk.num.$error.cbMoneyRange}"
+                     cb-field-error
+                     field-error-status="jk.num.$error.cbMoneyRange"
+                     field-error-msg="发行数量必须大于每人限领数量且小于100000">
+                    <input type="text"
+                           class="input-control"
+                           name="num"
+                           ng-model="vm.formData.num"
+                           placeholder="请输入发行数量"
+                           cb-money-range=""
+                           data-value-min="{{vm.formData.numPerUser}}"
+                           range-enabled="true"
+                           data-value-max="99999.99"
+                           maxlength="5">张
+                    <p>修改时只能增加数量，不填写即表示无限量</p>
+                </div>
+            </div>
+
+            <div class="cut-line"></div>
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    每人限领：
+                </div>
+                <div class="control-content f-fl"
+                     ng-class="{'has-error': jk.numPerUser.$error.cbMoneyRange}"
+                     cb-field-error
+                     field-error-status="jk.numPerUser.$error.cbMoneyRange"
+                     field-error-msg="每人限领必须小于发行数量">
+                    <input type="text" class="input-control" name="numPerUser"
+                           ng-model="vm.formData.numPerUser"
+                           ng-required="true"
+                           cb-money-range=""
+                           data-value-max="{{vm.formData.num}}"
+                           range-enabled="true"
+                           maxlength="5"
+                           >张
+                    <p>设置单个用户可领取的最大数量。</p>
+                </div>
+            </div>
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red"><i class="icon-required"></i></span>使用门槛：
+                </div>
+                <div class="control-content money-sign f-fl threshold"
+                     ng-class="{'has-error': jk.conditionPrice.$error.cbMoneyRange}"
+                     cb-field-error
+                     field-error-status="jk.conditionPrice.$error.cbMoneyRange"
+                     field-error-msg="使用门槛必须大于券面值且小于10000000">
+                    满&nbsp;
+                    <input type="text"
+                           class="input-control"
+                           name="conditionPrice"
+                           ng-model="vm.formData.conditionPrice"
+                           ng-change="vm.formHandler.invalite()"
+                           ng-required="true"
+                           cb-money-range=""
+                           data-value-min="{{vm.formData.price}}"
+                           range-enabled="true"
+                           data-value-max="999999.99"
+                           style="width: 200px;display: inline-block;"
+                           placeholder="请输入使用门槛"
+                           maxlength="9">元可用
+                    <p>即满足一定消费金额可用，不能低于券面值</p>
+                </div>
+            </div>
+
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    与其他优惠同享：
+                </div>
+                <div class="control-content f-fl radio-content">
+                    <label>
+                        <input type="radio" name="canMix"
+                               ng-value="false"
+                               ng-model="vm.formData.canMix"
+                        >不可
+                    </label>
+                    <label style="margin-left: 40px;">
+                        <input type="radio" name="canMix" ng-value="true"
+                               ng-model="vm.formData.canMix"
+                        >可以
+                    </label>
+
+                </div>
+            </div>
+
+
+            <!--第二版：不区分适用范围、无论商品还是服务统一为输入框，用户自行输入商品或者服务的详细信息-->
+            <div class="form-group f-cb scope">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    用券范围：
+                </div>
+                <div class="control-content f-fl">
+                    <div class="f-fl" style="line-height:34px;">
+                      <label style="margin-right: 20px;">
+                        <input type="radio" name="jkscope" ng-value="0"
+                               ng-model="vm.formData.scopeType"
+                               ng-change="vm.formHandler.inputReset('itemScope')" style="vertical-align: middle"><span style="vertical-align: middle">全场通用</span>
+                      </label>
+                      <label style="margin-right: 30px">
+                        <input type="radio" name="jkscope" ng-value="1" ng-model="vm.formData.scopeType" style="vertical-align: middle"><span style="vertical-align: middle">指定项目服务和商品</span>
+                      </label>
+                    </div>
+                    <div class="f-fl" ng-if="vm.formData.scopeType =='1'">
+                      仅限 &nbsp;<input type="text" class="input-control" name="scope" ng-model="vm.formData.itemScope" style="width: 200px;">可用
+                    </div>
+                </div>
+            </div>
+
+            <!--第一版：要求区分适用范围，全场通用or指定范围。范围中区分是商品还是服务，数据格式为数组、要求包含商品或者服务的sku信息-->
+            <!--<div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>用券范围：
+                </div>
+                <div class="control-content f-fl">
+                    <select ng-model="vm.formData.jkScopeType" ng-required="true" class="input-control">
+                        <option value="0">全场通用</option>
+                        <option value="1">指定服务/商品</option>
+                    </select>
+                </div>
+            </div>-->
+            <!--<div class="form-group f-cb" ng-if="vm.formData.jkScopeType == '1'">
+                <div class="control-label f-fl">指定商品：</div>
+                <div class="control-content f-fl">
+                    <ul class="item-list" ng-if="vm.formData.jkProductScope.length">
+                        <li ng-repeat="item in vm.formData.jkProductScope">
+                            {{item.productname}}
+                            <span ng-click="vm.formHandler.deleteItem($index,'jkProductScope')">x</span>
+                        </li>
+                    </ul>
+                    <div class="choice-btn" jk-product-dialog handler="vm.propsProgram.productHandler(data)">选择商品</div>
+                </div>
+            </div>
+            <div class="form-group f-cb" ng-if="vm.formData.jkScopeType == '1' ">
+                <div class="control-label f-fl">指定服务：</div>
+                <div class="control-content f-fl">
+                    <ul class="item-list" ng-if="vm.formData.jkServiceScope.length">
+                        <li ng-repeat="item in vm.formData.jkServiceScope">
+                            {{item.manualskuvalues}}
+                            <span ng-click="vm.formHandler.deleteItem($index,'jkServiceScope')">x</span>
+                        </li>
+                    </ul>
+                    <div class="choice-btn" jk-service-dialog handler="vm.propsProgram.serviceHandler(data)">选择服务</div>
+                </div>
+            </div>
+
+            <div class="warning-tips"
+                 ng-if="vm.formData.jkScopeType==1 && vm.formData.jkProductScope.length==0 && vm.formData.jkServiceScope.length==0">
+                请至少选择一种商品或服务
+            </div>-->
+
+
+            <div class="form-group instructions f-cb">
+                <div class="control-label f-fl">其它使用说明：</div>
+                <div class="control-content f-fl">
+                    <input type="text"
+                           class="input-control"
+                           name="instruction"
+                           ng-model="vm.formData.instruction"
+                           maxlength="20"
+                           style="width: 300px;"
+                           cb-string-range
+                           value-max="20"
+                           placeholder="请输入使用说明">
+                </div>
+            </div>
+
+            <div class="cut-line"></div>
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    券有效期：
+                </div>
+                <div class="control-content f-fl radio-content">
+                    <div class="f-cb" style="min-height: 50px">
+                        <label class="f-fl" style="margin-right: 30px">
+                            <input type="radio"
+                                   name="dateOrtime"
+                                   ng-value="true"
+                                   ng-model="vm.formData.dateOrtime"
+                                   ng-change="vm.formHandler.toggleType()"
+                                   ng-required="true">
+                            <span>固定时间</span>
+                        </label>
+
+                        <label class="f-fl" style="margin-right: 30px">
+                            <input type="radio" name="dateOrtime" ng-value="false" ng-model="vm.formData.dateOrtime" ng-change="vm.formHandler.toggleType()">
+                            <span>固定时长</span>
+                        </label>
+
+
+                        <!--ng-show="vm.formData.jkFix==='date'"-->
+
+                    </div>
+                    <div class="date-picker f-cb" ng-if="vm.formData.dateOrtime">
+                        <div class="f-fl" style="display: inline-block">
+                                <span style="width:180px;"
+                                      cb-datepicker
+                                      datepicker-options="vm.formConfig.dataPick"
+                                      is-open="vm.formConfig.isStartOpen"
+                                      datepicker-model="vm.formData.start">
+                                </span>
+                        </div>
+                        <span class="f-fl" style="padding-top: 5px">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;</span>
+                        <div class="f-fl"
+                             style="display: inline-block">
+                                <span style="width:180px;"
+                                      cb-datepicker
+                                      datepicker-options="vm.formConfig.dataPick"
+                                      is-open="vm.formConfig.isEndOpen"
+                                      datepicker-model="vm.formData.end">
+                                </span>
+                        </div>
+                    </div>
+                    <div class="f-fl" ng-if="!vm.formData.dateOrtime">
+                        <input class="input-control date-picker"
+                               name="availableDays"
+                               type="text"
+                               ng-model="vm.formData.availableDays"
+                        >天有效
+                        <p>从领取日开始计算，到期券将自动失效</p>
+                    </div>
+
+                    <!--<div class="bottom-input-control">-->
+                    <!--<label class="f-fl" style="margin-right: 30px">-->
+                    <!--<input type="radio" name="time" value="time" ng-model="vm.formData.jkFix" ng-change="vm.formHandler.toggleType()">-->
+                    <!--<span>固定时长</span>-->
+                    <!--</label>-->
+                    <!--&lt;!&ndash; ng-show="vm.formData.jkFix==='time'"&ndash;&gt;-->
+                    <!--<div class="f-fl">-->
+                    <!--<input class="input-control date-picker"-->
+                    <!--name="availableDays"-->
+                    <!--type="text"-->
+                    <!--ng-model="vm.formData.jkAvailableDays"-->
+                    <!--ng-disabled="vm.formData.jkFix==='date'"-->
+                    <!--&gt;天有效-->
+                    <!--<p>从领取日开始计算，到期券将自动失效</p>-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+
+                </div>
+            </div>
+
+            <!--隐藏域、做验证-->
+            <div class="hidden-content jkfix" ng-if="vm.formData.dateOrtime">
+                <input type="hidden" name="jkStart" ng-model="vm.formData.start" ng-required="true">
+                <input type="hidden" name="jkEnd" ng-model="vm.formData.end" ng-required="true">
+            </div>
+
+            <div class="hidden-content jkScope" ng-if="!vm.formData.dateOrtime">
+                <input type="hidden" name="jkDays" ng-model="vm.formData.availableDays" ng-required="true">
+            </div>
+
+            <div class="hidden-content jkScope" ng-if="vm.formData.scopeType =='1'">
+                <input type="hidden" name="jkItem" ng-model="vm.formData.itemScope" ng-required="true">
+            </div>
+
+            <div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    <span class="text-red">
+                        <i class="icon-required"></i>
+                    </span>
+                    使用时间：
+                </div>
+                <div class="control-content f-fl check-box">
+                    <label ng-repeat="item in vm.formConfig.weeks2">
+                      <input type="checkbox" name="usetime" ng-value="item.index" ng-model="item.flag" ng-change="vm.formConfig.pushDays($index)">
+                      <span ng-bind="item.text"></span>
+                    </label>
+                </div>
+            </div>
+            <!--广告语-->
+            <!--<div class="form-group f-cb">
+                <div class="control-label f-fl">
+                    广告语：
+                </div>
+                <div class="control-content f-fl">
+                    <input type="text" class="input-control" name="advertisment" ng-model="vm.formData.jkAd">
+                    <p></p>
+                </div>
+            </div>-->
+        </div>
+        <div class="inline-block f-tac form-footer" style="margin-top: 50px">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="vm.submitBack()" ng-disabled="jk.$invalid || !vm.formData.availableInWeek.length">保存</button>
+            <!--jk.$invalid && !vm.config.isLegal-->
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="vm.formHandler.addJk()" ng-disabled="jk.$invalid || !vm.formData.availableInWeek.length" style="margin: 0 20px;">保存并新建</button>
+            <!-- ng-disabled="jk.$invalid"-->
+            <button class="u-btn u-btn-disabled u-btn-sm" ui-sref="markting.jk.list({page:1})" style="background: #808080;color: #fff;">取　消</button>
+        </div>
+    </form>
+</div>
+
+
+<script type="text/ng-template" id="tips.html">
+    <p>优惠券、代金券、满减送等券种的总称，用于配合店铺做各类活动。</p>
+</script>

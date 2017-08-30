@@ -13,7 +13,16 @@
     var vm = this;
     var currentState = $state.current;
     var currentStateName = currentState.name;
-    var currentParams = angular.extend({}, $state.params, {pageSize: 5});
+    var currentParams = angular.extend({}, $state.params, {pageSize: 15});
+
+    vm.propsParams = {
+      addMotorHandler: function (data) {
+        if (data.status === "0") {
+          getList(currentParams);
+        }
+      }
+    }
+
     /**
      * 表格配置
      *
@@ -35,6 +44,14 @@
       selectHandler: function(item){
         // 拦截用户恶意点击
         !item.$active && item.guid && getUser(item.guid);
+      }
+    };
+
+    vm.gridModel.config.propsParams = {
+      editMotorHandler:function(data){
+        if(data.status === "0") {
+          getList(currentParams);
+        }
       }
     };
 
@@ -142,7 +159,7 @@
         }
       }).then(function(result){
         _.map(result.items, function (item) {
-          item.logo = configuration.getStatic() + item.logo;
+          item.logo = configuration.getStatic() + item.logo.replace("http://app.chebian.vip","");
           item.baoyang = configuration.getAPIConfig() + '/users/motors/baoyang/' + item.guid;
         });
         vm.gridModel.paginationinfo = {
@@ -150,19 +167,84 @@
           pageSize: params.pageSize,
           total: result.totalCount
         };
-        if(result.items[0]){
+        /*if(result.items[0]){
           getUser(result.items[0].guid);
         }else{
           vm.gridModel2.itemList = [];
           vm.gridModel2.loadingState = false;
-        }
+        }*/
         vm.gridModel.itemList = result.items;
-        vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$active = true);
+        // vm.gridModel.itemList[0] && (vm.gridModel.itemList[0].$active = true);
         vm.gridModel.loadingState = false;
       });
     }
 
     getList(currentParams);
+
+
+    /**
+     * 跳转到开单
+     * @param item
+     */
+
+    vm.gotoOrder = function (item){
+      userCustomer.byMotor({motorid: item.guid}).then(function(results){
+        var result = results.data;
+        if (result.status*1 === 0) {
+          return result.data[0].mobile;
+        } else {
+          cbAlert.error("错误提示", result.data);
+        }
+      }).then(function(result){
+        $state.go('trade.order.added', {
+          motorid: item.guid,
+          mobile: result,
+          license: item.licence
+        });
+      })
+    };
+
+    vm.gotoDetail = function(item){
+      userCustomer.byMotor({motorid: item.guid}).then(function(results){
+        var result = results.data;
+        if (result.status*1 === 0) {
+          return result.data[0].mobile;
+        } else {
+          cbAlert.error("错误提示", result.data);
+        }
+      }).then(function(result){
+        $state.go('user.customer.detail',{
+          mobile:result,
+          licence:item.licence
+        });
+      });
+    };
+
+    /*
+    * 服务端排序
+    * */
+    vm.sortReverse = {};
+    vm.serverSortHandler = function(name){
+      var result = {};
+      result[name] = vm.sortReverse[name] ? "ASC" : "DESC";
+      vm.sortChanged({
+        name: name,
+        data: result
+      });
+      vm.sortReverse[name] = !vm.sortReverse[name];
+    };
+    vm.sortChanged =  function (data) {
+      var orders = [];
+      angular.forEach(data.data, function (item, key) {
+        orders.push({
+          "field": key,
+          "direction": item
+        });
+      });
+      var order = angular.extend({}, currentParams, { orders: angular.toJson(orders) });
+      vm.gridModel.requestParams.params = order;
+      getList(order);
+    }
   }
 })();
 

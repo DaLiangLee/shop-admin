@@ -1,17 +1,17 @@
-<div class="m-server-category">
-  <div ng-if="folded">
+<div class="m-server-category" ng-if="store.length">
+  <!--<div ng-if="folded">
     <p bindonce=""><span bo-text="category.servername"></span> <a class="f-curp" ng-click="process.toggle()">编辑</a></p>
-  </div>
-  <div ng-if="!folded" class="category">
-    <div class="category-input">
+  </div>-->
+  <div class="category u-box-shadow">
+    <!--<div class="category-input">
       <div>
         <input type="text" class="input-control" name="" ng-model="category.servername" ng-change="input.search()" ng-blur="getServername()" placeholder="请输入服务名称" cb-placeholder cb-string-range value-max="20">
       </div>
       <span class="cancel" ng-if="input.name && step == 2" ng-click="process.toggle()">取消编辑</span>
-    </div>
+    </div>-->
     <div class="category-list">
       <ul class="f-cb" dg-click="select($event, item)" selector="li" bindonce="">
-        <li ng-repeat="item in store | filter: params" ng-class="{'active': item.$active}">
+        <li ng-repeat="item in store | filter: params" ng-class="{'active': item.$current}">
           <span bo-text="item.catename"></span>
         </li>
       </ul>

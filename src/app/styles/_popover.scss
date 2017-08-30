@@ -63,6 +63,7 @@ $font-size-base:          14px !default;
   &.left    { margin-left: -$popover-arrow-width; }
   &.top-left { margin-top: $popover-arrow-width; }
   &.right-top {margin-left: -$popover-arrow-width;}
+  &.top-right { margin-top: $popover-arrow-width; }
 }
 
 .popover-title {
@@ -164,6 +165,21 @@ $font-size-base:          14px !default;
   }
   &.top-left > .arrow{
     left: 20px;
+    margin-left: -$popover-arrow-outer-width;
+    border-top-width: 0;
+    border-bottom-color: $popover-arrow-outer-fallback-color; // IE8 fallback
+    border-bottom-color: $popover-arrow-outer-color;
+    top: -$popover-arrow-outer-width;
+    &:after {
+      content: " ";
+      top: 1px;
+      margin-left: -$popover-arrow-width;
+      border-top-width: 0;
+      border-bottom-color: $popover-arrow-color;
+    }
+  }
+  &.top-right > .arrow{
+    right: 20px;
     margin-left: -$popover-arrow-outer-width;
     border-top-width: 0;
     border-bottom-color: $popover-arrow-outer-fallback-color; // IE8 fallback

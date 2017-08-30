@@ -30,7 +30,7 @@
         <br>
         <div ng-if="vm.gridModel.columns.length" simple-grid columns="vm.gridModel.columns" store="vm.gridModel.itemList" pagination-info="vm.gridModel.paginationinfo" loading-state="vm.gridModel.loadingState" request-params="vm.gridModel.requestParams" config="vm.gridModel.config" page-changed="vm.gridModel.pageChanged(page)"></div>
         <div class="f-tac">
-            <button type="button" class="u-btn u-btn-disabled u-btn-sm" cb-back-button="{'name':'user.debitcard.list','params':{'page': 1}}" data-router="user.debitcard.detail">返　回</button>
+            <button type="button" class="u-btn u-btn-cancel u-btn-sm" cb-back-button="{'name':'user.debitcard.list','params':{'page': 1}}" data-router="user.debitcard.detail">返　回</button>
         </div>
     </div>
 </div>

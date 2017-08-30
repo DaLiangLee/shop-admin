@@ -1,0 +1,122 @@
+.simple-radio-group{
+  .simple-radio{
+    margin-right: 15px;
+  }
+}
+
+.simple-radio{
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 12px;
+  input[type=radio][disabled]{
+    cursor: not-allowed;
+  }
+  &:hover{
+    .radio-inner{
+      border-color: #038ae3;
+    }
+  }
+  &.simple-radio-checked{
+    .radios{
+      &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 1px solid #038ae3;
+        content: "";
+        animation: simpleRadioEffect .4s ease-in-out;
+        animation-fill-mode: both;
+      }
+      .radio-inner{
+        border: none;
+        background-color: #038ae3;
+        &:after{
+          opacity: 1;
+          transition: all .3s cubic-bezier(.78,.14,.15,.86);
+        }
+      }
+    }
+  }
+  &.simple-radio-disabled{
+    cursor: not-allowed;
+    .radio{
+      .radio-inner{
+        border-color: #d9d9d9!important;
+        background-color: #f7f7f7;
+      }
+      & + .radio-label{
+        color: rgba(0,0,0,.25);
+        cursor: not-allowed;
+      }
+    }
+  }
+  .radios{
+    display: inline-block;
+    position: relative;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: none;
+    line-height: 1;
+    vertical-align: text-bottom;
+    .radio-input{
+      position: absolute;
+      left: 0;
+      z-index: 1;
+      cursor: pointer;
+      opacity: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      margin: 0;
+    }
+    .radio-inner{
+      position: relative;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 16px;
+      height: 16px;
+      border-radius: 16px;
+      border: 1px solid #6a6a6a;
+      background-color: #fff;
+      transition: all .3s;
+      &:after{
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        left: 4px;
+        top: 4px;
+        overflow: hidden;
+        display: table;
+        content: "";
+        background-color: #fff;
+        opacity: 0;
+        border-radius: 8px;
+        transition: all .3s cubic-bezier(.78,.14,.15,.86);
+      }
+    }
+    & + .radio-label{
+      padding-left: 5px;
+      padding-right: 5px;
+      font-size: 14px;
+      color: #666666;
+    }
+  }
+}
+
+@keyframes simpleRadioEffect {
+  0% {
+    transform: scale(1);
+    opacity: .5
+  }
+
+  to {
+    transform: scale(1.6);
+    opacity: 0
+  }
+}

@@ -13,7 +13,27 @@
   angular
     .module('shopApp')
     .factory('localstorage', localstorage)
+    .factory('cachestorage', cachestorage)
     .factory('sessionstorage', sessionstorage);
+
+  /** @ngInject */
+  function cachestorage() {
+      var CACHE_STORAGE = {};
+      return {
+          get: function (key) {
+              return CACHE_STORAGE[key];
+          },
+          set: function (key, value) {
+              CACHE_STORAGE[key] = value;
+          },
+          remove: function (key) {
+              delete CACHE_STORAGE[key];
+          },
+          clear: function () {
+              CACHE_STORAGE = {};
+          }
+      }
+  }
 
   /** @ngInject */
   function sessionstorage($window) {
@@ -38,21 +58,21 @@
 
   /** @ngInject */
   function localstorage($window) {
-    if(!$window.localstorage){
+    if(!$window.localStorage){
       return ;
     }
     return {
       get: function (key) {
-        return angular.fromJson($window.localstorage.getItem(key));
+        return angular.fromJson($window.localStorage.getItem(key));
       },
       set: function (key, value) {
-        $window.localstorage.setItem(key, angular.toJson(value));
+        $window.localStorage.setItem(key, angular.toJson(value));
       },
       remove: function (key) {
-        $window.localstorage.removeItem(key);
+        $window.localStorage.removeItem(key);
       },
       clear: function () {
-        $window.localstorage.clear();
+        $window.localStorage.clear();
       }
     }
   }

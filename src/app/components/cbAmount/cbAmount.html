@@ -1,5 +1,5 @@
-<div class="w-amount-choose">
+<div class="w-amount-choose f-cb">
+    <button class="w-amount-reduce f-tac" ng-click="changeAmount(-1)" ng-disabled="config.isMinNum"><i class="icon icon-minus"></i></button>
     <input type="text" ng-model="num"  ng-keyup="modifyAmount()" cb-amount-model />
-    <button class="w-amount-add f-tac" ng-click="changeAmount(1)" ng-disabled="config.isMaxNum">+</button>
-    <button class="w-amount-reduce f-tac" ng-click="changeAmount(-1)" ng-disabled="config.isMinNum">-</button>
+    <button class="w-amount-add f-tac" ng-click="changeAmount(1)" ng-disabled="config.isMaxNum"><i class="icon icon-add"></i></button>
 </div>

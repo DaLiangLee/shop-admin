@@ -1,14 +1,15 @@
-<div class="m-product-unit b-w-5">
-    <div>
+<div class="m-product-unit">
+    <!--<div>
         <div>
-            <input type="text" class="input-control" cb-string-range value-max="10" ng-required="true" ng-blur="addUnit(currentunit)" ng-model="currentunit">
+            <input type="text" class="input-control" cb-string-range value-max="10" placeholder="请输入" ng-focus="toggleItems()" ng-required="true" ng-blur="addUnit(currentunit)" ng-model="currentunit">
         </div>
-    </div>
+    </div>-->
     <div class="unit-items f-cb">
-        <ul dg-click="chooseUnit(unit)" selector="li">
+        <ul dg-click="chooseUnit(unit)" selector="li" class="u-box-shadow units-list">
             <li ng-repeat="unit in units" class="unit-item" ng-class="{'isCurrent': unit.active}">
-                <span>{{unit.text}}</span>
+                <span style="padding: 0">{{unit.text}}</span>
             </li>
         </ul>
+        <!--<span class="unit-cancel" ng-click="closeItems()"><i class="icon-remove-circle"></i></span>-->
     </div>
 </div>

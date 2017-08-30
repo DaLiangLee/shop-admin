@@ -1,0 +1,31 @@
+.g-view-am {
+  padding: 15px;
+  background-color: #d7d7d7;
+}
+.am-wrapper{
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  .am-info{
+    padding: 20px;
+    font-size: 12px;
+    line-height: 24px;
+    color: #666;
+    h3{
+      color: #333;
+    }
+  }
+  .am-grid{
+    .item-name{
+      position: relative;
+      max-width: 90%;
+      span{
+        display: block;
+        font-size: 14px;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@
   /** @ngInject */
   function productGoodsConfig() {
     return {
-      DEFAULT_GRID: {
+      /*DEFAULT_GRID: {
         "columns": [
           {
             "id": 0,
@@ -125,7 +125,7 @@
             '<button class="u-btn u-btn-danger u-btn-sm" cb-access-control="chebian:store:product:goods:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)" data-message="确定将所选商品删除？删除后将不可恢复。" ng-if="propsParams.currentStatus == 1">删除商品</button> '
           ]
         }
-      },
+      },*/
       DEFAULT_SEARCH: {
         "config": {
           "searchID": 'product-goods',

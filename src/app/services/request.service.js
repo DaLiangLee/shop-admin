@@ -29,7 +29,8 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        data: method === "POST" ? data : undefined
+        data: method === "POST" ? data : undefined,
+        timeout: 30000
       });
     };
     this.request = function(parent, current){

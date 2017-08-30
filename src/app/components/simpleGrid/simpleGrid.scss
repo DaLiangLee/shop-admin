@@ -1,33 +1,4 @@
 @import '../../config.scss';
-.pagination-info {
-  display: inline-block;
-  vertical-align: top;
-  zoom: 1;
-  margin: 20px 0;
-  line-height: 34px;
-  padding: 0 16px;
-  color: #888;
-}
-
-.pagination-goto-page {
-  display: inline-block;
-  vertical-align: top;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-top: 20px;
-  input {
-    display: inline-block;
-    vertical-align: top;
-    width: 40px;
-    padding-right: 5px;
-  }
-  button {
-    vertical-align: top;
-    padding: 6px 8px;
-    margin-left: 6px;
-  }
-}
-
 
 /**
 下拉选择更多操作选项

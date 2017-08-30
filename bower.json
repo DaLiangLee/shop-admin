@@ -14,8 +14,8 @@
     "animate.css": "~3.4.0",
     "font-awesome": "^4.6.3",
     "angular-bootstrap": "~0.12.0",
-    "echarts": "^3.2.3",
-    "plupload": "https://github.com/moxiecode/plupload.git#^2.1.9"
+    "plupload": "https://github.com/moxiecode/plupload.git#^2.1.9",
+    "jquery-qrcode": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.29"

@@ -13,7 +13,7 @@
    * selectItem   返回数据
    */
   /** @ngInject */
-  function cbSelectLicense() {
+  function cbSelectLicense(tadeOrder,cbAlert) {
     var loadData = {
       "status": 0,
       "data": [{
@@ -249,11 +249,9 @@
     };
     var formatData = function (data) {
       var results = [];
-
       function getName(item) {
         return item.prefix.split(":")[0];
       }
-
       function getItms(item) {
         var arr = [];
         var json = item.prefix.split(":")[1];
@@ -265,7 +263,6 @@
         });
         return arr;
       }
-
       angular.forEach(data, function (item) {
         if (angular.isDefined(item.prefix)) {
           results.push({
@@ -286,6 +283,8 @@
       templateUrl: "app/components/cbSelectLicense/cbSelectLicense.html",
       link: function (scope) {
         var dataLists = formatData(loadData.data);
+        var defaultAbbr = "鄂", defaultLetter = "A";
+
         scope.selectModel2 = {
           store: dataLists[0].items,
           handler: function (data) {
@@ -296,7 +295,7 @@
           }
         };
         scope.selectModel1 = {
-          store: dataLists,
+          store: _.cloneDeep(dataLists),
           handler: function (data) {
             scope.selectModel2.store = _.find(dataLists, {'name': data}).items;
             scope.selectModel2.select = scope.selectModel2.store[0].name;
@@ -318,6 +317,7 @@
           if (angular.isDefined(value)) {
             scope.selectModel1.select = value.charAt(0);
             scope.selectModel2.select = value.charAt(1);
+            scope.selectModel1.store = _.cloneDeep(dataLists);
             scope.selectModel2.store = _.find(dataLists, {'name': value.charAt(0)}).items;
             if (/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}\s[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/.test(value)) {
               scope.selectModel3.text = value.substring(3);
@@ -325,9 +325,31 @@
               scope.selectModel3.text = value.substring(2);
             }
           } else {
-            scope.selectModel1.select = dataLists[0].name;
-            scope.selectModel2.select = dataLists[0].items[0].name;
-            scope.selectModel3.text = "";
+
+            tadeOrder.carnocode().then(function (results) {
+              var result = results.data;
+              if (result.status === 0) {
+                if (result.data.length === 2) {
+                  defaultAbbr = result.data[0];
+                  defaultLetter = result.data[1];
+                  scope.selectModel1.store = _.cloneDeep(dataLists);
+                  scope.selectModel2.store = _.find(dataLists, {'name': defaultAbbr}).items;
+                  scope.selectModel1.select = defaultAbbr;
+                  scope.selectModel2.select = defaultLetter;
+                  scope.selectModel3.text = "";
+                  console.log(scope.selectModel1.select,scope.selectModel2.select);
+                }
+                // setDate();
+                // console.log(defaultAbbr,defaultLetter);
+              } else {
+                // cbAlert.error("错误提示", result.data);
+                scope.selectModel1.store = _.cloneDeep(dataLists);
+                scope.selectModel2.store = _.find(dataLists, {'name': defaultAbbr}).items;
+                scope.selectModel1.select = defaultAbbr;
+                scope.selectModel2.select = defaultLetter;
+                scope.selectModel3.text = "";
+              }
+            });
           }
         });
 
@@ -336,6 +358,7 @@
          */
         scope.$on('$destroy', function () {
           select();
+          dataLists = [];
         });
       }
     }

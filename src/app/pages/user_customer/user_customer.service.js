@@ -7,12 +7,15 @@
   angular
     .module('shopApp')
     .factory('userCustomer', userCustomer)
-    .factory('userCustomerConfig', userCustomerConfig);
+    .factory('userCustomerConfig', userCustomerConfig)
+    .factory('saveCustomerData',saveCustomerData);
+
 
   /** @ngInject */
   function userCustomer(requestService) {
     return requestService.request('users', 'customer');
   }
+
 
   /** @ngInject */
   function userCustomerConfig() {
@@ -22,14 +25,14 @@
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<div class="editOrder"><span class="edit-More text-default" ng-click="propsParams.nextshow(item,$event) ">•••</span><p class="edits" ng-show="item.$show"><span class="text-primary edit-item" cb-access-control="chebian:store:user:customer:view" add-package-dialog item="item" item-handler="propsParams.packageItem(data)">办理套餐卡</span><span class="text-primary edit-item" cb-access-control="chebian:store:user:customer:view" charge-balance-dialog item="item" item-handler="propsParams.balanceItem(data)">充值</span></p></div>',
+            "fieldDirective": '<div class="editOrder"><span class="edit-More text-default" ng-click="propsParams.nextshow(item,$event) ">•••</span><p class="edits" ng-show="item.$show"><span class="text-primary edit-item" cb-access-control="chebian:store:user:customer:view" add-package-dialog item="item" item-handler="propsParams.packageItem(data)">办理套餐卡</span><span class="text-primary edit-item" cb-access-control="chebian:store:user:customer:view" charge-balance-dialog item="item" item-handler="propsParams.balanceItem(data)">充值</span><span class="text-primary edit-item" change-pwd-dialog item="item" cb-access-control="chebian:store:user:customer:view" >修改密码</span><span class="text-primary edit-item" item="item" item-handler="propsParams.editMotorHandler(data)" add-motor-dialog cb-access-control="chebian:store:user:customer:view" >新增车辆</span></p></div>',
             "name": '',
             "width": 50
           },
           {
             "id": 1,
             "cssProperty": "state-column",
-            "fieldDirective": '<div class="orderUser"><span class="state-unread" bo-text="item.worknum"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""> </span><span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>&nbsp;<span class="state-unread" cb-truncate-text="{{item.nickname}}" text-length="11"></span></div>',
+            "fieldDirective": '<div class="orderUser"><span class="state-unread" ng-class="{\'default-user-image\': !item.avatar}" style="display: inline-block; width: 24px; height: 24px;"><img bo-if="item.avatar" bo-src-i="{{item.avatar}}?x-oss-process=image/resize,m_fill,w_30,h_30" alt=""> </span><span class="state-unread" bo-bind="item.gender | formatStatusFilter : \'sex\'"></span>&nbsp;<span class="state-unread" cb-truncate-text="{{item.nickname}}" text-length="10"></span></div>',
             "name": '头像',
             "width": 180
           },
@@ -43,7 +46,7 @@
           {
             "id": 2,
             "cssProperty": "state-column",
-            "fieldDirective": '<a class="state-unread" bo-text="item.realname" ui-sref="user.customer.edit({mobile: item.mobile})"></a>',
+            "fieldDirective": '<a class="state-unread" bo-text="item.realname" add-new-customer item="item" item-handler="propsParams.addCustomerHandler(data)"></a>',
             "name": '姓名',
             "width": 120
           },
@@ -52,7 +55,7 @@
             "cssProperty": "state-column",
             "fieldDirective": '<span class="state-unread" bo-text="item.mobile | numberFormatFilter"></span>',
             "name": '手机号',
-            "width": 100
+            "width": 110
           },
           {
             "id": 5,
@@ -93,7 +96,7 @@
           {
             "id": 10,
             "cssProperty": "state-column",
-            "fieldDirective": '<span class="state-unread" bo-text="item.remark"></span>',
+            "fieldDirective": '<span class="state-unread" title="{{item.remark}}" bo-text="item.remark" style="display: inline-block;width: 200px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden"></span>',
             "name": '备注',
             "width": 100
           }
@@ -110,8 +113,11 @@
             maxSize: 5,
             showPageGoto: true
           },
+
+
+
           'addColumnsBarDirective': [
-            '<a class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:user:customer:add" ui-sref="user.customer.add()">新增会员</a> ',
+            '<a class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:user:customer:add" add-new-customer item="{}" item-handler="propsParams.addCustomerHandler(data)">新增会员</a> ',
             '<button class="u-btn u-btn-danger" cb-access-control="chebian:store:user:customer:remove" simple-grid-remove-item="guid" item="store" remove-item="propsParams.removeItem(data)">批量删除</button> '
           ]
         }
@@ -122,4 +128,20 @@
     }
   }
 
+
+  /** @ngInject */
+  function saveCustomerData(){
+    var customerData;
+    return {
+      getCustomer:function(){
+        return customerData;
+      },
+      setCustomer:function (data) {
+        customerData = data;
+      },
+      removeCustomer:function(){
+        customerData = {};
+      }
+    }
+  }
 })();

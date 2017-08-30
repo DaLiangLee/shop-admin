@@ -1,0 +1,366 @@
+<ol class="k-breadcrumb">
+    <li><a ui-sref="user.customer.list({page:1})">会员中心</a></li>
+    <li><a ui-sref="user.customer.list({page:1})">会员管理</a></li>
+    <li class="active">会员详情</li>
+</ol>
+
+<div class="g-view-customer-detail">
+    <!-- 会员详情：{{vm.customer.dataBase | json}}
+
+     <br>===================================================<br>
+
+     车辆详情：{{vm.gridModel2.itemList | json}}-->
+    <div class="detail-wrapper">
+
+
+        <div class="customer-info">
+            <div class="operat-part f-fr f-tac" style="width: 130px;">
+                <button ng-if="!vm.isCustomerView" type="button" class="u-btn u-btn-primary u-btn-sm" cb-back-button="{'name':'user.customer.list','params':{'page': 1}}" data-router="user.customer.detail" title="返回列表页">返　回</button>
+                <button ng-if="vm.isCustomerView" type="button" class="u-btn u-btn-primary u-btn-sm" cb-back-button="{'name':'user.motor.list','params':{'page': 1}}" data-router="user.customer.detail" title="返回列表页">返　回</button>
+                <ul>
+                    <li>
+                        <a class="link u-btn-link" cb-access-control="chebian:store:user:customer:view" charge-balance-dialog item="vm.customer.dataBase" item-handler="vm.propsParams.balanceItem(data)">充值</a>
+                    </li>
+                    <li>
+                        <a class="link u-btn-link" cb-access-control="chebian:store:user:customer:view" add-package-dialog item="vm.customer.dataBase" item-handler="vm.propsParams.packageItem(data)">办理套餐卡</a>
+                    </li>
+                    <li>
+                        <a class="link u-btn-link" cb-access-control="chebian:store:user:customer:view" gift-coupon-dialog item="vm.customer.dataBase" item-handler="vm.propsParams.giftCouponHandler(data)">送券</a>
+                    </li>
+                    <li>
+                        <a class="link u-btn-link" cb-access-control="chebian:store:user:customer:view" change-pwd-dialog item="vm.customer.dataBase" >重置密码</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="grid-loading" ng-if="vm.customer.loadingState">
+                <span class="loading"><span><i class="icon-loading"></i></span>正在加载中...</span>
+            </div>
+            <div ng-if="!vm.customer.loadingState" class="info-part" style="overflow: hidden">
+                <div class="top-part">
+                    <span class="customer-name" ng-bind="vm.customer.dataBase.realname"></span>&nbsp;&nbsp;
+                    <span ng-bind="vm.customer.dataBase.gender | formatStatusFilter : 'sex'"></span>&nbsp;&nbsp;&nbsp;
+                    <a class="link u-btn-link pointer" add-new-customer item="vm.customer.dataBase" item-handler="vm.propsParams.addCustomerHandler(data)" >编辑</a>
+                    <p class="customer-mobile" ng-bind="vm.customer.dataBase.mobile | numberFormatFilter"></p>
+                </div>
+
+                <div class="bottom-part">
+                    <ul class="f-cb">
+                        <li>
+                            <span class="event-title">关注店铺：</span>
+                            <span class="event-content" ng-bind="vm.customer.dataBase.followed=='0'?'未关注':'已关注'"></span>
+                        </li>
+                        <li>
+                            <span class="event-title">累计消费：</span>
+                            <span class="event-content">
+                                ￥ <span ng-bind="vm.customer.dataBase.tradeamountall | moneyformatFilter"></span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="event-title">会员等级：</span>
+                            <span class="event-content" ng-bind="vm.customer.dataBase.storegrade"></span>
+                        </li>
+                        <li>
+                            <span class="event-title">储值余额：</span>
+                            <a class="link u-btn-link pointer" ui-sref="user.debitcard.detail({userid: vm.customer.dataBase.guid, balance: vm.customer.dataBase.balance, mobile: vm.customer.dataBase.mobile})" title="查看储值余额">
+                                ￥ <span ng-bind="vm.customer.dataBase.balance | moneyformatFilter"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <span class="event-title">公司名称：</span>
+                            <span class="event-content" ng-bind="vm.customer.dataBase.companyname"></span>
+                        </li>
+                        <li>
+                            <span class="event-title">套餐卡数：</span>
+                            <a class="link u-btn-link pointer" ng-if="vm.customer.dataBase.packagenum != 0" ng-bind="vm.customer.dataBase.packagenum" ng-mouseenter="vm.propsParams.getPackageInfo(vm.customer.dataBase)" cb-popover popover-placement="bottom" popover-template-id="marktingPackageInfo.html" popover-animation="false" popover-template-data="vm.propsParams.templateData"></a>
+                            <a class="link u-btn-link pointer" style="padding-right: 2px; cursor: default;" ng-bind="vm.customer.dataBase.packagenum" ng-if="vm.customer.dataBase.packagenum == 0" title="没有可用的套餐卡"></a>
+                        </li>
+                        <li>
+                            <span class="event-title remarks">备注：</span>
+                            <span class="event-content" ng-bind="vm.customer.dataBase.remark"></span>
+                        </li>
+                        <li>
+                            <span class="event-title">券包：</span>
+                            <span class="link u-btn-link" ng-if="vm.customer.dataBase.userJKCouponCount == 0" style="cursor: default" title="没有可用的优惠券">
+                                <span ng-bind="vm.customer.dataBase.userJKCouponCount"></span> 张
+                            </span>
+                            <span ng-if="vm.customer.dataBase.userJKCouponCount != '0'">
+                                <a class="link u-btn-link pointer" ui-sref="markting.jksendrecorde.list({page:1,keywords: vm.customer.dataBase.mobile})"><span ng-bind="vm.customer.dataBase.userJKCouponCount"></span> 张</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- 有车辆信息时 -->
+        <div ng-if="vm.motor.itemList.length" class="motor-info f-cb">
+            <div class="operat-part f-fr f-tac" style="width: 130px">
+                <ul>
+                    <li>
+                        <a class="link u-btn-link" ng-click="vm.gotoOrder()">开单</a>
+                    </li>
+                    <li>
+                        <a class="link u-btn-link" item="vm.customer.dataBase" item-handler="vm.propsParams.addMotorHandler(data)" add-motor-dialog="add" cb-access-control="chebian:store:user:customer:view">添加车辆</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="info-part" style="overflow: hidden">
+                <div class="tabBar">
+                    <ul class="f-cb">
+                        <li ng-if="vm.frontMotors.length" ng-click="vm.pushList()" style="padding: 0 10px; font-size: 12px;" class="u-btn-link"><i class="icon-agnle-left"></i></li>
+                        <li ng-if="!vm.rotateList.length" ng-repeat="item in vm.motor.itemList | limitTo : 6" ng-click="vm.selectItem($index)" ng-class="{'active':item.$current}">
+                            <span ng-bind="item.licence"></span>
+                        </li>
+                        <li ng-if="vm.rotateList.length" ng-repeat="item in vm.rotateList" ng-click="vm.selectItem($index)" ng-class="{'active':item.$current}">
+                            <span ng-bind="item.licence"></span>
+                        </li>
+
+                        <!--ng-if="vm.motor.itemList.length >5"-->
+                        <li style="position:relative;top: 1px;" ng-if="vm.showMoreTab">
+                            <span class="u-btn-link more-btn" ng-click="vm.showMoreMotors($event)">更多车辆<i class="icon-more u-btn-link"></i></span>
+                            <ul class="more-motors" ng-if="vm.showMorelist">
+                                <li ng-repeat="item in vm.motor.itemList" ng-click="vm.moveMotor($index)">
+                                    {{item.licence}}
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="detail-bar">
+                    <div class="car-des f-cb">
+                        <!--vm.motor.currentMotor-->
+                        <div class="img-box f-fl">
+                            <img class="motor-logo" width="60px" ng-src="{{vm.motor.currentMotor.logo}}" alt="">
+                        </div>
+                        <div class="text-box f-fl">
+                            <span class="state-unread motor-licence" ng-bind="vm.motor.currentMotor.licence"></span>
+                            <a class="link u-btn-link pointer" add-motor-dialog="edit" item="vm.motor.currentMotor" motor-list="store" item-handler="vm.propsParams.editMotorHnadler(data)">编辑</a>
+                            <p><span ng-bind="vm.motor.currentMotor.model"></span></p>
+                        </div>
+
+                    </div>
+
+                    <ul class="f-cb" style="margin-bottom: 20px;">
+                        <li>
+                            <div class="event-title f-fl">故障码：</div>
+                            <div class="event-content f-fl">无法获取，该车辆未安装（未连接）智能车机。</div>
+                        </li>
+                        <li>
+                            <div class="event-title">上次到店时间：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.lastaccess"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">当前里程：</div>
+                            <div class="event-content"><span ng-bind="vm.motor.currentMotor.totalmile==0?'':vm.motor.currentMotor.totalmile"></span> km</div>
+                        </li>
+                        <li>
+                            <div class="event-title">至今未到店天数：</div>
+                            <div class="event-content">
+                                <p ng-if="vm.motor.currentMotor.daysofnotaccess">
+                                    <span ng-bind="vm.motor.currentMotor.daysofnotaccess"></span> 天
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="event-title">距下次保养：</div>
+                            <div class="event-content">
+                                <span ng-bind="vm.motor.currentMotor.countdownMile==0?'':vm.motor.currentMotor.countdownMile"></span> km
+                            </div>
+                        </li>
+                        <li>
+                            <div class="event-title">历史订单：</div>
+                            <div class="event-content link u-btn-link pointer" title="查看历史订单">
+                                <a class="u-btn-link" ui-sref="trade.order.list({keyword:vm.motor.currentMotor.guid,page:1})">
+                                    <span ng-bind="vm.motor.currentMotor.accesscount?vm.motor.currentMotor.accesscount:'0'"></span> 笔
+                                </a>
+
+                            </div>
+                        </li>
+                        <li>
+                            <div class="event-title">保养手册：</div>
+                            <div class="event-content">
+                                <a class="f-fl u-btn-link" target="_blank" ng-href="{{vm.motor.currentMotor.baoyang}}" title="查看保养手册"><i class="icon-book" style="font-size: 16px"></i></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="event-title">累计订单金额：</div>
+                            <div class="event-content">
+                                ￥<span ng-bind="vm.motor.currentMotor.expendamount | moneyformatFilter"></span>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <div class="event-title">VIN码：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.vin"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">购车日期：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.buydate"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">发动机号：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.enginenumber"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">上次年检时间：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.lastcheckdate"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">前轮胎：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.frontwheel"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">保险公司：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.insuranceid | insuranceFilter"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">后轮胎：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.rearwheel"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">保险购买时间：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.lastinsurancedate"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- 无车辆信息时 -->
+        <div ng-if="!vm.motor.itemList.length" class="motor-info f-cb">
+            <div class="operat-part f-fr f-tac" style="width: 130px">
+                <ul>
+                    <li>
+                        <a class="link u-btn-link" item="vm.customer.dataBase" item-handler="vm.propsParams.addMotorHandler(data)" add-motor-dialog cb-access-control="chebian:store:user:customer:view">添加车辆</a>
+                    </li>
+                </ul>
+            </div>
+            <!--<div class="info-part" style="overflow: hidden">
+                &lt;!&ndash;<div class="tabBar">
+                    <ul class="f-cb">
+                        <li ng-repeat="item in vm.motor.itemList | limitTo : 5" ng-click="vm.selectItem($index)" ng-class="{'active':item.$current}">
+                            <a ng-bind="item.licence"></a>
+                        </li>
+                        &lt;!&ndash;ng-if="vm.motor.itemList.length >5"&ndash;&gt;
+                        <li style="position:relative;">
+                            <a>更多车辆</a>
+                            <ul style="position:absolute;top: 40px;left: 0;border: 1px solid #E8E8E8;width: 100%;padding: 10px;background-color: #fff;">
+                                <li ng-repeat="item in vm.motor.itemList.slice(5)" ng-click="vm.rotateArray($index)">
+                                    {{item.licence}}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="detail-bar">
+                    <div class="car-des f-cb">
+                        &lt;!&ndash;vm.motor.currentMotor&ndash;&gt;
+                        <div class="img-box f-fl">
+                            <img class="motor-logo" width="60px" ng-src="{{vm.motor.currentMotor.logo}}" alt="">
+                        </div>
+                        <div class="text-box f-fl">
+                            <span class="state-unread" ng-bind="vm.motor.currentMotor.licence"></span>
+                            <a class="link u-btn-link pointer" add-motor-dialog="edit" item="vm.motor.currentMotor" motor-list="store" item-handler="vm.propsParams.editMotorHnadler(data)">编辑</a>
+                            <p><span ng-bind="vm.motor.currentMotor.model"></span></p>
+                        </div>
+
+                    </div>
+
+                    <ul>
+                        <li>
+                            <div class="event-title f-fl">故障码：</div>
+                            <div class="event-content f-fl">无法获取，该车主未安装（未连接）智能车机</div>
+                        </li>
+                        <li>
+                            <div class="event-title">上次到店时间：</div>
+                            <div class="event-content"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">当前里程：</div>
+                            <div class="event-content"><span ng-bind="vm.motor.currentMotor.totalmile"></span>km</div>
+                        </li>
+                        <li>
+                            <div class="event-title">至今未到店天数：</div>
+                            <div class="event-content"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">距下次保养：</div>
+                            <div class="event-content"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">历史订单：</div>
+                            <div class="event-content link u-btn-link pointer">43笔</div>
+                        </li>
+                        <li>
+                            <div class="event-title">保养手册：</div>
+                            <div class="event-content">
+                                <a class="f-fl" target="_blank" ng-href="{{vm.motor.currentMotor.baoyang}}"><i class="icon-book"></i></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="event-title">累计订单金额：</div>
+                            <div class="event-content">￥36，500.00</div>
+                        </li>
+                        <li>
+                            <div class="event-title">VIN码：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.vin"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">购车日期：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.buydate"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">发动机号：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.enginenumber"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">上次年检时间：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.lastcheckdate"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">前轮胎：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.frontwheel"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">保险公司：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.insuranceid | insuranceFilter"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">后轮胎：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.rearwheel"></div>
+                        </li>
+                        <li>
+                            <div class="event-title">保险购买时间：</div>
+                            <div class="event-content" ng-bind="vm.motor.currentMotor.lastinsurancedate"></div>
+                        </li>
+                    </ul>
+                </div>&ndash;&gt;
+            </div>-->
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script type="text/ng-template" id="marktingPackageInfo.html">
+    <div class="package-info-detail">
+        <table>
+            <tr>
+                <th class="info-header">套餐卡名称</th>
+                <th class="info-header"></th>
+            </tr>
+            <tr ng-repeat="item in templateData" bindonce="templateData" ng-if="templateData.length" class="info-body">
+                <td bo-bind="item.packagename" class="info-item"></td>
+                <td class="info-item">
+                    <a ui-sref="user.package.detail({userpackageid: item.id, mobile: item.mobile,timeleft:item.timeleft,expirationtime:item.expire,packagestate:item.status})" class="u-btn-link">查看详情</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</script>
+

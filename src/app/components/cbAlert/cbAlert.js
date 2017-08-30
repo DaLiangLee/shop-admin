@@ -229,7 +229,7 @@
          */
         var loaderBallFall = _this.option.showLoaderOnConfirm ? '<div class="loader-ball-fall"><div></div><div></div><div></div></div>' : "";
         if(_this.option.showConfirmButton && _this.option.showCancelButton){
-          buttonBox = '<div class="button-container"><button class="confirm u-btn u-btn-primary u-btn-sm" tabindex="1">'+_this.option.confirmButtonText+'</button>　　<button class="cancel u-btn u-btn-sm" tabindex="2">'+_this.option.cancelButtonText+'</button>'+loaderBallFall+'</div>';
+          buttonBox = '<div class="button-container"><button class="confirm u-btn u-btn-primary u-btn-sm" tabindex="1">'+_this.option.confirmButtonText+'</button>　　<button class="u-btn-cancel u-btn u-btn-sm" tabindex="2">'+_this.option.cancelButtonText+'</button>'+loaderBallFall+'</div>';
         }else if(!_this.option.showConfirmButton && !_this.option.showCancelButton){
           buttonBox = "";
         }else{
@@ -265,7 +265,7 @@
     AlertDialog.prototype.handleButton = function (callback) {
       var _this = this;
       var $confirm = this.$modal.find('.confirm');
-      var $cancel= this.$modal.find('.cancel');
+      var $cancel= this.$modal.find('.u-btn-cancel');
       var $input = this.$modal.find('.input');
 
       this.option.allowOutsideClick && this.$modal.on('click', '.alert-overlay', function () {

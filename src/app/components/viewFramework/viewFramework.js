@@ -41,7 +41,6 @@
         });
 
         $scope.$watch("view.config", function (newValue) {
-
           (newValue.sidebar != $window.sidebar) && $timeout(function () {
             angular.element(window).resize();
           }, 500, false);

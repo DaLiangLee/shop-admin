@@ -1,0 +1,312 @@
+<div class="viewFramework-add-new-customer-dialog">
+    <!-- 手机验证 -->
+    <div class="verify-code-check" ng-if="status === 0">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+            <h5 class="modal-title">新增会员</h5>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-horizontal" autocomplete="off" role="form" novalidate name="customer">
+                <div class="form-header">
+                    <div class="form-group f-cb">
+                        <div class="control-label f-fl">
+                        <span class="text-danger">
+                            <i class="icon-required"></i>
+                        </span>
+                            手机号：
+                        </div>
+                        <div class="control-content f-fl">
+                            <div >
+                                <input type="text"
+                                       class="input-control"
+                                       name="mobile"
+                                       id="inputPassword1"
+                                       ng-required="true"
+                                       ng-pattern="/^(1[3|5|7|8][0-9]{9}|14[5|7|9][0-9]{8})$/"
+                                       ng-model="dataBase.mobile"
+                                       placeholder="请输入手机号码" ng-change="existMobile(customer.mobile.$valid)" maxlength="11">
+
+                                <div class="has-customer" ng-if="myUsers == 1">
+                                    该用户已经是本店铺会员，点击下一步。
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="myUsers == -1 || myUsers == 0">
+                        <label for="inputPassword2" class="b-w-4 control-label"><span class="text-danger"><i class="icon-required"></i></span>短信验证码：</label>
+                        <div class="">
+                            <div class="f-fl">
+                                <input type="text"
+                                       class="input-control"
+                                       id="inputPassword2"
+                                       ng-model="dataBase.code"
+                                       placeholder="6位数字验证码"
+                                       name="code"
+                                       ng-disabled="myUsers == -1 || myUsers == 1"
+                                       ng-required="true"
+                                       ng-pattern="/^\d{6}$/" maxlength="6">
+                            </div>
+                            <div class="f-fl" style="margin-left: 20px">
+                                <button type="button" ng-class="{code_disabled: ((myUsers == -1 || myUsers == 1) && customer.mobile.$invalid) || !isCountdown}" class="u-btn u-btn-primary u-btn-sm" ng-disabled="((myUsers == -1 || myUsers == 1) && customer.mobile.$invalid) || !isCountdown" ng-click="setCountdown()" ng-bind="countdown">获取验证码</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="myUsers != 1">
+                        <div class="f-tal" style="padding-left: 40px;color: rgb(153,153,153);font-size: 12px">
+                            <p>为确保会员手机号的真实性，请在点击“获取验证码”后向您的会员索取验证码。</p>
+                            <p>验证码10分钟内有效。</p>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="alert alert-danger" style="text-align: center" ng-if="showWarningTips" ng-bind="warningTips">
+                错误提示：密码错误
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="inline-block f-tac" ng-if="!interception">
+                <!--ng-disabled="new-customer.$invalid"-->
+                <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="customer.$invalid" ng-click="submitBtn()" style="margin-right: -10px">下一步</button>
+                　　
+                <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+            </div>
+
+            <!--<div class="alert">
+                错误提示：密码错误
+            </div>-->
+            <!--<div class="inline-block f-tac" ng-if="interception">
+                <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>
+                　　
+                <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+            </div>-->
+        </div>
+    </div>
+
+    <!-- 编辑会员 -->
+    <div class="edit-customer" ng-if="status === 1">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+            <h5 class="modal-title">编辑会员</h5>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-horizontal" autocomplete="off" role="form" novalidate name="customer">
+                <div class="form-header">
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        <span class="text-danger">
+                            <i class="icon-required"></i>
+                        </span>
+                        姓名：
+                    </div>
+                    <div class="control-content f-fl">
+                        <div class="f-fl">
+                            <input type="text"
+                                   class="input-control input-w-140"
+                                   name="name"
+                                   ng-required="true"
+                                   ng-model="dataBase.realname"
+                                   placeholder="请输入姓名"
+                                   cb-string-range value-max="10">
+                        </div>
+
+                        <div class="f-fl">
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="optionsRadios" ng-model="dataBase.gender" value="1">
+                                    男
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="optionsRadios" ng-model="dataBase.gender" value="0">
+                                    女
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        手机号：
+                    </div>
+                    <div class="control-content f-fl input-w-140">
+                        <div style="line-height: 34px">
+                            <span ng-bind="dataBase.mobile | numberFormatFilter"></span>
+                            <a class="text-link" style="margin-left: 10px;cursor: pointer" edit-telphone-dialog item="propsParams" item-handler="propsHandler(data)" ng-if="status === 1">修改</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        会员等级：
+                    </div>
+                    <div class="control-content input-w-140">
+                        <div simple-select="guid,gradename" store="storegrade" select="dataBase.storegrade"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">关注状态：</label>
+                    <div class="control-content" style="line-height: 34px">
+                        <p class="" ng-bind="dataBase.followed | formatStatusFilter :'followed'"></p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label">公司名称：</label>
+                    <div class="control-content input-w-280">
+                        <input type="text" class="input-control" name="username" ng-model="dataBase.companyname"
+                               placeholder="请输入公司名称" cb-placeholder="" cb-string-range value-max="20">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">备注：</label>
+                    <div class="control-content input-w-280">
+                        <input type="text" class="input-control" name="username" ng-model="dataBase.remark" cb-string-range value-max="20"
+                               placeholder="请输入备注" cb-placeholder="">
+                    </div>
+                </div>
+            </div>
+            </form>
+
+            <!--<div class="alert alert-danger" style="text-align: center">
+                 错误提示
+            </div>-->
+        </div>
+
+        <div class="modal-footer">
+            <div class="inline-block f-tac" ng-if="!interception">
+                <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="customer.$invalid" ng-click="saveData()" style="margin-right: -10px">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                　　
+                <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+            </div>
+
+            <!--<div class="warning-tips" ng-bind="warningTips" ng-if="showWarningTips">
+
+            </div>-->
+            <!--<div class="alert">
+                错误提示：密码错误
+            </div>-->
+            <!--<div class="inline-block f-tac" ng-if="interception">
+                <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>
+                　　
+                <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+            </div>-->
+        </div>
+
+        <!-- 遮罩 -->
+        <div class="mask" ng-if="isLoadData">
+            <!--ng-if="isLoadData"-->
+            <span class="icon-loading"></span>
+        </div>
+    </div>
+
+    <!-- 新增会员 -->
+    <div class="add-customer" ng-if="status === 2">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+            <h5 class="modal-title">新增会员</h5>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-horizontal" autocomplete="off" role="form" novalidate name="customer" >
+                <div class="form-header">
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        <span class="text-danger">
+                            <i class="icon-required"></i>
+                        </span>
+                        姓名：
+                    </div>
+                    <div class="control-content f-fl">
+                        <div class="f-fl">
+                            <input type="text"
+                                   class="input-control input-w-140"
+                                   name="name"
+                                   ng-required="true"
+                                   ng-model="dataBase.realname"
+                                   placeholder="请输入姓名"
+                                   cb-string-range value-max="10">
+                        </div>
+
+                        <div class="f-fl">
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="optionsRadios" ng-model="dataBase.gender" value="1">
+                                    男
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="optionsRadios" ng-model="dataBase.gender" value="0">
+                                    女
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        手机号：
+                    </div>
+                    <div class="control-content f-fl input-w-140">
+                        <div style="line-height: 34px">
+
+                            <span ng-bind="dataBase.mobile | numberFormatFilter"></span>
+                            <!--<a href="javascript:;" edit-telphone-dialog item="" itemHandler="" ng-if="status === 1">修改</a>-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">公司名称：</label>
+                    <div class="control-content w5">
+                        <input type="text" class="input-control" name="username" ng-model="dataBase.companyname"
+                               placeholder="请输入会员公司名称" cb-placeholder="" cb-string-range value-max="20">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">备注：</label>
+                    <div class="control-content w5">
+                        <input type="text" class="input-control" name="username" ng-model="dataBase.remark" cb-string-range value-max="20"
+                               placeholder="请输入会员备注" cb-placeholder="">
+                    </div>
+                </div>
+            </div>
+            </form>
+            <!--<div class="alert alert-danger" style="text-align: center" >
+                错误提示：密码错误
+            </div>-->
+        </div>
+
+        <div class="modal-footer">
+            <div class="inline-block f-tac" ng-if="!interception">
+                <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="customer.$invalid" ng-click="saveData()">保&nbsp;&nbsp;&nbsp;&nbsp;存</button>
+                <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+            </div>
+        </div>
+
+        <!-- 遮罩 -->
+        <div class="mask" ng-if="isLoadData">
+            <span class="icon-loading"></span>
+        </div>
+
+    </div>
+</div>
+
+

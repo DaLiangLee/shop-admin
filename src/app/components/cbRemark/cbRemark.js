@@ -83,7 +83,11 @@
          * @returns {boolean}
          */
         function isEmptyRemark(value) {
-          return scope.config.emptyRemark = value === '';
+          if (_.isUndefined(value)) {
+            scope.config.emptyRemark = true;
+          } else {
+            scope.config.emptyRemark = value === '';
+          }
         }
 
         /**

@@ -14,7 +14,7 @@
                 <div class="f-fl user-account">
 
                     <p class="user-name" ng-bind="vm.userModel.realname"></p>
-                    <p class="tel-number" ng-bind="vm.userModel.mobile"></p>
+                    <p class="tel-number" ng-bind="vm.userModel.mobile | numberFormatFilter"></p>
 
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     <h4 class="f-fl" ng-bind="vm.userpackage.packagename"></h4>
                     <span class="package-status f-fl" ng-bind="vm.userpackage.$packageState | formatStatusFilter : 'packageState'" ng-class="{'vaild':vm.userpackage.$packageState==0,'finished':vm.userpackage.$packageState ==1,'expired':vm.userpackage.$packageState==2}"></span>
                 </div>
-                <div class="detail-time">
+                <div class="detail-time" ng-if="vm.userpackage.$packageState !=1">
                     <p class="f-fl">剩余时间&nbsp;<span class="time-left" ng-bind="vm.userpackage.expireDay | timeState : 'time'"></span></p>
                     <p class="end-time f-fl" ng-if="vm.userpackage.expire">至&nbsp;<span ng-bind="vm.userpackage.expire | timeState : 'date'" ng-class="{'warning':vm.userpackage.$packageState==2}"></span></p>
                 </div>

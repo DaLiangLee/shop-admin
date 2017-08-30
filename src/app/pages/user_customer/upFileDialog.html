@@ -1,0 +1,45 @@
+<div class="viewFramework-upload-file-dialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">批量添加会员</h5>
+    </div>
+    <div class="modal-body">
+        <!--<p class="warning" ng-bind="warning"></p>
+        <div class="upload-list" ng-if="!postInit">
+            <div class="init">正在初始化上传控件</div>
+        </div>-->
+        <div class="down-load f-cb">
+            <span class="f-fl">1.请先下载模板</span>
+            <a ng-href="{{download()}}" class="import-item f-fl" target="_blank">下载模版</a>
+        </div>
+
+        <div class="up-load f-cb">
+            <p class="text-title">2.选择文件并上传</p>
+            <input class="input-control input-w-200 f-fl" type="text" placeholder="请选择会员信息excel" title="items[0].name" ng-model="items[0].name">
+            <button class="u-btn u-btn-primary u-btn-sm f-fl" id="startUpload">选择文件</button>
+        </div>
+        <!--{{items[0].name}}-->
+        <!--<div class="upload-list" ng-if="items.length">
+            <div class="item" ng-repeat="item in items" id="{{item.id}}">
+                <div class="fileinfo"><span class="name" ng-bind="item.name"></span> （<b class="size" ng-bind="item.size"></b>）<span class="remove pull-right" ng-click="remove(item)">&times;</span></div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" ng-style="{'width': item.progress +'%'}">
+                        <span>{{item.progress}}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <!--<div class="text-warning">错误提示</div>-->
+        <div class="text-warning" ng-if="danger" ng-bind="danger">1212</div>
+    </div>
+    <div class="grid-loading" ng-if="loadingState" style="position:absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100;background-color: rgba(0,0,0,0.25);">
+        <span class="loading" style="background-color:#fff;"><span><i class="icon-loading"></i></span>正在上传，请稍等...</span>
+    </div>
+    <div class="modal-footer" id="j-upload-container">
+        <div class="inline-block f-tac" ng-if="!interception">
+            <!--<button class="upload-btn upload-start upload-disabled u-btn u-btn-primary u-btn-sm" style="visibility:hidden" id="startUpload" disabled>选择文件</button>-->
+            <button class="u-btn u-btn-primary u-btn-sm" id="addFiles" ng-disabled="!canUpLoad" style="margin-right: 15px">导&nbsp;&nbsp;&nbsp;&nbsp;入</button>
+            <button class="u-btn u-btn-cancel u-btn-sm" id="addFiles" ng-click="close(false)" >取&nbsp;&nbsp;&nbsp;&nbsp;消</button>
+
+        </div>
+    </div>

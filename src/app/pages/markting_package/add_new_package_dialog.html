@@ -77,9 +77,9 @@
                             <td>
                                 <div class="pull-down">
                                     <input type="text" name="name" id="name" class="input-control" ng-model="item.name"
-                                           ng-change="searchHandler(item, $index)"
+                                           ng-change="searchHandler(item)"
                                            ng-focus="getFocus(item)"
-                                           ng-disabled="!item.type || item.$isValueEmpty" placeholder="输入名称" ng-required="true">
+                                           ng-disabled="!item.type || item.$isValueEmpty" placeholder="输入名称可进行搜索" ng-required="true">
                                     <span class="icon-remove_circle" ng-click="clearContent(item, $index)"></span>
                                     <ul class="pull-down-list" dg-click="chooseItem($event, subitem, item)" selector="li" ng-if="config.searchList && !item.$isSelected" bindonce="config.searchList">
                                         <li ng-repeat="subitem in config.searchList" >
@@ -96,7 +96,7 @@
                             </td>
                             <td>
                                 <div ng-class="{'has-error': list.price.$error.cbMoneyRange}" cb-field-error="" field-error-status="list.price.$error.cbMoneyRange" field-error-msg="套餐价不能大于原价" style="position: relative;">
-                                    <input type="text" class="input-control package-input-item" name="price" ng-model="item.price" ng-keyup="inputPrice(item)" ng-blur="formatMoney(item)" ng-disabled="!config.isSelectItem" cb-money-range="" data-value-min="0.01" range-enabled="true" data-value-max="{{item.originprice}}" ng-required="true"  maxlength="11">
+                                    <input type="text" class="input-control package-input-item" name="price" ng-model="item.price" ng-keyup="inputPrice(item)" ng-blur="formatMoney(item)" ng-disabled="!config.isSelectItem" cb-money-range="" data-value-min="0" range-enabled="true" data-value-max="{{item.originprice}}" ng-required="true"  maxlength="11">
                                 </div>
                             </td>
                             <td>

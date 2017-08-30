@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+    <h5 class="modal-title">批量添加会员</h5>
+</div>
+
+<div class="modal-body">
+    <div class="form-group f-cb">
+        <span class="f-fl">1.请先下载模板：</span>
+        <a ng-href="{{download()}}" class="import-item" target="_blank">下载模版</a>
+    </div>
+
+    <div class="upload-list">
+        <div class="none">2.选择上传文件</div>
+    </div>
+    <div class="upload-list" ng-if="items.length">
+        <div class="item" ng-repeat="item in items" id="{{item.id}}">
+            <div class="fileinfo"><span class="name" ng-bind="item.name"></span> （<b class="size" ng-bind="item.size"></b>）<span class="remove pull-right" ng-click="remove(item)">&times;</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" ng-style="{'width': item.progress +'%'}">
+                    <span>{{item.progress}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-danger" ng-if="danger" ng-bind="danger">1212</div>
+</div>
+
+</div>
+
+<div class="modal-footer" id="j-upload-container">
+    <button class="upload-btn upload-start upload-disabled u-btn u-btn-primary u-btn-sm" style="visibility:hidden" id="startUpload" disabled>选择文件</button>
+    <button class="upload-btn upload-add u-btn u-btn-primary u-btn-sm" id="addFiles">选择文件</button>
+</div>

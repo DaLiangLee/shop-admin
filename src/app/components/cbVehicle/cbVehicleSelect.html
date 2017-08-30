@@ -137,7 +137,7 @@
     <div>
       <h2 class="h6">已选择适用车型：</h2>
       <hr>
-      <div style="height:280px; overflow-y: auto">
+      <div style="height:100px; overflow-y: auto">
         <div class="tags" ng-repeat="item in dataLists">
           <span ng-bind="item.title"></span>
           <span class="close" ng-click="removeHandle(item)">&times;</span>
@@ -149,7 +149,7 @@
     </div>
     <div class="modal-footer f-tac">
       <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>　　
-      <button class="u-btn u-btn-disabled u-btn-sm" ng-click="close(false)">取　消</button>
+      <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
     </div>
   </div>
 </div>

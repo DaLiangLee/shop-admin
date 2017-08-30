@@ -12,7 +12,7 @@
     </thead>
     <tbody dg-click="datepicker.select(cols, $event)" selector="button">
     <tr ng-repeat="row in rows track by $index">
-      <td ng-repeat="cols in row track by $index"><button class="u-btn u-btn-default" ng-class="{'u-btn-info': cols.current, 'u-btn-success': cols.selected, 'active': cols.secondary}" ng-disabled="cols.disabled">
+      <td ng-repeat="cols in row track by $index"><button class="u-btn u-btn-default" ng-class="{'u-btn-info current': cols.current, 'u-btn-success': cols.selected, 'active': cols.secondary}" ng-disabled="cols.disabled">
         <span><strong ng-bind="cols.label"></strong></span><br>
         <span><small ng-bind="cols.lunar"></small></span>
       </button></td>

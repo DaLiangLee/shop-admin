@@ -36,7 +36,7 @@ function browserSyncInit(baseDir, browser) {
   // 代理刘易
   // server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.50:8080', pathRewrite: {'^/shopservice' : '/'}, changeOrigin: true});
   // 代理姚东
-  //server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.98:8081', changeOrigin: true});
+  // server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.98:8081', changeOrigin: true});
   // 代理薛凡
   // server.middleware = proxyMiddleware('/shopservice', {target: 'http://192.168.2.25:8080', changeOrigin: true});
   // 代理服务器
@@ -60,7 +60,7 @@ gulp.task('serve:dist', ['cleanTmp', 'build'], function () {
   browserSyncInit(conf.paths.dist);
 });
 
-gulp.task('serve:debug', ['cleanTmp', 'cleanTest', 'buildTest'], function () {
+gulp.task('serve:debug', ['cleanTmp', 'cleanTest', 'watch', 'buildTest'], function () {
   browserSyncInit(conf.paths.dist);
 });
 
@@ -74,11 +74,8 @@ gulp.task('serve:e2e-dist', ['cleanTmp', 'build'], function () {
 
 gulp.task('gitpushAll', function () {
   var dir = __dirname.replace('\gulp', '');
-  console.log(dir)
   gulp.src([
     path.resolve(dir + '/**/*.*'),
-    path.join('!' + dir, '/.git'),
-    path.join('!' + dir, '/bower_components'),
-    path.join('!' + dir, '/node_modules'),
-  ]).pipe(gulp.dest(path.join('D:/github/shop', '/shop-admin')))
+    path.join('!' + dir, '/.git')
+  ]).pipe(gulp.dest(path.join('D:/github/shop', '/admin')))
 });

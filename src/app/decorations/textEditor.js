@@ -9,50 +9,6 @@
 
   /** @ngInject */
   function textEditor($compile) {
-    /*var htmlfilter = function(value, parameter){
-      var setthe = {},s,p,n;
-      if(parameter != undefined){
-        setthe.fhtml = parameter.fhtml || true;
-        setthe.fjs = parameter.fjs || false;
-        setthe.fcss = parameter.fcss || false;
-        setthe.fself = parameter.fself || false;
-      }else{
-        setthe.fhtml = true;
-        setthe.fjs = false;
-        setthe.fcss = false;
-        setthe.fself = false;
-      }
-      if(angular.isString(value)){
-        s = value;
-      }else if( angular.isObject(value)){
-        s = value.value;
-        p = value.preplace;
-        n = value.nextplace;
-      }
-      if(!s){
-        return s;
-      }
-      if (!setthe.fhtml && !setthe.fjs && !setthe.fcss && !setthe.fself){
-        setthe.fhtml = true;
-      }
-      if (setthe.fjs){
-        s = s.replace(/<\s*script[^>]*>(.|[\r\n])*?<\s*\/script[^>]*>/gi, '');
-      }
-      if (setthe.fcss){
-        s = s.replace(/<\s*style[^>]*>(.|[\r\n])*?<\s*\/style[^>]*>/gi, '');
-      }
-      if (setthe.fhtml) {
-        //s = s.replace(/<\/?[^>]+>/g, '');
-        //s = s.replace(/\&[a-z]+;/gi, '');
-        //s = s.replace(/[`~!@#\$%\^\&\*\(\)_\+<>\?:"\{\},\.\\\/;'\[\]]/g, '');
-      }
-
-      if (setthe.fself && angular.isObject(value)){
-        s = s.replace(new RegExp(p, 'g'), n);
-      }
-      return s;
-    };*/
-
     return {
       restrict: "A",
       require: "?ngModel",

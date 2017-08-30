@@ -1,10 +1,6 @@
 <div>
-  <div class="radio-inline" ng-repeat="list in items.list">
-    <label>
-      <input type="radio" cb-name="items.name" ng-change="handler()" ng-model="searchParams[items.name]" ng-value="list.id"
-             class="ng-pristine ng-valid">
-      {{list.label}}
-    </label>
+  <div class="simple-search-radio">
+    <div simple-radio="" ng-repeat="list in items.list" radio-label="list.label" radio-checked="list.checked" radio-value="list.id" on-change="handler(data, list)"></div>
   </div>
   <div class="radio-inline" ng-if="searchParams[items.name] == -2">
     <div class="f-fl" style="width: 200px;">

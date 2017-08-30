@@ -49,13 +49,14 @@
       scope: {
         config: "=",
         image: "=",
-        uploadHandler: "&"
+        uploadHandler: "&",
+        deleteHandler:"&"
       },
       templateUrl: "app/components/simpleImage/simpleImage.html",
       link: function (scope) {
         scope.config = angular.extend({
           limit: 1,
-          width: 300,
+          width: 200,
           height: 200,
           oss: "?x-oss-process=image/resize,w_300",
           message: "请选择2M以内的图片",
@@ -80,6 +81,13 @@
 
         scope.remove = function ($event, item) {
           $event.stopPropagation();
+          console.log(item);
+          scope.deleteHandler({
+            data:{
+              status:0,
+              data:"删除图片"
+            }
+          });
           _.remove(scope.imageArr, function (key) {
             return key.index === item.index;
           });

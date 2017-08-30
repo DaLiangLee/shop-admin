@@ -2,16 +2,12 @@
   &-note {
     i {
       cursor: pointer;
+      font-size: 18px;
       &:hover {
         color: #555;
       }
     }
   }
-
-  .icon-doc_fill {
-    color: #6491fe;
-  }
-
   &-content {
     padding: 5px;
     border: 1px solid #dadada;

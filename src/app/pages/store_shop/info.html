@@ -1,121 +1,138 @@
 <div class="titH3">
-  <h3>基本信息</h3>
+    <h3>基本信息</h3>
 </div>
-<br />
+<br/>
 <div class="form-horizontal" ng-if="vm.dataBase.store">
-  <div class="row form-group">
-    <label class="b-w-2  control-label">经营状态</label>
-    <div class="b-w-6">
-      <p class="text-border">
-        <span ng-bind="vm.dataBase.store.audit | formatStatusFilter : 'store_shop'"></span>
-      </p>
+    <div class="row form-group">
+        <label class="b-w-2  control-label">经营状态</label>
+        <div class="b-w-6">
+            <p class="text-border">
+                <span ng-bind="vm.dataBase.store.audit | formatStatusFilter : 'store_shop'"></span>
+            </p>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">工商注册类型</label>
-    <div class="b-w-6">
-      <p class="text-border" ng-bind="vm.dataBase.store.regtype | formatStatusFilter : 'store_reg_type'"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">工商注册类型</label>
+        <div class="b-w-6">
+            <p class="text-border" ng-bind="vm.dataBase.store.regtype | formatStatusFilter : 'store_reg_type'"></p>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店铺类型</label>
-    <div class="b-w-6">
-      <p class="text-border" ng-bind="vm.dataBase.store.storetype | formatStatusFilter : 'store_type'"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店铺类型</label>
+        <div class="b-w-6">
+            <p class="text-border" ng-bind="vm.dataBase.store.storetype | formatStatusFilter : 'store_type'"></p>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店铺编码</label>
-    <div class="b-w-6">
-      <p class="text-border" ng-bind="vm.dataBase.store.storecode"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店铺编码</label>
+        <div class="b-w-6">
+            <p class="text-border" ng-bind="vm.dataBase.store.storecode"></p>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店铺二维码</label>
-    <div class="col-xs-4 col-lg-4">
-      <img ng-src="{{vm.dataBase.store.qrcode}}" alt="">
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店铺二维码</label>
+        <div class="col-xs-4 col-lg-4">
+            <img ng-src="{{vm.dataBase.store.qrcode}}" alt="">
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="titH3">
-  <h3>店铺介绍</h3>
+    <h3>店铺介绍</h3>
 </div>
-<br />
+<br/>
 <div class="form-horizontal" ng-if="vm.dataBase.store">
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店招名称</label>
-    <div class="b-w-6">
-      <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店招名称</label>
+        <div class="b-w-6">
+            <p class="text-border" ng-bind="vm.dataBase.store.storename"></p>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">服务项目</label>
-    <div class="b-w-6 info-item">
-      <label ng-repeat="item in vm.dataBase.allonelevel" style="margin-right: 10px;"><input type="checkbox" disabled ng-checked="vm.getScopeStatus(item, vm.dataBase.selectedonelevel)">{{item.catename}}</label>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">服务项目</label>
+        <div class="b-w-6 info-item">
+            <div simple-checkbox-group="allonelevel" checkbox-options="vm.dataBase.allonelevel2" checkbox-value="vm.dataBase.selectedonelevel2"></div>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店招图片</label>
-    <div class="b-w-6">
-      <div simple-image config="vm.uploadModel.config" image="vm.dataBase.store.photos" upload-handler="vm.uploadModel.handler(data)"></div>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店招图片</label>
+        <div class="b-w-6">
+            <div simple-image config="vm.uploadModel.config" image="vm.dataBase.store.photos"
+                 upload-handler="vm.uploadModel.handler(data)"></div>
+        </div>
     </div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">店铺地址</label>
-    <div class="b-w-6">
-      <p class="text-border" ng-bind-html="vm.dataBase.store.address"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">店铺地址</label>
+        <div class="b-w-6">
+            <p class="text-border" ng-bind-html="vm.dataBase.store.address"></p>
+        </div>
     </div>
-  </div>
-  <!--<div class="row form-group">
-    <label class="col-lg-1 control-label">硬件环境：</label>
-    <div class="col-lg-6">
-      <div>
+    <!--<div class="row form-group">
+      <label class="col-lg-1 control-label">硬件环境：</label>
+      <div class="col-lg-6">
+        <div>
+
+        </div>
+        <div simple-image config="vm.uploadModel.config" image="vm.dataBase.store.device" upload-handler="vm.uploadModel.handler(data)"></div>
 
       </div>
-      <div simple-image config="vm.uploadModel.config" image="vm.dataBase.store.device" upload-handler="vm.uploadModel.handler(data)"></div>
+    </div>-->
+    <div class="row form-group">
+        <label class="b-w-2 control-label">员工风采</label>
+        <div class="b-w-5">
+            <p class="text-border">
+                （<span ng-bind="vm.dataBase.store.countIsshow"></span>人）
+            </p>
+        </div>
+        <div class="b-w-2 b-pl10">
+            <button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-member member=""
+                    setting-item="vm.memberHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置员工风采
+            </button>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">营业时间</label>
+        <div class="b-w-5" ng-if="vm.dataBase.store.opentime && vm.dataBase.store.closetime">
+            <p class="text-border">
+                <span ng-bind="vm.dataBase.store.opentime"></span> — <span
+                    ng-bind="vm.dataBase.store.closetime"></span>
+            </p>
+        </div>
+        <div class="b-w-2 b-pl10">
+            <button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-hours
+                    start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"
+                    setting-item="vm.hoursHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置营业时间
+            </button>
+        </div>
+    </div>
 
+    <div class="row form-group">
+        <label class="b-w-2 control-label">客服电话</label>
+        <div class="b-w-5" ng-if="vm.dataBase.store.telephone">
+            <p class="text-border">
+                <span ng-bind="vm.dataBase.store.telephone | numberFormatFilter"></span>
+            </p>
+        </div>
+        <div class="b-w-2 b-pl10">
+            <button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-telephone
+                    telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)"
+                    cb-access-control="chebian:store:store:shop:edit">设置客服电话
+            </button>
+        </div>
     </div>
-  </div>-->
-  <div class="row form-group">
-    <label class="b-w-2 control-label">员工风采</label>
-    <div  class="b-w-5">
-      <p class="text-border">
-        （<span ng-bind="vm.dataBase.store.countIsshow"></span>人）
-      </p>
-    </div>
-    <div  class="b-w-2 b-pl10"><button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-member member=""  setting-item="vm.memberHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置员工风采</button></div>
-  </div>
-  <div class="row form-group">
-    <label class="b-w-2 control-label">营业时间</label>
-    <div class="b-w-5" ng-if="vm.dataBase.store.opentime && vm.dataBase.store.closetime">
-      <p class="text-border">
-        <span ng-bind="vm.dataBase.store.opentime"></span> — <span
-        ng-bind="vm.dataBase.store.closetime"></span>
-      </p>
-    </div>
-    <div class="b-w-2 b-pl10"><button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-hours start-time="vm.dataBase.store.opentime" end-time="vm.dataBase.store.closetime"  setting-item="vm.hoursHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置营业时间</button></div>
-  </div>
-
-  <div class="row form-group">
-    <label class="b-w-2 control-label">客服电话</label>
-    <div class="b-w-5" ng-if="vm.dataBase.store.telephone">
-      <p class="text-border">
-        <span ng-bind="vm.dataBase.store.telephone | numberFormatFilter"></span>
-      </p>
-    </div>
-    <div class="b-w-2 b-pl10">
-    <button class="u-btn u-btn-primary u-btn-sm" shop-home-settings-telephone telephone="vm.dataBase.store.telephone" setting-item="vm.telephoneHandler(data)" cb-access-control="chebian:store:store:shop:edit">设置客服电话</button>
-    </div>
-  </div>
 
 
-  <div class="row form-group">
-    <label class="b-w-2 control-label">商户介绍</label>
-    <div class="b-w-5" ng-if="vm.dataBase.store.description">
-      <p class="text-border" style="height: auto;word-break:break-all;word-wrap:break-word; " ng-bind="vm.dataBase.store.description"></p>
+    <div class="row form-group">
+        <label class="b-w-2 control-label">商户介绍</label>
+        <div class="b-w-5" ng-if="vm.dataBase.store.description">
+            <p class="text-border" style="height: auto;word-break:break-all;word-wrap:break-word; "
+               ng-bind="vm.dataBase.store.description"></p>
+        </div>
+        <div class="b-w-2 b-pl10">
+            <button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:store:shop:edit"
+                    cb-message-board="editor" content="vm.dataBase.store.description" config="vm.description"
+                    title="编辑商户介绍" review-item="vm.reviewHandler(data)">编辑商户介绍
+            </button>
+        </div>
     </div>
-    <div class="b-w-2 b-pl10">
-      <button class="u-btn u-btn-primary u-btn-sm" cb-access-control="chebian:store:store:shop:edit" cb-message-board="editor" content="vm.dataBase.store.description" config="vm.description" title="编辑商户介绍" review-item="vm.reviewHandler(data)">编辑商户介绍</button>
-    </div>
-  </div>
 </div>

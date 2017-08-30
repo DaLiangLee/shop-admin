@@ -55,7 +55,7 @@
     left: 0;
     z-index: 1000;
     min-width: 160px;
-    padding: 5px 0;
+    padding: 5px 4px 10px 4px;
     margin: 2px 0 0;
     font-size: 14px;
     text-align: left;
@@ -72,6 +72,10 @@
     }
     .grid {
       width: 100%;
+
+      .grid:active {
+        outline: none;
+      }
       th{
         text-align: center;
         padding:5px 0;
@@ -81,7 +85,28 @@
       }
       .u-btn{
         width: 100%;
-        padding: 8px 15px;
+        padding: 10px 17px;
+        color: #666666;
+
+        &:hover {
+          background-color: #a6d7f7;
+          color: #ffffff;
+        }
+
+        &[disabled]:hover {
+          background-color: transparent;
+          color: #666666;
+          opacity: 0.5;
+        }
+
+        &-default {
+          border: none;
+
+          &.current {
+            color: #ffffff;
+          }
+        }
+
       }
     }
     .month{

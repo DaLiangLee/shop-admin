@@ -1,0 +1,90 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">更改手机号码</h5>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="warning-tips">
+            <p>请在更改手机号码前核实会员真实身份。</p>
+            <p>更改后新手机号码将与会员绑定，接收服务信息。</p>
+        </div>
+        <form class="form-horizontal" autocomplete="off" role="form" novalidate name="phonenumber">
+            <div class="form-header">
+                <div class="form-group f-cb">
+                    <div class="control-label f-fl">
+                        <span class="text-danger">
+                            <i class="icon-required"></i>
+                        </span>
+                        新手机号：
+                    </div>
+                    <div class="control-content f-fl input-w-140">
+                        <div >
+                            <input type="text"
+                                   class="input-control"
+                                   name="mobile"
+                                   id="inputPassword1"
+                                   ng-required="true"
+                                   ng-pattern="/^(1[3|5|7|8][0-9]{9}|14[5|7|9][0-9]{8})$/"
+                                   ng-model="dataBase.mobile"
+                                   placeholder="请输入手机号码" ng-change="existMobile(phonenumber.mobile.$valid)" maxlength="11">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputPassword2" class="b-w-4 control-label"><span class="text-danger"><i class="icon-required"></i></span>验证码：</label>
+                    <div class="">
+                        <div class="f-fl">
+                            <input type="text"
+                                   class="input-control input-w-140"
+                                   id="inputPassword2"
+                                   ng-model="dataBase.code"
+                                   placeholder="6位数字验证码"
+                                   name="code"
+                                   ng-required="true"
+                                   ng-pattern="/^\d{6}$/" maxlength="6">
+                        </div>
+                        <div class="f-fl" style="margin-left: 20px">
+                            <button type="button" ng-class="{code_disabled: phonenumber.mobile.$invalid || !isCountdown}" class="u-btn u-btn-primary u-btn-block u-btn-sm" ng-disabled="(phonenumber.mobile.$invalid) || !isCountdown" ng-click="setCountdown()" ng-bind="countdown"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="min-height: 46px">
+                    <div class="control-label">
+
+                    </div>
+                    <div class="control-content" ng-if="showTips">
+                        <div class="tips">
+                            验证码已发送到会员的手机号，请向您的会员索取
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-danger" style="text-align: center" ng-if="showWarningTips" ng-bind="warningTips">
+
+                </div>
+                <!-- 分割线 -->
+                <!--<div class="cut-line"></div>-->
+
+            </div>
+        </form>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button type="submit" class="u-btn u-btn-primary u-btn-sm" ng-disabled="phonenumber.$invalid" ng-click="submitBtn()" style="margin-right: -10px">下一步</button>
+            　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+        </div>
+        <!--<div class="inline-block f-tac" ng-if="interception">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="confirm()">确　定</button>
+            　　
+            <button class="u-btn u-btn-cancel u-btn-sm" ng-click="close(false)">取　消</button>
+        </div>-->
+    </div>
+</div>

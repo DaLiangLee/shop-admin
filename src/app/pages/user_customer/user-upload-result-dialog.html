@@ -1,4 +1,4 @@
-<div>
+<!--<div>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
         <h5 class="modal-title">上传结果</h5>
@@ -8,6 +8,30 @@
         <p>成功上传:&nbsp;&nbsp;<span ng-bind="config.successCount"></span> 条</p>
         <p>失败上传:&nbsp;&nbsp;<span ng-bind="config.errorCount" ng-class="{'text-red': config.hasError}"></span> 条 <span></span></p>
         <p ng-if="config.hasError">下载未成功上传的数据: <a ng-href="{{config.downloadUrl}}" target="_blank">下载文件</a></p>
+    </div>
+    <div class="modal-footer">
+        <div class="inline-block f-tac">
+            <button class="u-btn u-btn-primary u-btn-sm" ng-click="close(false)">确　定</button>
+        </div>
+    </div>
+</div>-->
+
+<!--
+版本优化  2017/08/07   by    yigeng
+-->
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" z-index="-1" ng-click="close(false)" aria-hidden="true">&times;</button>
+        <h5 class="modal-title">导入信息</h5>
+    </div>
+    <div class="modal-body">
+        <p class="title">您本次导入会员信息&nbsp;<span ng-bind="config.totalCount"></span>&nbsp;个</p>
+        <p class="success">成功导入&nbsp;<span ng-bind="config.successCount" style="color: #09bb07;"></span>&nbsp;个</p>
+        <p class="failed">未成功导入&nbsp;<span ng-bind="config.errorCount" style="color: #d7292a;"></span>&nbsp;个</p>
+        <p class="tips-download" ng-if="config.hasError">
+            您可通过下方按钮，下载未成功导入的会员信息
+        </p>
+        <a class="download-btn" ng-if="config.hasError" ng-href="{{config.downloadUrl}}" target="_blank">下载</a>
     </div>
     <div class="modal-footer">
         <div class="inline-block f-tac">
