@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2017/06/07.
  */
-(function (angular) {
+(function(angular) {
     'use strict';
 
     angular
@@ -14,28 +14,28 @@
         var vm = this;
         var currentState = $state.current;
         var currentStateName = currentState.name;
-        var currentParams = angular.extend({}, $state.params, {pageSize: 10});
+        var currentParams = angular.extend({}, $state.params, { pageSize: 10 });
         var propsParams = {};
 
 
         vm.gridModel = {
             columns: _.clone(userPackageConfig().DEFAULT_GRID.columns),
             userPackage: [],
-            config: _.merge(userPackageConfig().DEFAULT_GRID.config, {propsParams: propsParams}),
-            loadingState: true,      // 加载数据
-            pageChanged: function (data) {    // 监听分页
-                var page = angular.extend({}, currentParams, {page: data});
+            config: _.merge(userPackageConfig().DEFAULT_GRID.config, { propsParams: propsParams }),
+            loadingState: true, // 加载数据
+            pageChanged: function(data) { // 监听分页
+                var page = angular.extend({}, currentParams, { page: data });
                 $state.go(currentStateName, page);
             },
-            sortChanged: function (data) {
+            sortChanged: function(data) {
                 var orders = [];
-                angular.forEach(data.data, function (item, key) {
+                angular.forEach(data.data, function(item, key) {
                     orders.push({
                         "field": key.replace("", ""),
                         "direction": item
                     });
                 });
-                var order = angular.extend({}, currentParams, {orders: angular.toJson(orders)});
+                var order = angular.extend({}, currentParams, { orders: angular.toJson(orders) });
                 getList(order);
             }
 
@@ -47,8 +47,8 @@
 
         vm.searchModel = {
             config: DEFAULT_SEARCH.config(searchModel),
-            'handler': function (data) {
-                var items = _.find(DEFAULT_SEARCH.createtime, function (item) {
+            'handler': function(data) {
+                var items = _.find(DEFAULT_SEARCH.createtime, function(item) {
                     return item.id === data.createtime0 * 1;
                 });
                 if (angular.isDefined(items)) {
@@ -56,8 +56,8 @@
                 }
                 var search = data;
 
-                _.chain(currentParams).tap(function (value) {
-                    _.forEach(_.pick(value, ['createtime0', 'createtime1']), function (item, key) {
+                _.chain(currentParams).tap(function(value) {
+                    _.forEach(_.pick(value, ['createtime0', 'createtime1']), function(item, key) {
                         !_.isUndefined(item) && (value[key] *= 1);
                     });
                 }).value();
@@ -85,13 +85,13 @@
                 return;
             }
 
-            marktingPackage.getuserpackage(params).then(function (results) {
+            marktingPackage.getuserpackage(params).then(function(results) {
                 var result = results.data;
                 if (result.status * 1 === 0) {
                     /**
                      *办理时间和到期时间计算剩余天数
                      */
-                    _.forEach(result.data, function (item) {
+                    _.forEach(result.data, function(item) {
                         item.expireDay = utils.getComputeDay(new Date(), item.expire);
                         if (item.expireDay < 0 && item.status === '0') {
                             item.$packageState = '2';
@@ -124,7 +124,7 @@
         var vm = this;
         var currentState = $state.current;
         var currentStateName = currentState.name;
-        var currentParams = angular.extend({}, $state.params, {page: 1, pageSize: 10});
+        var currentParams = angular.extend({}, $state.params, { page: 1, pageSize: 10 });
 
         /**
          * 需要返回操作
@@ -135,7 +135,7 @@
         /**
          *调用用户信息接口获取用户详细信息
          */
-        userCustomer.getUser({mobile: currentParams.mobile}).then(function (results) {
+        userCustomer.getUser({ mobile: currentParams.mobile }).then(function(results) {
             var result = results.data;
             if (result.status * 1 === 0) {
                 vm.userModel = result.data;
@@ -162,12 +162,12 @@
             requestParams: {
                 params: currentParams,
                 request: "user,package,exceldebitcardDetail",
-                permission: "chebian:store:user:package:view"
+                permission: "shopapp:store:user:package:view"
             },
-            config: _.merge(userPackageConfig().DEFAULT_GRID_DETAIL.config, {propsParams: propsParams}),
-            loadingState: true,      // 加载数据
-            pageChanged: function (data) {    // 监听分页
-                var page = angular.extend({}, currentParams, {page: data});
+            config: _.merge(userPackageConfig().DEFAULT_GRID_DETAIL.config, { propsParams: propsParams }),
+            loadingState: true, // 加载数据
+            pageChanged: function(data) { // 监听分页
+                var page = angular.extend({}, currentParams, { page: data });
                 vm.gridModel.requestParams.params = page;
                 getList(page);
             }
@@ -180,8 +180,8 @@
          */
         vm.searchModel = {
             config: DEFAULT_SEARCH_DETAIL.config(currentParams),
-            'handler': function (data) {
-                var items = _.find(DEFAULT_SEARCH_DETAIL.createtime, function (item) {
+            'handler': function(data) {
+                var items = _.find(DEFAULT_SEARCH_DETAIL.createtime, function(item) {
                     return item.id === data.createtime0 * 1;
                 });
                 if (angular.isDefined(items)) {
@@ -202,11 +202,11 @@
          * 延长套餐时间
          * @param data
          */
-        vm.userpackageHandler = function (data) {
+        vm.userpackageHandler = function(data) {
             if (data.status === '0') {
-                marktingPackage.incexpire({id: vm.userpackage.id, expireDay: data.data.time})
+                marktingPackage.incexpire({ id: vm.userpackage.id, expireDay: data.data.time })
                     .then(utils.requestHandler)
-                    .then(function () {
+                    .then(function() {
                         vm.userpackage.expire = data.data.expire;
                         vm.userpackage.expireDay = data.data.expireDay;
                         $state.reload();
@@ -218,10 +218,10 @@
          * 获取某个会员套餐卡详情列表
          */
         function getList(params) {
-            marktingPackage.getuserpackageitem(params).then(function (results) {
+            marktingPackage.getuserpackageitem(params).then(function(results) {
                 var result = results.data;
                 if (result.status * 1 === 0) {
-                    vm.packageDetail = _.map(result.data.userpackageitem, function (item) {
+                    vm.packageDetail = _.map(result.data.userpackageitem, function(item) {
                         if (!item.num) {
                             item.num = 0;
                         }
@@ -239,7 +239,7 @@
                     }
 
 
-                    _.forEach(result.data.logs, function (item) {
+                    _.forEach(result.data.logs, function(item) {
                         if (!_.isEmpty(item.ordercreator) && angular.fromJson(item.ordercreator).realname) {
                             item.ordercreator = angular.fromJson(item.ordercreator).realname;
                         } else {
